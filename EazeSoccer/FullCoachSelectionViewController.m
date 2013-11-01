@@ -1,0 +1,103 @@
+//
+//  FullCoachSelectionViewController.m
+//  FootballStatsConsole
+//
+//  Created by Gilbert Zaldivar on 6/17/13.
+//  Copyright (c) 2013 Gil. All rights reserved.
+//
+
+#import "FullCoachSelectionViewController.h"
+#import "CoachTableCell.h"
+#import "Coach.h"
+#import "EazesportzAppDelegate.h"
+#import "sportzCurrentSettings.h"
+
+#import <QuartzCore/QuartzCore.h>
+
+@interface FullCoachSelectionViewController () <UIAlertViewDelegate>
+
+@end
+
+@implementation FullCoachSelectionViewController {
+    NSIndexPath *deleteIndexPath;
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [currentSettings retrieveCoaches];
+    if (currentSettings.coaches.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Coaches"
+                                                        message:@"Program administrator has not entered any coaches"
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    } else {
+        [self.coachTableView reloadData];
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"CoachTableCell";
+    CoachTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    // Configure the cell...
+    if (cell == nil) {
+        cell = [[CoachTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    Coach *acoach = [currentSettings.coaches objectAtIndex:indexPath.row];
+    cell.coachImage.image = [acoach getImage:@"thumb"];
+    cell.coachnameLabel.text = acoach.fullname;
+    cell.responsibilityLabel.text = acoach.speciality;
+    cell.yearsLabel.text = [acoach.years stringValue];
+    return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        deleteIndexPath = [self.coachTableView indexPathForSelectedRow];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"All Athlete data will be lost. Click Confirm to Proceed"
+                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if([title isEqualToString:@"Confirm"]) {
+        if ([currentSettings deleteCoach:[currentSettings.coaches objectAtIndex:deleteIndexPath.row]]) {
+            [self viewWillAppear:YES];
+        }
+    }
+}
+
+@end

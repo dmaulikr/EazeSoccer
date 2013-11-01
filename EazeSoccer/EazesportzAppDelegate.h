@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import "sportzCurrentSettings.h"
+
+sportzCurrentSettings *currentSettings;
+
 @interface EazesportzAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

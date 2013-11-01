@@ -1,0 +1,43 @@
+//
+//  BlogEntryViewController.h
+//  FootballStatsConsole
+//
+//  Created by Gilbert Zaldivar on 6/10/13.
+//  Copyright (c) 2013 Gil. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+#import "Blog.h"
+
+@interface BlogEntryViewController : UIViewController
+
+@property(nonatomic, strong) Blog *blog;
+
+@property (weak, nonatomic) IBOutlet UITextField *blogTitleText;
+@property (weak, nonatomic) IBOutlet UITextView *blogentryTextView;
+@property (weak, nonatomic) IBOutlet UIButton *userButton;
+@property (weak, nonatomic) IBOutlet UIImageView *bloggerImage;
+
+@property (weak, nonatomic) IBOutlet UILabel *commentLabel;
+@property (weak, nonatomic) IBOutlet UITextView *commentTextView;
+- (IBAction)deleteButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *submitButton;
+- (IBAction)submitButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *tagPlayerButton;
+@property (weak, nonatomic) IBOutlet UIButton *tagGameButton;
+@property (weak, nonatomic) IBOutlet UIButton *tagCoachButton;
+@property (weak, nonatomic) IBOutlet UIView *playerContainer;
+@property (weak, nonatomic) IBOutlet UIView *coachContainer;
+@property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+
+@property (weak, nonatomic) IBOutlet UIView *gameContainer;
+
+- (IBAction)blogTagPlayerSelected:(UIStoryboardSegue *)segue;
+- (IBAction)blogTagGameSelected:(UIStoryboardSegue *)segue;
+- (IBAction)blogTagCoachSelected:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UITextField *gameTextField;
+@property (weak, nonatomic) IBOutlet UITextField *coachTextField;
+@property (weak, nonatomic) IBOutlet UITextField *playerTextField;
+
+@end

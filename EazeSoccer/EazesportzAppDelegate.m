@@ -7,12 +7,28 @@
 //
 
 #import "EazesportzAppDelegate.h"
+#import "sportzConstants.h"
+#import "sportzServerInit.h"
+#import "KeychainWrapper.h"
+
+#import <AWSRuntime/AmazonErrorHandler.h>
 
 @implementation EazesportzAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    UIImageView *myGraphic;
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    
+    if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"]) {
+        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer.jpg"]];
+    }
+    
+    [self.window.rootViewController.view addSubview: myGraphic];
+    [self.window.rootViewController.view sendSubviewToBack: myGraphic];
+    currentSettings = [[sportzCurrentSettings alloc] init];
+    [AmazonErrorHandler shouldNotThrowExceptions];
     return YES;
 }
 							
