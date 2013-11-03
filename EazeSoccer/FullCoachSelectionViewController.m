@@ -83,7 +83,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         deleteIndexPath = [self.coachTableView indexPathForSelectedRow];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                        message:@"All Athlete data will be lost. Click Confirm to Proceed"
+                                                        message:@"All Coach data will be lost. Click Confirm to Proceed"
                                                        delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];

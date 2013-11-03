@@ -24,17 +24,11 @@
 @property (weak, nonatomic) IBOutlet UIButton *deleteAvatarButton;
 - (IBAction)deleteAvatarButtonClicked:(id)sender;
 - (IBAction)submitButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UILabel *emailLabel;
-@property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollview;
 - (IBAction)cameraRollButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *camerarollButton;
 - (IBAction)cameraButtonClicked:(id)sender;
 @property(nonatomic, strong) UIPopoverController *popover;
 ;
-@property (weak, nonatomic) IBOutlet UIView *userView;
 @property (weak, nonatomic) IBOutlet UIButton *resetPassword;
 - (IBAction)resetPasswordButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 
 @end

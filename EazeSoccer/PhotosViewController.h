@@ -20,7 +20,6 @@
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) User *user;
 
-- (IBAction)newButtonClicked:(id)sender;
 - (IBAction)userButtonClicked:(id)sender;
 - (IBAction)playerButtonClicked:(id)sender;
 - (IBAction)gameButtonClicked:(id)sender;

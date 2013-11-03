@@ -39,7 +39,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    _bannerImageView.image = [currentSettings getBannerImage];
 }
 
 - (void)didReceiveMemoryWarning
@@ -167,7 +166,7 @@
         EditGameViewController *destController = segue.destinationViewController;
         destController.game = nil;
     } else if (indexPath.length > 0) {
-        thegame = currentSettings.game;
+        thegame = [currentSettings.gameList objectAtIndex:indexPath.row];
     }
 }
 

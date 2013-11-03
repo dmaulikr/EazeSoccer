@@ -15,7 +15,6 @@
 @property(nonatomic, strong) GameSchedule *thegame;
 
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *bannerImageView;
 @property (weak, nonatomic) IBOutlet UITableView *gamesTableView;
 
 @end

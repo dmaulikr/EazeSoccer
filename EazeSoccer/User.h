@@ -33,4 +33,6 @@
 
 - (BOOL)isBasic;
 
+- (id)initWithDictionary:(NSDictionary *)userDictionary;
+
 @end

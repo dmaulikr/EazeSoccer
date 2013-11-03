@@ -25,7 +25,6 @@
 //@property(nonatomic, strong) Gamelogs *gamelog;
 
 - (IBAction)refreshButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIImageView *bannerImageView;
 @property (weak, nonatomic) IBOutlet UITableView *blogTableView;
 
 - (IBAction)userButtonClicked:(id)sender;
@@ -44,5 +43,7 @@
 @property (weak, nonatomic) IBOutlet UIView *gameScheduleContainer;
 @property (weak, nonatomic) IBOutlet UIView *userContainer;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addBlogEntryButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 
 @end

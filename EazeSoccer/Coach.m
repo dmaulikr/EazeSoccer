@@ -1,5 +1,5 @@
 //
-//  Coach.m
+//  m
 //  smpwlions
 //
 //  Created by Gilbert Zaldivar on 4/2/13.
@@ -23,9 +23,31 @@
 @synthesize tiny;
 @synthesize teamid;
 @synthesize teamname;
+@synthesize processing;
 
 @synthesize thumbimage;
 @synthesize tinyimage;
+
+- (id)initWithDictionary:(NSDictionary *)coachDictionary {
+    if ((self = [super init]) && (coachDictionary.count > 0)) {
+        coachid = [coachDictionary objectForKey:@"id"];
+        bio = [coachDictionary objectForKey:@"bio"];
+        fullname = [coachDictionary objectForKey:@"full_name"];
+        firstname = [coachDictionary objectForKey:@"firstname"];
+        middlename = [coachDictionary objectForKey:@"middlename"];
+        lastname = [coachDictionary objectForKey:@"lastname"];
+        speciality = [coachDictionary objectForKey:@"speciality"];
+        years = [coachDictionary objectForKey:@"years_on_staff"];
+        teamid = [coachDictionary objectForKey:@"team_id"];
+        thumb = [coachDictionary objectForKey:@"thumb"];
+        tiny = [coachDictionary objectForKey:@"tiny"];
+        largepic = [coachDictionary objectForKey:@"largepic"];
+        processing = [[coachDictionary objectForKey:@"processing"] boolValue];
+        return self;
+    } else {
+        return nil;
+    }
+}
 
 - (UIImage *)getImage:(NSString *)size {
     UIImage *image;

@@ -63,13 +63,15 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    _bannerImageView.image = [currentSettings getBannerImage];
     team = currentSettings.team;
 
     refreshControl = UIRefreshControl.alloc.init;
     [refreshControl addTarget:self action:@selector(startRefresh) forControlEvents:UIControlEventValueChanged];
     [_blogTableView addSubview:refreshControl];
     _activityIndicator.hidesWhenStopped = YES;
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBlogEntryButton, self.refreshButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -351,6 +353,10 @@
     Blog *lastblog = [blogfeed lastObject];
     [self getBlogs:lastblog.updatedat];
     [refreshControl endRefreshing];
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    [textView resignFirstResponder];
 }
 
 - (void)getBlogs:(NSString *)fromdate {

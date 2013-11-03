@@ -76,31 +76,7 @@
         
         if (statusCode == 200) {
             for (int i = 0; i < [theusers count]; i++) {
-                NSDictionary *userdata = [theusers objectAtIndex:i];
-                user = [[User alloc] init];
-                user.email = [userdata objectForKey:@"email"];
-                user.userid = [userdata objectForKey:@"id"];
-                user.username = [userdata objectForKey:@"name"];
-                user.avatarprocessing = [[userdata objectForKey:@"avatarprocessing"] boolValue];
-                
-                if ((NSNull *)[userdata objectForKey:@"avatarthumburl"] != [NSNull null])
-                    user.userthumb = [userdata objectForKey:@"avatarthumburl"];
-                else
-                    user.userthumb = @"";
-                
-                if ((NSNull *)[userdata objectForKey:@"avatartinyurl"] != [NSNull null])
-                    user.tiny = [userdata objectForKey:@"avatartinyurl"];
-                else
-                    user.tiny = @"";
-                
-                user.isactive = [NSNumber numberWithInteger:[[userdata objectForKey:@"is_active"] integerValue]];
-                user.bio_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"bio_alert"] integerValue]];
-                user.blog_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"blog_alert"] integerValue]];
-                user.media_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"media_alert"] integerValue]];
-                user.stat_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"stat_alert"] integerValue]];
-                user.score_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"score_alert"] integerValue]];
-                user.admin = [NSNumber numberWithInteger:[[userdata objectForKey:@"admin"] integerValue]];
-                [users addObject:user];
+                [users addObject:[[User alloc] initWithDictionary:[theusers objectAtIndex:i]]];
             }
             if (users.count == 0) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Users Found" message:@"Try a different search criteria!"
@@ -122,16 +98,6 @@
 
 - (IBAction)searchButtonClicked:(id)sender {
     _userSearchContainer.hidden = NO;
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    return NO;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

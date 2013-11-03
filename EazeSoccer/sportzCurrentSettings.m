@@ -292,9 +292,10 @@
     NSArray *thecoaches = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     if ([httpResponse statusCode] == 200) {
         self.coaches = [[NSMutableArray alloc] init];
-        sportzteamsCoachDataJSON *coachdata = [[sportzteamsCoachDataJSON alloc] init];
-        [coachdata processCoachData:thecoaches];
-        coaches = coachdata.coaches;
+        
+        for (int i = 0; i < thecoaches.count; i++) {
+            [coaches addObject:[[Coach alloc] initWithDictionary:[thecoaches objectAtIndex:i]]];
+        }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Coaches"
                                                         message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]

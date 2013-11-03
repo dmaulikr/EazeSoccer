@@ -155,17 +155,9 @@
         coachData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
         NSDictionary *coachdict = [coachData objectForKey:@"coach"];
         
-        if (coach == nil)
-            coach = [[Coach alloc] init];
-        
+        coach = [[Coach alloc] initWithDictionary:coachdict];
         coach.coachid = [coachdict objectForKey:@"_id"];
-        coach.lastname = [coachdict objectForKey:@"lastname"];
-        coach.firstname = [coachdict objectForKey:@"firstname"];
-        coach.middlename = [coachdict objectForKey:@"middlename"];
-        coach.bio = [coachdict objectForKey:@"bio"];
-        coach.speciality = [coachdict objectForKey:@"speciality"];
-        coach.years = [coachdict objectForKey:@"years_on_staff"];
-                
+        
         if (imageselected) {
             [self uploadImage:coach];
         } else {

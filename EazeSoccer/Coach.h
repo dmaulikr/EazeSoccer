@@ -30,4 +30,6 @@
 
 - (UIImage *)getImage:(NSString *)size;
 
+- (id)initWithDictionary:(NSDictionary *)coachDictionary;
+
 @end

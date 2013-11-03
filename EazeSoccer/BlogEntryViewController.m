@@ -125,12 +125,9 @@
         _blogTitleText.text = @"";
         _deleteButton.hidden = YES;
         _deleteButton.enabled = NO;
-        _tagPlayerButton.enabled = NO;
-//        _tagPlayerButton.backgroundColor = [UIColor redColor];
         _tagCoachButton.enabled = NO;
-//        _tagCoachButton.backgroundColor = [UIColor redColor];
+        _tagPlayerButton.enabled = NO;
         _tagGameButton.enabled = NO;
-//        _tagGameButton.backgroundColor = [UIColor redColor];
         blog = [[Blog alloc] init];
         blog.username = currentSettings.user.username;
         [_userButton setTitle:[NSString stringWithFormat:@"%@%@", @"Blogger: ", blog.username] forState:UIControlStateNormal];
@@ -360,7 +357,6 @@
         blog.athlete = player.athleteid;
         _playerTextField.text = [[currentSettings findAthlete:blog.athlete] logname];
         _tagPlayerButton.enabled = YES;
-//        _tagPlayerButton.backgroundColor = [UIColor greenColor];
         [_tagPlayerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     }
     _playerContainer.hidden = YES;
@@ -373,7 +369,6 @@
         blog.gameschedule = game.id;
         _gameTextField.text = [[currentSettings findGame:blog.gameschedule] game_name];
         _tagGameButton.enabled = YES;
-//        _tagGameButton.backgroundColor = [UIColor greenColor];
         [_tagGameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     }
     _gameContainer.hidden = YES;
@@ -386,7 +381,6 @@
         blog.coach = coach.coachid;
         _coachTextField.text = [[currentSettings findCoach:blog.coach] fullname];
         _tagCoachButton.enabled = YES;
-//        _tagCoachButton.backgroundColor = [UIColor greenColor];
         [_tagCoachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     }
     _coachContainer.hidden = YES;

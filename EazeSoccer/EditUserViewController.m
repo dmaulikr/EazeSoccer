@@ -51,18 +51,11 @@
     
     _deleteAvatarButton.layer.cornerRadius = 4;
     _activeLabel.layer.cornerRadius = 4;
-    _emailLabel.layer.cornerRadius = 4;
-    _usernameLabel.layer.cornerRadius = 4;
     _resetPassword.layer.cornerRadius = 4;
-    _cameraButton.layer.cornerRadius = 4;
-    _camerarollButton.layer.cornerRadius = 4;
     
     _activeSwitch.enabled = YES;
     
     _activityIndicator.hidesWhenStopped = YES;
-    
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
-    [_scrollview addGestureRecognizer:singleTap];
 }
 
 - (void)didReceiveMemoryWarning
@@ -90,29 +83,7 @@
         userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         
         if (responseStatusCode == 200) {
-            user = [[User alloc] init];
-            user.email = [userdata objectForKey:@"email"];
-            user.userid = [userdata objectForKey:@"id"];
-            user.avatarprocessing = [[userdata objectForKey:@"avatarprocessing"] boolValue];
-            
-            if ((NSNull *)[userdata objectForKey:@"avatarthumburl"] != [NSNull null])
-                user.userthumb = [userdata objectForKey:@"avatarthumburl"];
-            else
-                user.userthumb = @"";
-            
-            if ((NSNull *)[userdata objectForKey:@"avatartinyurl"] != [NSNull null])
-                user.tiny = [userdata objectForKey:@"avatartinyurl"];
-            else
-                user.tiny = @"";
-            
-            user.tiny = [userdata objectForKey:@"tiny"];
-            user.isactive = [NSNumber numberWithInteger:[[userdata objectForKey:@"is_active"] integerValue]];
-            user.bio_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"bio_alert"] integerValue]];
-            user.blog_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"blog_alert"] integerValue]];
-            user.media_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"media_alert"] integerValue]];
-            user.stat_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"stat_alert"] integerValue]];
-            user.score_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"score_alert"] integerValue]];
-            user.admin = [NSNumber numberWithInteger:[[userdata objectForKey:@"admin"] integerValue]];
+            user = [[User alloc] initWithDictionary:userdata];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving User"
                                                             message:[NSString stringWithFormat:@"%d", responseStatusCode]
@@ -157,12 +128,12 @@
     NSError *error = nil;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    int responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
+    int aresponseStatusCode = [(NSHTTPURLResponse*)response statusCode];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    NSLog(@"%@", userdata);
+    NSDictionary *auserdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    NSLog(@"%@", auserdata);
     
-    if (responseStatusCode == 200) {
+    if (aresponseStatusCode == 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
                                                         message:@"User image removed!"
                                                         delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -217,7 +188,7 @@
     
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:userDict, @"user", nil];
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
@@ -254,31 +225,8 @@
     
     if (responseStatusCode == 200) {
         NSLog(@"%@", userdata);
-        NSDictionary *userdict = [userdata objectForKey:@"user"];
-        
-        user.email = [userdict objectForKey:@"email"];
-        user.admin = [NSNumber numberWithInteger:[[userdict objectForKey:@"admin"] integerValue]];
-        user.username = [userdict objectForKey:@"name"];
-        
-        if ((NSNull *)[userdict objectForKey:@"avatarthumburl"] != [NSNull null])
-            user.userthumb = [userdict objectForKey:@"avatarthumburl"];
-        else
-            user.userthumb = @"";
-        
-        if ((NSNull *)[userdict objectForKey:@"avatartinyurl"] != [NSNull null])
-            user.tiny = [userdict objectForKey:@"avatartinyurl"];
-        else
-            user.tiny = @"";
-        
-        user.isactive = [NSNumber numberWithInteger:[[userdict objectForKey:@"is_active"] integerValue]];
-        user.bio_alert = [NSNumber numberWithInteger:[[userdict objectForKey:@"bio_alert"] integerValue]];
-        user.blog_alert = [NSNumber numberWithInteger:[[userdict objectForKey:@"blog_alert"] integerValue]];
-        user.media_alert = [NSNumber numberWithInteger:[[userdict objectForKey:@"media_alert"] integerValue]];
-        user.stat_alert = [NSNumber numberWithInteger:[[userdict objectForKey:@"stat_alert"] integerValue]];
-        user.score_alert = [NSNumber numberWithInteger:[[userdict objectForKey:@"score_alert"] integerValue]];
-    
-        user.teammanagerid = [userdict objectForKey:@"teamid"];
-        
+        user = [[User alloc] initWithDictionary:userdata];
+         
         if ([user.userid isEqualToString:currentSettings.user.userid]) {
             currentSettings.user = user;
             currentSettings.user.authtoken = [userdata objectForKey:@"authentication_token"];
@@ -310,11 +258,6 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
-}
-
-- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
-    CGPoint touchPoint = [gesture locationInView:_scrollview];
-    [self.view endEditing:YES];
 }
 
 - (IBAction)cameraRollButtonClicked:(id)sender {
@@ -445,7 +388,7 @@
                                     @"filetype", user.username, @"filename", nil];
     
     //    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userDict options:nil error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userDict options:0 error:&error];
     [urlrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [urlrequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [urlrequest setHTTPMethod:@"PUT"];

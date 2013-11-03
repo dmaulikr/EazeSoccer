@@ -36,7 +36,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    _headerViewImageView.image = [currentSettings getBannerImage];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, self.editSportButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

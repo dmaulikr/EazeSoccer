@@ -17,6 +17,7 @@
 @property(nonatomic, strong)  Team *team;
 
 @property (weak, nonatomic) IBOutlet UITableView *teamTableView;
-@property (weak, nonatomic) IBOutlet UIImageView *headerViewImageView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editSportButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addTeamButton;
 
 @end
