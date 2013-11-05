@@ -142,4 +142,8 @@
 
 + (NSString *)getSponsors:(NSString *)authToken;
 
++ (NSString *)getStandings:(NSString *)authToken;
++ (NSString *)updateTeamStanding:(Standings *)standing Token:(NSString *)authtoken;
++ (NSString *)importTeamStanding:(NSString *)gameid Token:(NSString *)authtoken;
+
 @end

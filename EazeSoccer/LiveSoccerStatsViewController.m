@@ -50,12 +50,18 @@
 }
 
 - (IBAction)shotsButtonClicked:(id)sender {
+    playerStats.shotstaken = [NSNumber numberWithInt:[playerStats.shotstaken intValue] + 1];
+    _shotsLabel.text = [playerStats.shotstaken stringValue];
 }
 
 - (IBAction)assistsButtonClicked:(id)sender {
+    playerStats.assists = [NSNumber numberWithInt:[playerStats.assists intValue] + 1];
+    _assistsLabel.text = [playerStats.assists stringValue];
 }
+
 - (IBAction)stealButtonClicked:(id)sender {
 }
+
 - (IBAction)savesButtonClicked:(id)sender {
 }
 - (IBAction)golasAgainstButtonClicked:(id)sender {

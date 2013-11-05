@@ -18,6 +18,8 @@
 @property(nonatomic, strong) Athlete *player;
 @property(nonatomic, strong) GameSchedule *game;
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *undoButtonClicked;
+
 @property (weak, nonatomic) IBOutlet UITextField *minutesPlayedTextField;
 - (IBAction)goalButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *goalLabel;

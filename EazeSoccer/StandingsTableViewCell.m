@@ -1,14 +1,14 @@
 //
-//  SoccerPlayerStasTableCell.m
-//  EazeSportz
+//  StandingsTableViewCell.m
+//  Basketball Console
 //
-//  Created by Gil on 11/4/13.
-//  Copyright (c) 2013 Gil. All rights reserved.
+//  Created by Gil on 10/22/13.
+//  Copyright (c) 2013 Gilbert Zaldivar. All rights reserved.
 //
 
-#import "SoccerPlayerStasTableCell.h"
+#import "StandingsTableViewCell.h"
 
-@implementation SoccerPlayerStasTableCell
+@implementation StandingsTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

@@ -8,7 +8,7 @@
 
 #import "SoccerPlayerStatsViewController.h"
 #import "EazesportzAppDelegate.h"
-#import "SoccerPlayerStasTableCell.h"
+#import "SoccerPlayerStatsTableCell.h"
 #import "LiveSoccerStatsViewController.h"
 
 @interface SoccerPlayerStatsViewController ()
@@ -107,11 +107,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"SoccerStatsTableCell";
-    SoccerPlayerStasTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    SoccerPlayerStatsTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
     if (cell == nil) {
-        cell = [[SoccerPlayerStasTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[SoccerPlayerStatsTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
     if (indexPath.section == 0) {
@@ -186,7 +186,7 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
+    if ([segue.identifier isEqualToString:@"SoccerPlayerStatsSegue"]) {
         liveStatsController = segue.destinationViewController;
     } else {
         NSIndexPath *indexPath = [_soccerPlayerStatsTableView indexPathForSelectedRow];

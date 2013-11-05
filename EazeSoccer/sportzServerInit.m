@@ -9,6 +9,7 @@
 #import "sportzServerInit.h"
 #import "EazesportzAppDelegate.h"
 //#import "FootballStats.h"
+#import "Standings.h"
 
 @implementation sportzServerInit 
 
@@ -1306,6 +1307,32 @@
     NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
     return serverUrlString = [serverUrlString stringByAppendingFormat:@"%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/sponsors.json?auth_token=",
                               authToken];
+}
+
+
++ (NSString *)getStandings:(NSString *)authToken {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
+    return serverUrlString = [serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/teams/",
+                              currentSettings.team.teamid, @"/standings.json?auth_token=", authToken];
+}
+
++ (NSString *)updateTeamStanding:(Standings *)standing Token:(NSString *)authtoken {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
+    return serverUrlString = [serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id,
+                              @"/teams/", currentSettings.team.teamid, @"/standings/savegamerecord.json?gameschedule_id=", standing.gameschedule_id,
+                              @"&league_wins=", [standing.leaguewins stringValue], @"&league_losses=", [standing.leaguelosses stringValue],
+                              @"&nonleague_wins=", [standing.nonleaguewins stringValue], @"&nonleague_losses=", [standing.nonleaguelosses stringValue],
+                              @"&auth_token=", authtoken];
+}
+
++ (NSString *)importTeamStanding:(NSString *)gameid Token:(NSString *)authtoken {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
+    return serverUrlString = [serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id,
+                              @"/teams/", currentSettings.team.teamid, @"/standings/importteamrecord.json?gameschedule_id=",
+                              gameid, @"&auth_token=", authtoken];
 }
 
 @end

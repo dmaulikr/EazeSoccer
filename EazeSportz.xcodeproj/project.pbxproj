@@ -14,7 +14,7 @@
 		B4158DCB1828245B00AEE47D /* Soccer.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DCA1828245B00AEE47D /* Soccer.m */; };
 		B4158DCE18282F8A00AEE47D /* LiveStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DCD18282F8A00AEE47D /* LiveStatsViewController.m */; };
 		B4158DD11828309100AEE47D /* BasketballPlayerStatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD01828309100AEE47D /* BasketballPlayerStatTableCell.m */; };
-		B4158DD41828349D00AEE47D /* SoccerPlayerStasTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD31828349D00AEE47D /* SoccerPlayerStasTableCell.m */; };
+		B4158DD41828349D00AEE47D /* SoccerPlayerStatsTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD31828349D00AEE47D /* SoccerPlayerStatsTableCell.m */; };
 		B4158DD7182834E500AEE47D /* SoccerPlayerStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD6182834E500AEE47D /* SoccerPlayerStatsViewController.m */; };
 		B41593171826D4A00010BAAA /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B41593161826D4A00010BAAA /* AssetsLibrary.framework */; };
 		B41593191826D4AB0010BAAA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B41593181826D4AB0010BAAA /* CoreMedia.framework */; };
@@ -40,6 +40,9 @@
 		B44C8F871822E91C009D0239 /* UserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F851822E91C009D0239 /* UserTableViewCell.m */; };
 		B474F3971828B16700AFF39F /* calendar.png in Resources */ = {isa = PBXBuildFile; fileRef = B474F3961828B16700AFF39F /* calendar.png */; };
 		B474F39A1828BDD000AFF39F /* LiveSoccerStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F3991828BDD000AFF39F /* LiveSoccerStatsViewController.m */; };
+		B474F39F1828C78700AFF39F /* StandingsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F39C1828C78700AFF39F /* StandingsTableViewCell.m */; };
+		B474F3A01828C78700AFF39F /* StandingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F39E1828C78700AFF39F /* StandingsTableViewController.m */; };
+		B474F3A31828C83D00AFF39F /* EditStandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F3A21828C83D00AFF39F /* EditStandingViewController.m */; };
 		B48558CF1827E6E700DE3AE6 /* ContactTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B48558CE1827E6E700DE3AE6 /* ContactTableViewController.m */; };
 		B48558D21827F28700DE3AE6 /* ChangeTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B48558D11827F28700DE3AE6 /* ChangeTeamViewController.m */; };
 		B4A515931822EACA003E2A10 /* HeaderSelectCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515921822EACA003E2A10 /* HeaderSelectCollectionReusableView.m */; };
@@ -144,8 +147,8 @@
 		B4158DCD18282F8A00AEE47D /* LiveStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveStatsViewController.m; sourceTree = "<group>"; };
 		B4158DCF1828309100AEE47D /* BasketballPlayerStatTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasketballPlayerStatTableCell.h; sourceTree = "<group>"; };
 		B4158DD01828309100AEE47D /* BasketballPlayerStatTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasketballPlayerStatTableCell.m; sourceTree = "<group>"; };
-		B4158DD21828349D00AEE47D /* SoccerPlayerStasTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoccerPlayerStasTableCell.h; sourceTree = "<group>"; };
-		B4158DD31828349D00AEE47D /* SoccerPlayerStasTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoccerPlayerStasTableCell.m; sourceTree = "<group>"; };
+		B4158DD21828349D00AEE47D /* SoccerPlayerStatsTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoccerPlayerStatsTableCell.h; sourceTree = "<group>"; };
+		B4158DD31828349D00AEE47D /* SoccerPlayerStatsTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoccerPlayerStatsTableCell.m; sourceTree = "<group>"; };
 		B4158DD5182834E500AEE47D /* SoccerPlayerStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoccerPlayerStatsViewController.h; sourceTree = "<group>"; };
 		B4158DD6182834E500AEE47D /* SoccerPlayerStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoccerPlayerStatsViewController.m; sourceTree = "<group>"; };
 		B41593161826D4A00010BAAA /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -184,6 +187,12 @@
 		B474F3961828B16700AFF39F /* calendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendar.png; sourceTree = "<group>"; };
 		B474F3981828BDD000AFF39F /* LiveSoccerStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveSoccerStatsViewController.h; sourceTree = "<group>"; };
 		B474F3991828BDD000AFF39F /* LiveSoccerStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveSoccerStatsViewController.m; sourceTree = "<group>"; };
+		B474F39B1828C78700AFF39F /* StandingsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandingsTableViewCell.h; sourceTree = "<group>"; };
+		B474F39C1828C78700AFF39F /* StandingsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandingsTableViewCell.m; sourceTree = "<group>"; };
+		B474F39D1828C78700AFF39F /* StandingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandingsTableViewController.h; sourceTree = "<group>"; };
+		B474F39E1828C78700AFF39F /* StandingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandingsTableViewController.m; sourceTree = "<group>"; };
+		B474F3A11828C83D00AFF39F /* EditStandingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditStandingViewController.h; sourceTree = "<group>"; };
+		B474F3A21828C83D00AFF39F /* EditStandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditStandingViewController.m; sourceTree = "<group>"; };
 		B48558CD1827E6E700DE3AE6 /* ContactTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactTableViewController.h; sourceTree = "<group>"; };
 		B48558CE1827E6E700DE3AE6 /* ContactTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactTableViewController.m; sourceTree = "<group>"; };
 		B48558D01827F28700DE3AE6 /* ChangeTeamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeTeamViewController.h; sourceTree = "<group>"; };
@@ -451,6 +460,8 @@
 				B4F421541821A4180023E61C /* EditGameViewController.m */,
 				B44C8F7C1822E857009D0239 /* EditPlayerViewController.h */,
 				B44C8F7D1822E857009D0239 /* EditPlayerViewController.m */,
+				B474F3A11828C83D00AFF39F /* EditStandingViewController.h */,
+				B474F3A21828C83D00AFF39F /* EditStandingViewController.m */,
 				B402F94E18219197006648DD /* EditTeamViewController.h */,
 				B402F94F18219197006648DD /* EditTeamViewController.m */,
 				B4A5159A1822EB65003E2A10 /* EditUserViewController.h */,
@@ -511,8 +522,8 @@
 				B4C174B0182447EB00D6D8B9 /* SearchForUserViewController.m */,
 				B4158DC91828245B00AEE47D /* Soccer.h */,
 				B4158DCA1828245B00AEE47D /* Soccer.m */,
-				B4158DD21828349D00AEE47D /* SoccerPlayerStasTableCell.h */,
-				B4158DD31828349D00AEE47D /* SoccerPlayerStasTableCell.m */,
+				B4158DD21828349D00AEE47D /* SoccerPlayerStatsTableCell.h */,
+				B4158DD31828349D00AEE47D /* SoccerPlayerStatsTableCell.m */,
 				B4158DD5182834E500AEE47D /* SoccerPlayerStatsViewController.h */,
 				B4158DD6182834E500AEE47D /* SoccerPlayerStatsViewController.m */,
 				B4F988A71820BD990093EF7E /* Sponsor.h */,
@@ -530,6 +541,10 @@
 				B4F988C01820BE610093EF7E /* sportzteamsAlertsJSON.m */,
 				B4F988A41820BD880093EF7E /* Standings.h */,
 				B4F988A51820BD880093EF7E /* Standings.m */,
+				B474F39B1828C78700AFF39F /* StandingsTableViewCell.h */,
+				B474F39C1828C78700AFF39F /* StandingsTableViewCell.m */,
+				B474F39D1828C78700AFF39F /* StandingsTableViewController.h */,
+				B474F39E1828C78700AFF39F /* StandingsTableViewController.m */,
 				B4158DC51828217600AEE47D /* Stats.h */,
 				B4158DC61828217600AEE47D /* Stats.m */,
 				B4F988A01820BD180093EF7E /* Team.h */,
@@ -711,6 +726,7 @@
 				B48558D21827F28700DE3AE6 /* ChangeTeamViewController.m in Sources */,
 				B4A515C31823FE94003E2A10 /* CoachSelectionViewController.m in Sources */,
 				B4AE4C7618219D560076A6DE /* GameScheduleTableViewCell.m in Sources */,
+				B474F3A01828C78700AFF39F /* StandingsTableViewController.m in Sources */,
 				B4F988B51820BDE00093EF7E /* Photo.m in Sources */,
 				B41593331827092F0010BAAA /* NewsTableCell.m in Sources */,
 				B41862E41821A6A3009F520C /* FindEazesportzSiteViewController.m in Sources */,
@@ -721,6 +737,7 @@
 				B4F988A91820BD990093EF7E /* Sponsor.m in Sources */,
 				B4A515AE18235C00003E2A10 /* BasketballStats.m in Sources */,
 				B44C8F861822E91C009D0239 /* UsersViewController.m in Sources */,
+				B474F3A31828C83D00AFF39F /* EditStandingViewController.m in Sources */,
 				B4F988991820BCF20093EF7E /* Video.m in Sources */,
 				B4F988BB1820BDFE0093EF7E /* KeychainWrapper.m in Sources */,
 				B44C8F781822E29F009D0239 /* RosterTableCell.m in Sources */,
@@ -744,10 +761,11 @@
 				B4A515C41823FE94003E2A10 /* Contact.m in Sources */,
 				B4A515A51822F39F003E2A10 /* VideosViewController.m in Sources */,
 				B4A515CC1823FEB9003E2A10 /* EditContactViewController.m in Sources */,
+				B474F39F1828C78700AFF39F /* StandingsTableViewCell.m in Sources */,
 				B44C8F871822E91C009D0239 /* UserTableViewCell.m in Sources */,
 				B4A515AB1822FDF1003E2A10 /* ShuffleAlphabet.m in Sources */,
 				B4F988D01820BEE00093EF7E /* ProgramInfoViewController.m in Sources */,
-				B4158DD41828349D00AEE47D /* SoccerPlayerStasTableCell.m in Sources */,
+				B4158DD41828349D00AEE47D /* SoccerPlayerStatsTableCell.m in Sources */,
 				B4F988CD1820BEB20093EF7E /* sportzteamsRegisterLoginViewController.m in Sources */,
 				B4F988841820B3B80093EF7E /* Alert.m in Sources */,
 				B4A515DC18243B57003E2A10 /* CoachTableCell.m in Sources */,

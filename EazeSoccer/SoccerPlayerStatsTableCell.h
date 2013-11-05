@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SoccerPlayerStasTableCell : UITableViewCell
+@interface SoccerPlayerStatsTableCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *playerImage;
 @property (weak, nonatomic) IBOutlet UILabel *playerName;
