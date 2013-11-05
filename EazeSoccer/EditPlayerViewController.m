@@ -12,7 +12,7 @@
 #import "sportzCurrentSettings.h"
 #import "PhotosViewController.h"
 #import "VideosViewController.h"
-//#import "PlayerStatsCollectionViewController.h"
+#import "SoccerPlayerStatsViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -22,8 +22,6 @@
 @end
 
 @implementation EditPlayerViewController {
-    UIPickerView *positionpicker, *heightpicker, *weightpicker;
-    
     NSArray *positionkeys;
     NSMutableArray *positionvalues;
     NSMutableArray *height, *inches;
@@ -55,63 +53,20 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    
+    _activityIndicator.hidesWhenStopped = YES;
+
     _bioTextView.layer.cornerRadius = 4;
     _numberTextField.keyboardType = UIKeyboardTypeNumberPad;
     _weightTextField.keyboardType = UIKeyboardTypeNumberPad;
     _seasonTextField.keyboardType = UIKeyboardTypeNumberPad;
     imageselected = NO;
+    _heightTextField.inputView = _heightPicker.inputView;
     
-    positionpicker = [[UIPickerView alloc] init];
-    positionpicker.dataSource = self;
-    positionpicker.delegate = self;
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:.50];
-    [UIView setAnimationDelegate:self];
-    positionpicker.showsSelectionIndicator = YES;
-    positionpicker.frame = CGRectMake(200, 200, positionpicker.frame.size.width, positionpicker.frame.size.height);
-    _positionTextField.inputView = positionpicker;
-    UIToolbar *myToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,0, 320, 44)]; //should code with variables to support view resizing
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                target:self action:@selector(dismissActionSheet:)];
-    [myToolbar setItems:[NSArray arrayWithObject: doneButton] animated:NO];
-    _positionTextField.inputAccessoryView = myToolbar;
-        
-    heightpicker = [[UIPickerView alloc] init];
-    heightpicker.dataSource = self;
-    heightpicker.delegate = self;
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:.50];
-    [UIView setAnimationDelegate:self];
-    heightpicker.showsSelectionIndicator = YES;
-    heightpicker.frame = CGRectMake(200, 200, heightpicker.frame.size.width, heightpicker.frame.size.height);
-    _heightTextField.inputView = heightpicker;
-    myToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,0, 320, 44)]; //should code with variables to support view resizing
-    doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                               target:self action:@selector(dismissActionSheet:)];
-    [myToolbar setItems:[NSArray arrayWithObject: doneButton] animated:NO];
-    _heightTextField.inputAccessoryView = myToolbar;
-
-    NSBundle *bundle = [NSBundle mainBundle];
-    NSString *plistPath =[bundle pathForResource:@"Positions" ofType:@"plist"];
-    NSDictionary *offpositions = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
-    positionkeys = [offpositions allKeys];
-    positionvalues = [[NSMutableArray alloc] init];
-    for (int i = 0; i < [positionkeys count]; i++)
-        [positionvalues addObject:[offpositions objectForKey:[positionkeys objectAtIndex:i]]];
-        
     height = [[NSMutableArray alloc] initWithObjects:@"3", @"4", @"5", @"6", @"7", @"8", nil];
     inches = [[NSMutableArray alloc] initWithObjects:@"0", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", nil];
-
-/*    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
-    [_scrollView addGestureRecognizer:singleTap];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.statsButton, self.doneButton, nil];
     
-    _activityIndicator.hidesWhenStopped = YES;
-}
-
-- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
-    CGPoint touchPoint = [gesture locationInView:_scrollView];
-    [self.view endEditing:YES]; */
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -124,6 +79,12 @@
     [super viewWillAppear:animated];
     
     heighttext = @"";
+    _positionPicker.hidden = YES;
+    _heightPicker.hidden = YES;
+    [_addPositionControl setSelectedSegmentIndex:UISegmentedControlNoSegment];
+    
+    _soccerStatsContainer.hidden = YES;
+    _doneButton.enabled = NO;
     
     if (player) {
         [_numberTextField setText:[[player number] stringValue]];
@@ -151,18 +112,14 @@
         
         if (player.hasphotos) {
             [_photosButton setTitle:@"Photos" forState:UIControlStateNormal];
-//            _photosButton.backgroundColor = [UIColor greenColor];
         } else {
-//            _photosButton.backgroundColor = [UIColor redColor];
             [_photosButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
             _photosButton.enabled = NO;
         }
         
         if (player.hasvideos) {
             [_videosButton setTitle:@"Videos" forState:UIControlStateNormal];
-//            _videosButton.backgroundColor = [UIColor greenColor];
         } else {
-//            _videosButton.backgroundColor = [UIColor redColor];
             [_videosButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
             _videosButton.enabled = NO;
         }
@@ -180,8 +137,6 @@
         _warningDeleteButton.enabled = NO;
         _statsButton.enabled = NO;
         _playerImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-//        _photosButton.backgroundColor = [UIColor redColor];
-//        _videosButton.backgroundColor = [UIColor redColor];
         [_videosButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         [_photosButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     }
@@ -297,7 +252,7 @@
 
 //Method to define how many columns/dials to show
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    if (pickerView == heightpicker)
+    if (pickerView == _heightPicker)
         return 2;
     else
         return 1;
@@ -305,9 +260,9 @@
 
 // Method to define the numberOfRows in a component using the array.
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
-    if (pickerView == positionpicker) {
+    if (pickerView == _positionPicker) {
         return [positionvalues count];
-    } else if (pickerView == heightpicker) {
+    } else if (pickerView == _heightPicker) {
         switch (component) {
             case 0:
                 return [height count];
@@ -323,9 +278,9 @@
 
 // Method to show the title of row for a component.
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    if (pickerView == positionpicker) {
+    if (pickerView == _positionPicker) {
         return [positionkeys objectAtIndex:row];
-    } else if (pickerView == heightpicker) {
+    } else if (pickerView == _heightPicker) {
         switch (component) {
             case 0:
                 return [height objectAtIndex:row];
@@ -340,12 +295,40 @@
 }
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    if (pickerView == positionpicker) {
-        if (![[positionvalues objectAtIndex:row] isEqualToString:@"None"])
-            _positionTextField.text = [positionvalues objectAtIndex:row];
-        else
+    if (pickerView == _positionPicker) {
+        if (![[positionvalues objectAtIndex:row] isEqualToString:@"None"]) {
+            
+            if (_addPositionControl.selectedSegmentIndex == 0) {
+                if (_positionTextField.text.length > 0) {
+                    _positionTextField.text = [_positionTextField.text stringByAppendingFormat:@"%@%@", @"/", [positionvalues objectAtIndex:row]];
+                } else {
+                    _positionTextField.text = [positionvalues objectAtIndex:row];
+                }
+            } else {
+                if (_positionTextField.text.length > 0) {
+                    NSArray *positions = [_positionTextField.text componentsSeparatedByString:@"/"];
+                    if (positions.count == 1)
+                        _positionTextField.text = @"";
+                    else {
+                        for (int i = 0; i < positions.count; i++) {
+                            NSString *aposition = [positions objectAtIndex:i];
+                            if (![aposition isEqualToString:[positionvalues objectAtIndex:row]]) {
+                                if (i > 0)
+                                    _positionTextField.text = [_positionTextField.text stringByAppendingString:@"/"];
+                                
+                                _positionTextField.text = [positions objectAtIndex:i];
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
             _positionTextField.text = @"";
-    } else if (pickerView == heightpicker) {
+        }
+        
+        [_addPositionControl setSelectedSegmentIndex:UISegmentedControlNoSegment];
+        _positionPicker.hidden = YES;
+    } else if (pickerView == _heightPicker) {
         switch (component) {
             case 0:
                 heighttext = [height objectAtIndex:row];
@@ -353,18 +336,10 @@
                 
             case 1:
                 _heightTextField.text = [NSString stringWithFormat:@"%@%@%@", heighttext, @"-", [inches objectAtIndex:row]];
+                _heightPicker.hidden = YES;
                 break;
         }
      }
-}
-
-- (void)dismissActionSheet:(id)sender {
-    [_positionTextField resignFirstResponder];
-    [_heightTextField resignFirstResponder];
-    if (_heightTextField.text.length == 0)
-        _heightTextField.text = player.height;
-    if (_weightTextField.text.length == 0)
-        _weightTextField.text = [player.weight stringValue];
 }
 
 - (IBAction)camerarollButtonClicked:(id)sender {
@@ -452,8 +427,14 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     if ((textField == _seasonTextField) || (textField == _gradeageclassTextField) ||
-        (textField == _numberTextField) || (textField == _weightTextField))
+        (textField == _numberTextField) || (textField == _weightTextField)) {
         textField.text = @"";
+    } else if (textField == _positionTextField) {
+        [_positionTextField resignFirstResponder];
+    } else if (textField == _heightTextField) {
+        [_heightTextField resignFirstResponder];
+        _heightPicker.hidden = NO;
+    }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
@@ -461,6 +442,8 @@
         _numberTextField.text = @"0";
     else if ((textField == _weightTextField) && (_weightTextField.text.length == 0))
         _weightTextField.text = @"0";
+    else if (textField == _positionTextField)
+        _positionPicker.hidden = YES;
 }
 
 - (IBAction)warningDeleteButtonClicked:(id)sender {
@@ -481,9 +464,9 @@
     } else if ([segue.identifier isEqualToString:@"PlayerVideosSegue"]) {
         VideosViewController *destController = segue.destinationViewController;
         destController.player = player;
-    } else if ([segue.identifier isEqualToString:@"PlayerInfoSegue"]) {
-//        PlayerStatsCollectionViewController *destController = segue.destinationViewController;
-//        destController.player = player;
+    } else if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
+        SoccerPlayerStatsViewController *destController = segue.destinationViewController;
+        destController.athlete = player;
     }
 }
 
@@ -593,4 +576,27 @@
     } else
         return YES;
 }
+
+- (IBAction)addPositionControl:(id)sender {
+    
+    positionkeys = [currentSettings.sport.playerPositions allKeys];
+    positionvalues = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < [positionkeys count]; i++)
+        [positionvalues addObject:[currentSettings.sport.playerPositions objectForKey:[positionkeys objectAtIndex:i]]];
+    
+    [_positionPicker reloadAllComponents];
+    _positionPicker.hidden = NO;
+}
+
+- (IBAction)statsButtonClicked:(id)sender {
+    _soccerStatsContainer.hidden = NO;
+    _doneButton.enabled = YES;
+}
+
+- (IBAction)doneButtonClicked:(id)sender {
+    _soccerStatsContainer.hidden = YES;
+    _doneButton.enabled = NO;
+}
+
 @end

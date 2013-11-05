@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "BasketballStats.h"
+#import "Stats.h"
+#import "FootballStats.h"
+#import "Soccer.h"
 
 @interface Athlete : NSObject
 
@@ -36,16 +39,28 @@
 @property(nonatomic, assign) BOOL hasvideos;
 @property(nonatomic, assign) BOOL processing;
 
+@property(nonatomic, strong) NSMutableArray *football_stats;
+@property(nonatomic, strong) Stats *stats;
+
 @property(nonatomic, strong) NSMutableArray *basketball_stats;
+
+@property(nonatomic, strong) NSMutableArray *soccer_stats;
 
 @property(nonatomic, strong) UIImage *thumbimage;
 @property(nonatomic, strong) UIImage *tinyimage;
 @property(nonatomic, strong) UIImage *mediumimage;
 
+
 - (id)initWithDictionary:(NSDictionary *)athleteDictionary;
 
-//- (BasketballStats *)findGameStatEntries:(NSString *)gameid;
-//- (void)updateGameStats:(BasketballStats *)bballstats Game:(NSString *)gameid;
+- (FootballStats *)findFootballGameStatEntries:(NSString *)gameid;
+
+- (BasketballStats *)findBasketballGameStatEntries:(NSString *)gameid;
+- (void)updateBasketballGameStats:(BasketballStats *)bballstats Game:(NSString *)gameid;
+
+- (Soccer *)findSoccerGameStats:(NSString *)gameid;
+- (void)updateSoccerGameStats:(Soccer *)soccerstat Game:(NSString *)gameid;
+- (BOOL)isSoccerGoalie;
 
 - (UIImage *)getImage:(NSString *)size;
 

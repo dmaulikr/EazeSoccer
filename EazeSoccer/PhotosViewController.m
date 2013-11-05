@@ -269,10 +269,7 @@
     if (responseStatusCode == 200) {
         photos = [[NSMutableArray alloc] init];
         for (int i = 0; i < [serverData count]; i++) {
-            NSDictionary *items = [serverData objectAtIndex:i];
-            Photo *photo = [[Photo alloc] init];
-            [photo parsePhoto:items];
-            [photos addObject:photo];
+            [photos addObject:[[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]]];
         }
         [_activityIndicator stopAnimating];
         [_collectionView reloadData];

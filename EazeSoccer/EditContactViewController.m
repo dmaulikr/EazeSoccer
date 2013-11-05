@@ -43,14 +43,6 @@
     _mobileTextField.keyboardType = UIKeyboardTypeNumberPad;
     _emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
     _deleteButton.layer.cornerRadius = 4;
-    
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
-    [_scrollView addGestureRecognizer:singleTap];
-}
-
-- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
-    CGPoint touchPoint = [gesture locationInView:_scrollView];
-    [self.view endEditing:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -102,7 +94,7 @@
                                      _faxTextField.text , @"fax", _emailTextField.text, @"email", nil];
         
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:teamDict, @"contact", nil];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (jsonSerializationError) {
         NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
@@ -125,22 +117,14 @@
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     NSDictionary *contactData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     if ([httpResponse statusCode] == 200) {
-        contact.title = [contactData objectForKey:@"title"];
-        contact.name = [contactData objectForKey:@"name"];
-        contact.phone = [contactData objectForKey:@"phone"];
-        contact.mobile = [contactData objectForKey:@"mobile"];
-        contact.fax = [contactData objectForKey:@"fax"];
-        contact.email = [contactData objectForKey:@"email"];
+        contact = [[Contact alloc] initWithDirectory:contactData];
+        contact.contactid = [contactData objectForKey:@"_id"];
         
         if (newcontact)
             newcontact = NO;
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
-                                                        message:@"Contact Updated!"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } else {
+        [self.navigationController popViewControllerAnimated:YES];
+     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating contact"
                                                         message:[contactData objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -157,26 +141,12 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        NSURL *url = [NSURL URLWithString:[sportzServerInit getContact:contact.contactid Token:currentSettings.user.authtoken]];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-        NSURLResponse* response;
-        NSError *error = nil;
-        NSDictionary *jsonDict = [[NSDictionary alloc] init];
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&error];
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPMethod:@"DELETE"];
-        [request setHTTPBody:jsonData];
-        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-        int responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
-        NSDictionary *confirmDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         
-        if (responseStatusCode == 200) {
+        if (![contact initDeleteContact]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Contact Delete Successful!"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
-            contact = nil;
             _contacttitleTextField.text = @"";
             _emailTextField.text = @"";
             _contactnameTextField.text = @"";
@@ -185,8 +155,7 @@
             _phoneTextField.text = @"";
             [self viewWillAppear:YES];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Contact"
-                                                            message:[NSString stringWithFormat:@"%d", responseStatusCode]
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Contact" message:[contact httperror]
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];

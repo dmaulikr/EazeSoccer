@@ -49,6 +49,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+    self.navigationItem.hidesBackButton = YES;
     Sport *thesport;
     
     if (sport)

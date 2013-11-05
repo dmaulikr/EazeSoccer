@@ -224,7 +224,7 @@
     
     NSDictionary *jsonDict = [[NSDictionary alloc] init];
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
@@ -314,7 +314,7 @@
     
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:blogdata, @"blog", nil];
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -342,7 +342,7 @@
         [alert show];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating blog data"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                        message:[serverData objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];

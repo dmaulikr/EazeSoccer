@@ -17,6 +17,7 @@
 #import "EditPlayerViewController.h"
 #import "EditUserViewController.h"
 #import "EditGameViewController.h"
+#import "EditTeamViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -427,6 +428,9 @@
         destController.theuser = user;
     } else if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
         playerSelectController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"TeamInfoSegue"]) {
+        EditTeamViewController *destController = segue.destinationViewController;
+        destController.team = currentSettings.team;
     }
 }
 
@@ -441,7 +445,7 @@
     
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:tagDict, @"videoclip", nil];
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -462,7 +466,7 @@
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     if ([httpResponse statusCode] != 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                        message:[json objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -480,7 +484,7 @@
     
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:tagDict, @"videoclip", nil];
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -501,7 +505,7 @@
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     if ([httpResponse statusCode] != 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating videoclip data"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                        message:[json objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -697,7 +701,7 @@
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:photoDict, @"videoclip", nil];
     
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -720,7 +724,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     if ([httpResponse statusCode] == 200) {
         NSDictionary *items = [serverData objectForKey:@"videoclip"];
-        [video parseVideoItems:items];
+        video = [[Video alloc] initWithDirectory:items];
         
         if (newVideo) {
             video.videoid= [items objectForKey:@"_id"];
@@ -802,11 +806,20 @@
     if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
         // Code here to support video if enabled
         videoselected = YES;
-        moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] path];
+        moviePath = (NSString *)[[info objectForKey:UIImagePickerControllerMediaURL] path];
         _videoImageView.image = (UIImage*) [info objectForKey:UIImagePickerControllerOriginalImage];
         NSURL *url = [[NSURL alloc] initFileURLWithPath:moviePath];
         MPMoviePlayerController *player = [[MPMoviePlayerController alloc] initWithContentURL:url];
-       _videoImageView.image = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+//       _videoImageView.image = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+        AVURLAsset *asset1 = [[AVURLAsset alloc] initWithURL:url options:nil];
+        AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
+        generate1.appliesPreferredTrackTransform = YES;
+        NSError *err = NULL;
+        CMTime time = CMTimeMake(1, 2);
+        CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
+        UIImage *one = [[UIImage alloc] initWithCGImage:oneRef];
+        [_videoImageView setImage:one];
+        _videoImageView.contentMode = UIViewContentModeScaleAspectFit;
         [player stop];
     }
 }
@@ -855,7 +868,7 @@
         NSMutableURLRequest *urlrequest = [NSMutableURLRequest requestWithURL:url];
         NSDictionary *jsonDict = [[NSDictionary alloc] init];
         NSError *jsonSerializationError = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
         
         if (!jsonSerializationError) {
             NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -878,7 +891,7 @@
             [self.navigationController popViewControllerAnimated:YES];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Video"
-                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                            message:[photoDict objectForKey:@"error"]
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];

@@ -102,6 +102,7 @@
     NSString *WonLost;
     
     NSDate *now = [NSDate date];
+    
     if (gamedate < now) {
         if (homeFinal > visitorFinal)
             WonLost = [NSString stringWithFormat:@"W "];

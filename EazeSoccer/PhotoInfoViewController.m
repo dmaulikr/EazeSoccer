@@ -17,6 +17,7 @@
 #import "EditUserViewController.h"
 #import "PlayerSelectionViewController.h"
 #import "EditGameViewController.h"
+#import "EditTeamViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -257,6 +258,9 @@
         destController.theuser = user;
     } else if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
         playerSelectController = segue.destinationViewController;
+    } else if (([segue.identifier isEqualToString:@"TeamInfoSegue"])) {
+        EditTeamViewController *destController = segue.destinationViewController;
+        destController.team = currentSettings.team;
     }
 }
 
@@ -692,7 +696,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     if ([httpResponse statusCode] == 200) {
         NSDictionary *items = [serverData objectForKey:@"photo"];
-        [photo parsePhoto:items];
+        photo = [[Photo alloc] initWithDirectory:items];
         
         if (newPhoto) {
             photo.photoid = [items objectForKey:@"_id"];

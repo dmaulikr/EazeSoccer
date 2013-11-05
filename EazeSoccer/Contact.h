@@ -18,4 +18,9 @@
 @property(nonatomic, strong) NSString *email;
 @property(nonatomic, strong) NSString *contactid;
 
+@property(nonatomic, strong) NSString *httperror;
+
+- (id)initWithDirectory:(NSDictionary *)contactDirectory;
+- (id)initDeleteContact;
+
 @end

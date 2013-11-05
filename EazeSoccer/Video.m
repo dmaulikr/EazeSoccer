@@ -35,27 +35,33 @@
         return nil;
 }
 
-- (void)parseVideoItems:(NSDictionary *)items {
-    if ((NSNull *)[items objectForKey:@"poster_url"] != [NSNull null])
-        self.poster_url = [items objectForKey:@"poster_url"];
-    else
-        self.poster_url = @"";
-    
-    if ((NSNull *)[items objectForKey:@"video_url"] != [NSNull null])
-        self.video_url = [items objectForKey:@"video_url"];
-    else
-        self.video_url = @"";
-    
-    self.description = [items objectForKey:@"description"];
-    self.displayName = [items objectForKey:@"displayname"];
-    self.teamid = [items objectForKey:@"teamid"];
-    self.schedule = [items objectForKey:@"gameschedule"];
-    self.videoid = [items objectForKey:@"id"];
-    self.players = [items objectForKey:@"players"];
-    self.userid = [items objectForKey:@"user_id"];
-    self.resolution = [items objectForKey:@"resolution"];
-    self.duration = [items objectForKey:@"duration"];
-    self.gamelog = [items objectForKey:@"gamelog"];
+- (id)initWithDirectory:(NSDictionary *)items {
+    if ((self = [super init]) && (items.count > 0)) {
+        if ((NSNull *)[items objectForKey:@"poster_url"] != [NSNull null])
+            self.poster_url = [items objectForKey:@"poster_url"];
+        else
+            self.poster_url = @"";
+        
+        if ((NSNull *)[items objectForKey:@"video_url"] != [NSNull null])
+            self.video_url = [items objectForKey:@"video_url"];
+        else
+            self.video_url = @"";
+        
+        self.description = [items objectForKey:@"description"];
+        self.displayName = [items objectForKey:@"displayname"];
+        self.teamid = [items objectForKey:@"teamid"];
+        self.schedule = [items objectForKey:@"gameschedule"];
+        self.videoid = [items objectForKey:@"id"];
+        self.players = [items objectForKey:@"players"];
+        self.userid = [items objectForKey:@"user_id"];
+        self.resolution = [items objectForKey:@"resolution"];
+        self.duration = [items objectForKey:@"duration"];
+        self.gamelog = [items objectForKey:@"gamelog"];
+        
+        return self;
+    } else {
+        return nil;
+    }
 }
 
 @end

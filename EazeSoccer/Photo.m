@@ -33,30 +33,36 @@
         return nil;
 }
 
-- (void)parsePhoto:(NSDictionary *)items {
-    if ((NSNull *)[items objectForKey:@"large_url"] != [NSNull null])
-        self.large_url = [items objectForKey:@"large_url"];
-    else
-        self.large_url = @"";
+- (id)initWithDirectory:(NSDictionary *)items {
+    if ((self = [super self]) && (items.count > 0)) {
+        if ((NSNull *)[items objectForKey:@"large_url"] != [NSNull null])
+            self.large_url = [items objectForKey:@"large_url"];
+        else
+            self.large_url = @"";
+        
+        if ((NSNull *)[items objectForKey:@"medium_url"] != [NSNull null])
+            self.medium_url = [items objectForKey:@"medium_url"];
+        else
+            self.medium_url = @"";
+        
+        if ((NSNull *)[items objectForKey:@"thumbnail_url"] != [NSNull null])
+            self.thumbnail_url = [items objectForKey:@"thumbnail_url"];
+        else
+            self.thumbnail_url = @"";
+        
+        self.description = [items objectForKey:@"description"];
+        self.displayname = [items objectForKey:@"displayname"];
+        self.teamid = [items objectForKey:@"teamid"];
+        self.schedule = [items objectForKey:@"gameschedule"];
+        self.photoid = [items objectForKey:@"id"];
+        self.owner = [items objectForKey:@"user"];
+        self.players = [items objectForKey:@"players"];
+        self.gamelog = [items objectForKey:@"gamelog"];
     
-    if ((NSNull *)[items objectForKey:@"medium_url"] != [NSNull null])
-        self.medium_url = [items objectForKey:@"medium_url"];
-    else
-        self.medium_url = @"";
-    
-    if ((NSNull *)[items objectForKey:@"thumbnail_url"] != [NSNull null])
-        self.thumbnail_url = [items objectForKey:@"thumbnail_url"];
-    else
-        self.thumbnail_url = @"";
-    
-    self.description = [items objectForKey:@"description"];
-    self.displayname = [items objectForKey:@"displayname"];
-    self.teamid = [items objectForKey:@"teamid"];
-    self.schedule = [items objectForKey:@"gameschedule"];
-    self.photoid = [items objectForKey:@"id"];
-    self.owner = [items objectForKey:@"user"];
-    self.players = [items objectForKey:@"players"];
-    self.gamelog = [items objectForKey:@"gamelog"];
+        return  self;
+    } else {
+        return nil;
+    }
 }
 
 @end

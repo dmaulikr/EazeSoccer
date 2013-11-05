@@ -26,6 +26,6 @@
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) NSMutableArray *athletes;
 
-- (void)parsePhoto:(NSDictionary *)items;
+- (id)initWithDirectory:(NSDictionary *)items;
 
 @end

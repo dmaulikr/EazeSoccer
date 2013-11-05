@@ -8,7 +8,6 @@
 
 #import "sportzCurrentSettings.h"
 #import "sportzServerInit.h"
-#import "sportzteamsCoachDataJSON.h"
 
 @implementation sportzCurrentSettings {
     AmazonS3Client *s3;

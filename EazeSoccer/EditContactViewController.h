@@ -14,7 +14,6 @@
 
 @property(nonatomic, strong) Contact *contact;
 
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UITextField *contacttitleTextField;
 @property (weak, nonatomic) IBOutlet UITextField *contactnameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneTextField;

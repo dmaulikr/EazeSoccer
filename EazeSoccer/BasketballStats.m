@@ -47,4 +47,26 @@
         return nil;
 }
 
+- (id)initWithDirectory:(NSDictionary *)basketballStatDirectory {
+    if ((self = [super init]) && (basketballStatDirectory.count > 0)) {
+        twoattempt = [basketballStatDirectory objectForKey:@"twoattempt"];
+        twomade = [basketballStatDirectory objectForKey:@"twomade"];
+        threeattempt = [basketballStatDirectory objectForKey:@"threeattempt"];
+        threemade = [basketballStatDirectory objectForKey:@"threemade"];
+        ftattempt = [basketballStatDirectory objectForKey:@"ftattempt"];
+        ftmade = [basketballStatDirectory objectForKey:@"ftmade"];
+        fouls = [basketballStatDirectory objectForKey:@"fouls"];
+        assists = [basketballStatDirectory objectForKey:@"assists"];
+        steals = [basketballStatDirectory objectForKey:@"steals"];
+        blocks = [basketballStatDirectory objectForKey:@"blocks"];
+        offrebound = [basketballStatDirectory objectForKey:@"offrebound"];
+        defrebound = [basketballStatDirectory objectForKey:@"defrebound"];
+        basketball_stat_id = [basketballStatDirectory objectForKey:@"basketball_stat_id"];
+        gameschedule_id = [basketballStatDirectory objectForKey:@"gameschedule_id"];
+        return self;
+    } else {
+        return nil;
+    }
+}
+
 @end

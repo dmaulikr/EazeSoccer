@@ -28,6 +28,6 @@
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) NSMutableArray *athletes;
 
-- (void)parseVideoItems:(NSDictionary *)items;
+- (id)initWithDirectory:(NSDictionary *)items;
 
 @end

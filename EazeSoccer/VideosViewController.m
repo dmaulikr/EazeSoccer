@@ -109,15 +109,11 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [_activityIndicator stopAnimating];
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:nil error:nil];
-    NSLog(@"%@", serverData);
     
     if (responseStatusCode == 200) {
         videos = [[NSMutableArray alloc] init];
         for (int i = 0; i < [serverData count]; i++) {
-            NSDictionary *items = [serverData objectAtIndex:i];
-            Video *video = [[Video alloc] init];
-            [video parseVideoItems:items];
-            [videos addObject:video];
+            [videos addObject:[[Video alloc] initWithDirectory:[serverData objectAtIndex:i]]];
         }
         [_collectionView reloadData];
         

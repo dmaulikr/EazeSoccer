@@ -14,7 +14,8 @@
 
 @property(nonatomic,strong) Athlete *player;
 
-@property (weak, nonatomic) IBOutlet UIButton *statsButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
+- (IBAction)statsButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UITextField *lastnameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *firstnameTextField;
@@ -36,5 +37,12 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UIButton *videosButton;
 @property (weak, nonatomic) IBOutlet UIButton *photosButton;
+@property (weak, nonatomic) IBOutlet UIPickerView *positionPicker;
+- (IBAction)addPositionControl:(id)sender;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *addPositionControl;
+@property (weak, nonatomic) IBOutlet UIPickerView *heightPicker;
+@property (weak, nonatomic) IBOutlet UIView *soccerStatsContainer;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+- (IBAction)doneButtonClicked:(id)sender;
 
 @end
