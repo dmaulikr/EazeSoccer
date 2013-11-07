@@ -25,7 +25,9 @@
 
 @property(nonatomic, strong) NSString *gameschedule_id;
 @property(nonatomic, strong) NSString *basketball_stat_id;
+@property(nonatomic, strong) NSString *athleteid;
 
-- (id)initWithDirectory:(NSDictionary *)basketballStatDirectory;
+- (id)initWithDirectory:(NSDictionary *)basketballStatDirectory AthleteId:(NSString *)playerid;
+- (id)copyWithZone:(NSZone *)zone;
 
 @end

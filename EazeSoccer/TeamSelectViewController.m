@@ -49,14 +49,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.tabBarController.tabBar.hidden = YES;
-    self.navigationItem.hidesBackButton = YES;
     Sport *thesport;
+    
+    if (!currentSettings.team) {
+        self.tabBarController.tabBar.hidden = YES;
+        self.navigationItem.hidesBackButton = YES;
+    }
     
     if (sport)
         thesport = sport;
-    else
+    else {
         thesport = currentSettings.sport;
+    }
     
     NSURL *url = [NSURL URLWithString:[sportzServerInit getTeams:thesport.id Token:currentSettings.user.authtoken]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -156,6 +160,7 @@
         EditTeamViewController *destController = segue.destinationViewController;
         destController.team = nil;
     } else {
+        sport = nil;
         NSIndexPath *indexPath = [_teamTableView indexPathForSelectedRow];
         
         if (indexPath.length > 0) {

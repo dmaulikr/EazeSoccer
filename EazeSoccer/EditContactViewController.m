@@ -73,8 +73,8 @@
                           initWithTitle: @"Confirm Delete"
                           message: @"Click Confirm Delete Button to Delete Contact?"
                           delegate: self
-                          cancelButtonTitle:@"Cancel"
-                          otherButtonTitles:@"Confirm", nil];
+                          cancelButtonTitle:@"Confirm"
+                          otherButtonTitles:@"Cancel", nil];
     [alert show];
 }
 
@@ -143,17 +143,7 @@
     if([title isEqualToString:@"Confirm"]) {
         
         if (![contact initDeleteContact]) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Contact Delete Successful!"
-                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-            _contacttitleTextField.text = @"";
-            _emailTextField.text = @"";
-            _contactnameTextField.text = @"";
-            _mobileTextField.text = @"";
-            _faxTextField.text = @"";
-            _phoneTextField.text = @"";
-            [self viewWillAppear:YES];
+            [self.navigationController popViewControllerAnimated:YES];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Contact" message:[contact httperror]
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

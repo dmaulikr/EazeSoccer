@@ -88,10 +88,10 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        deleteIndexPath = [self.playerTableView indexPathForSelectedRow];
+        deleteIndexPath = indexPath;
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
                                                         message:@"All Athlete data will be lost. Click Confirm to Proceed"
-                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
+                                                       delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -101,7 +101,7 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if ([currentSettings deletePlayer:[self.rosterdata objectAtIndex:deleteIndexPath.row]]) {
+        if (![[self.rosterdata objectAtIndex:deleteIndexPath.row] initDeleteAthlete]) {
             [self viewWillAppear:YES];
         }
     }

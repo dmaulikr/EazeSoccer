@@ -16,7 +16,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-@interface EditUserViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate>
+@interface EditUserViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate,
+                                      AmazonServiceRequestDelegate>
 
 @end
 
@@ -225,7 +226,8 @@
     
     if (responseStatusCode == 200) {
         NSLog(@"%@", userdata);
-        user = [[User alloc] initWithDictionary:userdata];
+        user = [[User alloc] initWithDictionary:[userdata objectForKey:@"user"]];
+        user.userid = [[userdata objectForKey:@"user"] objectForKey:@"_id"];
          
         if ([user.userid isEqualToString:currentSettings.user.userid]) {
             currentSettings.user = user;
@@ -350,22 +352,7 @@
     por.contentType = @"image/jpeg";
 
     UIImage *image = _userimage.image;
-    UIImage *originalImage = _userimage.image;
-    CGAffineTransform transform = _userimage.transform;
-    
-    if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationRight];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationDown];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2 * 3))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationLeft];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 2))) {
-        image = originalImage; // UIImageOrientationUp
-    }
-    
-    _userimage.image = image;
-    
-    NSData *imageData = UIImageJPEGRepresentation(_userimage.image, 1.0);
+    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
     por.data = imageData;
     por.delegate = self;
     

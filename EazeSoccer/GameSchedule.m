@@ -7,6 +7,7 @@
 //
 
 #import "GameSchedule.h"
+#import "EazesportzAppDelegate.h"
 
 @implementation GameSchedule
 
@@ -21,7 +22,13 @@
 @synthesize opponent_name;
 @synthesize opponent_mascot;
 @synthesize opponentpic;
+@synthesize gameisfinal;
+@synthesize lastplay;
+@synthesize homescore;
+@synthesize opponentscore;
+
 @synthesize game_name;
+
 @synthesize homeq1;
 @synthesize homeq2;
 @synthesize homeq3;
@@ -33,7 +40,6 @@
 @synthesize penalty;
 @synthesize firstdowns;
 @synthesize penaltyyards;
-@synthesize lastplay;
 @synthesize possession;
 @synthesize ballon;
 @synthesize own;
@@ -41,18 +47,23 @@
 @synthesize our;
 @synthesize down;
 @synthesize currentqtr;
-@synthesize gameisfinal;
+
 @synthesize togo;
 
-@synthesize homescore;
-@synthesize opponentscore;
 @synthesize hometimeouts;
 @synthesize opoonenttimeouts;
+
 @synthesize homefouls;
 @synthesize visitorfouls;
 @synthesize homebonus;
 @synthesize visitorbonus;
 @synthesize period;
+
+@synthesize socceroppck;
+@synthesize socceroppsaves;
+@synthesize socceroppsog;
+
+@synthesize httperror;
 
 - (id)initWithDictionary:(NSDictionary *)gameScheduleDictionary {
     if ((self = [super init]) && (gameScheduleDictionary.count > 0)) {
@@ -98,6 +109,10 @@
         visitorbonus = [[gameScheduleDictionary objectForKey:@"visitorbonus"] boolValue];
         visitorfouls = [gameScheduleDictionary objectForKey:@"opponentfouls"];
         period = [gameScheduleDictionary objectForKey:@"currentperiod"];
+        
+        socceroppsog = [gameScheduleDictionary objectForKey:@"socceroppsog"];
+        socceroppsaves = [gameScheduleDictionary objectForKey:@"socceroppsaves"];
+        socceroppck = [gameScheduleDictionary objectForKey:@"socceroppck"];
         
         /*
          NSMutableArray *gamelogs = [gameScheduleDictionary objectForKey:@"gamelogs"];
@@ -153,4 +168,124 @@
     return gamelog;
 }
 */
+
+- (BOOL)saveGameschedule {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
+    NSURL *url;
+    
+    if (self.id) {
+        url = [NSURL URLWithString:[serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/teams/",
+                                    currentSettings.team.teamid, @"/gameschedules/", self.id, @".json?auth_token=", currentSettings.user.authtoken]];
+    } else {
+        url = [NSURL URLWithString:[serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/teams/",
+                                    currentSettings.team.teamid, @"/gameschedules.json?auth_token=", currentSettings.user.authtoken]];
+    }
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    [formatter setDateFormat:@"yyyy-MM-dd"];
+//    NSDate *pickerDate = [formatter dateFromString:startdate];
+//    [formatter setDateFormat:@"yyyy-MM-dd"];
+    
+    NSArray *time = [starttime componentsSeparatedByString:@":"];
+    
+    NSMutableDictionary *gamedict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:opponent, @"opponent",
+                                     opponent_mascot, @"opponent_mascot", location, @"location",
+                                     event, @"event", startdate, @"gamedate",
+                                     [time objectAtIndex:0], @"starttime(4i)", [time objectAtIndex:1], @"starttime(5i)",
+                                     homeaway, @"homeaway", [homescore stringValue], @"homescore",
+                                     [opponentscore stringValue], @"opponentscore", [[NSNumber numberWithBool:leaguegame] stringValue], @"league", nil];
+    
+    if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+        [gamedict setValue:[socceroppsog stringValue] forKey:@"socceroppsog"];
+        [gamedict setValue:[socceroppsaves stringValue] forKey:@"socceroppsaves"];
+        [gamedict setValue:[socceroppck stringValue] forKey:@"socceroppck"];
+        [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
+        NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
+        [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
+        [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
+    } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+        
+    }
+    
+    NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
+    [jsonDict setValue:gamedict forKey:@"gameschedule"];
+    NSError *jsonSerializationError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    
+    if (!self.id) {
+        [request setHTTPMethod:@"POST"];
+    } else {
+        [request setHTTPMethod:@"PUT"];
+    }
+    
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    if ([httpResponse statusCode] == 200) {
+        return YES;
+    } else {
+        httperror = [serverData objectForKey:@"error"];
+        return NO;
+    }
+}
+
+- (id)initDeleteGame {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                       @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules/", self.id,
+                                        @".json?auth_token=", currentSettings.user.authtoken]];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *error = nil;
+    NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
+    NSError *jsonSerializationError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPMethod:@"DELETE"];
+    [request setHTTPBody:jsonData];
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    if ([httpResponse statusCode] == 200) {
+        self = nil;
+        return self;
+    } else {
+        httperror = [serverData objectForKey:@"error"];
+        return  self;
+    }
+}
+
 @end

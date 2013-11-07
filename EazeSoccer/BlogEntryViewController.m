@@ -21,7 +21,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface BlogEntryViewController ()
+@interface BlogEntryViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -158,7 +158,7 @@
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                         message:@"Cannot post a blank comment"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -219,39 +219,10 @@
 }
 
 - (IBAction)deleteButtonClicked:(id)sender {
-    NSURL *aurl = [NSURL URLWithString:[sportzServerInit deleteBlog:blog.blogid Token:currentSettings.user.authtoken]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
-    
-    NSDictionary *jsonDict = [[NSDictionary alloc] init];
-    NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPMethod:@"DELETE"];
-    [request setHTTPBody:jsonData];
-    
-    //Capturing server response
-    NSURLResponse* response;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-    NSLog(@"%@", serverData);
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    if ([httpResponse statusCode] == 200) {
-        [self.navigationController popViewControllerAnimated:YES];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete sucessful!"
-                                                        message:@"Blog entry deleted"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error deleting blog"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm" message:@"Delete Blog Entry?"
+                                                   delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -335,11 +306,7 @@
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     if ([httpResponse statusCode] == 200) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update sucessful!"
-                                                        message:@"Blog data updated"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [self.navigationController popViewControllerAnimated:YES];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating blog data"
                                                         message:[serverData objectForKey:@"error"]
@@ -384,6 +351,21 @@
         [_tagCoachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     }
     _coachContainer.hidden = YES;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if([title isEqualToString:@"Confirm"]) {
+        if (![blog initDeleteBlog]) {
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error deleting blog" message:[blog httperror]
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
+    }
 }
 
 @end

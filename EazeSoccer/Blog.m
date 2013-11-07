@@ -7,6 +7,7 @@
 //
 
 #import "Blog.h"
+#import "EazesportzAppDelegate.h"
 
 @implementation Blog
 
@@ -27,6 +28,8 @@
 
 @synthesize thumbimage;
 @synthesize tinyimage;
+
+@synthesize httperror;
 
 - (id)initWithDictionary:(NSDictionary *)blogDictionary {
     if ((self = [super init]) && (blogDictionary.count > 0)) {
@@ -58,6 +61,37 @@
     } else {
         return nil;
     }
+}
+
+- (id)initDeleteBlog {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/blogs/", blogid, @".json?auth_token=",
+                                        currentSettings.user.authtoken]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    
+    NSDictionary *jsonDict = [[NSDictionary alloc] init];
+    NSError *jsonSerializationError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPMethod:@"DELETE"];
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    if ([httpResponse statusCode] == 200) {
+        self = nil;
+    } else {
+        httperror = [serverData objectForKey:@"error"];
+    }
+    return self;
 }
 
 @end

@@ -449,7 +449,7 @@
 - (IBAction)warningDeleteButtonClicked:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
                                                     message:@"All Athlete data will be lost. Click Confirm to Proceed"
-                                                   delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
+                                                   delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }
@@ -474,8 +474,13 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if ([currentSettings deletePlayer:player]) {
-            [self.navigationController popToRootViewControllerAnimated:YES];
+        if (![player initDeleteAthlete]) {
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[player httperror]
+                                                           delegate:nil cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
         }
     }
 }
@@ -491,22 +496,7 @@
     por.contentType = @"image/jpeg";
     
     UIImage *image = _playerImage.image;
-    UIImage *originalImage = _playerImage.image;
-    CGAffineTransform transform = _playerImage.transform;
-    
-    if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationRight];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationDown];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2 * 3))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationLeft];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 2))) {
-        image = originalImage; // UIImageOrientationUp
-    }
-    
-    _playerImage.image = image;
-
-    NSData *imageData = UIImageJPEGRepresentation(_playerImage.image, 1.0);
+    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
     por.data = imageData;
     int imagesize = imageData.length;
     por.delegate = self;

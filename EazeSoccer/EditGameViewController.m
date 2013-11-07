@@ -43,20 +43,10 @@
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
     
-    _homescoreLabel.layer.cornerRadius = 4;
-    _visitorscoreLabel.layer.cornerRadius = 4;
     _selectDateButton.layer.cornerRadius = 6;
     _selectDateButton.backgroundColor = [UIColor greenColor];
     _homeScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
     _visitorScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
-    
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
-    [_scrollView addGestureRecognizer:singleTap];    
-}
-
-- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
-    CGPoint touchPoint = [gesture locationInView:_scrollView];
-    [self.view endEditing:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,7 +77,14 @@
         _homeawayTextField.text = game.homeaway;
         _locationTextField.text = game.location;
         _eventTextField.text = game.event;
-        _gameDateTextField.text = game.startdate;
+        
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setDateFormat:@"yyyy-MM-dd"];
+        NSDate *gamedate = [dateFormat dateFromString:game.startdate];
+        [dateFormat setDateFormat:@"MM-dd-yyyy"];
+        
+        _gameDateTextField.text = [dateFormat stringFromDate:gamedate];
+        
         _gameTimeTextField.text = game.starttime;
         _homeScoreTextField.text = _homescoreLabel.text = [[game homescore] stringValue];
         _visitorScoreTextField.text = _visitorscoreLabel.text = [[game opponentscore] stringValue];
@@ -137,6 +134,7 @@
         else
             _visitorscoreLabel.text = _visitorScoreTextField.text;
     }
+    [textField resignFirstResponder];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -174,70 +172,38 @@
 - (IBAction)submitButtonClicked:(id)sender {
     if ((_opponentTextField.text.length > 0) && (_locationTextField.text.length > 0) && (_homeawayTextField.text.length > 0) &&
         (_gameDateTextField.text.length > 0) && (_gameTimeTextField.text.length > 0)) {
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-        NSURL *url = [NSURL URLWithString:[sportzServerInit updateGame:currentSettings.team.teamid Game:game.id
-                                                    Token:currentSettings.user.authtoken]];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
         NSArray *datetime = [[formatter stringFromDate:pickerDate] componentsSeparatedByString:@" "];
-        NSArray *time = [[datetime objectAtIndex:1] componentsSeparatedByString:@":"];
-        [formatter setDateFormat:@"yyyy-MM-dd"];
+//        NSArray *time = [[datetime objectAtIndex:1] componentsSeparatedByString:@":"];
+//        [formatter setDateFormat:@"yyyy-MM-dd"];
+        [formatter setDateFormat:@"HH:mm"];
+        NSString *timedata = [formatter stringFromDate:pickerDate];
+
+        if (!game)
+            game = [[GameSchedule alloc] init];
         
-        NSNumber *boolNumber = [NSNumber numberWithBool:[_leagueSwitch isOn]];
+        game.startdate = datetime[0];
+        game.starttime = timedata;
+        game.opponent = _opponentTextField.text;
+        game.opponent_mascot = _mascotTextField.text;
+        game.location = _locationTextField.text;
+        game.event = _eventTextField.text;
+        game.homeaway = _homeawayTextField.text;
+        game.homescore = [NSNumber numberWithInt:[_homeScoreTextField.text intValue]];
+        game.opponentscore = [NSNumber numberWithInt:[_visitorScoreTextField.text intValue]];
+        game.leaguegame = [_leagueSwitch isOn];
         
-        NSDictionary *gamedict = [[NSDictionary alloc] initWithObjectsAndKeys:[_opponentTextField text], @"opponent",
-                                  _mascotTextField.text, @"opponent_mascot", [_locationTextField text], @"location",
-                                  [_eventTextField text], @"event", [formatter stringFromDate:pickerDate], @"gamedate",
-                                  [time objectAtIndex:0], @"starttime(4i)", [time objectAtIndex:1], @"starttime(5i)",
-                                  [_homeawayTextField text], @"homeaway", _homeScoreTextField.text, @"homescore",
-                                  _visitorScoreTextField.text, @"opponentscore", [boolNumber stringValue], @"league", nil];
-        
-        NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
-        [jsonDict setValue:gamedict forKey:@"gameschedule"];
-        NSError *jsonSerializationError = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-        
-        if (!jsonSerializationError) {
-            NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            NSLog(@"Serialized JSON: %@", serJson);
-        } else {
-            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+        if (teamSelectController.team ) {
+             game.opponentpic = teamSelectController.team.team_logo;
         }
         
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-        
-        if (!game) {
-            [request setHTTPMethod:@"POST"];
-        } else {
-            [request setHTTPMethod:@"PUT"];
-        }
-        
-        [request setHTTPBody:jsonData];
-        
-        //Capturing server response
-        NSURLResponse* response;
-        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-        NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-        NSLog(@"%@", serverData);
-        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        
-        if ([httpResponse statusCode] == 200) {
-            if (!game) {
-                _deleteButton.enabled = YES;
-                _deleteButton.hidden = NO;
-            }
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Game Updated!"
-                                 delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
+        if ([game saveGameschedule]) {
+            [self.navigationController popViewControllerAnimated:YES];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Creating Game Data"
-                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                            message:[game httperror]
                                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
@@ -253,7 +219,7 @@
 
 - (IBAction)deleteButtonClicked:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You are about delete the game. All data will be lost!"
-                                                   delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
+                                                   delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }
@@ -271,8 +237,8 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if ([currentSettings deleteGame:game]) {
-            [self.navigationController popToRootViewControllerAnimated:YES];
+        if (![game initDeleteGame]) {
+            [self.navigationController popViewControllerAnimated:YES];
         }
     }
 }
@@ -292,7 +258,7 @@
             [teamSelectController viewWillAppear:YES];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You cannot select your team as an opponent!"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }

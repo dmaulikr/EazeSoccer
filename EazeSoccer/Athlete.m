@@ -47,6 +47,8 @@
 @synthesize tinyimage;
 @synthesize mediumimage;
 
+@synthesize httperror;
+
 - (id)init {
     if (self = [super init]) {
         if ([currentSettings.sport.name isEqualToString:@"Football"])
@@ -126,15 +128,14 @@
             
             for (int i = 0; i < [bballstats count]; i++) {
                 NSDictionary *entry = [bballstats objectAtIndex:i];
-                [basketball_stats addObject:[[BasketballStats alloc] initWithDirectory:[entry objectForKey:@"basketball_stats"]]];
+                [basketball_stats addObject:[[BasketballStats alloc] initWithDirectory:[entry objectForKey:@"basketball_stats"] AthleteId:athleteid]];
             }
         } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
             NSArray *soccerstats = [athleteDictionary objectForKey:@"soccers"];
             soccer_stats = [[NSMutableArray alloc] init];
             
             for (int i = 0; i < soccerstats.count; i++) {
-                NSDictionary *entry = [soccerstats objectAtIndex:i];
-                [soccer_stats addObject:[[Soccer alloc] initWithDirectory:[entry objectForKey:@"soccer"]]];
+                [soccer_stats addObject:[[Soccer alloc] initWithDirectory:[[soccerstats objectAtIndex:i] objectForKey:@"soccer"] AthleteId:athleteid]];
             }
         }
         
@@ -144,13 +145,46 @@
     }
 }
 
+- (id)initDeleteAthlete {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                       @"/sports/", currentSettings.sport.id, @"/athletes/", athleteid, @".json?auth_token=",
+                                       currentSettings.user.authtoken]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *error = nil;
+    NSDictionary *jsonDict = [[NSDictionary alloc] init];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPMethod:@"DELETE"];
+    [request setHTTPBody:jsonData];
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+    int responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if (responseStatusCode == 200) {
+        return nil;
+    } else {
+        httperror = [athdata objectForKey:@"error"];
+        return self;
+    }
+}
+
 - (BasketballStats *)findBasketballGameStatEntries:(NSString *)gameid {
-    BasketballStats *entry = nil;
+    BasketballStats *entry = [[BasketballStats alloc] init];
     for (int i = 0; i < [basketball_stats count]; i++) {
         if ([[[basketball_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid]) {
-            entry = [basketball_stats objectAtIndex:i];
+            entry = [[basketball_stats objectAtIndex:i] copy];
         }
     }
+    
+    if (entry.athleteid.length == 0) {
+        entry.athleteid = athleteid;
+        entry.gameschedule_id = gameid;
+    }
+
     return entry;
 }
 
@@ -169,12 +203,18 @@
 }
 
 - (Soccer *)findSoccerGameStats:(NSString *)gameid {
-    Soccer *entry = nil;
+    Soccer *entry = [[Soccer alloc] init];
     for (int i = 0; i < [soccer_stats count]; i++) {
         if ([[[soccer_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid]) {
-            entry = [soccer_stats objectAtIndex:i];
+            entry = [[soccer_stats objectAtIndex:i] copy];
         }
     }
+    
+    if (entry.athleteid.length == 0) {
+        entry.athleteid = athleteid;
+        entry.gameschedule_id = gameid;
+    }
+    
     return entry;
 }
 
@@ -192,6 +232,10 @@
     [soccer_stats addObject:soccerstat];
 }
 
+- (BOOL)saveSoccerGameStats:(NSString *)gameid {
+    return [[self findSoccerGameStats:gameid] saveStats];
+}
+
 - (BOOL)isSoccerGoalie {
     BOOL result = NO;
     
@@ -199,6 +243,16 @@
         if ([[soccer_stats objectAtIndex:i] goalieStats]) {
             result = YES;
             break;
+        }
+    }
+    
+    if (!result) {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        for (int i = 0; i < positions.count; i++) {
+            if ([[positions objectAtIndex:i] isEqualToString:@"GK"]) {
+                result = YES;
+                break;
+            }
         }
     }
     

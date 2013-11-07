@@ -13,7 +13,7 @@
 #import "NewsFeedEditViewController.h"
 #import "NewsTableCell.h"
 
-@interface NewsTableViewController ()
+@interface NewsTableViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -24,6 +24,8 @@
     int responseStatusCode;
     
     UIRefreshControl *refreshControl;
+    
+    NSIndexPath *deleteIndex;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -78,7 +80,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"NewsTableCell";
     NewsTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
@@ -116,7 +118,7 @@
     } else if (feeditem.coach.length > 0) {
         cell.imageView.image = [[currentSettings findCoach:feeditem.coach] getImage:@"thumb"];
     } else if (feeditem.team.length > 0) {
-        cell.imageView.image = [[currentSettings findTeam:feeditem.team] getImage:@"thumb"];
+        cell.imageView.image = [currentSettings.team getImage:@"thumb"];
     }
     return cell;
 }
@@ -134,8 +136,13 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
+        deleteIndex = indexPath;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm!" message:@"Delete News Entry?"
+                                                       delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+        
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 /*
@@ -236,6 +243,23 @@
     NSURL *url = [NSURL URLWithString:[sportzServerInit newsfeed:fromdate Token:currentSettings.user.authtoken]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if([title isEqualToString:@"Confirm"]) {
+        if (![[newsfeed objectAtIndex:deleteIndex.row] initDeleteNewsFeed]) {
+            [newsfeed removeObjectAtIndex:deleteIndex.row];
+            [self.tableView reloadData];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error deleting News Item"
+                                                            message:[[newsfeed objectAtIndex:deleteIndex.row] httperror]
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
+    }
 }
 
 @end

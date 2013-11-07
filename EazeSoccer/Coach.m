@@ -8,6 +8,8 @@
 
 #import "Coach.h"
 
+#import "EazesportzAppDelegate.h"
+
 @implementation Coach
 
 @synthesize lastname;
@@ -28,6 +30,8 @@
 @synthesize thumbimage;
 @synthesize tinyimage;
 
+@synthesize httperror;
+
 - (id)initWithDictionary:(NSDictionary *)coachDictionary {
     if ((self = [super init]) && (coachDictionary.count > 0)) {
         coachid = [coachDictionary objectForKey:@"id"];
@@ -46,6 +50,34 @@
         return self;
     } else {
         return nil;
+    }
+}
+
+- (id)initDeleteCoach {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                       @"/sports/", currentSettings.sport.id, @"/coaches/", coachid, @".json?auth_token=",
+                                       currentSettings.user.authtoken]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *error = nil;
+    NSDictionary *jsonDict = [[NSDictionary alloc] init];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPMethod:@"DELETE"];
+    [request setHTTPBody:jsonData];
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *coachdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if ([httpResponse statusCode] == 200) {
+        self = nil;
+        return self;
+    } else {
+        httperror = [coachdata objectForKey:@"error"];
+        return  self;
     }
 }
 

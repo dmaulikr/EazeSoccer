@@ -8,11 +8,13 @@
 
 #import "LiveSoccerStatsViewController.h"
 
-@interface LiveSoccerStatsViewController ()
+@interface LiveSoccerStatsViewController () <UIAlertViewDelegate>
 
 @end
 
-@implementation LiveSoccerStatsViewController
+@implementation LiveSoccerStatsViewController {
+    Soccer *originalStats;
+}
 
 @synthesize playerStats;
 @synthesize player;
@@ -42,33 +44,134 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     playerStats = [player findSoccerGameStats:game.id];
+    originalStats = [playerStats copy];
+    _assistsLabel.text = [playerStats.assists stringValue];
+    _goalLabel.text = [playerStats.goals stringValue];
+    _shotsLabel.text = [playerStats.shotstaken stringValue];
+    _stealsLabel.text = [playerStats.steals stringValue];
+    _goalsAgainstLabel.text = [playerStats.goalsagainst stringValue];
+    _savesLabel.text = [playerStats.goalssaved stringValue];
+    _minutesPlayedTextField.text = [playerStats.minutesplayed stringValue];
+    _cornerKickLabel.text = [playerStats.cornerkicks stringValue];
+    [self updatePoints];
 }
 
 - (IBAction)goalButtonClicked:(id)sender {
-    playerStats.goals = [NSNumber numberWithInt:[playerStats.goals intValue] + 1 ];
-    _goalLabel.text = [playerStats.goals stringValue];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Goal" message:@"" delegate:self cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Goal Made", @"Goal Missed", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (IBAction)shotsButtonClicked:(id)sender {
-    playerStats.shotstaken = [NSNumber numberWithInt:[playerStats.shotstaken intValue] + 1];
-    _shotsLabel.text = [playerStats.shotstaken stringValue];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Shot" message:@"" delegate:self cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Add Shot", @"Remove Shot", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (IBAction)assistsButtonClicked:(id)sender {
-    playerStats.assists = [NSNumber numberWithInt:[playerStats.assists intValue] + 1];
-    _assistsLabel.text = [playerStats.assists stringValue];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Assist" message:@"" delegate:self cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Add Assist", @"Remove Assist", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (IBAction)stealButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Steal" message:@"" delegate:self cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Add Steal", @"Remove Steal", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (IBAction)savesButtonClicked:(id)sender {
-}
-- (IBAction)golasAgainstButtonClicked:(id)sender {
-}
-- (IBAction)submitButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Saves" message:@"" delegate:self cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Add Save", @"Remove Save", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
-- (IBAction)updateTotalsButtonClicked:(id)sender {
+- (IBAction)goalsAgainstButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Goals Against" message:@"" delegate:self cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Add GA", @"Remove GA", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
+}
+
+- (IBAction)submitButtonClicked:(id)sender {
+    [player updateSoccerGameStats:playerStats Game:game.id];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Goal Made"]) {
+        playerStats.goals = [NSNumber numberWithInt:[playerStats.goals intValue] + 1 ];
+        _goalLabel.text = [playerStats.goals stringValue];
+        playerStats.shotstaken = [NSNumber numberWithInt:[playerStats.shotstaken intValue] + 1];
+        _shotsLabel.text = [playerStats.shotstaken stringValue];
+        [self updatePoints];
+    } else if (([title isEqualToString:@"Goal Missed"]) && ([playerStats.goals intValue] > 0)) {
+        playerStats.goals = [NSNumber numberWithInt:[playerStats.goals intValue] - 1 ];
+        _goalLabel.text = [playerStats.goals stringValue];
+        playerStats.shotstaken = [NSNumber numberWithInt:[playerStats.shotstaken intValue] - 1];
+        _shotsLabel.text = [playerStats.shotstaken stringValue];
+        [self updatePoints];
+    } else if ([title isEqualToString:@"Add Shot"]) {
+        playerStats.shotstaken = [NSNumber numberWithInt:[playerStats.shotstaken intValue] + 1];
+        _shotsLabel.text = [playerStats.shotstaken stringValue];
+    } else if (([title isEqualToString:@"Remove Shot"]) && ([playerStats.shotstaken intValue] > 0)) {
+        playerStats.shotstaken = [NSNumber numberWithInt:[playerStats.shotstaken intValue] - 1];
+        _shotsLabel.text = [playerStats.shotstaken stringValue];
+    } else if ([title isEqualToString:@"Add Assist"]) {
+        playerStats.assists = [NSNumber numberWithInt:[playerStats.assists intValue] + 1];
+        _assistsLabel.text = [playerStats.assists stringValue];
+        [self updatePoints];
+    } else if (([title isEqualToString:@"Remove Assist"]) && ([playerStats.assists intValue] > 0)) {
+        playerStats.assists = [NSNumber numberWithInt:[playerStats.assists intValue] - 1];
+        _assistsLabel.text = [playerStats.assists stringValue];
+        [self updatePoints];
+    } else if ([title isEqualToString:@"Add Steal"]) {
+        playerStats.steals = [NSNumber numberWithInt:[playerStats.steals intValue] + 1];
+        _stealsLabel.text = [playerStats.steals stringValue];
+    } else if (([title isEqualToString:@"Remove Steal"]) && ([playerStats.steals intValue] > 0)) {
+        playerStats.steals = [NSNumber numberWithInt:[playerStats.steals intValue] - 1];
+        _stealsLabel.text = [playerStats.steals stringValue];
+    } else if ([title isEqualToString:@"Add Save"]) {
+        playerStats.goalssaved = [NSNumber numberWithInt:[playerStats.goalssaved intValue] + 1];
+        _savesLabel.text = [playerStats.goalssaved stringValue];
+    } else if (([title isEqualToString:@"Remove Save"]) && ([playerStats.goalssaved intValue] > 0)) {
+        playerStats.goalssaved = [NSNumber numberWithInt:[playerStats.goalssaved intValue] - 1];
+        _savesLabel.text = [playerStats.goalssaved stringValue];
+    } else if ([title isEqualToString:@"Add GA"]) {
+        playerStats.goalsagainst = [NSNumber numberWithInt:[playerStats.goalsagainst intValue] + 1];
+        _goalsAgainstLabel.text = [playerStats.goalsagainst stringValue];
+    } else if (([title isEqualToString:@"Remove GA"]) && ([playerStats.goalsagainst intValue] > 0)) {
+        playerStats.goalsagainst = [NSNumber numberWithInt:[playerStats.goalsagainst intValue] - 1];
+        _goalsAgainstLabel.text = [playerStats.goalsagainst stringValue];
+    } else if ([title isEqualToString:@"Add C/K"]) {
+        playerStats.cornerkicks = [NSNumber numberWithInt:[playerStats.cornerkicks intValue] + 1];
+        _cornerKickLabel.text = [playerStats.cornerkicks stringValue];
+    } else if (([title isEqualToString:@"Remove C/K"]) && ([playerStats.cornerkicks intValue] > 0)) {
+        playerStats.cornerkicks = [NSNumber numberWithInt:[playerStats.cornerkicks intValue] - 1];
+        _cornerKickLabel.text = [playerStats.cornerkicks stringValue];
+    }
+}
+
+- (void)updatePoints {
+    _pointsLabel.text = [NSString stringWithFormat:@"%d", ([playerStats.goals intValue] * 2) + [playerStats.assists intValue]];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (!_submitButton.touchInside) {
+        playerStats = [originalStats copy];
+    }
+}
+
+- (IBAction)cornerKickButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Corner Kick" message:@"" delegate:self cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Add C/K", @"Remove C/K", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 @end

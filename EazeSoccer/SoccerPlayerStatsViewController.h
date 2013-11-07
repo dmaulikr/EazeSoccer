@@ -20,5 +20,8 @@
 @property (weak, nonatomic) IBOutlet UIView *soccerStatsContainer;
 
 -(IBAction)liveSoccerPlayerStats:(UIStoryboardSegue *)segue;
+-(IBAction)updateTotalSoccerStats:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIView *totalStatsContainer;
+- (IBAction)saveButtonClicked:(id)sender;
 
 @end

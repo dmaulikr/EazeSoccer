@@ -291,14 +291,14 @@
         NSURLResponse* response;
         NSError *error = nil;
         NSDictionary *jsonDict = [[NSDictionary alloc] init];
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&error];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPMethod:@"DELETE"];
         [request setHTTPBody:jsonData];
         NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
         responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
-        NSArray *teamDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+        NSDictionary *teamDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         
         if (responseStatusCode == 200) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Sport Delete Successful!"
@@ -313,8 +313,7 @@
             _logoImage.image = nil;
             [self viewWillAppear:YES];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Sport"
-                                                            message:[NSString stringWithFormat:@"%d", responseStatusCode]
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Sport" message:[teamDict objectForKey:@"error"]
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
@@ -331,24 +330,8 @@
     por.contentType = @"image/jpeg";
     
     UIImage *image = _logoImage.image;
-    UIImage *originalImage = _logoImage.image;
-    CGAffineTransform transform = _logoImage.transform;
-    
-    if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationRight];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationDown];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2 * 3))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationLeft];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 2))) {
-        image = originalImage; // UIImageOrientationUp
-    }
-    
-    _logoImage.image = image;
-
-    NSData *imageData = UIImageJPEGRepresentation(_logoImage.image, 1.0);
+    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
     por.data = imageData;
-    int imagesize = imageData.length;
     por.delegate = self;
     
     // Put the image data into the specified s3 bucket and object.
@@ -370,7 +353,7 @@
                                     @"filetype", [NSString stringWithFormat:@"%@%@", currentSettings.sport.name, @"_logo"], @"filename", nil];
     
     //    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:athDict options:nil error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:athDict options:0 error:&error];
     [urlrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [urlrequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [urlrequest setHTTPMethod:@"PUT"];

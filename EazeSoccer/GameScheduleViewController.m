@@ -90,10 +90,12 @@
     [cell.visitorteamLabel setText:game.opponent];
     [cell.locationLabel setText:game.location];
     [cell.homeawayLabel setText:game.homeaway];
+    
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyy-MM-dd"];
     NSDate *gamedate = [dateFormat dateFromString:game.startdate];
     [dateFormat setDateFormat:@"MM-dd-yyyy"];
+    
     [cell.dateLabel setText:[dateFormat stringFromDate:gamedate]];
     [cell.timeLabel setText:game.starttime];
     
@@ -175,8 +177,9 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if ([currentSettings deleteGame:[currentSettings.gameList objectAtIndex:deleteIndexPath.row]]) {
-            [self viewWillAppear:YES];
+        if (![[currentSettings.gameList objectAtIndex:deleteIndexPath.row] initDeleteGame]) {
+            [currentSettings.gameList removeObjectAtIndex:deleteIndexPath.row];
+            [_gamesTableView reloadData];
         }
     }
 }

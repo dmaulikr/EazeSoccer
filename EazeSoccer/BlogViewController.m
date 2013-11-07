@@ -22,7 +22,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface BlogViewController ()
+@interface BlogViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -39,6 +39,8 @@
 //    GamePlayViewController *gameplayController;
     
     UIRefreshControl *refreshControl;
+    BOOL refresh;
+    NSIndexPath *deleteIndexPath;
 }
 
 @synthesize game;
@@ -86,6 +88,7 @@
     _coachSelectionContainer.hidden = YES;
     _gameScheduleContainer.hidden = YES;
     _userContainer.hidden = YES;
+    refresh = NO;
     [self getBlogs:nil];
 }
 
@@ -176,6 +179,12 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        deleteIndexPath = [_blogTableView indexPathForSelectedRow];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confrim"
+                                                        message:@"Delete Blog Entry"
+                                                       delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
     }
 }
 
@@ -226,13 +235,18 @@
     NSLog(@"%@", serverData);
     
     if (responseStatusCode == 200) {
-        blogfeed = [self extractBlogData:serverData];
+        
+        if (refresh)
+            [blogfeed addObjectsFromArray:[self extractBlogData:serverData]];
+        else
+            blogfeed = [self extractBlogData:serverData];
+        
         [_activityIndicator stopAnimating];
         [_blogTableView reloadData];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Blog Feed"
                                                         message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -349,6 +363,7 @@
 }
 
 - (void)startRefresh {
+    refresh = YES;
     Blog *lastblog = [blogfeed lastObject];
     [self getBlogs:lastblog.updatedat];
     [refreshControl endRefreshing];
@@ -380,6 +395,23 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [_activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if([title isEqualToString:@"Confirm"]) {
+        if (![[blogfeed objectAtIndex:deleteIndexPath.row] initDeleteBlog]) {
+            [blogfeed removeObjectAtIndex:deleteIndexPath.row];
+            [_blogTableView reloadData];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:[[blogfeed objectAtIndex:deleteIndexPath.row] httperror]
+                                                           delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
+    }
 }
 
 @end

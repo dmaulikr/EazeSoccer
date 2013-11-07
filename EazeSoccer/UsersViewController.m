@@ -151,7 +151,7 @@
     } else if (item.userthumb.length == 0)
         cell.userImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
     else {
-        NSURL * imageURL = [NSURL URLWithString:user.userthumb];
+        NSURL * imageURL = [NSURL URLWithString:item.userthumb];
         NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
         cell.userImage.image = [UIImage imageWithData:imageData];
     }

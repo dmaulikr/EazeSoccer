@@ -18,8 +18,6 @@
 @property(nonatomic, strong) Athlete *player;
 @property(nonatomic, strong) GameSchedule *game;
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *undoButtonClicked;
-
 @property (weak, nonatomic) IBOutlet UITextField *minutesPlayedTextField;
 - (IBAction)goalButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *goalLabel;
@@ -32,9 +30,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *pointsLabel;
 - (IBAction)savesButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *savesLabel;
-- (IBAction)golasAgainstButtonClicked:(id)sender;
+- (IBAction)goalsAgainstButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *goalsAgainstLabel;
 - (IBAction)submitButtonClicked:(id)sender;
-- (IBAction)updateTotalsButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *submitButton;
+- (IBAction)cornerKickButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *cornerKickLabel;
 
 @end

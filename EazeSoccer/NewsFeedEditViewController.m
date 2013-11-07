@@ -103,15 +103,10 @@
             image = [[currentSettings findAthlete:newsitem.athlete] getImage:@"thumb"];
         } else if (newsitem.coach.length > 0) {
             image = [[currentSettings findCoach:newsitem.coach] getImage:@"thumb"];
-        } else if ([currentSettings.sport.sport_logo isEqualToString:@"sport_logo/large/missing.png"]) {
-            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"teambutton.png"], 1)];
         } else if (newsitem.team.length > 0) {
-            image = [[currentSettings findTeam:newsitem.team] getImage:@"thumb"];
-        } else {
-            NSURL * imageURL = [NSURL URLWithString:currentSettings.sport.sport_logo];
-            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-            image = [UIImage imageWithData:imageData];
+            image = [currentSettings.team getImage:@"thumb"];
         }
+        
     } else {
         newNewsFeed = YES;
         newsitem = [[Newsfeed alloc] init];
@@ -155,63 +150,13 @@
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
-    NSURL *aurl;
-    NSMutableDictionary *newsDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _newsTitleTextField.text, @"title",
-                                      _newsTextView.text, @"news", currentSettings.team.teamid, @"team_id", nil];
-                               
-    if (newsitem.athlete.length > 0)
-        [newsDict setValue:newsitem.athlete forKey:@"athlete_id"];
-    
-    if (newsitem.game.length > 0)
-        [newsDict setValue:newsitem.game forKey:@"gameschedule_id"];
-    
-    if (newsitem.coach.length > 0)
-        [newsDict setValue:newsitem.coach forKey: @"coach_id"];
-    
-    if (newNewsFeed)
-        aurl = [NSURL URLWithString:[sportzServerInit newNewsFeed:currentSettings.user.authtoken]];
-    else
-        aurl = [NSURL URLWithString:[sportzServerInit updateNewsFeed:newsitem.newsid Token:currentSettings.user.authtoken]];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
-    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:newsDict, @"newsfeed", nil];
-    NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-    
-    if (!jsonSerializationError) {
-        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"Serialized JSON: %@", serJson);
+    newsitem.title = _newsTitleTextField.text;
+    newsitem.news = _newsTextView.text;
+    if ([newsitem saveNewsFeed]) {
+        [self.navigationController popViewControllerAnimated:YES];
     } else {
-        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-    }
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-    
-    if (newNewsFeed) {
-        [request setHTTPMethod:@"POST"];
-    } else {
-        [request setHTTPMethod:@"PUT"];
-    }
-    
-    [request setHTTPBody:jsonData];
-
-    //Capturing server response
-    NSURLResponse* response;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    if ([httpResponse statusCode] == 200) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update sucessful!"
-                                                        message:@"News Item updated"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating news data"
-                                                        message:[serverData objectForKey:@"error"]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating news data" message:[newsitem httperror]
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -221,7 +166,7 @@
 - (IBAction)deleteButtonClicked:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete News Item"
                                                     message:@"All data will be lost"
-                                                   delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
+                                                   delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }
@@ -316,30 +261,10 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        NSURL *aurl = [NSURL URLWithString:[sportzServerInit deleteNewsFeed:newsitem.newsid Token:currentSettings.user.authtoken]];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
-        
-        NSDictionary *jsonDict = [[NSDictionary alloc] init];
-        NSError *jsonSerializationError = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-        
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPMethod:@"DELETE"];
-        [request setHTTPBody:jsonData];
-        
-        //Capturing server response
-        NSURLResponse* response;
-        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-        NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-        NSLog(@"%@", serverData);
-        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        if ([httpResponse statusCode] == 200) {
+        if (![newsitem initDeleteNewsFeed]) {
             [self.navigationController popViewControllerAnimated:YES];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error deleting News Item"
-                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error deleting News Item" message:[newsitem httperror]
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];

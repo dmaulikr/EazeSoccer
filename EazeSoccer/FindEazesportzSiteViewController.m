@@ -127,7 +127,7 @@
         NSError *error = nil;
         NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
         if ([(NSHTTPURLResponse*)response statusCode] == 200) {
-            NSArray *serverData = [NSJSONSerialization JSONObjectWithData:result options:nil error:nil];
+            NSArray *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
             siteList = [[NSMutableArray alloc] init];
             for (int i = 0; i < [serverData count]; i++) {
                 NSDictionary *items = [serverData objectAtIndex:i];

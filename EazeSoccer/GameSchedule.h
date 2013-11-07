@@ -56,7 +56,17 @@
 @property(nonatomic, assign) BOOL visitorbonus;
 @property(nonatomic, strong) NSNumber *period;
 
+@property(nonatomic, strong) NSNumber *socceroppck;
+@property(nonatomic, strong) NSNumber *socceroppsog;
+@property(nonatomic, strong) NSNumber *socceroppsaves;
+
+@property(nonatomic, strong) NSString *httperror;
+
 - (id)initWithDictionary:(NSDictionary *)gameScheduleDictionary;
+
+- (BOOL)saveGameschedule;
+
+- (id)initDeleteGame;
 
 //@property(nonatomic, strong) NSMutableArray *gamelogs;
 

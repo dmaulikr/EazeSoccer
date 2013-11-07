@@ -8,8 +8,7 @@
 
 #import "sportzServerInit.h"
 #import "EazesportzAppDelegate.h"
-//#import "FootballStats.h"
-#import "Standings.h"
+#import "FootballStats.h"
 
 @implementation sportzServerInit 
 

@@ -34,7 +34,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *homeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *visitorLabel;
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UISwitch *leagueSwitch;
 - (IBAction)searchEazesportzButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *findsiteContainer;

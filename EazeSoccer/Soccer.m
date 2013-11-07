@@ -7,6 +7,7 @@
 //
 
 #import "Soccer.h"
+#import "EazesportzAppDelegate.h"
 
 @implementation Soccer
 
@@ -20,25 +21,32 @@
 @synthesize goalssaved;
 @synthesize shutouts;
 @synthesize minutesplayed;
+@synthesize cornerkicks;
+
+@synthesize athleteid;
+
+@synthesize httperror;
 
 - (id)init {
     if (self = [super init]) {
         soccerid = @"";
         gameschedule_id = @"";
-        goals = 0;
-        shotstaken = 0;
-        assists = 0;
-        steals = 0;
-        goalsagainst = 0;
-        goalssaved = 0;
-        shutouts = 0;
-        minutesplayed = 0;
+        athleteid = @"";
+        goals = [NSNumber numberWithInt:0];
+        shotstaken = [NSNumber numberWithInt:0];
+        assists = [NSNumber numberWithInt:0];
+        steals = [NSNumber numberWithInt:0];
+        goalsagainst = [NSNumber numberWithInt:0];
+        goalssaved = [NSNumber numberWithInt:0];
+        shutouts = [NSNumber numberWithInt:0];
+        minutesplayed = [NSNumber numberWithInt:0];
+        cornerkicks = [NSNumber numberWithInt:0];
         return self;
     } else
         return nil;
 }
 
-- (id)initWithDirectory:(NSDictionary *)soccerDirectory {
+- (id)initWithDirectory:(NSDictionary *)soccerDirectory AthleteId:(NSString *)playerid {
     if ((self = [super init]) && (soccerDirectory.count > 0)) {
         soccerid = [soccerDirectory objectForKey:@"soccerid"];
         gameschedule_id = [soccerDirectory objectForKey:@"gameschedule_id"];
@@ -50,10 +58,31 @@
         goalssaved = [soccerDirectory objectForKey:@"goalssaved"];
         shutouts = [soccerDirectory objectForKey:@"shutouts"];
         minutesplayed = [soccerDirectory objectForKey:@"minutesplayed"];
+        cornerkicks = [soccerDirectory objectForKey:@"cornerkick"];
+        
+        athleteid = playerid;
+        
         return self;
     } else {
         return nil;
     }
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    Soccer *copy = [[Soccer allocWithZone: zone] init];
+    copy.assists = assists;
+    copy.steals = steals;
+    copy.goalssaved = goalssaved;
+    copy.goalsagainst = goalsagainst;
+    copy.goals = goals;
+    copy.shotstaken = shotstaken;
+    copy.soccerid = soccerid;
+    copy.gameschedule_id = gameschedule_id;
+    copy.minutesplayed = minutesplayed;
+    copy.shutouts = shutouts;
+    copy.athleteid = athleteid;
+    copy.cornerkicks = cornerkicks;
+    return copy;
 }
 
 - (BOOL)goalieStats {
@@ -61,6 +90,72 @@
         return YES;
     else
         return NO;
+}
+
+- (BOOL)saveStats {
+    NSURL *aurl;
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
+    
+    if (soccerid.length > 0) {
+        aurl = [NSURL URLWithString:[serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/athletes/",
+                                     athleteid, @"/soccers/", soccerid, @".json?auth_token=", currentSettings.user.authtoken]];
+
+    } else {
+        aurl = [NSURL URLWithString:[serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/athletes/",
+                                     athleteid, @"/soccers.json?gameschedule_id=", gameschedule_id, @"/&auth_token=", currentSettings.user.authtoken]];
+    }
+    
+    NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
+                                     [goals stringValue], @"goals", [shotstaken stringValue], @"shotstaken", [assists stringValue], @"assists",
+                                     [steals stringValue], @"steals", [goalsagainst stringValue], @"goalsagainst", [goalssaved stringValue], @"goalssaved",
+                                     [minutesplayed stringValue], @"minutesplayed", [shutouts stringValue], @"shutouts",
+                                     [cornerkicks stringValue], @"cornerkick", nil];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"soccer", nil];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    if (soccerid.length > 0) {
+        [request setHTTPMethod:@"PUT"];
+    } else {
+        [request setHTTPMethod:@"POST"];
+    }
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *items = [serverData objectForKey:@"soccerstats"];
+    
+    if ([httpResponse statusCode] == 200) {
+        
+        if (soccerid.length == 0)
+            soccerid = [items objectForKey:@"_id"];
+        
+        return YES;
+    } else {
+        httperror = [items objectForKey:@"error"];
+        return NO;
+    }
+
 }
 
 @end

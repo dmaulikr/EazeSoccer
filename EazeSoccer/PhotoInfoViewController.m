@@ -375,7 +375,7 @@
         NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:photoDict, @"photo", nil];
         
         NSError *jsonSerializationError = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
         
         if (!jsonSerializationError) {
             NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -463,7 +463,7 @@
     
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:tagDict, @"photo", nil];
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -502,7 +502,7 @@
     
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:tagDict, @"photo", nil];
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -522,8 +522,7 @@
     NSDictionary* json = [NSJSONSerialization JSONObjectWithData:result options:kNilOptions error:&jsonSerializationError];
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     if ([httpResponse statusCode] != 200) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data" message:[json objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -622,21 +621,7 @@
         
         por.contentType = @"image/jpeg";
         UIImage *image = _photoImage.image;
-        UIImage *originalImage = _photoImage.image;
-        CGAffineTransform transform = _photoImage.transform;
-        
-        if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2))) {
-            image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationRight];
-        } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI))) {
-            image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationDown];
-        } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2 * 3))) {
-            image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationLeft];
-        } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 2))) {
-            image = originalImage; // UIImageOrientationUp
-        }
-        
-        _photoImage.image = image;                
-        NSData *imageData = UIImageJPEGRepresentation(_photoImage.image, 1.0);
+        NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
         por.data = imageData;
         imagesize = imageData.length;
         por.delegate = self;
@@ -674,7 +659,7 @@
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:photoDict, @"photo", nil];
     
     NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];

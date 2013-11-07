@@ -50,8 +50,11 @@
 @property(nonatomic, strong) UIImage *tinyimage;
 @property(nonatomic, strong) UIImage *mediumimage;
 
+@property(nonatomic, strong) NSString *httperror;
+
 
 - (id)initWithDictionary:(NSDictionary *)athleteDictionary;
+- (id)initDeleteAthlete;
 
 - (FootballStats *)findFootballGameStatEntries:(NSString *)gameid;
 
@@ -60,6 +63,7 @@
 
 - (Soccer *)findSoccerGameStats:(NSString *)gameid;
 - (void)updateSoccerGameStats:(Soccer *)soccerstat Game:(NSString *)gameid;
+- (BOOL)saveSoccerGameStats:(NSString *)gameid;
 - (BOOL)isSoccerGoalie;
 
 - (UIImage *)getImage:(NSString *)size;

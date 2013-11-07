@@ -161,10 +161,7 @@
         if (imageselected) {
             [self uploadImage:coach];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Coach Update Successful!"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
+            [self.navigationController popViewControllerAnimated:YES];
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Coach"
@@ -210,7 +207,7 @@
 - (IBAction)deleteButtonClicked:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete Coach?"
                                             message:@"All data for coach will be lost!"
-                                            delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
+                                            delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }
@@ -319,9 +316,14 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-         if ([currentSettings deleteCoach:coach]) {
-             [self.navigationController popToRootViewControllerAnimated:YES];
-        }
+         if (![coach initDeleteCoach]) {
+             [self.navigationController popViewControllerAnimated:YES];
+         } else {
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[coach httperror]
+                                                            delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+             [alert setAlertViewStyle:UIAlertViewStyleDefault];
+             [alert show];
+         }
     }
 }
 
@@ -335,22 +337,7 @@
     por.contentType = @"image/jpeg";
     
     UIImage *image = _coachImage.image;
-    UIImage *originalImage = _coachImage.image;
-    CGAffineTransform transform = _coachImage.transform;
-    
-    if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationRight];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationDown];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2 * 3))) {
-        image = [UIImage imageWithCGImage:originalImage.CGImage scale:originalImage.scale orientation:UIImageOrientationLeft];
-    } else if (CGAffineTransformEqualToTransform(transform, CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 2))) {
-        image = originalImage; // UIImageOrientationUp
-    }
-    
-    _coachImage.image = image;
-
-    NSData *imageData = UIImageJPEGRepresentation(_coachImage.image, 1.0);
+    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
     por.data = imageData;
     int imagesize = imageData.length;
     por.delegate = self;
@@ -386,10 +373,7 @@
     NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Coach Update Successful!"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [self.navigationController popViewControllerAnimated:YES];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

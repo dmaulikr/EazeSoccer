@@ -21,4 +21,6 @@
 @property(nonatomic, strong) NSString *oppimageurl;
 @property(nonatomic, strong) NSString *teamid;
 
+- (id)initWithDirectory:(NSDictionary *)standingsDirectory;
+
 @end

@@ -84,7 +84,7 @@
         deleteIndexPath = [self.coachTableView indexPathForSelectedRow];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
                                                         message:@"All Coach data will be lost. Click Confirm to Proceed"
-                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
+                                                       delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -94,8 +94,15 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if ([currentSettings deleteCoach:[currentSettings.coaches objectAtIndex:deleteIndexPath.row]]) {
-            [self viewWillAppear:YES];
+        if (![[currentSettings.coaches objectAtIndex:deleteIndexPath.row] initDeleteCoach]) {
+            [currentSettings.coaches removeObjectAtIndex:deleteIndexPath.row];
+            [self.coachTableView reloadData];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:[[currentSettings.coaches objectAtIndex:deleteIndexPath.row] httperror]
+                                                           delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
         }
     }
 }

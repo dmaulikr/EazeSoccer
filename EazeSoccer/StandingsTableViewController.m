@@ -62,27 +62,10 @@
     
     if ([httpResponse statusCode] == 200) {
         leaguelist = [[NSMutableArray alloc] init];
-        for (int i = 0; i < standingData.count; i++) {
-            NSDictionary *items = [standingData objectAtIndex:i];
-            Standings *standing = [[Standings alloc] init];
-            standing.teamname = [items objectForKey:@"teamname"];
-            standing.mascot = [items objectForKey:@"mascot"];
-            standing.leaguewins = [items objectForKey:@"leaguewins"];
-            standing.leaguelosses = [items objectForKey:@"leaguelosses"];
-            standing.nonleaguewins = [items objectForKey:@"nonleaguewins"];
-            standing.nonleaguelosses = [items objectForKey:@"nonleaguelosses"];
-            standing.gameschedule_id = [items objectForKey:@"gameschedule_id"];
-            standing.sportid = [items objectForKey:@"sportid"];
-            standing.teamid = [items objectForKey:@"teamid"];
-            
-            if ((NSNull *)[items objectForKey:@"oppimageurl"] != [NSNull null])
-                standing.oppimageurl = [items objectForKey:@"oppimageurl"];
-            else
-                standing.oppimageurl = @"";
-            
-            [leaguelist addObject:standing];
+        for (int i = 0; i < standingData.count; i++) {            
+            [leaguelist addObject:[[Standings alloc] initWithDirectory:[standingData objectAtIndex:i]]];
         }
-        [_standingTableView reloadData];
+        [self.tableView reloadData];
    } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Standings"
                                                         message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
@@ -115,12 +98,16 @@
     Standings *standing = [leaguelist objectAtIndex:indexPath.row];
     cell.teamNameLabel.text = [NSString stringWithFormat:@"%@%@%@", standing.teamname, @" ", standing.mascot];
     
-    if (standing.oppimageurl.length > 0) {
-        NSURL * imageURL = [NSURL URLWithString:standing.oppimageurl];
-        NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-        cell.teamImage.image = [UIImage imageWithData:imageData];
+    if (standing.gameschedule_id.length > 0) {
+        if (standing.oppimageurl.length > 0) {
+            NSURL * imageURL = [NSURL URLWithString:standing.oppimageurl];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            cell.teamImage.image = [UIImage imageWithData:imageData];
+        } else {
+            cell.teamImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        }
     } else {
-        cell.teamImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        cell.teamImage.image = [currentSettings.team getImage:@"thumb"];
     }
     
     cell.overallLabel.text = [NSString stringWithFormat:@"%d%@%d", [standing.leaguewins intValue] + [standing.nonleaguewins intValue], @"-",
@@ -155,7 +142,7 @@
     label.text = @"Team";
     [header addSubview:label];
     
-    UILabel *FGALabel = [[UILabel alloc] initWithFrame:CGRectMake(360.0, 15.0, 100.0, 55.0)];
+    UILabel *FGALabel = [[UILabel alloc] initWithFrame:CGRectMake(488.0, 15.0, 100.0, 55.0)];
     FGALabel.backgroundColor= [UIColor clearColor];
     FGALabel.textColor = [UIColor blueColor];
     FGALabel.shadowColor = [UIColor whiteColor];
@@ -164,7 +151,7 @@
     FGALabel.text = @"Overall";
     [header addSubview:FGALabel];
     
-    UILabel *FGMLabel = [[UILabel alloc] initWithFrame:CGRectMake(520.0, 15.0, 100.0, 55.0)];
+    UILabel *FGMLabel = [[UILabel alloc] initWithFrame:CGRectMake(648.0, 15.0, 100.0, 55.0)];
     FGMLabel.backgroundColor= [UIColor clearColor];
     FGMLabel.textColor = [UIColor blueColor];
     FGMLabel.shadowColor = [UIColor whiteColor];

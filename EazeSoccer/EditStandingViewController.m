@@ -135,7 +135,6 @@
     NSDictionary *standingData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if ([httpResponse statusCode] == 200) {
-        NSLog(@"%@", standingData);
         NSDictionary *gamerecord = [standingData objectForKey:@"gameschedule"];
         _leagueLossesTextField.text = [[gamerecord objectForKey:@"opponent_league_losses"] stringValue];
         _leagueWinsTextField.text = [[gamerecord objectForKey:@"opponent_league_wins"] stringValue];

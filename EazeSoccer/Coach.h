@@ -28,8 +28,11 @@
 @property(nonatomic, strong) UIImage *thumbimage;
 @property(nonatomic, strong) UIImage *tinyimage;
 
+@property(nonatomic, strong) NSString *httperror;
+
 - (UIImage *)getImage:(NSString *)size;
 
 - (id)initWithDictionary:(NSDictionary *)coachDictionary;
+- (id)initDeleteCoach;
 
 @end

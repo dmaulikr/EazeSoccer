@@ -20,9 +20,17 @@
 @property(nonatomic, strong) NSNumber *goalssaved;
 @property(nonatomic, strong) NSNumber *shutouts;
 @property(nonatomic, strong) NSNumber *minutesplayed;
+@property(nonatomic, strong) NSNumber *cornerkicks;
 
-- (id)initWithDirectory:(NSDictionary *)soccerDirectory;
+@property(nonatomic, strong) NSString *athleteid;
+
+@property(nonatomic,strong) NSString *httperror;
+
+- (id)initWithDirectory:(NSDictionary *)soccerDirectory AthleteId:(NSString *)playerid;
+- (id)copyWithZone:(NSZone *)zone;
 
 - (BOOL)goalieStats;
+
+- (BOOL)saveStats;
 
 @end

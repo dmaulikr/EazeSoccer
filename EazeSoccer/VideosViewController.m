@@ -241,6 +241,8 @@
     if (kind == UICollectionElementKindSectionHeader) {
         HeaderSelectCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader
                                                                         withReuseIdentifier:@"VideoHeaderCell" forIndexPath:indexPath];
+        headerView.bannerImage.image = [currentSettings getBannerImage];
+        
         if (game != nil)
             headerView.headerLabel.text = game.game_name;
         else if (player != nil)

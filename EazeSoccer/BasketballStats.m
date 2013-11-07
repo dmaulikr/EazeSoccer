@@ -25,6 +25,7 @@
 
 @synthesize gameschedule_id;
 @synthesize basketball_stat_id;
+@synthesize athleteid;
 
 - (id)init {
     if (self = [super init]) {
@@ -47,7 +48,7 @@
         return nil;
 }
 
-- (id)initWithDirectory:(NSDictionary *)basketballStatDirectory {
+- (id)initWithDirectory:(NSDictionary *)basketballStatDirectory AthleteId:(NSString *)playerid {
     if ((self = [super init]) && (basketballStatDirectory.count > 0)) {
         twoattempt = [basketballStatDirectory objectForKey:@"twoattempt"];
         twomade = [basketballStatDirectory objectForKey:@"twomade"];
@@ -63,10 +64,31 @@
         defrebound = [basketballStatDirectory objectForKey:@"defrebound"];
         basketball_stat_id = [basketballStatDirectory objectForKey:@"basketball_stat_id"];
         gameschedule_id = [basketballStatDirectory objectForKey:@"gameschedule_id"];
+        athleteid = playerid;
         return self;
     } else {
         return nil;
     }
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    BasketballStats *copy = [[BasketballStats alloc] init];
+    copy.twoattempt = twoattempt;
+    copy.twomade = twomade;
+    copy.threeattempt = threeattempt;
+    copy.threemade = threemade;
+    copy.ftattempt = ftattempt;
+    copy.ftmade = ftmade;
+    copy.fouls = fouls;
+    copy.blocks = blocks;
+    copy.steals = steals;
+    copy.assists = assists;
+    copy.defrebound = defrebound;
+    copy.offrebound = offrebound;
+    copy.gameschedule_id = gameschedule_id;
+    copy.basketball_stat_id = basketball_stat_id;
+    copy.athleteid = athleteid;
+    return copy;
 }
 
 @end

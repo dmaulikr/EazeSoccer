@@ -28,6 +28,9 @@
 @property(nonatomic, strong) UIImage *thumbimage;
 @property(nonatomic, strong) UIImage *tinyimage;
 
+@property(nonatomic, strong) NSString *httperror;
+
 - (id)initWithDictionary:(NSDictionary *)blogDictionary;
+- (id)initDeleteBlog;
 
 @end

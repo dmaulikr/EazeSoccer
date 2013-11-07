@@ -10,7 +10,7 @@
 #import "Athlete.h"
 #import "Photo.h"
 #import "Video.h"
-
+#import "Standings.h"
 @interface sportzServerInit : NSObject
 
 - (NSString *)getSportzServerUrlString;

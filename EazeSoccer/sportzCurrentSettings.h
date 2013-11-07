@@ -75,5 +75,7 @@
 - (S3Bucket *)getBucket;
 - (AmazonS3Client *)getS3;
 
+- (UIImage *)normalizedImage:(UIImage *)image;
+
 @end
 

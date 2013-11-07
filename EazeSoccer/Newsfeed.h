@@ -20,6 +20,11 @@
 @property(nonatomic, strong) NSString *external_url;
 @property(nonatomic, strong) NSString *updated_at;
 
+@property(nonatomic, strong) NSString *httperror;
+
 - (id)initWithDirectory:(NSDictionary *)newsDict;
+
+- (BOOL)saveNewsFeed;
+- (id)initDeleteNewsFeed;
 
 @end
