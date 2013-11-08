@@ -11,14 +11,14 @@
 #import "sportzServerInit.h"
 #import "sportzCurrentSettings.h"
 #import "EditTeamViewController.h"
+#import "sportzConstants.h"
+#import "KeychainWrapper.h"
 
-@interface TeamSelectViewController ()
+@interface TeamSelectViewController () <UIAlertViewDelegate>
 
 @end
 
-@implementation TeamSelectViewController {
-    NSMutableArray *teamList;
-}
+@implementation TeamSelectViewController
 
 @synthesize sport;
 @synthesize team;
@@ -51,7 +51,15 @@
     [super viewWillAppear:animated];
     Sport *thesport;
     
-    if (!currentSettings.team) {
+    if (!currentSettings.sport.approved) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Beta Approval Needed"
+                                                        message:[NSString stringWithFormat:@"Email us at info@eazesportz.com"]
+                                                       delegate:self cancelButtonTitle:@"Logout" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+        _editSportButton.enabled = NO;
+        _addTeamButton.enabled = NO;
+    } else if (!currentSettings.team) {
         self.tabBarController.tabBar.hidden = YES;
         self.navigationItem.hidesBackButton = YES;
     }
@@ -62,7 +70,9 @@
         thesport = currentSettings.sport;
     }
     
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getTeams:thesport.id Token:currentSettings.user.authtoken]];
+    [currentSettings retrieveTeams];
+    [_teamTableView reloadData];
+/*    NSURL *url = [NSURL URLWithString:[sportzServerInit getTeams:thesport.id Token:currentSettings.user.authtoken]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSURLResponse* response;
     NSError *error = nil;
@@ -84,6 +94,57 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+ */
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    if ([title isEqualToString:@"Logout"]) {
+        
+        NSURL *url = [NSURL URLWithString:[sportzServerInit logout:currentSettings.user.authtoken]];
+        NSURLResponse* response;
+        NSError *error = nil;
+        NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
+        NSError *jsonSerializationError = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+        
+        if (!jsonSerializationError) {
+            NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            NSLog(@"Serialized JSON: %@", serJson);
+        } else {
+            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+        }
+        
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPBody:jsonData];
+        [request setHTTPMethod:@"DELETE"];
+        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+        
+        currentSettings.user.email = @"";
+        currentSettings.user.authtoken = @"";
+        currentSettings.user.username = @"";
+        currentSettings.user.userid = @"";
+        currentSettings.team.teamid = @"";
+        currentSettings.team.team_name = @"";
+        currentSettings.team.team_logo = @"";
+        [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
+        [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
+        
+        if ([httpResponse statusCode] == 200) {
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Logging Out"
+                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
+    }
 }
 
 #pragma mark - Table view data source
@@ -97,7 +158,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return teamList.count;
+    return currentSettings.teams.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -110,7 +171,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    Team *ateam = [teamList objectAtIndex:indexPath.row];
+    Team *ateam = [currentSettings.teams objectAtIndex:indexPath.row];
     cell.textLabel.text = ateam.team_name;
     cell.imageView.image = [ateam getImage:@"thumb"];
     cell.detailTextLabel.text = ateam.mascot;
@@ -122,9 +183,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (sport) {
-        team = [teamList objectAtIndex:indexPath.row];
+        team = [currentSettings.teams objectAtIndex:indexPath.row];
     } else {
-        currentSettings.team = [teamList objectAtIndex:indexPath.row];
+        currentSettings.team = [currentSettings.teams objectAtIndex:indexPath.row];
         [currentSettings retrieveCoaches];
         [currentSettings retrievePlayers];
         self.navigationItem.hidesBackButton = NO;
@@ -155,7 +216,7 @@
     if ([segue.identifier isEqualToString:@"EditTeamSegue"]) {
         NSIndexPath *indexPath = [_teamTableView indexPathForSelectedRow];
         EditTeamViewController *destController = segue.destinationViewController;
-        destController.team = [teamList objectAtIndex:indexPath.row];
+        destController.team = [currentSettings.teams objectAtIndex:indexPath.row];
     } else if ([segue.identifier isEqualToString:@"NewTeamSegue"]) {
         EditTeamViewController *destController = segue.destinationViewController;
         destController.team = nil;
@@ -164,7 +225,7 @@
         NSIndexPath *indexPath = [_teamTableView indexPathForSelectedRow];
         
         if (indexPath.length > 0) {
-            team = [teamList objectAtIndex:indexPath.row];
+            team = [currentSettings.teams objectAtIndex:indexPath.row];
         }
     }
 }

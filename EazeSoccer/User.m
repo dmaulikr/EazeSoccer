@@ -62,6 +62,9 @@
         stat_alert = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"stat_alert"] integerValue]];
         score_alert = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"score_alert"] integerValue]];
         admin = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"admin"] integerValue]];
+        awssecretkey = [userDictionary objectForKey:@"awskey"];
+        awskeyid = [userDictionary objectForKey:@"awskeyid"];
+        tier = [userDictionary objectForKey:@"tier"];
         
         return self;
     } else {

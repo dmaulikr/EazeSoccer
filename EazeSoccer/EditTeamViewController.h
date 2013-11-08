@@ -26,7 +26,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
 - (IBAction)cameraButtonClicked:(id)sender;
 - (IBAction)submitButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 - (IBAction)deleteButtonClicked:(id)sender;
 

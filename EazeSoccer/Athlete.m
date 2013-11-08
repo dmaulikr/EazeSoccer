@@ -128,7 +128,7 @@
             
             for (int i = 0; i < [bballstats count]; i++) {
                 NSDictionary *entry = [bballstats objectAtIndex:i];
-                [basketball_stats addObject:[[BasketballStats alloc] initWithDirectory:[entry objectForKey:@"basketball_stats"] AthleteId:athleteid]];
+                [basketball_stats addObject:[[BasketballStats alloc] initWithDirectory:[entry objectForKey:@"basketball_stat"] AthleteId:athleteid]];
             }
         } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
             NSArray *soccerstats = [athleteDictionary objectForKey:@"soccers"];

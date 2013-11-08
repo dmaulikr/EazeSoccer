@@ -165,21 +165,18 @@
     
     NSMutableDictionary *sportDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[_sitenameTextField text], @"sitename",
                                      [_mascotTextField text], @"mascot", _yearTextField.text, @"year", _zipcodeTextField.text, @"zip",
-                                      currentSettings.user.email, @"contactemail", @"Fall", @"season", @"Basketball", @"name", nil];
+                                      currentSettings.user.email, @"contactemail", @"Fall", @"season", nil];
     
-/*    if (imageselected) {
-        UIImage *photoImage = _logoImage.image;
-        NSData *imageData = UIImageJPEGRepresentation(photoImage, 1.0);
-        NSString *imageDataEncodedString = [imageData base64EncodedString];
-        [sportDict setObject:imageDataEncodedString forKey:@"image_data"];
-        [sportDict setObject:@"image/jpg" forKey:@"content_type"];
-        NSString *name = [_sitenameTextField.text stringByAppendingFormat:@"%@%@%@", @"_", _mascotTextField.text, @".jpg"];
-        [sportDict setObject:name forKey:@"original_filename"];
-        imageselected = NO;
-    } */
+    NSBundle *mainBundle = [NSBundle mainBundle];
+
+    if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"]) {
+        [sportDict setValue:@"Soccer" forKey:@"name"];
+    } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Basketball"]) {
+        [sportDict setValue:@"Basketball" forKey:@"name"];
+    }
     
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:sportDict, @"sport", nil];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (jsonSerializationError) {
         NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
@@ -242,40 +239,28 @@
     [_activityIndicator stopAnimating];
     
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
+    
     if (responseStatusCode == 200) {
-        NSDictionary *sportdata = [serverData objectForKey:@"sport"];
-        sport.id = [sportdata objectForKey:@"_id"];
-        sport.sitename = [sportdata objectForKey:@"sitename"];
-        sport.mascot = [sportdata objectForKey:@"mascot"];
-        sport.year = [sportdata objectForKey:@"year"];
-        sport.zip = [sportdata objectForKey:@"zip"];
-        sport.sport_logo = [sportdata objectForKey:@"sport_logo"];
-        sport.sport_logo_thumb = [sportdata objectForKey:@"sport_logo_thumb"];
-        sport.sport_logo_medium = [sportdata objectForKey:@"sport_logo_medium"];
-        sport.sport_logo_tiny = [sportdata objectForKey:@"sport_logo_tiny"];
-        sport.banner = [sportdata objectForKey:@"banner_url"];
-        sport.name = [sportdata objectForKey:@"name"];
-        sport.season = [sportdata objectForKey:@"season"];
-        sport.has_stats = [NSNumber numberWithBool:[[sportdata objectForKey:@"has_stats"] boolValue]];
-        sport.alert_interval = [sportdata objectForKey:@"alert_interval"];
-        sport.gamelog_interval = [sportdata objectForKey:@"gamelog_interval"];
-        sport.newsfeed_interval = [sportdata objectForKey:@"newsfeed_interval"];
-        sport.beta = [[sportdata objectForKey:@"beta"] boolValue];
-        sport.approved = [[sportdata objectForKey:@"approved"] boolValue];
+        currentSettings.sport = [[Sport alloc] initWithDictionary:[serverData objectForKey:@"sport"]];
         
-        currentSettings.sport = sport;
+        if (currentSettings.sport.id.length == 0) {
+            currentSettings.sport.id = [[serverData objectForKey:@"sport"] objectForKey:@"_id"];
+        }
+        
+//        currentSettings.sport = sport;
         
         if (imageselected) {
             [self uploadImage:currentSettings.sport];
-        } else {        
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Sport Update Successful!"
+        } else if (currentSettings.team.teamid.length == 0) {
+            [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Update Successul!"
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Sport"
-                                                        message:[NSString stringWithFormat:@"%d", responseStatusCode]
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Sport" message:[serverData objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -365,12 +350,10 @@
     
     if (responseStatusCode == 200) {
 
-        if (newsport) {
-            self.navigationItem.hidesBackButton = NO;
-            self.tabBarController.tabBar.hidden = NO;
-            [self.navigationController popViewControllerAnimated:YES];
+        if (currentSettings.team.teamid.length == 0) {
+             [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Sport Logo Update Being Processed!"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Update Successful!"
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];

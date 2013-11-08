@@ -394,15 +394,8 @@
     if ([httpResponse statusCode] == 200) {
         teams =[[NSMutableArray alloc] init];
         for (int i = 0; i < [serverData count]; i++) {
-            NSDictionary *items = [serverData objectAtIndex:i];
-            Team *ateam = [Team alloc];
-            ateam.teamid = [items objectForKey:@"id"];
-            ateam.mascot = [items objectForKey:@"mascot"];
-            ateam.title = [items objectForKey:@"title"];
-            ateam.team_name = [items objectForKey:@"team_name"];
-            ateam.team_logo = [items objectForKey:@"team_logo"];
-            [teams addObject:ateam];
-        }
+            [teams addObject:[[Team alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+         }
         NSURL *url = [NSURL URLWithString:[sportzServerInit getSponsors:self.user.authtoken]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         NSURLResponse* response;

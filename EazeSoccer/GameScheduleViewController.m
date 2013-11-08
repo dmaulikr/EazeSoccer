@@ -50,6 +50,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     if ([currentSettings.user.email length] == 0) {
         [self performSegueWithIdentifier:@"LoginSegue" sender:self];
     } else if (currentSettings.team == nil) {

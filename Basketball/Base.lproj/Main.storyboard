@@ -14,10 +14,24 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
+                    <connections>
+                        <segue destination="tx8-Aa-nU3" kind="relationship" relationship="viewControllers" id="Cu6-fi-nUe"/>
+                        <segue destination="gWP-1e-jqd" kind="relationship" relationship="viewControllers" id="kLF-5v-QZy"/>
+                        <segue destination="0HS-yt-YL9" kind="relationship" relationship="viewControllers" id="y15-uG-4nM"/>
+                        <segue destination="ble-ep-7ye" kind="relationship" relationship="viewControllers" id="W2n-fm-fHL"/>
+                        <segue destination="yzY-5n-JWW" kind="relationship" relationship="viewControllers" id="FXG-mu-wCu"/>
+                        <segue destination="aTY-sD-Yw7" kind="relationship" relationship="viewControllers" id="3de-e2-ohl"/>
+                        <segue destination="zjT-vE-Puo" kind="relationship" relationship="viewControllers" id="BYh-zi-hcR"/>
+                        <segue destination="uYB-wZ-AT4" kind="relationship" relationship="viewControllers" id="Rsg-NI-BEg"/>
+                        <segue destination="8uX-QW-uS0" kind="relationship" relationship="viewControllers" id="E10-d5-tei"/>
+                        <segue destination="WGA-0K-t6x" kind="relationship" relationship="viewControllers" id="Yyj-uG-hHQ"/>
+                        <segue destination="4jx-BA-CYT" kind="relationship" relationship="viewControllers" id="MIv-BI-fP7"/>
+                        <segue destination="An6-hX-aY6" kind="relationship" relationship="viewControllers" id="GeK-cq-2aV"/>
+                    </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2023" y="718"/>
+            <point key="canvasLocation" x="991" y="5019"/>
         </scene>
         <!--Navigation Controller - Roster-->
         <scene sceneID="WJv-VH-fC7">
@@ -1715,7 +1729,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-aU-XMS">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0R3-aU-XMS">
                                 <rect key="frame" x="0.0" y="65" width="768" height="866"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Ocu-vF-Fh2">
@@ -1782,7 +1796,7 @@
                                     <outlet property="delegate" destination="8kH-kw-YBZ" id="XGc-Wm-55y"/>
                                 </connections>
                             </collectionView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VNW-ra-VsG">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VNW-ra-VsG">
                                 <rect key="frame" x="0.0" y="931" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
@@ -3729,7 +3743,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="myc-ft-ggE">
             <objects>
                 <navigationController definesPresentationContext="YES" id="tx8-Aa-nU3" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Schedule" image="soccer.png" id="K2B-jk-JFZ"/>
+                    <tabBarItem key="tabBarItem" title="Schedule" image="basketball.png" id="K2B-jk-JFZ"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="G67-GV-ix0">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -5944,10 +5958,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z9d-bd-YeB">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z9d-bd-YeB">
                                 <rect key="frame" x="0.0" y="63" width="768" height="910"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hAt-z3-WWs">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="hAt-z3-WWs">
                                         <rect key="frame" x="34" y="38" width="700" height="525"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="525" id="Y4o-f9-NL3"/>
@@ -6206,7 +6220,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                             <constraint firstItem="rWV-uH-2BL" firstAttribute="baseline" secondItem="ZVd-9N-Vjd" secondAttribute="baseline" id="zuq-yP-ev5"/>
                                         </constraints>
                                     </view>
-                                    <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pzc-dL-kbi">
+                                    <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pzc-dL-kbi">
                                         <rect key="frame" x="184" y="255" width="400" height="400"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -10498,6 +10512,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
     </scenes>
     <resources>
         <image name="addressbook.png" width="32" height="32"/>
+        <image name="basketball.png" width="30" height="30"/>
         <image name="calendar.png" width="29" height="30"/>
         <image name="clock.png" width="29" height="30"/>
         <image name="edit.png" width="32" height="32"/>
@@ -10509,7 +10524,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <image name="phone-book.png" width="30" height="30"/>
         <image name="photo.png" width="30" height="30"/>
         <image name="playbutton_cripped.png" width="1250" height="1011"/>
-        <image name="soccer.png" width="30" height="30"/>
         <image name="speaker-on.png" width="30" height="30"/>
         <image name="whistle.png" width="30" height="30"/>
     </resources>
@@ -10519,17 +10533,17 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="k8L-JH-Nai"/>
+        <segue reference="xEz-Hd-G7E"/>
+        <segue reference="ILn-zM-xEZ"/>
+        <segue reference="zXQ-RQ-ayV"/>
+        <segue reference="gcc-55-nMu"/>
+        <segue reference="yTQ-dp-rdd"/>
+        <segue reference="jfS-Py-OAk"/>
         <segue reference="ntE-l4-HuY"/>
         <segue reference="tDE-cB-ANY"/>
         <segue reference="8rY-lX-XBC"/>
-        <segue reference="xEz-Hd-G7E"/>
-        <segue reference="k8L-JH-Nai"/>
         <segue reference="wd2-Y2-cND"/>
-        <segue reference="jfS-Py-OAk"/>
-        <segue reference="zXQ-RQ-ayV"/>
-        <segue reference="r86-dR-Apc"/>
-        <segue reference="gcc-55-nMu"/>
-        <segue reference="yTQ-dp-rdd"/>
         <segue reference="Uuy-bN-h0R"/>
         <segue reference="z1l-xH-4nO"/>
     </inferredMetricsTieBreakers>

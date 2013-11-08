@@ -46,14 +46,6 @@
     _activityIndicator.hidesWhenStopped = YES;
 //    _deleteButton.backgroundColor = [UIColor redColor];
     _teamlogoLabel.layer.cornerRadius = 4;
-    
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
-    [_scrollView addGestureRecognizer:singleTap];
-}
-
-- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
-    CGPoint touchPoint = [gesture locationInView:_scrollView];
-    [self.view endEditing:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,6 +66,8 @@
     } else {
         team = [[Team alloc] init];
         newteam = YES;
+        _deleteButton.enabled = NO;
+        _deleteButton.hidden = YES;
     }
     
     if (team.hasImage) {
@@ -81,7 +75,7 @@
         _teamlogoLabel.hidden = YES;
     } else {
         _teamImage.image = [currentSettings.sport getImage:@"thumb"];
-        _teamlogoLabel.text = @"Using Sport Logo - Change below";
+        _teamlogoLabel.text = @"Using Sport Logo";
     }
 }
 
@@ -266,10 +260,7 @@
         if (imageselected)
             [self uploadImage:team];
         else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Team Update Successful!"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
+            [self.navigationController popViewControllerAnimated:YES];
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Team"
@@ -356,12 +347,7 @@
     NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        [currentSettings retrieveTeams];
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Team Update Successful!"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [self.navigationController popViewControllerAnimated:YES];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

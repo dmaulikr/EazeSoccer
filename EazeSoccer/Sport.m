@@ -87,7 +87,7 @@
     UIImage *image;
     
     if ([size isEqualToString:@"tiny"] ) {        
-        if ([sport_logo_tiny isEqualToString:@"/sport_logo/tiny/missing.png"]) {
+        if ([sport_logo_tiny isEqualToString:@"/sport_logos/tiny/missing.png"]) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else if ((sportimage.CIImage == nil) && (sportimage.CGImage == nil)) {
             NSURL * imageURL = [NSURL URLWithString:sport_logo_tiny];
@@ -97,7 +97,7 @@
         } else
             image = sportimage;
     } else if ([size isEqualToString:@"thumb"]) {        
-        if (([sport_logo_thumb isEqualToString:@"/sport_logo/thumb/missing.png"]) || (sport_logo_thumb.length == 0)) {
+        if (([sport_logo_thumb isEqualToString:@"/sport_logos/thumb/missing.png"]) || (sport_logo_thumb.length == 0)) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else if ((sportimage.CIImage == nil) && (sportimage.CGImage == nil)) {
             NSURL * imageURL = [NSURL URLWithString:sport_logo_thumb];
