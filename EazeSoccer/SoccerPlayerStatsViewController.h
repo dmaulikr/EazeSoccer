@@ -23,5 +23,7 @@
 -(IBAction)updateTotalSoccerStats:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UIView *totalStatsContainer;
 - (IBAction)saveButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *infoImage;
 
 @end

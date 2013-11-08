@@ -64,7 +64,6 @@
             soccerStatsController.game = gameController.thegame;
             [soccerStatsController viewWillAppear:YES];
         }
-        self.title = [NSString stringWithFormat:@"%@%@", @"Live Stats - vs. ", [gameController.thegame opponent]];
     }
     _gameContainer.hidden = YES;
 }

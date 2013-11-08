@@ -39,6 +39,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    _infoImage.image = [currentSettings getBannerImage];
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,6 +52,13 @@
     [super viewWillAppear:animated];
     _soccerStatsContainer.hidden = YES;
     _totalStatsContainer.hidden = YES;
+    
+    if (game)
+        _infoLabel.text = game.game_name;
+    else if (athlete)
+        _infoLabel.text = athlete.full_name;
+    else
+        _infoLabel.text = @"Select a game to enter stats!";
     
     if ((game) || (athlete)) {
         [_soccerPlayerStatsTableView reloadData];
@@ -125,14 +133,7 @@
             GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
             cell.playerName.text = agame.opponent;
             stats = [athlete findSoccerGameStats:agame.id];
-            
-            if ([agame.opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) {
-                cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-            } else {
-                NSURL * imageURL = [NSURL URLWithString:game.opponentpic];
-                NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-                cell.imageView.image = [UIImage imageWithData:imageData];
-            }
+            cell.imageView.image = [athlete getImage:@"tiny"];
         }
         
         cell.label1.text = [stats.goals stringValue];
@@ -151,14 +152,7 @@
             GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
             cell.playerName.text = agame.opponent;
             stats = [athlete findSoccerGameStats:agame.id];
-            
-            if ([agame.opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) {
-                cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-            } else {
-                NSURL * imageURL = [NSURL URLWithString:agame.opponentpic];
-                NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-                cell.imageView.image = [UIImage imageWithData:imageData];
-            }
+            cell.imageView.image = [athlete getImage:@"tiny"];
         }
 
         cell.label1.text = [stats.goalssaved stringValue];

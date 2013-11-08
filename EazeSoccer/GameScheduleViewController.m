@@ -92,7 +92,7 @@
     
     GameSchedule *game = [currentSettings.gameList objectAtIndex:indexPath.row];
     [cell.hometeamLabel setText:[currentSettings.team team_name]];
-    [cell.visitorteamLabel setText:game.opponent];
+    [cell.visitorteamLabel setText:game.opponent_name];
     [cell.locationLabel setText:game.location];
     [cell.homeawayLabel setText:game.homeaway];
     

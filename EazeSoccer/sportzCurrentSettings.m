@@ -49,6 +49,8 @@
     
     if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"])
         image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"soccerheader.jpg"], 1)];
+    else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Basketball"])
+        image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"bballongymfloor.png"], 1)];
     
     return image;
 }
@@ -384,7 +386,17 @@
 }
 
 - (void)retrieveTeams {
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getTeams:self.sport.id Token:self.user.authtoken]];
+    teams = [self retrieveSportTeams:self.sport.id];
+    if (!teams) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                message:@"Error retrieving teams" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
+- (NSMutableArray *)retrieveSportTeams:(NSString *)sportid {
+    NSURL *url = [NSURL URLWithString:[sportzServerInit getTeams:sportid Token:self.user.authtoken]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSURLResponse* response;
     NSError *error = nil;
@@ -392,10 +404,10 @@
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     NSArray *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     if ([httpResponse statusCode] == 200) {
-        teams =[[NSMutableArray alloc] init];
+        NSMutableArray *theteams =[[NSMutableArray alloc] init];
         for (int i = 0; i < [serverData count]; i++) {
-            [teams addObject:[[Team alloc] initWithDictionary:[serverData objectAtIndex:i]]];
-         }
+            [theteams addObject:[[Team alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+        }
         NSURL *url = [NSURL URLWithString:[sportzServerInit getSponsors:self.user.authtoken]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         NSURLResponse* response;
@@ -426,18 +438,12 @@
                 sponsor.teamid = [items objectForKey:@"team_id"];
                 [sponsors addObject:sponsor];
             }
+            return theteams;
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error retrieving Sponsors"
-                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
+            return nil;
         }
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error retrieving Teams"
-                                                message:[NSString stringWithFormat:@"%d",  [httpResponse statusCode]] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        return nil;
     }
 }
 

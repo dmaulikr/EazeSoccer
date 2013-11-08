@@ -107,6 +107,8 @@
         _deleteButton.enabled = NO;
         _visitorScoreTextField.text = @"0";
         _homeScoreTextField.text = @"0";
+        _opponentTextField.text = @"";
+        _mascotTextField.text = @"";
         [_leagueSwitch setOn:NO];
     }
 }
@@ -252,17 +254,17 @@
     _findsiteContainer.hidden = YES;
     
     if (findSiteController.sport) {
-        if (![findSiteController.sport.id isEqualToString:currentSettings.sport.id]) {
+//        if (![findSiteController.sport.id isEqualToString:currentSettings.sport.id]) {
             _findTeamContainer.hidden = NO;
             teamSelectController.sport = findSiteController.sport;
             [teamSelectController viewWillAppear:YES];
-        } else {
+/*        } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You cannot select your team as an opponent!"
                                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
-        }
-    }
+        } */
+    } 
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

@@ -52,6 +52,11 @@
     self.tabBarController.tabBar.hidden = YES;
     self.navigationItem.hidesBackButton = YES;
     
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     if ((currentSettings.teams.count == 0) && (currentSettings.user.email.length > 0))
         [self performSegueWithIdentifier:@"AlreadyLoggedInSegue" sender:self];
     else if ([currentSettings.user.email length] > 0) {     // User still logged in, present teams view

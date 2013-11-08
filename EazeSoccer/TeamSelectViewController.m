@@ -18,7 +18,9 @@
 
 @end
 
-@implementation TeamSelectViewController
+@implementation TeamSelectViewController {
+    NSMutableArray *teamList;
+}
 
 @synthesize sport;
 @synthesize team;
@@ -49,7 +51,19 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    Sport *thesport;
+    
+    if (sport) {
+        teamList = [currentSettings retrieveSportTeams:sport.id];
+    } else {
+        [currentSettings retrieveTeams];
+        teamList = currentSettings.teams;
+    }
+    
+    [_teamTableView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
     if (!currentSettings.sport.approved) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Beta Approval Needed"
@@ -59,42 +73,17 @@
         [alert show];
         _editSportButton.enabled = NO;
         _addTeamButton.enabled = NO;
-    } else if (!currentSettings.team) {
+    } else if (currentSettings.team.teamid.length == 0) {
         self.tabBarController.tabBar.hidden = YES;
         self.navigationItem.hidesBackButton = YES;
-    }
-    
-    if (sport)
-        thesport = sport;
-    else {
-        thesport = currentSettings.sport;
-    }
-    
-    [currentSettings retrieveTeams];
-    [_teamTableView reloadData];
-/*    NSURL *url = [NSURL URLWithString:[sportzServerInit getTeams:thesport.id Token:currentSettings.user.authtoken]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    NSArray *teamData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    
-    if ([httpResponse statusCode] == 200) {
-        teamList = [[NSMutableArray alloc] init];
-        for (int i = 0; i < teamData.count; i++) {
-            [teamList addObject:[[Team alloc] initWithDictionary:[teamData objectAtIndex:i]]];
-        }
-        [_teamTableView reloadData];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Teams"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        
+    } else if ((teamList.count == 0) && (sport)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No teams"
+                                                        message:[NSString stringWithFormat:@"Program admin has not entered team data yet!"]
+                                                       delegate:self cancelButtonTitle:@"Logout" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
- */
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -158,7 +147,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return currentSettings.teams.count;
+    return teamList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -171,7 +160,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    Team *ateam = [currentSettings.teams objectAtIndex:indexPath.row];
+    Team *ateam = [teamList objectAtIndex:indexPath.row];
     cell.textLabel.text = ateam.team_name;
     cell.imageView.image = [ateam getImage:@"thumb"];
     cell.detailTextLabel.text = ateam.mascot;
@@ -182,10 +171,8 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (sport) {
-        team = [currentSettings.teams objectAtIndex:indexPath.row];
-    } else {
-        currentSettings.team = [currentSettings.teams objectAtIndex:indexPath.row];
+    if (!sport) {
+        currentSettings.team = [teamList objectAtIndex:indexPath.row];
         [currentSettings retrieveCoaches];
         [currentSettings retrievePlayers];
         self.navigationItem.hidesBackButton = NO;
@@ -216,16 +203,15 @@
     if ([segue.identifier isEqualToString:@"EditTeamSegue"]) {
         NSIndexPath *indexPath = [_teamTableView indexPathForSelectedRow];
         EditTeamViewController *destController = segue.destinationViewController;
-        destController.team = [currentSettings.teams objectAtIndex:indexPath.row];
+        destController.team = [teamList objectAtIndex:indexPath.row];
     } else if ([segue.identifier isEqualToString:@"NewTeamSegue"]) {
         EditTeamViewController *destController = segue.destinationViewController;
         destController.team = nil;
     } else {
-        sport = nil;
         NSIndexPath *indexPath = [_teamTableView indexPathForSelectedRow];
         
         if (indexPath.length > 0) {
-            team = [currentSettings.teams objectAtIndex:indexPath.row];
+            team = [teamList objectAtIndex:indexPath.row];
         }
     }
 }

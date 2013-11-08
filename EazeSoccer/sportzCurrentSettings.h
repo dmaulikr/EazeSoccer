@@ -69,6 +69,8 @@
 - (BOOL)deletePlayer:(Athlete *)player;
 
 - (void)retrieveTeams;
+- (NSMutableArray *)retrieveSportTeams:(NSString *)sportid;
+
 - (void)retrieveSport;
 
 - (BOOL)initS3Bucket;
