@@ -98,7 +98,7 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSURL *aurl;
     
-    if (basketball_stat_id.length > 0)
+    if (basketball_stat_id.length == 0)
         aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/athletes/",
                                     athleteid, @"/basketball_stats.json?gameschedule_id=", gameschedule_id, @"/&auth_token=",
                                      currentSettings.user.authtoken]];
@@ -109,16 +109,15 @@
                 
     }
     
-    NSMutableDictionary *statDict;
-    statDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id",
-                 [twoattempt stringValue] , @"twoattempt", [twomade stringValue], @"towmade",
-                 [threeattempt stringValue], @"threeattempt", [threemade stringValue], @"threemade",
-                 [ftattempt stringValue], @"ftattempt", [ftmade stringValue], @"ftmade", [fouls stringValue], @"fouls",
-                 [assists stringValue], @"assists", [steals stringValue], @"steals", [blocks stringValue], @"blocks",
-                 [offrebound stringValue], @"offrebound", [defrebound stringValue], @"defrebound", @"Live", @"livestats", nil];
+    NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id",
+                                     [twoattempt stringValue] , @"twoattempt", [twomade stringValue], @"towmade",
+                                     [threeattempt stringValue], @"threeattempt", [threemade stringValue], @"threemade",
+                                     [ftattempt stringValue], @"ftattempt", [ftmade stringValue], @"ftmade", [fouls stringValue], @"fouls",
+                                     [assists stringValue], @"assists", [steals stringValue], @"steals", [blocks stringValue], @"blocks",
+                                     [offrebound stringValue], @"offrebound", [defrebound stringValue], @"defrebound", @"Totals", @"livestats", nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
-    //        NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"basketball_stats", nil];
+    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"basketball_stat", nil];
     
     NSError *jsonSerializationError = nil;
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -129,7 +128,7 @@
         [request setHTTPMethod:@"POST"];
     }
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:statDict options:0 error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];

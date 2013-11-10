@@ -11,6 +11,7 @@
 #import "BasketballStatTableCell.h"
 #import "BasketballStats.h"
 #import "LiveBasketballStatsViewController.h"
+#import "BasketballTotalStatsViewController.h"
 
 @interface BasketballStatsViewController ()
 
@@ -18,6 +19,7 @@
 
 @implementation BasketballStatsViewController {
     LiveBasketballStatsViewController *liveStatsController;
+    BasketballTotalStatsViewController *totalStatsController;
 }
 
 @synthesize athlete;
@@ -36,6 +38,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    _bannerImage.image = [currentSettings getBannerImage];
 }
 
 - (void)didReceiveMemoryWarning
@@ -48,14 +51,26 @@
     [super viewWillAppear:animated];
     
     _basketballLiveStatsContainer.hidden = YES;
+    _basketballTotalStatsContainer.hidden = YES;
+    
+    if (game)
+        _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", game.opponent_name];
+    else if (athlete)
+        _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats for ", athlete.logname];
+    else
+        _statLabel.text = @"Select game to enter stats";
+    
+    if ((game) || (athlete)) {
+        [_basketballTableView reloadData];
+    }
 }
 
 - (IBAction)saveButtonClicked:(id)sender {
     if (game) {
         for (int cnt = 0; cnt < currentSettings.roster.count; cnt++) {
-            if (![[currentSettings.roster objectAtIndex:cnt] saveSoccerGameStats:game.id]) {
+            if (![[currentSettings.roster objectAtIndex:cnt] saveBasketballGameStats:game.id]) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                message:[NSString stringWithFormat:@"%@%@", @"Update failed for  ", [[currentSettings.roster objectAtIndex:cnt] logname]]
+                            message:[NSString stringWithFormat:@"%@%@", @"Update failed for  ", [[currentSettings.roster objectAtIndex:cnt] logname]]
                                                                delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert setAlertViewStyle:UIAlertViewStyleDefault];
                 [alert show];
@@ -64,9 +79,9 @@
         }
     } else {
         for (int i = 0; i < currentSettings.gameList.count; i++) {
-            if (![athlete saveSoccerGameStats:[[currentSettings.gameList objectAtIndex:i] id]]) {
+            if (![athlete saveBasketballGameStats:[[currentSettings.gameList objectAtIndex:i] id]]) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                message:[NSString stringWithFormat:@"%@%@", @"Update failed for  ", [athlete logname]]
+                                     message:[NSString stringWithFormat:@"%@%@", @"Update failed for  ", [athlete logname]]
                                                                delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert setAlertViewStyle:UIAlertViewStyleDefault];
                 [alert show];
@@ -84,12 +99,24 @@
 
 - (IBAction)liveBasketballPlayerStats:(UIStoryboardSegue *)segue {
     _basketballLiveStatsContainer.hidden = YES;
-    [athlete updateBasketballGameStats:liveStatsController.stats];
+    
+    if (athlete)
+        [athlete updateBasketballGameStats:liveStatsController.stats];
+    else
+        [liveStatsController.player updateBasketballGameStats:liveStatsController.stats];
+    
     [_basketballTableView reloadData];
 }
 
 - (IBAction)updateTotalBasketballStats:(UIStoryboardSegue *)segue {
+    _basketballTotalStatsContainer.hidden = YES;
     
+    if (athlete)
+        [athlete updateBasketballGameStats:totalStatsController.stats];
+    else
+        [liveStatsController.player updateBasketballGameStats:liveStatsController.stats];
+    
+    [_basketballTableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -101,7 +128,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [currentSettings.roster count];
+    if (athlete)
+        return [currentSettings.gameList count];
+    else
+        return [currentSettings.roster count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -176,7 +206,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Player                FGM    FGA      FGP   3PA    3PM       3FGP  FTM     FTA        FTP  FOULS POINTS";
+    return @"              Player                FGM    FGA      FGP   3PA    3PM       3FGP  FTM     FTA        FTP  FOULS POINTS";
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -186,10 +216,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
    
     if (game) {
-        if (indexPath.section == 0)
-            liveStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];        
+        liveStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+        liveStatsController.game = game;
     } else if (athlete) {
         liveStatsController.player = athlete;
+        liveStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"  message:@"Select game to update stats for player!"
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -202,9 +233,32 @@
     _basketballLiveStatsContainer.hidden = NO;
 }
 
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        if (athlete) {
+            totalStatsController.player = athlete;
+            totalStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        } else {
+            totalStatsController.game = game;
+            totalStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+        }
+        
+        [totalStatsController viewWillAppear:YES];
+        _basketballTotalStatsContainer.hidden = NO;
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return @"Enter Totals";
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"LiveStatsSegue"]) {
         liveStatsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"TotalStatsSegue"]) {
+        totalStatsController = segue.destinationViewController;
     }
 }
 

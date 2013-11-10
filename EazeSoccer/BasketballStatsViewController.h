@@ -21,5 +21,8 @@
 -(IBAction)liveBasketballPlayerStats:(UIStoryboardSegue *)segue;
 -(IBAction)updateTotalBasketballStats:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UIView *basketballLiveStatsContainer;
+@property (weak, nonatomic) IBOutlet UIView *basketballTotalStatsContainer;
+@property (weak, nonatomic) IBOutlet UIImageView *bannerImage;
+@property (weak, nonatomic) IBOutlet UILabel *statLabel;
 
 @end
