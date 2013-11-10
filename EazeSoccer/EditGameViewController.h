@@ -14,6 +14,8 @@
 
 @property(nonatomic, strong) GameSchedule *game;
 
+@property(nonatomic, strong) UIPopoverController *popover;
+
 - (IBAction)submitButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 - (IBAction)deleteButtonClicked:(id)sender;
@@ -38,8 +40,11 @@
 - (IBAction)searchEazesportzButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *findsiteContainer;
 @property (weak, nonatomic) IBOutlet UIView *findTeamContainer;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 - (IBAction)findsiteSelected:(UIStoryboardSegue *)segue;
 - (IBAction)findteamSelected:(UIStoryboardSegue *)segue;
+- (IBAction)opponentImageButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *opponentImageButton;
 
 @end

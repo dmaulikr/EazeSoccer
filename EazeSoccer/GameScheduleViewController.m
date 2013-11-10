@@ -95,6 +95,7 @@
     [cell.visitorteamLabel setText:game.opponent_name];
     [cell.locationLabel setText:game.location];
     [cell.homeawayLabel setText:game.homeaway];
+    cell.homeImageView.image = [currentSettings.team getImage:@"tiny"];
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyy-MM-dd"];
@@ -124,20 +125,8 @@
         WonLost = @"  0-0";
     }
     
-    [cell.wonlostLabel setText:WonLost];
-    
-    UIImage *image;
-    
-    [cell.homeImageView setImage:[currentSettings.team getImage:@"thumb"]];
-    
-    if ([game.opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"]) {
-        image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"teambutton.png"], 1)];
-    } else {
-        NSURL * imageURL = [NSURL URLWithString:game.opponentpic];
-        NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-        image = [UIImage imageWithData:imageData];
-    }
-    [cell.visitorImageView setImage:image];
+    [cell.wonlostLabel setText:WonLost];    
+    [cell.visitorImageView setImage:[game opponentImage]];
     
     return cell;
 }

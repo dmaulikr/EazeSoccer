@@ -78,7 +78,7 @@
         else
             return 1;
     } else
-        return 0;
+        return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -106,6 +106,8 @@
         } else {
             return 0;
         }
+    } else if (section == 0) {
+        return currentSettings.roster.count;
     } else {
         return 0;
     }
@@ -129,11 +131,16 @@
             cell.playerName.text = player.logname;
             stats = [player findSoccerGameStats:game.id];
             cell.imageView.image = [player getImage:@"tiny"];
-        } else {
+        } else if (athlete) {
             GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
             cell.playerName.text = agame.opponent;
             stats = [athlete findSoccerGameStats:agame.id];
-            cell.imageView.image = [athlete getImage:@"tiny"];
+            cell.imageView.image = [agame opponentImage];
+        } else {
+            Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
+            cell.playerName.text = player.logname;
+            stats = [[Soccer alloc] init];
+            cell.imageView.image = [player getImage:@"tiny"];
         }
         
         cell.label1.text = [stats.goals stringValue];
@@ -183,23 +190,23 @@
             liveStatsController.player = [goalies objectAtIndex:indexPath.row];
         
         liveStatsController.game = game;
-    } else {
+    } else if (athlete) {
         if (indexPath.section == 0)
             liveStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
         else
             liveStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
         
         liveStatsController.player = athlete;
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"  message:@"Select game to update stats for player!"
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+        return;
     }
     
     [liveStatsController viewWillAppear:YES];
     _soccerStatsContainer.hidden = NO;
-/*    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"  message:@"Update Stats by selecting Live Stats on Menu below!"
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } */
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -241,13 +248,13 @@
 }
 
 - (IBAction)liveSoccerPlayerStats:(UIStoryboardSegue *)segue {
-    [liveStatsController.player updateSoccerGameStats:liveStatsController.playerStats Game:liveStatsController.playerStats.gameschedule_id];
+    [liveStatsController.player updateSoccerGameStats:liveStatsController.playerStats];
     _soccerStatsContainer.hidden = YES;
     [_soccerPlayerStatsTableView reloadData];
 }
 
 - (IBAction)updateTotalSoccerStats:(UIStoryboardSegue *)segue {
-    [totalStatsController.player updateSoccerGameStats:totalStatsController.soccerstats Game:totalStatsController.soccerstats.gameschedule_id];
+    [totalStatsController.player updateSoccerGameStats:totalStatsController.soccerstats];
     _totalStatsContainer.hidden = YES;
     [_soccerPlayerStatsTableView reloadData];
 }

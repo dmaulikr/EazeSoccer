@@ -66,21 +66,28 @@
         approved = [[sportDictionary objectForKey:@"approved"] boolValue];
         
         if ([name isEqualToString:@"Soccer"]) {
-            NSArray *positions = [sportDictionary objectForKey:@"soccer_positions"];
-            for (int i = 0; i < positions.count; i++) {
-                NSArray *pospair = [positions objectAtIndex:i];
-                for (int cnt = 0; cnt < pospair.count; cnt = cnt + 2) {
-                    [playerPositions setObject:[pospair objectAtIndex:cnt + 1] forKey:[pospair objectAtIndex:cnt]];
-                }
-            }
+            playerPositions = [self parsePositions:[sportDictionary objectForKey:@"soccer_positions"]];
         } else if ([name isEqualToString:@"Basketball"]) {
-            
+            playerPositions = [self parsePositions:[sportDictionary objectForKey:@"basketball_positions"]];
         }
         
         return self;
     } else {
         return nil;
     }
+}
+
+- (NSMutableDictionary *)parsePositions:(NSArray *)positions {
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    
+    for (int i = 0; i < positions.count; i++) {
+        NSArray *pospair = [positions objectAtIndex:i];
+        for (int cnt = 0; cnt < pospair.count; cnt = cnt + 2) {
+            [result setObject:[pospair objectAtIndex:cnt + 1] forKey:[pospair objectAtIndex:cnt]];
+        }
+    }
+    
+    return result;
 }
 
 - (UIImage *)getImage:(NSString *)size {

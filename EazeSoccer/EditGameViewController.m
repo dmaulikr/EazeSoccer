@@ -7,26 +7,29 @@
 //
 
 #import "EditGameViewController.h"
-#import "eazesportzAppDelegate.h"
+#import "EazesportzAppDelegate.h"
 #import "sportzServerInit.h"
-#import "sportzCurrentSettings.h"
 #import "FindEazesportzSiteViewController.h"
 #import "TeamSelectViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
-@interface EditGameViewController () <UIAlertViewDelegate>
+@interface EditGameViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate,
+                                    UIAlertViewDelegate, AmazonServiceRequestDelegate>
 
 @end
 
 @implementation EditGameViewController {
     NSDate *pickerDate;
     
+    BOOL oppImage, newmedia;
     FindEazesportzSiteViewController *findSiteController;
     TeamSelectViewController *teamSelectController;
 }
 
 @synthesize game;
+@synthesize popover;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -100,6 +103,13 @@
         } else {
             [_leagueSwitch setOn:NO];
         }
+        
+        if (game.opponentpic.length > 0) {
+            [_opponentImageButton setImage:[game opponentImage] forState:UIControlStateNormal];
+            
+            if (game.eazesportzOpponent)
+                _opponentImageButton.enabled = NO;
+        }
     } else {
         _homescoreLabel.text = @"0";
         _visitorscoreLabel.text = @"0";
@@ -109,6 +119,7 @@
         _homeScoreTextField.text = @"0";
         _opponentTextField.text = @"";
         _mascotTextField.text = @"";
+        _opponentImageButton.enabled = YES;
         [_leagueSwitch setOn:NO];
     }
 }
@@ -202,7 +213,11 @@
         }
         
         if ([game saveGameschedule]) {
-            [self.navigationController popViewControllerAnimated:YES];
+            if (oppImage) {
+                [self uploadImage:game];
+            } else {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Creating Game Data"
                                                             message:[game httperror]
@@ -217,6 +232,72 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+}
+
+- (BOOL)uploadImage:(GameSchedule *)agame {
+    oppImage = NO;
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [_activityIndicator startAnimating];
+    NSString *photopath = [NSString stringWithFormat:@"%@%@%@%@", @"uploads/gameschedulelogo/",
+                           agame.id, @"/", agame.opponent_mascot];
+    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:photopath inBucket:[[currentSettings getBucket] name]];
+    por.contentType = @"image/jpeg";
+    
+    UIImage *image = _opponentImageButton.imageView.image;
+    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
+    por.data = imageData;
+    int imagesize = imageData.length;
+    por.delegate = self;
+    
+    // Put the image data into the specified s3 bucket and object.
+    [[currentSettings getS3] putObject:por];
+    return YES;
+}
+
+-(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
+{
+    [_activityIndicator stopAnimating];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                       @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules/",
+                                       game.id, @"/updatelogo.json?auth_token=", currentSettings.user.authtoken]];
+    NSMutableURLRequest *urlrequest = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse* urlresponse;
+    NSError *error = nil;
+    NSString *path = [NSString stringWithFormat:@"%@%@%@%@", @"uploads/gameschedulelogo/", game.id, @"/", game.opponent_mascot];
+    NSMutableDictionary *athDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: path, @"filepath", @"image/jpeg",
+                                    @"filetype", game.opponent_mascot, @"filename", nil];
+    
+    //    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:athDict options:0 error:&error];
+    [urlrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlrequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [urlrequest setHTTPMethod:@"PUT"];
+    [urlrequest setHTTPBody:jsonData];
+    NSData* result = [NSURLConnection sendSynchronousRequest:urlrequest  returningResponse:&urlresponse error:&error];
+    int responseStatusCode = [(NSHTTPURLResponse*)urlresponse statusCode];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *gamedata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if (responseStatusCode == 200) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[gamedata objectForKey:@"error"]
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
+-(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Photo Upload Error" delegate:self
+                                          cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
+    [_activityIndicator stopAnimating];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
 - (IBAction)deleteButtonClicked:(id)sender {
@@ -254,17 +335,10 @@
     _findsiteContainer.hidden = YES;
     
     if (findSiteController.sport) {
-//        if (![findSiteController.sport.id isEqualToString:currentSettings.sport.id]) {
-            _findTeamContainer.hidden = NO;
-            teamSelectController.sport = findSiteController.sport;
-            [teamSelectController viewWillAppear:YES];
-/*        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You cannot select your team as an opponent!"
-                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-        } */
-    } 
+        _findTeamContainer.hidden = NO;
+        teamSelectController.sport = findSiteController.sport;
+        [teamSelectController viewWillAppear:YES];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -281,7 +355,87 @@
     if (teamSelectController.team) {
         _opponentTextField.text = teamSelectController.team.title;
         _mascotTextField.text = teamSelectController.team.mascot;
+        
+        if (([teamSelectController.team.team_logo isEqualToString:@"/team_logos/thumb/missing.png"]) ||
+            (teamSelectController.team.team_logo.length == 0)) {
+            [_opponentImageButton setImage:[findSiteController.sport getImage:@"thumb"] forState:UIControlStateNormal];
+        } else if ((teamSelectController.team.teamimage.CIImage == nil) && (teamSelectController.team.teamimage.CGImage == nil)) {
+            NSURL * imageURL = [NSURL URLWithString:teamSelectController.team.team_logo];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            [_opponentImageButton setImage:[UIImage imageWithData:imageData] forState:UIControlStateNormal];
+        }
     }
+}
+
+- (IBAction)opponentImageButtonClicked:(id)sender {
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
+        imagePicker.allowsEditing = NO;
+        imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+        UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+        apopover.delegate = self;
+        
+        // set contentsize
+        [apopover setPopoverContentSize:CGSizeMake(220,300)];
+        
+        [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        self.popover = apopover;
+    }
+}
+
+#pragma mark -
+#pragma mark UIImagePickerControllerDelegate
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    NSString *mediaType = info[UIImagePickerControllerMediaType];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
+        UIImage *image = info[UIImagePickerControllerOriginalImage];
+        
+        _opponentImageButton.imageView.image = image;
+        /*        CGSize imageviewsize;
+         
+         if (_playerImage.image.size.width > _playerImage.image.size.height) {
+         imageviewsize = CGSizeMake(100.0, 75.0);
+         _playerImage.frame = CGRectMake(_playerImage.frame.origin.x, _playerImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
+         } else {
+         imageviewsize = CGSizeMake(75.0, 100.0);
+         _playerImage.frame = CGRectMake(_playerImage.frame.origin.x, _playerImage.frame.origin.y, imageviewsize.width,
+         imageviewsize.height);
+         } */
+        if (newmedia)
+            UIImageWriteToSavedPhotosAlbum(image,
+                                           self,
+                                           @selector(image:finishedSavingWithError:contextInfo:),
+                                           nil);
+        oppImage = YES;
+    }
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
+    {
+        // Code here to support video if enabled
+    }
+}
+
+-(void)image:(UIImage *)imag finishedSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (error) {
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle: @"Save failed"
+                              message: @"Failed to save image"
+                              delegate: nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

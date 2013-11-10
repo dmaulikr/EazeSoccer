@@ -188,10 +188,10 @@
     return entry;
 }
 
-- (void)updateBasketballGameStats:(BasketballStats *)bballstats Game:(NSString *)gameid {
+- (void)updateBasketballGameStats:(BasketballStats *)bballstats {
     int i;
     for (i = 0; i < [basketball_stats count]; i++) {
-        if ([[[basketball_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid]) {
+        if ([[[basketball_stats objectAtIndex:i] gameschedule_id] isEqualToString:bballstats.gameschedule_id]) {
             break;
         }
     }
@@ -200,6 +200,10 @@
         [basketball_stats removeObjectAtIndex:i];
     }
     [basketball_stats addObject:bballstats];
+}
+
+- (BOOL)saveBasketballGameStats:(NSString *)gameid {
+    return [[self findBasketballGameStatEntries:gameid] saveStats];
 }
 
 - (Soccer *)findSoccerGameStats:(NSString *)gameid {
@@ -218,10 +222,10 @@
     return entry;
 }
 
-- (void)updateSoccerGameStats:(Soccer *)soccerstat Game:(NSString *)gameid {
+- (void)updateSoccerGameStats:(Soccer *)soccerstat {
     int i;
     for (i = 0; i < [soccer_stats count]; i++) {
-        if ([[[soccer_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid]) {
+        if ([[[soccer_stats objectAtIndex:i] gameschedule_id] isEqualToString:soccerstat.gameschedule_id]) {
             break;
         }
     }

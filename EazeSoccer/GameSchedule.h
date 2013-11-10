@@ -14,6 +14,7 @@
 
 @property(nonatomic, strong) NSString *opponent;
 @property(nonatomic, strong) NSString *opponentpic;
+@property(nonatomic, assign) BOOL eazesportzOpponent;
 @property(nonatomic, strong) NSString *opponent_mascot;
 @property(nonatomic, strong) NSString *opponent_name;
 @property(nonatomic, strong) NSString *startdate;
@@ -67,6 +68,8 @@
 - (BOOL)saveGameschedule;
 
 - (id)initDeleteGame;
+
+- (UIImage *)opponentImage;
 
 //@property(nonatomic, strong) NSMutableArray *gamelogs;
 

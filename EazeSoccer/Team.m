@@ -41,9 +41,7 @@
 - (UIImage *)getImage:(NSString *)size {
     UIImage *image;
     
-    if ([size isEqualToString:@"tiny"]) {
-        
-    } else if ([size isEqualToString:@"thumb"] ) {
+    if (([size isEqualToString:@"tiny"]) || ([size isEqualToString:@"thumb"])) {
         
         if (([self.team_logo isEqualToString:@"/team_logos/thumb/missing.png"]) || (self.team_logo.length == 0)) {
             image = [currentSettings.sport getImage:@"thumb"];

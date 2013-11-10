@@ -99,7 +99,7 @@
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
-    [player updateSoccerGameStats:playerStats Game:game.id];
+    [player updateSoccerGameStats:playerStats];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {

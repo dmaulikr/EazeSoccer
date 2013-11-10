@@ -27,7 +27,11 @@
 @property(nonatomic, strong) NSString *basketball_stat_id;
 @property(nonatomic, strong) NSString *athleteid;
 
+@property(nonatomic, strong) NSString *httperror;
+
 - (id)initWithDirectory:(NSDictionary *)basketballStatDirectory AthleteId:(NSString *)playerid;
 - (id)copyWithZone:(NSZone *)zone;
+
+- (BOOL)saveStats;
 
 @end

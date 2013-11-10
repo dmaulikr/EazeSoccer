@@ -22,6 +22,7 @@
 @synthesize opponent_name;
 @synthesize opponent_mascot;
 @synthesize opponentpic;
+@synthesize eazesportzOpponent;
 @synthesize gameisfinal;
 @synthesize lastplay;
 @synthesize homescore;
@@ -74,6 +75,7 @@
         opponent_name = [gameScheduleDictionary objectForKey:@"opponent_name"];
         opponent_mascot = [gameScheduleDictionary objectForKey:@"opponent_mascot"];
         opponentpic = [gameScheduleDictionary objectForKey:@"opponentpic"];
+        eazesportzOpponent = [[gameScheduleDictionary objectForKey:@"eazesportzOpponent"] boolValue];
         location = [gameScheduleDictionary objectForKey:@"location"];
         starttime = [gameScheduleDictionary objectForKey:@"starttime"];
         startdate = [gameScheduleDictionary objectForKey:@"gamedate"];
@@ -285,6 +287,16 @@
     } else {
         httperror = [serverData objectForKey:@"error"];
         return  self;
+    }
+}
+
+- (UIImage *)opponentImage {
+    if ([opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) {
+        return [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    } else {
+        NSURL * imageURL = [NSURL URLWithString:opponentpic];
+        NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+        return [UIImage imageWithData:imageData];
     }
 }
 

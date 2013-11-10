@@ -59,10 +59,11 @@
 - (FootballStats *)findFootballGameStatEntries:(NSString *)gameid;
 
 - (BasketballStats *)findBasketballGameStatEntries:(NSString *)gameid;
-- (void)updateBasketballGameStats:(BasketballStats *)bballstats Game:(NSString *)gameid;
+- (void)updateBasketballGameStats:(BasketballStats *)bballstats;
+- (BOOL)saveBasketballGameStats:(NSString *)gameid;
 
 - (Soccer *)findSoccerGameStats:(NSString *)gameid;
-- (void)updateSoccerGameStats:(Soccer *)soccerstat Game:(NSString *)gameid;
+- (void)updateSoccerGameStats:(Soccer *)soccerstat;
 - (BOOL)saveSoccerGameStats:(NSString *)gameid;
 - (BOOL)isSoccerGoalie;
 

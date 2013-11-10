@@ -13,6 +13,7 @@
 #import "PhotosViewController.h"
 #import "VideosViewController.h"
 #import "SoccerPlayerStatsViewController.h"
+#import "BasketballStatsViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -466,6 +467,9 @@
         destController.player = player;
     } else if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
         SoccerPlayerStatsViewController *destController = segue.destinationViewController;
+        destController.athlete = player;
+    } else if ([segue.identifier isEqualToString:@"BasketballStatsPlayerSegue"]) {
+        BasketballStatsViewController *destController = segue.destinationViewController;
         destController.athlete = player;
     }
 }

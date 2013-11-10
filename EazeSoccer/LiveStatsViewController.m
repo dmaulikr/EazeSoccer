@@ -12,6 +12,7 @@
 #import "GameScheduleViewController.h"
 #import "sportzServerInit.h"
 #import "SoccerLiveClockViewController.h"
+#import "BasketballStatsViewController.h"
 
 @interface LiveStatsViewController ()
 
@@ -21,6 +22,7 @@
     GameScheduleViewController *gameController;
     SoccerPlayerStatsViewController *soccerStatsController;
     SoccerLiveClockViewController *soccerScoreboardController;
+    BasketballStatsViewController *basketballStatsController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -53,9 +55,9 @@
     _gameContainer.hidden = YES;
     _soccerClockContainer.hidden = YES;
     
-    if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+//    if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
         _soccerContainer.hidden = NO;
-    }
+//    }
 }
 
 - (IBAction)selectGameLiveStats:(UIStoryboardSegue *)segue {
@@ -63,6 +65,9 @@
         if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
             soccerStatsController.game = gameController.thegame;
             [soccerStatsController viewWillAppear:YES];
+        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+            basketballStatsController.game = gameController.thegame;
+            [basketballStatsController viewWillAppear:YES];
         }
     }
     _gameContainer.hidden = YES;
@@ -75,6 +80,8 @@
         soccerStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"SoccerScoreboardSegue"]) {
         soccerScoreboardController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"BasketballPlayerStatsSegue"]) {
+        basketballStatsController = segue.destinationViewController;
     }
 }
 
