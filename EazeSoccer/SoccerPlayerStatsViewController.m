@@ -174,10 +174,17 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == 0)
-        return @"               Player                   Goals    Shots    Assists   Steals   C/K      Points";
-    else
-        return @"               Goalie                   Saves    Goals Against      Minutes";
+    if (section == 0) {
+        if (game)
+            return @"               Player                   Goals    Shots    Assists   Steals   C/K      Points";
+        else
+            return @"               Game                     Goals    Shots    Assists   Steals   C/K      Points";
+    } else {
+        if (game)
+            return @"               Goalie                   Saves    Goals Against      Minutes";
+        else
+            return @"Goalie Stats for Game       Saves    Goals Against      Minutes";
+    }
 }
 
 #pragma mark - Table view delegate

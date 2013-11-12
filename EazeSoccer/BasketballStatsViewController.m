@@ -206,7 +206,10 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"              Player                FGM    FGA      FGP   3PA    3PM       3FGP  FTM     FTA        FTP  FOULS POINTS";
+    if (game)
+        return @"              Player                FGM    FGA      FGP   3PA    3PM       3FGP  FTM     FTA        FTP  FOULS POINTS";
+    else
+        return @"              Game                  FGM    FGA      FGP   3PA    3PM       3FGP  FTM     FTA        FTP  FOULS POINTS";
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -219,6 +219,8 @@
         [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
         [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
         [gamedict setValue:possession forKey:@"bballpossessionarrow"];
+        [gamedict setValue:[[NSNumber numberWithBool:homebonus] stringValue] forKey:@"homebonus"];
+        [gamedict setValue:[[NSNumber numberWithBool:visitorbonus] stringValue] forKey:@"visitorbonus"];
     }
     
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
@@ -304,7 +306,7 @@
 }
 
 - (UIImage *)opponentImage {
-    if ([opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) {
+    if (([opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) || ([opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
         return [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
     } else {
         NSURL * imageURL = [NSURL URLWithString:opponentpic];

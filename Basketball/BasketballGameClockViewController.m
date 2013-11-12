@@ -196,20 +196,20 @@
 - (IBAction)homeBonusButton:(id)sender {
     if (!_leftBonusImage.hidden) {
         _leftBonusImage.hidden = YES;
-        game.visitorbonus = YES;
+        game.homebonus = NO;
     } else {
         _leftBonusImage.hidden = NO;
-        game.visitorbonus = NO;
+        game.homebonus = YES;
     }
  }
 
 - (IBAction)visitorBonusButton:(id)sender {
     if (!_rightBonusImage.hidden) {
         _rightBonusImage.hidden = YES;
-       game.homebonus = YES;
+       game.visitorbonus = NO;
     } else {
         _rightBonusImage.hidden = NO;
-        game.homebonus = NO;
+        game.visitorbonus = YES;
     }
 }
 
