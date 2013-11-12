@@ -48,7 +48,7 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     
     if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"])
-        image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"soccerheader.jpg"], 1)];
+        image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"soccerheader.png"], 1)];
     else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Basketball"])
         image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"bballongymfloor.png"], 1)];
     
@@ -465,6 +465,55 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+}
+
+- (int)teamFouls:(NSString *)gameid {
+    int teamfouls = 0;
+    
+    for (int cnt = 0; cnt < self.roster.count; cnt++) {
+        Athlete *player = [self.roster objectAtIndex:cnt];
+        
+        if ([sport.name isEqualToString:@"Basketball"]) {
+            for (int i = 0; i < player.basketball_stats.count; i++) {
+                BasketballStats *stats = [player.basketball_stats objectAtIndex:i];
+                
+                if ([stats.gameschedule_id isEqualToString:gameid]) {
+                    teamfouls = teamfouls + [stats.fouls intValue];
+                }
+            }
+        } else if ([sport.name isEqualToString:@"Soccer"]) {
+        }
+    }
+    
+    return teamfouls;
+}
+
+- (int)teamTotalPoints:(NSString *)gameid {
+    int totalpoints = 0;
+    
+    for (int cnt = 0; cnt < self.roster.count; cnt++) {
+        Athlete *player = [self.roster objectAtIndex:cnt];
+        
+        if ([sport.name isEqualToString:@"Basketball"]) {
+            for (int i = 0; i < player.basketball_stats.count; i++) {
+                BasketballStats *stats = [player.basketball_stats objectAtIndex:i];
+                
+                if ([stats.gameschedule_id isEqualToString:gameid]) {
+                    totalpoints = totalpoints + ([stats.twomade intValue] * 2) + ([stats.threemade intValue] * 3) + [stats.ftmade intValue];
+                }
+            }
+        } else if ([sport.name isEqualToString:@"Soccer"]) {
+            for (int i = 0; i < player.soccer_stats.count; i++) {
+                Soccer *stats = [player.soccer_stats objectAtIndex:i];
+                
+                if ([stats.gameschedule_id isEqualToString:gameid]) {
+                    totalpoints = totalpoints + [stats.goals intValue];
+                }
+            }
+        }
+    }
+    
+    return totalpoints;
 }
 
 - (BOOL)initS3Bucket {

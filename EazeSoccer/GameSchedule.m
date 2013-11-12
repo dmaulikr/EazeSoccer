@@ -210,7 +210,15 @@
         [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
         [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
     } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
-        
+        [gamedict setValue:[visitorfouls stringValue] forKey:@"opponentfouls"];
+        [gamedict setValue:[opponentscore stringValue] forKey:@"opponentscore"];
+        [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
+        [gamedict setValue:[[NSNumber numberWithBool:visitorbonus] stringValue] forKey:@"visitorbonus"];
+        [gamedict setValue:[[NSNumber numberWithBool:homebonus] stringValue] forKey:@"homebonus"];
+        NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
+        [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
+        [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
+        [gamedict setValue:possession forKey:@"bballpossessionarrow"];
     }
     
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
@@ -245,6 +253,10 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
     if ([httpResponse statusCode] == 200) {
+        
+        if (self.id.length == 0)
+            self.id = [[serverData objectForKey:@"schedule"] objectForKey:@"_id"];
+        
         return YES;
     } else {
         httperror = [serverData objectForKey:@"error"];
@@ -281,6 +293,7 @@
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
     if ([httpResponse statusCode] == 200) {
         self = nil;
         return self;

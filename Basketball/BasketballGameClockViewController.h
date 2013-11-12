@@ -32,5 +32,14 @@
 - (IBAction)fourthPeriodButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *homeFoulsTextField;
 @property (weak, nonatomic) IBOutlet UITextField *visitorFoulsTextField;
+@property (weak, nonatomic) IBOutlet UIImageView *hometeamImage;
+@property (weak, nonatomic) IBOutlet UILabel *hometeamLabel;
+@property (weak, nonatomic) IBOutlet UILabel *visitorteamLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *visitorImage;
+@property (weak, nonatomic) IBOutlet UILabel *gameclockLabel;
+- (IBAction)saveButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIImageView *homePossessionArrow;
+@property (weak, nonatomic) IBOutlet UIImageView *visitorPossessionArrow;
+- (IBAction)possessionArrorButtonClicked:(id)sender;
 
 @end

@@ -65,6 +65,8 @@
         _coachLastNameTextField.text = @"";
         _coachMiddleNameTextField.text = @"";
         _responsibilityTextField.text = @""; */
+        _deleteButton.enabled = NO;
+        _deleteButton.hidden = YES;
         _bioTextView.text = @"";
         _yearsOnStaffTextField.text = [NSString stringWithFormat:@"%d", 0];
         image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];

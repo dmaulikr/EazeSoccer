@@ -13,6 +13,7 @@
 #import "sportzServerInit.h"
 #import "SoccerLiveClockViewController.h"
 #import "BasketballStatsViewController.h"
+#import "BasketballGameClockViewController.h"
 
 @interface LiveStatsViewController ()
 
@@ -23,6 +24,7 @@
     SoccerPlayerStatsViewController *soccerStatsController;
     SoccerLiveClockViewController *soccerScoreboardController;
     BasketballStatsViewController *basketballStatsController;
+    BasketballGameClockViewController *basketballGameCloclController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -82,6 +84,8 @@
         soccerScoreboardController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"BasketballPlayerStatsSegue"]) {
         basketballStatsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"BasketballScoreboardSegue"]) {
+        basketballGameCloclController = segue.destinationViewController;
     }
 }
 
@@ -91,7 +95,11 @@
             soccerScoreboardController.game = gameController.thegame;
             [soccerScoreboardController viewWillAppear:YES];
             _soccerClockContainer.hidden = NO;
+        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+            basketballGameCloclController.game = gameController.thegame;
+            [basketballGameCloclController viewWillAppear:YES];
         }
+        _soccerClockContainer.hidden = NO;
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"Select a game first!"
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

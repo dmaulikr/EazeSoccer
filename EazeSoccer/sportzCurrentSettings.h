@@ -73,6 +73,9 @@
 
 - (void)retrieveSport;
 
+- (int)teamFouls:(NSString *)gameid;
+- (int)teamTotalPoints:(NSString *)gameid;
+
 - (BOOL)initS3Bucket;
 - (S3Bucket *)getBucket;
 - (AmazonS3Client *)getS3;
