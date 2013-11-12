@@ -699,7 +699,7 @@
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error uploading photo"
                                                         message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -793,6 +793,8 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+    } else if ([title isEqualToString:@"Ok"]) {
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

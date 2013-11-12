@@ -61,10 +61,6 @@
         _responsibilityTextField.text = coach.speciality;
         image = [coach getImage:@"thumb"];
     } else {
-/*        _coachFirstNameTextField.text = @"";
-        _coachLastNameTextField.text = @"";
-        _coachMiddleNameTextField.text = @"";
-        _responsibilityTextField.text = @""; */
         _deleteButton.enabled = NO;
         _deleteButton.hidden = YES;
         _bioTextView.text = @"";
