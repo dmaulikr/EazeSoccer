@@ -77,7 +77,14 @@
     if (game) {
         _opponentTextField.text = game.opponent;
         _mascotTextField.text = game.opponent_mascot;
-        _homeawayTextField.text = game.homeaway;
+        
+        if ([game.homeaway isEqualToString:@"Home"]) {
+            [_homeawaySwitch setOn:YES];
+//            _homeawayTextField.text = game.homeaway;
+        } else {
+            [_homeawaySwitch setOn:NO];
+        }
+        
         _locationTextField.text = game.location;
         _eventTextField.text = game.event;
         
@@ -183,7 +190,7 @@
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
-    if ((_opponentTextField.text.length > 0) && (_locationTextField.text.length > 0) && (_homeawayTextField.text.length > 0) &&
+    if ((_opponentTextField.text.length > 0) && (_locationTextField.text.length > 0) &&
         (_gameDateTextField.text.length > 0) && (_gameTimeTextField.text.length > 0)) {
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -203,7 +210,13 @@
         game.opponent_mascot = _mascotTextField.text;
         game.location = _locationTextField.text;
         game.event = _eventTextField.text;
-        game.homeaway = _homeawayTextField.text;
+        
+        if ([_homeawaySwitch isOn])
+            game.homeaway = @"Home";
+        else
+            game.homeaway = @"Away";
+        
+//        game.homeaway = _homeawayTextField.text;
         game.homescore = [NSNumber numberWithInt:[_homeScoreTextField.text intValue]];
         game.opponentscore = [NSNumber numberWithInt:[_visitorScoreTextField.text intValue]];
         game.leaguegame = [_leagueSwitch isOn];
@@ -227,7 +240,7 @@
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                              message:@"Game entry must include Opponent, Location, Home/Away, Start Date and Start Time"
+                              message:@"Game entry must include Opponent, Location, Start Date and Start Time"
                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];

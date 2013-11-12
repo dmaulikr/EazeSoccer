@@ -102,6 +102,203 @@
 		B4A515D618243945003E2A10 /* man.png in Resources */ = {isa = PBXBuildFile; fileRef = B4A515D518243945003E2A10 /* man.png */; };
 		B4A515DC18243B57003E2A10 /* CoachTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515DB18243B57003E2A10 /* CoachTableCell.m */; };
 		B4A515DF18243CB5003E2A10 /* FullCoachSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515DE18243CB5003E2A10 /* FullCoachSelectionViewController.m */; };
+		B4A5AD581831FE99002E2CCF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F9883018208AC70093EF7E /* Foundation.framework */; };
+		B4A5AD591831FE99002E2CCF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F9883218208AC70093EF7E /* CoreGraphics.framework */; };
+		B4A5AD5A1831FE99002E2CCF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F9883418208AC70093EF7E /* UIKit.framework */; };
+		B4A5AD601831FE99002E2CCF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B4A5AD5E1831FE99002E2CCF /* InfoPlist.strings */; };
+		B4A5AD621831FE99002E2CCF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A5AD611831FE99002E2CCF /* main.m */; };
+		B4A5AD691831FE99002E2CCF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4A5AD671831FE99002E2CCF /* Main.storyboard */; };
+		B4A5AD711831FE99002E2CCF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B4A5AD701831FE99002E2CCF /* Images.xcassets */; };
+		B4A5AD771831FE99002E2CCF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F9885218208AC70093EF7E /* XCTest.framework */; };
+		B4A5AD781831FE99002E2CCF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F9883018208AC70093EF7E /* Foundation.framework */; };
+		B4A5AD791831FE99002E2CCF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F9883418208AC70093EF7E /* UIKit.framework */; };
+		B4A5AD811831FE99002E2CCF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B4A5AD7F1831FE99002E2CCF /* InfoPlist.strings */; };
+		B4A5AD831831FE99002E2CCF /* EazeBasketballTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A5AD821831FE99002E2CCF /* EazeBasketballTests.m */; };
+		B4A5AD8A1832012D002E2CCF /* Alert.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988801820B3B80093EF7E /* Alert.h */; };
+		B4A5AD8B1832012D002E2CCF /* Alert.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988811820B3B80093EF7E /* Alert.m */; };
+		B4A5AD8C1832012D002E2CCF /* Athlete.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988921820BCCF0093EF7E /* Athlete.h */; };
+		B4A5AD8D1832012D002E2CCF /* Athlete.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988931820BCCF0093EF7E /* Athlete.m */; };
+		B4A5AD8E1832012D002E2CCF /* BasketballStats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515AC18235C00003E2A10 /* BasketballStats.h */; };
+		B4A5AD8F1832012D002E2CCF /* BasketballStats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515AD18235C00003E2A10 /* BasketballStats.m */; };
+		B4A5AD901832012D002E2CCF /* BasketballPlayerStatTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4158DCF1828309100AEE47D /* BasketballPlayerStatTableCell.h */; };
+		B4A5AD911832012D002E2CCF /* BasketballPlayerStatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD01828309100AEE47D /* BasketballPlayerStatTableCell.m */; };
+		B4A5AD921832012D002E2CCF /* Blog.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988861820B3CB0093EF7E /* Blog.h */; };
+		B4A5AD931832012D002E2CCF /* Blog.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988871820B3CB0093EF7E /* Blog.m */; };
+		B4A5AD941832012D002E2CCF /* BlogCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515AF1823F8CE003E2A10 /* BlogCell.h */; };
+		B4A5AD951832012D002E2CCF /* BlogCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515B01823F8CE003E2A10 /* BlogCell.m */; };
+		B4A5AD961832012D002E2CCF /* BlogEntryViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515B21823F981003E2A10 /* BlogEntryViewController.h */; };
+		B4A5AD971832012D002E2CCF /* BlogEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515B31823F981003E2A10 /* BlogEntryViewController.m */; };
+		B4A5AD981832012D002E2CCF /* BlogViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515B41823F981003E2A10 /* BlogViewController.h */; };
+		B4A5AD991832012D002E2CCF /* BlogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515B51823F981003E2A10 /* BlogViewController.m */; };
+		B4A5AD9A1832012D002E2CCF /* ChangeTeamViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B48558D01827F28700DE3AE6 /* ChangeTeamViewController.h */; };
+		B4A5AD9B1832012D002E2CCF /* ChangeTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B48558D11827F28700DE3AE6 /* ChangeTeamViewController.m */; };
+		B4A5AD9C1832012D002E2CCF /* Coach.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988891820B3E20093EF7E /* Coach.h */; };
+		B4A5AD9D1832012D002E2CCF /* Coach.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F9888A1820B3E20093EF7E /* Coach.m */; };
+		B4A5AD9E1832012D002E2CCF /* CoachSelectionViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515BA1823FE94003E2A10 /* CoachSelectionViewController.h */; };
+		B4A5AD9F1832012D002E2CCF /* CoachSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515BB1823FE94003E2A10 /* CoachSelectionViewController.m */; };
+		B4A5ADA01832012D002E2CCF /* CoachTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515DA18243B57003E2A10 /* CoachTableCell.h */; };
+		B4A5ADA11832012D002E2CCF /* CoachTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515DB18243B57003E2A10 /* CoachTableCell.m */; };
+		B4A5ADA21832012D002E2CCF /* Contact.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515BC1823FE94003E2A10 /* Contact.h */; };
+		B4A5ADA31832012D002E2CCF /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515BD1823FE94003E2A10 /* Contact.m */; };
+		B4A5ADA41832012D002E2CCF /* ContactCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515BE1823FE94003E2A10 /* ContactCell.h */; };
+		B4A5ADA51832012D002E2CCF /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515BF1823FE94003E2A10 /* ContactCell.m */; };
+		B4A5ADA61832012D002E2CCF /* ContactTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B48558CD1827E6E700DE3AE6 /* ContactTableViewController.h */; };
+		B4A5ADA71832012D002E2CCF /* ContactTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B48558CE1827E6E700DE3AE6 /* ContactTableViewController.m */; };
+		B4A5ADA81832012D002E2CCF /* ContactViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C01823FE94003E2A10 /* ContactViewController.h */; };
+		B4A5ADA91832012D002E2CCF /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C11823FE94003E2A10 /* ContactViewController.m */; };
+		B4A5ADAA1832012D002E2CCF /* EditCoachViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C71823FEB9003E2A10 /* EditCoachViewController.h */; };
+		B4A5ADAB1832012D002E2CCF /* EditCoachViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C81823FEB9003E2A10 /* EditCoachViewController.m */; };
+		B4A5ADAC1832012D002E2CCF /* EditContactViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C91823FEB9003E2A10 /* EditContactViewController.h */; };
+		B4A5ADAD1832012D002E2CCF /* EditContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515CA1823FEB9003E2A10 /* EditContactViewController.m */; };
+		B4A5ADAE1832012D002E2CCF /* EditGameViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F421531821A4180023E61C /* EditGameViewController.h */; };
+		B4A5ADAF1832012D002E2CCF /* EditGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F421541821A4180023E61C /* EditGameViewController.m */; };
+		B4A5ADB01832012D002E2CCF /* EditPlayerViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F7C1822E857009D0239 /* EditPlayerViewController.h */; };
+		B4A5ADB11832012D002E2CCF /* EditPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F7D1822E857009D0239 /* EditPlayerViewController.m */; };
+		B4A5ADB21832012D002E2CCF /* EditStandingViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B474F3A11828C83D00AFF39F /* EditStandingViewController.h */; };
+		B4A5ADB31832012D002E2CCF /* EditStandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F3A21828C83D00AFF39F /* EditStandingViewController.m */; };
+		B4A5ADB41832012D002E2CCF /* EditTeamViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B402F94E18219197006648DD /* EditTeamViewController.h */; };
+		B4A5ADB51832012D002E2CCF /* EditTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B402F94F18219197006648DD /* EditTeamViewController.m */; };
+		B4A5ADB61832012D002E2CCF /* EditUserViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A5159A1822EB65003E2A10 /* EditUserViewController.h */; };
+		B4A5ADB71832012D002E2CCF /* EditUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A5159B1822EB65003E2A10 /* EditUserViewController.m */; };
+		B4A5ADB81832012D002E2CCF /* EazesportzAppDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F9883F18208AC70093EF7E /* EazesportzAppDelegate.h */; };
+		B4A5ADB91832012D002E2CCF /* EazesportzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F9884018208AC70093EF7E /* EazesportzAppDelegate.m */; };
+		B4A5ADBA1832012D002E2CCF /* FindEazesportzSiteViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B41862E21821A6A3009F520C /* FindEazesportzSiteViewController.h */; };
+		B4A5ADBB1832012D002E2CCF /* FindEazesportzSiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B41862E31821A6A3009F520C /* FindEazesportzSiteViewController.m */; };
+		B4A5ADBC1832012D002E2CCF /* FindPlayerViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515A61822FC4C003E2A10 /* FindPlayerViewController.h */; };
+		B4A5ADBD1832012D002E2CCF /* FindPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515A71822FC4C003E2A10 /* FindPlayerViewController.m */; };
+		B4A5ADBE1832012D002E2CCF /* FootballStats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4158DC21828210100AEE47D /* FootballStats.h */; };
+		B4A5ADBF1832012D002E2CCF /* FootballStats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DC31828210100AEE47D /* FootballStats.m */; };
+		B4A5ADC01832012D002E2CCF /* FullCoachSelectionViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515DD18243CB5003E2A10 /* FullCoachSelectionViewController.h */; };
+		B4A5ADC11832012D002E2CCF /* FullCoachSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515DE18243CB5003E2A10 /* FullCoachSelectionViewController.m */; };
+		B4A5ADC21832012D002E2CCF /* FullGameScheduleViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4EF7BC3182C44AB00DBD278 /* FullGameScheduleViewController.h */; };
+		B4A5ADC31832012D002E2CCF /* FullGameScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4EF7BC4182C44AB00DBD278 /* FullGameScheduleViewController.m */; };
+		B4A5ADC41832012D002E2CCF /* FullViewPlayerSelectionViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A5159D1822F277003E2A10 /* FullViewPlayerSelectionViewController.h */; };
+		B4A5ADC51832012D002E2CCF /* FullViewPlayerSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A5159E1822F277003E2A10 /* FullViewPlayerSelectionViewController.m */; };
+		B4A5ADC61832012D002E2CCF /* GameSchedule.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F9888F1820BCA70093EF7E /* GameSchedule.h */; };
+		B4A5ADC71832012D002E2CCF /* GameSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988901820BCA70093EF7E /* GameSchedule.m */; };
+		B4A5ADC81832012D002E2CCF /* GameScheduleViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F9886B18208B480093EF7E /* GameScheduleViewController.h */; };
+		B4A5ADC91832012D002E2CCF /* GameScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F9886C18208B480093EF7E /* GameScheduleViewController.m */; };
+		B4A5ADCA1832012D002E2CCF /* GameScheduleTableViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4AE4C7418219D560076A6DE /* GameScheduleTableViewCell.h */; };
+		B4A5ADCB1832012D002E2CCF /* GameScheduleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4AE4C7518219D560076A6DE /* GameScheduleTableViewCell.m */; };
+		B4A5ADCC1832012D002E2CCF /* HeaderSelectCollectionReusableView.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515911822EACA003E2A10 /* HeaderSelectCollectionReusableView.h */; };
+		B4A5ADCD1832012D002E2CCF /* HeaderSelectCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515921822EACA003E2A10 /* HeaderSelectCollectionReusableView.m */; };
+		B4A5ADCE1832012D002E2CCF /* KeychainWrapper.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988B81820BDFE0093EF7E /* KeychainWrapper.h */; };
+		B4A5ADCF1832012D002E2CCF /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988B91820BDFE0093EF7E /* KeychainWrapper.m */; };
+		B4A5ADD01832012D002E2CCF /* LiveStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4158DCC18282F8A00AEE47D /* LiveStatsViewController.h */; };
+		B4A5ADD11832012D002E2CCF /* LiveStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DCD18282F8A00AEE47D /* LiveStatsViewController.m */; };
+		B4A5ADD21832012D002E2CCF /* LiveSoccerStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B474F3981828BDD000AFF39F /* LiveSoccerStatsViewController.h */; };
+		B4A5ADD31832012D002E2CCF /* LiveSoccerStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F3991828BDD000AFF39F /* LiveSoccerStatsViewController.m */; };
+		B4A5ADD41832012D002E2CCF /* LoginViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F9886818208B0B0093EF7E /* LoginViewController.h */; };
+		B4A5ADD51832012D002E2CCF /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F9886918208B0B0093EF7E /* LoginViewController.m */; };
+		B4A5ADD61832012D002E2CCF /* Newsfeed.h in Sources */ = {isa = PBXBuildFile; fileRef = B415932B1827068C0010BAAA /* Newsfeed.h */; };
+		B4A5ADD71832012D002E2CCF /* Newsfeed.m in Sources */ = {isa = PBXBuildFile; fileRef = B415932C1827068C0010BAAA /* Newsfeed.m */; };
+		B4A5ADD81832012D002E2CCF /* NewsFeedEditViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B415932E182707DC0010BAAA /* NewsFeedEditViewController.h */; };
+		B4A5ADD91832012D002E2CCF /* NewsFeedEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B415932F182707DC0010BAAA /* NewsFeedEditViewController.m */; };
+		B4A5ADDA1832012D002E2CCF /* NewsTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B41593311827092F0010BAAA /* NewsTableCell.h */; };
+		B4A5ADDB1832012D002E2CCF /* NewsTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B41593321827092F0010BAAA /* NewsTableCell.m */; };
+		B4A5ADDC1832012D002E2CCF /* NewsTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B41593281827064A0010BAAA /* NewsTableViewController.h */; };
+		B4A5ADDD1832012D002E2CCF /* NewsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B41593291827064A0010BAAA /* NewsTableViewController.m */; };
+		B4A5ADDE1832012D002E2CCF /* Photo.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988AE1820BDE00093EF7E /* Photo.h */; };
+		B4A5ADDF1832012D002E2CCF /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988AF1820BDE00093EF7E /* Photo.m */; };
+		B4A5ADE01832012D002E2CCF /* PhotoCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515941822EAE7003E2A10 /* PhotoCell.h */; };
+		B4A5ADE11832012D002E2CCF /* PhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515951822EAE7003E2A10 /* PhotoCell.m */; };
+		B4A5ADE21832012D002E2CCF /* PhotoInfoViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515971822EB03003E2A10 /* PhotoInfoViewController.h */; };
+		B4A5ADE31832012D002E2CCF /* PhotoInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515981822EB03003E2A10 /* PhotoInfoViewController.m */; };
+		B4A5ADE41832012D002E2CCF /* PhotosViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F7F1822E888009D0239 /* PhotosViewController.h */; };
+		B4A5ADE51832012D002E2CCF /* PhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F801822E888009D0239 /* PhotosViewController.m */; };
+		B4A5ADE61832012D002E2CCF /* PlayerSelectionViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F791822E415009D0239 /* PlayerSelectionViewController.h */; };
+		B4A5ADE71832012D002E2CCF /* PlayerSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F7A1822E415009D0239 /* PlayerSelectionViewController.m */; };
+		B4A5ADE81832012D002E2CCF /* ProgramInfoViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988CE1820BEE00093EF7E /* ProgramInfoViewController.h */; };
+		B4A5ADE91832012D002E2CCF /* ProgramInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988CF1820BEE00093EF7E /* ProgramInfoViewController.m */; };
+		B4A5ADEA1832012D002E2CCF /* RosterTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F761822E29F009D0239 /* RosterTableCell.h */; };
+		B4A5ADEB1832012D002E2CCF /* RosterTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F771822E29F009D0239 /* RosterTableCell.m */; };
+		B4A5ADEC1832012D002E2CCF /* ShuffleAlphabet.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515A91822FDF1003E2A10 /* ShuffleAlphabet.h */; };
+		B4A5ADED1832012D002E2CCF /* ShuffleAlphabet.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515AA1822FDF1003E2A10 /* ShuffleAlphabet.m */; };
+		B4A5ADEE1832012D002E2CCF /* SearchForUserViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4C174AF182447EB00D6D8B9 /* SearchForUserViewController.h */; };
+		B4A5ADEF1832012D002E2CCF /* SearchForUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4C174B0182447EB00D6D8B9 /* SearchForUserViewController.m */; };
+		B4A5ADF01832012D002E2CCF /* Soccer.h in Sources */ = {isa = PBXBuildFile; fileRef = B4158DC91828245B00AEE47D /* Soccer.h */; };
+		B4A5ADF11832012D002E2CCF /* Soccer.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DCA1828245B00AEE47D /* Soccer.m */; };
+		B4A5ADF21832012D002E2CCF /* SoccerLiveClockViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B423F66B1829EED10021EFF8 /* SoccerLiveClockViewController.h */; };
+		B4A5ADF31832012D002E2CCF /* SoccerLiveClockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B423F66C1829EED10021EFF8 /* SoccerLiveClockViewController.m */; };
+		B4A5ADF41832012D002E2CCF /* SoccerPlayerStatsTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD21828349D00AEE47D /* SoccerPlayerStatsTableCell.h */; };
+		B4A5ADF51832012D002E2CCF /* SoccerPlayerStatsTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD31828349D00AEE47D /* SoccerPlayerStatsTableCell.m */; };
+		B4A5ADF61832012D002E2CCF /* SoccerPlayerStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD5182834E500AEE47D /* SoccerPlayerStatsViewController.h */; };
+		B4A5ADF71832012D002E2CCF /* SoccerPlayerStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DD6182834E500AEE47D /* SoccerPlayerStatsViewController.m */; };
+		B4A5ADF81832012D002E2CCF /* Sponsor.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988A71820BD990093EF7E /* Sponsor.h */; };
+		B4A5ADF91832012D002E2CCF /* Sponsor.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988A81820BD990093EF7E /* Sponsor.m */; };
+		B4A5ADFA1832012D002E2CCF /* Sport.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988721820B3040093EF7E /* Sport.h */; };
+		B4A5ADFB1832012D002E2CCF /* Sport.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988731820B3040093EF7E /* Sport.m */; };
+		B4A5ADFC1832012D002E2CCF /* sportzConstants.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988741820B3040093EF7E /* sportzConstants.h */; };
+		B4A5ADFD1832012D002E2CCF /* sportzCurrentSettings.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988751820B3040093EF7E /* sportzCurrentSettings.h */; };
+		B4A5ADFE1832012D002E2CCF /* sportzCurrentSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988761820B3040093EF7E /* sportzCurrentSettings.m */; };
+		B4A5ADFF1832012D002E2CCF /* sportzServerInit.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988771820B3040093EF7E /* sportzServerInit.h */; };
+		B4A5AE001832012D002E2CCF /* sportzServerInit.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988781820B3040093EF7E /* sportzServerInit.m */; };
+		B4A5AE011832012D002E2CCF /* sportzteamsRegisterLoginViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988CB1820BEB20093EF7E /* sportzteamsRegisterLoginViewController.h */; };
+		B4A5AE021832012D002E2CCF /* sportzteamsRegisterLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988CC1820BEB20093EF7E /* sportzteamsRegisterLoginViewController.m */; };
+		B4A5AE031832012D002E2CCF /* sportzteamsAlertsJSON.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988BF1820BE610093EF7E /* sportzteamsAlertsJSON.h */; };
+		B4A5AE041832012D002E2CCF /* sportzteamsAlertsJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988C01820BE610093EF7E /* sportzteamsAlertsJSON.m */; };
+		B4A5AE051832012D002E2CCF /* Standings.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988A41820BD880093EF7E /* Standings.h */; };
+		B4A5AE061832012D002E2CCF /* Standings.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988A51820BD880093EF7E /* Standings.m */; };
+		B4A5AE071832012D002E2CCF /* StandingsTableViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B474F39B1828C78700AFF39F /* StandingsTableViewCell.h */; };
+		B4A5AE081832012D002E2CCF /* StandingsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F39C1828C78700AFF39F /* StandingsTableViewCell.m */; };
+		B4A5AE091832012D002E2CCF /* StandingsTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B474F39D1828C78700AFF39F /* StandingsTableViewController.h */; };
+		B4A5AE0A1832012D002E2CCF /* StandingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F39E1828C78700AFF39F /* StandingsTableViewController.m */; };
+		B4A5AE0B1832012D002E2CCF /* Stats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4158DC51828217600AEE47D /* Stats.h */; };
+		B4A5AE0C1832012D002E2CCF /* Stats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4158DC61828217600AEE47D /* Stats.m */; };
+		B4A5AE0D1832012D002E2CCF /* Team.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988A01820BD180093EF7E /* Team.h */; };
+		B4A5AE0E1832012D002E2CCF /* Team.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988A11820BD180093EF7E /* Team.m */; };
+		B4A5AE0F1832012D002E2CCF /* TeamSelectViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4AA0BC3182163C700E39B32 /* TeamSelectViewController.h */; };
+		B4A5AE101832012D002E2CCF /* TeamSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4AA0BC4182163C700E39B32 /* TeamSelectViewController.m */; };
+		B4A5AE111832012D002E2CCF /* UpdateSoccerTotalsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B474F3A41829B93700AFF39F /* UpdateSoccerTotalsViewController.h */; };
+		B4A5AE121832012D002E2CCF /* UpdateSoccerTotalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F3A51829B93700AFF39F /* UpdateSoccerTotalsViewController.m */; };
+		B4A5AE131832012D002E2CCF /* User.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F9889B1820BD030093EF7E /* User.h */; };
+		B4A5AE141832012D002E2CCF /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F9889C1820BD030093EF7E /* User.m */; };
+		B4A5AE151832012D002E2CCF /* UserTableViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F841822E91C009D0239 /* UserTableViewCell.h */; };
+		B4A5AE161832012D002E2CCF /* UserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F851822E91C009D0239 /* UserTableViewCell.m */; };
+		B4A5AE171832012D002E2CCF /* UsersViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F821822E91C009D0239 /* UsersViewController.h */; };
+		B4A5AE181832012D002E2CCF /* UsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F831822E91C009D0239 /* UsersViewController.m */; };
+		B4A5AE191832012D002E2CCF /* Video.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988951820BCF20093EF7E /* Video.h */; };
+		B4A5AE1A1832012D002E2CCF /* Video.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988961820BCF20093EF7E /* Video.m */; };
+		B4A5AE1B1832012D002E2CCF /* VideoCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F988971820BCF20093EF7E /* VideoCell.h */; };
+		B4A5AE1C1832012D002E2CCF /* VideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F988981820BCF20093EF7E /* VideoCell.m */; };
+		B4A5AE1D1832012D002E2CCF /* VideoInfoViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515A01822F39F003E2A10 /* VideoInfoViewController.h */; };
+		B4A5AE1E1832012D002E2CCF /* VideoInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515A11822F39F003E2A10 /* VideoInfoViewController.m */; };
+		B4A5AE1F1832012D002E2CCF /* VideosViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515A21822F39F003E2A10 /* VideosViewController.h */; };
+		B4A5AE201832012D002E2CCF /* VideosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515A31822F39F003E2A10 /* VideosViewController.m */; };
+		B4A5AE2118320149002E2CCF /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B415931A1826D4BE0010BAAA /* MobileCoreServices.framework */; };
+		B4A5AE221832015D002E2CCF /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B415931E1826D4D90010BAAA /* MediaPlayer.framework */; };
+		B4A5AE2318320167002E2CCF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B415931C1826D4C50010BAAA /* Security.framework */; };
+		B4A5AE2418320188002E2CCF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B41593201826D4E00010BAAA /* QuartzCore.framework */; };
+		B4A5AE251832019F002E2CCF /* calendar.png in Resources */ = {isa = PBXBuildFile; fileRef = B474F3961828B16700AFF39F /* calendar.png */; };
+		B4A5AE261832019F002E2CCF /* clock.png in Resources */ = {isa = PBXBuildFile; fileRef = B4158DC01827FACF00AEE47D /* clock.png */; };
+		B4A5AE271832019F002E2CCF /* addressbook.png in Resources */ = {isa = PBXBuildFile; fileRef = B415933818277CF00010BAAA /* addressbook.png */; };
+		B4A5AE281832019F002E2CCF /* whistle.png in Resources */ = {isa = PBXBuildFile; fileRef = B415933618277B0F0010BAAA /* whistle.png */; };
+		B4A5AE291832019F002E2CCF /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = B415933418277A8A0010BAAA /* gear.png */; };
+		B4A5AE2A1832019F002E2CCF /* uploadmovie.png in Resources */ = {isa = PBXBuildFile; fileRef = B41593261826EF700010BAAA /* uploadmovie.png */; };
+		B4A5AE2B1832019F002E2CCF /* playbutton_cripped.png in Resources */ = {isa = PBXBuildFile; fileRef = B41593241826E9960010BAAA /* playbutton_cripped.png */; };
+		B4A5AE2C1832019F002E2CCF /* multi-agents.png in Resources */ = {isa = PBXBuildFile; fileRef = B4C174AD182443E200D6D8B9 /* multi-agents.png */; };
+		B4A5AE2D1832019F002E2CCF /* man.png in Resources */ = {isa = PBXBuildFile; fileRef = B4A515D518243945003E2A10 /* man.png */; };
+		B4A5AE2E1832019F002E2CCF /* edit.png in Resources */ = {isa = PBXBuildFile; fileRef = B4A515D318243880003E2A10 /* edit.png */; };
+		B4A5AE2F1832019F002E2CCF /* film.png in Resources */ = {isa = PBXBuildFile; fileRef = B4A515CF182437E9003E2A10 /* film.png */; };
+		B4A5AE301832019F002E2CCF /* speaker-on.png in Resources */ = {isa = PBXBuildFile; fileRef = B4A515CD18240238003E2A10 /* speaker-on.png */; };
+		B4A5AE311832019F002E2CCF /* soccerheader.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B4AA0BC118215A2900E39B32 /* soccerheader.jpg */; };
+		B4A5AE321832019F002E2CCF /* home.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F988B71820BDFE0093EF7E /* home.png */; };
+		B4A5AE331832019F002E2CCF /* newspaper.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F988AA1820BDE00093EF7E /* newspaper.png */; };
+		B4A5AE341832019F002E2CCF /* phone-book.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F988AB1820BDE00093EF7E /* phone-book.png */; };
+		B4A5AE351832019F002E2CCF /* photo_not_available.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F988AC1820BDE00093EF7E /* photo_not_available.png */; };
+		B4A5AE361832019F002E2CCF /* photo_processing.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F988AD1820BDE00093EF7E /* photo_processing.png */; };
+		B4A5AE371832019F002E2CCF /* photo.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F988B01820BDE00093EF7E /* photo.png */; };
+		B4A5AE3A183201C7002E2CCF /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4A5AE38183201C7002E2CCF /* AWSRuntime.framework */; };
+		B4A5AE3B183201C7002E2CCF /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4A5AE39183201C7002E2CCF /* AWSS3.framework */; };
+		B4A5AE3C183202A2002E2CCF /* arrow-big-01.png in Resources */ = {isa = PBXBuildFile; fileRef = B464238518302B0300856A64 /* arrow-big-01.png */; };
+		B4A5AE3D183202A2002E2CCF /* arrow-big-02.png in Resources */ = {isa = PBXBuildFile; fileRef = B464238618302B0300856A64 /* arrow-big-02.png */; };
+		B4A5AE3E183202A2002E2CCF /* Small-triangle-red-left.png in Resources */ = {isa = PBXBuildFile; fileRef = B426EBE818300CA6001C6AAA /* Small-triangle-red-left.png */; };
+		B4A5AE3F183202A2002E2CCF /* Small-triangle-red-right.png in Resources */ = {isa = PBXBuildFile; fileRef = B426EBE918300CA6001C6AAA /* Small-triangle-red-right.png */; };
+		B4A5AE40183202A2002E2CCF /* basketball.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EF7CBC182C578300DBD278 /* basketball.png */; };
+		B4A5AE41183202A2002E2CCF /* Gymfloor.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EF7CBA182C56E300DBD278 /* Gymfloor.png */; };
+		B4A5AE42183202A2002E2CCF /* bballongymfloor.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EF7CB8182C56B100DBD278 /* bballongymfloor.png */; };
+		B4A5AE43183202A2002E2CCF /* basketball-on-gymnasium-floor.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EF7CB6182C569900DBD278 /* basketball-on-gymnasium-floor.png */; };
+		B4A5AE46183279ED002E2CCF /* EazesportzGameScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A5AE45183279ED002E2CCF /* EazesportzGameScheduleViewController.m */; };
 		B4AA0BC0182154E100E39B32 /* USStateAbbreviations.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4AA0BBF182154E100E39B32 /* USStateAbbreviations.plist */; };
 		B4AA0BC218215A2900E39B32 /* soccerheader.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B4AA0BC118215A2900E39B32 /* soccerheader.jpg */; };
 		B4AA0BC5182163C700E39B32 /* TeamSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4AA0BC4182163C700E39B32 /* TeamSelectViewController.m */; };
@@ -332,6 +529,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B4A5AD7A1831FE99002E2CCF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B4F9882518208AC70093EF7E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B4A5AD561831FE99002E2CCF;
+			remoteInfo = EazeBasketball;
+		};
 		B4EF7BED182C481A00DBD278 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B4F9882518208AC70093EF7E /* Project object */;
@@ -477,6 +681,21 @@
 		B4A515DB18243B57003E2A10 /* CoachTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoachTableCell.m; sourceTree = "<group>"; };
 		B4A515DD18243CB5003E2A10 /* FullCoachSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullCoachSelectionViewController.h; sourceTree = "<group>"; };
 		B4A515DE18243CB5003E2A10 /* FullCoachSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullCoachSelectionViewController.m; sourceTree = "<group>"; };
+		B4A5AD571831FE99002E2CCF /* Basketball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basketball.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4A5AD5D1831FE99002E2CCF /* EazeBasketball-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EazeBasketball-Info.plist"; sourceTree = "<group>"; };
+		B4A5AD5F1831FE99002E2CCF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B4A5AD611831FE99002E2CCF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B4A5AD631831FE99002E2CCF /* EazeBasketball-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EazeBasketball-Prefix.pch"; sourceTree = "<group>"; };
+		B4A5AD681831FE99002E2CCF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B4A5AD701831FE99002E2CCF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B4A5AD761831FE99002E2CCF /* EazeBasketballTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EazeBasketballTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4A5AD7E1831FE99002E2CCF /* EazeBasketballTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EazeBasketballTests-Info.plist"; sourceTree = "<group>"; };
+		B4A5AD801831FE99002E2CCF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B4A5AD821831FE99002E2CCF /* EazeBasketballTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EazeBasketballTests.m; sourceTree = "<group>"; };
+		B4A5AE38183201C7002E2CCF /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
+		B4A5AE39183201C7002E2CCF /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
+		B4A5AE44183279ED002E2CCF /* EazesportzGameScheduleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzGameScheduleViewController.h; sourceTree = "<group>"; };
+		B4A5AE45183279ED002E2CCF /* EazesportzGameScheduleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzGameScheduleViewController.m; sourceTree = "<group>"; };
 		B4AA0BBF182154E100E39B32 /* USStateAbbreviations.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = USStateAbbreviations.plist; sourceTree = "<group>"; };
 		B4AA0BC118215A2900E39B32 /* soccerheader.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = soccerheader.jpg; sourceTree = "<group>"; };
 		B4AA0BC3182163C700E39B32 /* TeamSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TeamSelectViewController.h; sourceTree = "<group>"; };
@@ -587,6 +806,32 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B4A5AD541831FE99002E2CCF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4A5AE2418320188002E2CCF /* QuartzCore.framework in Frameworks */,
+				B4A5AE2318320167002E2CCF /* Security.framework in Frameworks */,
+				B4A5AE3B183201C7002E2CCF /* AWSS3.framework in Frameworks */,
+				B4A5AE221832015D002E2CCF /* MediaPlayer.framework in Frameworks */,
+				B4A5AE2118320149002E2CCF /* MobileCoreServices.framework in Frameworks */,
+				B4A5AD591831FE99002E2CCF /* CoreGraphics.framework in Frameworks */,
+				B4A5AD5A1831FE99002E2CCF /* UIKit.framework in Frameworks */,
+				B4A5AD581831FE99002E2CCF /* Foundation.framework in Frameworks */,
+				B4A5AE3A183201C7002E2CCF /* AWSRuntime.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B4A5AD731831FE99002E2CCF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4A5AD771831FE99002E2CCF /* XCTest.framework in Frameworks */,
+				B4A5AD791831FE99002E2CCF /* UIKit.framework in Frameworks */,
+				B4A5AD781831FE99002E2CCF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B4EF7BC7182C481900DBD278 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -647,6 +892,49 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B4A5AD5B1831FE99002E2CCF /* EazeBasketball */ = {
+			isa = PBXGroup;
+			children = (
+				B4A5AE38183201C7002E2CCF /* AWSRuntime.framework */,
+				B4A5AE39183201C7002E2CCF /* AWSS3.framework */,
+				B4A5AD671831FE99002E2CCF /* Main.storyboard */,
+				B4A5AD701831FE99002E2CCF /* Images.xcassets */,
+				B4A5AD5C1831FE99002E2CCF /* Supporting Files */,
+				B4A5AE44183279ED002E2CCF /* EazesportzGameScheduleViewController.h */,
+				B4A5AE45183279ED002E2CCF /* EazesportzGameScheduleViewController.m */,
+			);
+			path = EazeBasketball;
+			sourceTree = "<group>";
+		};
+		B4A5AD5C1831FE99002E2CCF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B4A5AD5D1831FE99002E2CCF /* EazeBasketball-Info.plist */,
+				B4A5AD5E1831FE99002E2CCF /* InfoPlist.strings */,
+				B4A5AD611831FE99002E2CCF /* main.m */,
+				B4A5AD631831FE99002E2CCF /* EazeBasketball-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B4A5AD7C1831FE99002E2CCF /* EazeBasketballTests */ = {
+			isa = PBXGroup;
+			children = (
+				B4A5AD821831FE99002E2CCF /* EazeBasketballTests.m */,
+				B4A5AD7D1831FE99002E2CCF /* Supporting Files */,
+			);
+			path = EazeBasketballTests;
+			sourceTree = "<group>";
+		};
+		B4A5AD7D1831FE99002E2CCF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B4A5AD7E1831FE99002E2CCF /* EazeBasketballTests-Info.plist */,
+				B4A5AD7F1831FE99002E2CCF /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		B4EF7BCE182C481900DBD278 /* Basketball */ = {
 			isa = PBXGroup;
 			children = (
@@ -719,6 +1007,8 @@
 				B4F9885818208AC70093EF7E /* EazeSoccerTests */,
 				B4EF7BCE182C481900DBD278 /* Basketball */,
 				B4EF7BEF182C481A00DBD278 /* BasketballTests */,
+				B4A5AD5B1831FE99002E2CCF /* EazeBasketball */,
+				B4A5AD7C1831FE99002E2CCF /* EazeBasketballTests */,
 				B4F9882F18208AC70093EF7E /* Frameworks */,
 				B4F9882E18208AC70093EF7E /* Products */,
 			);
@@ -731,6 +1021,8 @@
 				B4F9885118208AC70093EF7E /* EazeSportzTests.xctest */,
 				B4EF7BCA182C481900DBD278 /* Basketball.app */,
 				B4EF7BE9182C481A00DBD278 /* BasketballTests.xctest */,
+				B4A5AD571831FE99002E2CCF /* Basketball.app */,
+				B4A5AD761831FE99002E2CCF /* EazeBasketballTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -972,6 +1264,41 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B4A5AD561831FE99002E2CCF /* EazeBasketball */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B4A5AD841831FE9A002E2CCF /* Build configuration list for PBXNativeTarget "EazeBasketball" */;
+			buildPhases = (
+				B4A5AD531831FE99002E2CCF /* Sources */,
+				B4A5AD541831FE99002E2CCF /* Frameworks */,
+				B4A5AD551831FE99002E2CCF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EazeBasketball;
+			productName = EazeBasketball;
+			productReference = B4A5AD571831FE99002E2CCF /* Basketball.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B4A5AD751831FE99002E2CCF /* EazeBasketballTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B4A5AD871831FE9A002E2CCF /* Build configuration list for PBXNativeTarget "EazeBasketballTests" */;
+			buildPhases = (
+				B4A5AD721831FE99002E2CCF /* Sources */,
+				B4A5AD731831FE99002E2CCF /* Frameworks */,
+				B4A5AD741831FE99002E2CCF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B4A5AD7B1831FE99002E2CCF /* PBXTargetDependency */,
+			);
+			name = EazeBasketballTests;
+			productName = EazeBasketballTests;
+			productReference = B4A5AD761831FE99002E2CCF /* EazeBasketballTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B4EF7BC9182C481900DBD278 /* Basketball */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B4EF7BF7182C481A00DBD278 /* Build configuration list for PBXNativeTarget "Basketball" */;
@@ -1052,6 +1379,12 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = Gil;
 				TargetAttributes = {
+					B4A5AD561831FE99002E2CCF = {
+						DevelopmentTeam = MA242X4XDT;
+					};
+					B4A5AD751831FE99002E2CCF = {
+						TestTargetID = B4F9882C18208AC70093EF7E;
+					};
 					B4EF7BC9182C481900DBD278 = {
 						DevelopmentTeam = MA242X4XDT;
 					};
@@ -1083,11 +1416,58 @@
 				B4F9885018208AC70093EF7E /* EazeSportzTests */,
 				B4EF7BC9182C481900DBD278 /* Basketball */,
 				B4EF7BE8182C481A00DBD278 /* BasketballTests */,
+				B4A5AD561831FE99002E2CCF /* EazeBasketball */,
+				B4A5AD751831FE99002E2CCF /* EazeBasketballTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B4A5AD551831FE99002E2CCF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4A5AE3C183202A2002E2CCF /* arrow-big-01.png in Resources */,
+				B4A5AE3D183202A2002E2CCF /* arrow-big-02.png in Resources */,
+				B4A5AE3E183202A2002E2CCF /* Small-triangle-red-left.png in Resources */,
+				B4A5AE3F183202A2002E2CCF /* Small-triangle-red-right.png in Resources */,
+				B4A5AE40183202A2002E2CCF /* basketball.png in Resources */,
+				B4A5AE41183202A2002E2CCF /* Gymfloor.png in Resources */,
+				B4A5AE42183202A2002E2CCF /* bballongymfloor.png in Resources */,
+				B4A5AE43183202A2002E2CCF /* basketball-on-gymnasium-floor.png in Resources */,
+				B4A5AE251832019F002E2CCF /* calendar.png in Resources */,
+				B4A5AE261832019F002E2CCF /* clock.png in Resources */,
+				B4A5AE271832019F002E2CCF /* addressbook.png in Resources */,
+				B4A5AE281832019F002E2CCF /* whistle.png in Resources */,
+				B4A5AE291832019F002E2CCF /* gear.png in Resources */,
+				B4A5AE2A1832019F002E2CCF /* uploadmovie.png in Resources */,
+				B4A5AE2B1832019F002E2CCF /* playbutton_cripped.png in Resources */,
+				B4A5AE2C1832019F002E2CCF /* multi-agents.png in Resources */,
+				B4A5AE2D1832019F002E2CCF /* man.png in Resources */,
+				B4A5AE2E1832019F002E2CCF /* edit.png in Resources */,
+				B4A5AE2F1832019F002E2CCF /* film.png in Resources */,
+				B4A5AE301832019F002E2CCF /* speaker-on.png in Resources */,
+				B4A5AE311832019F002E2CCF /* soccerheader.jpg in Resources */,
+				B4A5AE321832019F002E2CCF /* home.png in Resources */,
+				B4A5AE331832019F002E2CCF /* newspaper.png in Resources */,
+				B4A5AE341832019F002E2CCF /* phone-book.png in Resources */,
+				B4A5AE351832019F002E2CCF /* photo_not_available.png in Resources */,
+				B4A5AE361832019F002E2CCF /* photo_processing.png in Resources */,
+				B4A5AE371832019F002E2CCF /* photo.png in Resources */,
+				B4A5AD711831FE99002E2CCF /* Images.xcassets in Resources */,
+				B4A5AD601831FE99002E2CCF /* InfoPlist.strings in Resources */,
+				B4A5AD691831FE99002E2CCF /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B4A5AD741831FE99002E2CCF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4A5AD811831FE99002E2CCF /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B4EF7BC8182C481900DBD278 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1178,6 +1558,174 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B4A5AD531831FE99002E2CCF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4A5AD8A1832012D002E2CCF /* Alert.h in Sources */,
+				B4A5AD8B1832012D002E2CCF /* Alert.m in Sources */,
+				B4A5AD8C1832012D002E2CCF /* Athlete.h in Sources */,
+				B4A5AD8D1832012D002E2CCF /* Athlete.m in Sources */,
+				B4A5AD8E1832012D002E2CCF /* BasketballStats.h in Sources */,
+				B4A5AD8F1832012D002E2CCF /* BasketballStats.m in Sources */,
+				B4A5AD901832012D002E2CCF /* BasketballPlayerStatTableCell.h in Sources */,
+				B4A5AD911832012D002E2CCF /* BasketballPlayerStatTableCell.m in Sources */,
+				B4A5AD921832012D002E2CCF /* Blog.h in Sources */,
+				B4A5AD931832012D002E2CCF /* Blog.m in Sources */,
+				B4A5AD941832012D002E2CCF /* BlogCell.h in Sources */,
+				B4A5AD951832012D002E2CCF /* BlogCell.m in Sources */,
+				B4A5AD961832012D002E2CCF /* BlogEntryViewController.h in Sources */,
+				B4A5AD971832012D002E2CCF /* BlogEntryViewController.m in Sources */,
+				B4A5AD981832012D002E2CCF /* BlogViewController.h in Sources */,
+				B4A5AD991832012D002E2CCF /* BlogViewController.m in Sources */,
+				B4A5AD9A1832012D002E2CCF /* ChangeTeamViewController.h in Sources */,
+				B4A5AD9B1832012D002E2CCF /* ChangeTeamViewController.m in Sources */,
+				B4A5AD9C1832012D002E2CCF /* Coach.h in Sources */,
+				B4A5AD9D1832012D002E2CCF /* Coach.m in Sources */,
+				B4A5AD9E1832012D002E2CCF /* CoachSelectionViewController.h in Sources */,
+				B4A5AD9F1832012D002E2CCF /* CoachSelectionViewController.m in Sources */,
+				B4A5ADA01832012D002E2CCF /* CoachTableCell.h in Sources */,
+				B4A5ADA11832012D002E2CCF /* CoachTableCell.m in Sources */,
+				B4A5ADA21832012D002E2CCF /* Contact.h in Sources */,
+				B4A5ADA31832012D002E2CCF /* Contact.m in Sources */,
+				B4A5ADA41832012D002E2CCF /* ContactCell.h in Sources */,
+				B4A5ADA51832012D002E2CCF /* ContactCell.m in Sources */,
+				B4A5ADA61832012D002E2CCF /* ContactTableViewController.h in Sources */,
+				B4A5ADA71832012D002E2CCF /* ContactTableViewController.m in Sources */,
+				B4A5ADA81832012D002E2CCF /* ContactViewController.h in Sources */,
+				B4A5ADA91832012D002E2CCF /* ContactViewController.m in Sources */,
+				B4A5ADAA1832012D002E2CCF /* EditCoachViewController.h in Sources */,
+				B4A5ADAB1832012D002E2CCF /* EditCoachViewController.m in Sources */,
+				B4A5ADAC1832012D002E2CCF /* EditContactViewController.h in Sources */,
+				B4A5ADAD1832012D002E2CCF /* EditContactViewController.m in Sources */,
+				B4A5ADAE1832012D002E2CCF /* EditGameViewController.h in Sources */,
+				B4A5ADAF1832012D002E2CCF /* EditGameViewController.m in Sources */,
+				B4A5ADB01832012D002E2CCF /* EditPlayerViewController.h in Sources */,
+				B4A5ADB11832012D002E2CCF /* EditPlayerViewController.m in Sources */,
+				B4A5ADB21832012D002E2CCF /* EditStandingViewController.h in Sources */,
+				B4A5ADB31832012D002E2CCF /* EditStandingViewController.m in Sources */,
+				B4A5ADB41832012D002E2CCF /* EditTeamViewController.h in Sources */,
+				B4A5ADB51832012D002E2CCF /* EditTeamViewController.m in Sources */,
+				B4A5ADB61832012D002E2CCF /* EditUserViewController.h in Sources */,
+				B4A5ADB71832012D002E2CCF /* EditUserViewController.m in Sources */,
+				B4A5AE46183279ED002E2CCF /* EazesportzGameScheduleViewController.m in Sources */,
+				B4A5ADB81832012D002E2CCF /* EazesportzAppDelegate.h in Sources */,
+				B4A5ADB91832012D002E2CCF /* EazesportzAppDelegate.m in Sources */,
+				B4A5ADBA1832012D002E2CCF /* FindEazesportzSiteViewController.h in Sources */,
+				B4A5ADBB1832012D002E2CCF /* FindEazesportzSiteViewController.m in Sources */,
+				B4A5ADBC1832012D002E2CCF /* FindPlayerViewController.h in Sources */,
+				B4A5ADBD1832012D002E2CCF /* FindPlayerViewController.m in Sources */,
+				B4A5ADBE1832012D002E2CCF /* FootballStats.h in Sources */,
+				B4A5ADBF1832012D002E2CCF /* FootballStats.m in Sources */,
+				B4A5ADC01832012D002E2CCF /* FullCoachSelectionViewController.h in Sources */,
+				B4A5ADC11832012D002E2CCF /* FullCoachSelectionViewController.m in Sources */,
+				B4A5ADC21832012D002E2CCF /* FullGameScheduleViewController.h in Sources */,
+				B4A5ADC31832012D002E2CCF /* FullGameScheduleViewController.m in Sources */,
+				B4A5ADC41832012D002E2CCF /* FullViewPlayerSelectionViewController.h in Sources */,
+				B4A5ADC51832012D002E2CCF /* FullViewPlayerSelectionViewController.m in Sources */,
+				B4A5ADC61832012D002E2CCF /* GameSchedule.h in Sources */,
+				B4A5ADC71832012D002E2CCF /* GameSchedule.m in Sources */,
+				B4A5ADC81832012D002E2CCF /* GameScheduleViewController.h in Sources */,
+				B4A5ADC91832012D002E2CCF /* GameScheduleViewController.m in Sources */,
+				B4A5ADCA1832012D002E2CCF /* GameScheduleTableViewCell.h in Sources */,
+				B4A5ADCB1832012D002E2CCF /* GameScheduleTableViewCell.m in Sources */,
+				B4A5ADCC1832012D002E2CCF /* HeaderSelectCollectionReusableView.h in Sources */,
+				B4A5ADCD1832012D002E2CCF /* HeaderSelectCollectionReusableView.m in Sources */,
+				B4A5ADCE1832012D002E2CCF /* KeychainWrapper.h in Sources */,
+				B4A5ADCF1832012D002E2CCF /* KeychainWrapper.m in Sources */,
+				B4A5ADD01832012D002E2CCF /* LiveStatsViewController.h in Sources */,
+				B4A5ADD11832012D002E2CCF /* LiveStatsViewController.m in Sources */,
+				B4A5ADD21832012D002E2CCF /* LiveSoccerStatsViewController.h in Sources */,
+				B4A5ADD31832012D002E2CCF /* LiveSoccerStatsViewController.m in Sources */,
+				B4A5ADD41832012D002E2CCF /* LoginViewController.h in Sources */,
+				B4A5ADD51832012D002E2CCF /* LoginViewController.m in Sources */,
+				B4A5ADD61832012D002E2CCF /* Newsfeed.h in Sources */,
+				B4A5ADD71832012D002E2CCF /* Newsfeed.m in Sources */,
+				B4A5ADD81832012D002E2CCF /* NewsFeedEditViewController.h in Sources */,
+				B4A5ADD91832012D002E2CCF /* NewsFeedEditViewController.m in Sources */,
+				B4A5ADDA1832012D002E2CCF /* NewsTableCell.h in Sources */,
+				B4A5ADDB1832012D002E2CCF /* NewsTableCell.m in Sources */,
+				B4A5ADDC1832012D002E2CCF /* NewsTableViewController.h in Sources */,
+				B4A5ADDD1832012D002E2CCF /* NewsTableViewController.m in Sources */,
+				B4A5ADDE1832012D002E2CCF /* Photo.h in Sources */,
+				B4A5ADDF1832012D002E2CCF /* Photo.m in Sources */,
+				B4A5ADE01832012D002E2CCF /* PhotoCell.h in Sources */,
+				B4A5ADE11832012D002E2CCF /* PhotoCell.m in Sources */,
+				B4A5ADE21832012D002E2CCF /* PhotoInfoViewController.h in Sources */,
+				B4A5ADE31832012D002E2CCF /* PhotoInfoViewController.m in Sources */,
+				B4A5ADE41832012D002E2CCF /* PhotosViewController.h in Sources */,
+				B4A5ADE51832012D002E2CCF /* PhotosViewController.m in Sources */,
+				B4A5ADE61832012D002E2CCF /* PlayerSelectionViewController.h in Sources */,
+				B4A5ADE71832012D002E2CCF /* PlayerSelectionViewController.m in Sources */,
+				B4A5ADE81832012D002E2CCF /* ProgramInfoViewController.h in Sources */,
+				B4A5ADE91832012D002E2CCF /* ProgramInfoViewController.m in Sources */,
+				B4A5ADEA1832012D002E2CCF /* RosterTableCell.h in Sources */,
+				B4A5ADEB1832012D002E2CCF /* RosterTableCell.m in Sources */,
+				B4A5ADEC1832012D002E2CCF /* ShuffleAlphabet.h in Sources */,
+				B4A5ADED1832012D002E2CCF /* ShuffleAlphabet.m in Sources */,
+				B4A5ADEE1832012D002E2CCF /* SearchForUserViewController.h in Sources */,
+				B4A5ADEF1832012D002E2CCF /* SearchForUserViewController.m in Sources */,
+				B4A5ADF01832012D002E2CCF /* Soccer.h in Sources */,
+				B4A5ADF11832012D002E2CCF /* Soccer.m in Sources */,
+				B4A5ADF21832012D002E2CCF /* SoccerLiveClockViewController.h in Sources */,
+				B4A5ADF31832012D002E2CCF /* SoccerLiveClockViewController.m in Sources */,
+				B4A5ADF41832012D002E2CCF /* SoccerPlayerStatsTableCell.h in Sources */,
+				B4A5ADF51832012D002E2CCF /* SoccerPlayerStatsTableCell.m in Sources */,
+				B4A5ADF61832012D002E2CCF /* SoccerPlayerStatsViewController.h in Sources */,
+				B4A5ADF71832012D002E2CCF /* SoccerPlayerStatsViewController.m in Sources */,
+				B4A5ADF81832012D002E2CCF /* Sponsor.h in Sources */,
+				B4A5ADF91832012D002E2CCF /* Sponsor.m in Sources */,
+				B4A5ADFA1832012D002E2CCF /* Sport.h in Sources */,
+				B4A5ADFB1832012D002E2CCF /* Sport.m in Sources */,
+				B4A5ADFC1832012D002E2CCF /* sportzConstants.h in Sources */,
+				B4A5ADFD1832012D002E2CCF /* sportzCurrentSettings.h in Sources */,
+				B4A5ADFE1832012D002E2CCF /* sportzCurrentSettings.m in Sources */,
+				B4A5ADFF1832012D002E2CCF /* sportzServerInit.h in Sources */,
+				B4A5AE001832012D002E2CCF /* sportzServerInit.m in Sources */,
+				B4A5AE011832012D002E2CCF /* sportzteamsRegisterLoginViewController.h in Sources */,
+				B4A5AE021832012D002E2CCF /* sportzteamsRegisterLoginViewController.m in Sources */,
+				B4A5AE031832012D002E2CCF /* sportzteamsAlertsJSON.h in Sources */,
+				B4A5AE041832012D002E2CCF /* sportzteamsAlertsJSON.m in Sources */,
+				B4A5AE051832012D002E2CCF /* Standings.h in Sources */,
+				B4A5AE061832012D002E2CCF /* Standings.m in Sources */,
+				B4A5AE071832012D002E2CCF /* StandingsTableViewCell.h in Sources */,
+				B4A5AE081832012D002E2CCF /* StandingsTableViewCell.m in Sources */,
+				B4A5AE091832012D002E2CCF /* StandingsTableViewController.h in Sources */,
+				B4A5AE0A1832012D002E2CCF /* StandingsTableViewController.m in Sources */,
+				B4A5AE0B1832012D002E2CCF /* Stats.h in Sources */,
+				B4A5AE0C1832012D002E2CCF /* Stats.m in Sources */,
+				B4A5AE0D1832012D002E2CCF /* Team.h in Sources */,
+				B4A5AE0E1832012D002E2CCF /* Team.m in Sources */,
+				B4A5AE0F1832012D002E2CCF /* TeamSelectViewController.h in Sources */,
+				B4A5AE101832012D002E2CCF /* TeamSelectViewController.m in Sources */,
+				B4A5AE111832012D002E2CCF /* UpdateSoccerTotalsViewController.h in Sources */,
+				B4A5AE121832012D002E2CCF /* UpdateSoccerTotalsViewController.m in Sources */,
+				B4A5AE131832012D002E2CCF /* User.h in Sources */,
+				B4A5AE141832012D002E2CCF /* User.m in Sources */,
+				B4A5AE151832012D002E2CCF /* UserTableViewCell.h in Sources */,
+				B4A5AE161832012D002E2CCF /* UserTableViewCell.m in Sources */,
+				B4A5AE171832012D002E2CCF /* UsersViewController.h in Sources */,
+				B4A5AE181832012D002E2CCF /* UsersViewController.m in Sources */,
+				B4A5AE191832012D002E2CCF /* Video.h in Sources */,
+				B4A5AE1A1832012D002E2CCF /* Video.m in Sources */,
+				B4A5AE1B1832012D002E2CCF /* VideoCell.h in Sources */,
+				B4A5AE1C1832012D002E2CCF /* VideoCell.m in Sources */,
+				B4A5AE1D1832012D002E2CCF /* VideoInfoViewController.h in Sources */,
+				B4A5AE1E1832012D002E2CCF /* VideoInfoViewController.m in Sources */,
+				B4A5AE1F1832012D002E2CCF /* VideosViewController.h in Sources */,
+				B4A5AE201832012D002E2CCF /* VideosViewController.m in Sources */,
+				B4A5AD621831FE99002E2CCF /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B4A5AD721831FE99002E2CCF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4A5AD831831FE99002E2CCF /* EazeBasketballTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B4EF7BC6182C481900DBD278 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1443,6 +1991,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B4A5AD7B1831FE99002E2CCF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B4A5AD561831FE99002E2CCF /* EazeBasketball */;
+			targetProxy = B4A5AD7A1831FE99002E2CCF /* PBXContainerItemProxy */;
+		};
 		B4EF7BEE182C481A00DBD278 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B4EF7BC9182C481900DBD278 /* Basketball */;
@@ -1456,6 +2009,30 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		B4A5AD5E1831FE99002E2CCF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B4A5AD5F1831FE99002E2CCF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B4A5AD671831FE99002E2CCF /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B4A5AD681831FE99002E2CCF /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		B4A5AD7F1831FE99002E2CCF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B4A5AD801831FE99002E2CCF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		B4EF7BD1182C481900DBD278 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1507,6 +2084,95 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		B4A5AD851831FE9A002E2CCF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/dirctdt/Development/IOS/sportzteams/EazeSoccer/EazeBasketball,
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EazeBasketball/EazeBasketball-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "EazeBasketball/EazeBasketball-Info.plist";
+				PRODUCT_NAME = Basketball;
+				PROVISIONING_PROFILE = "237194E8-5316-44D1-A2B4-72FB611FE769";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B4A5AD861831FE9A002E2CCF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/dirctdt/Development/IOS/sportzteams/EazeSoccer/EazeBasketball,
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EazeBasketball/EazeBasketball-Prefix.pch";
+				INFOPLIST_FILE = "EazeBasketball/EazeBasketball-Info.plist";
+				PRODUCT_NAME = Basketball;
+				PROVISIONING_PROFILE = "237194E8-5316-44D1-A2B4-72FB611FE769";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		B4A5AD881831FE9A002E2CCF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/EazeSportz.app/EazeSportz";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EazeBasketball/EazeBasketball-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "EazeBasketballTests/EazeBasketballTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		B4A5AD891831FE9A002E2CCF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/EazeSportz.app/EazeSportz";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EazeBasketball/EazeBasketball-Prefix.pch";
+				INFOPLIST_FILE = "EazeBasketballTests/EazeBasketballTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 		B4EF7BF8182C481A00DBD278 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1526,7 +2192,7 @@
 				);
 				INFOPLIST_FILE = "Basketball/Basketball-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "569BC746-9056-4B4C-83B7-24440BC4693A";
+				PROVISIONING_PROFILE = "CB53DC48-07CD-41CE-B7C8-0EDCFEB0F8E0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1547,7 +2213,7 @@
 				GCC_PREFIX_HEADER = "Basketball/Basketball-Prefix.pch";
 				INFOPLIST_FILE = "Basketball/Basketball-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "569BC746-9056-4B4C-83B7-24440BC4693A";
+				PROVISIONING_PROFILE = "CB53DC48-07CD-41CE-B7C8-0EDCFEB0F8E0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1754,6 +2420,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B4A5AD841831FE9A002E2CCF /* Build configuration list for PBXNativeTarget "EazeBasketball" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B4A5AD851831FE9A002E2CCF /* Debug */,
+				B4A5AD861831FE9A002E2CCF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		B4A5AD871831FE9A002E2CCF /* Build configuration list for PBXNativeTarget "EazeBasketballTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B4A5AD881831FE9A002E2CCF /* Debug */,
+				B4A5AD891831FE9A002E2CCF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		B4EF7BF7182C481A00DBD278 /* Build configuration list for PBXNativeTarget "Basketball" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

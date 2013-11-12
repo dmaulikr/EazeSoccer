@@ -46,5 +46,6 @@
 - (IBAction)findteamSelected:(UIStoryboardSegue *)segue;
 - (IBAction)opponentImageButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *opponentImageButton;
+@property (weak, nonatomic) IBOutlet UISwitch *homeawaySwitch;
 
 @end
