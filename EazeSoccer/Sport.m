@@ -8,7 +8,9 @@
 
 #import "Sport.h"
 
-@implementation Sport
+@implementation Sport {
+    NSString *logosize;
+}
 
 @synthesize id;
 @synthesize sitename;
@@ -37,6 +39,7 @@
 - (id)init {
     if (self = [super init]) {
         playerPositions = [[NSMutableDictionary alloc] init];
+        logosize = @"";
         return self;
     } else
         return nil;
@@ -96,21 +99,23 @@
     if ([size isEqualToString:@"tiny"] ) {        
         if ([sport_logo_tiny isEqualToString:@"/sport_logos/tiny/missing.png"]) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-        } else if ((sportimage.CIImage == nil) && (sportimage.CGImage == nil)) {
+        } else if (((sportimage.CIImage == nil) && (sportimage.CGImage == nil)) || (![logosize isEqualToString:@"tiny"])) {
             NSURL * imageURL = [NSURL URLWithString:sport_logo_tiny];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             image = [UIImage imageWithData:imageData];
             sportimage = image;
+            logosize = size;
         } else
             image = sportimage;
     } else if ([size isEqualToString:@"thumb"]) {        
         if (([sport_logo_thumb isEqualToString:@"/sport_logos/thumb/missing.png"]) || (sport_logo_thumb.length == 0)) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-        } else if ((sportimage.CIImage == nil) && (sportimage.CGImage == nil)) {
+        } else if (((sportimage.CIImage == nil) && (sportimage.CGImage == nil)) || (![logosize isEqualToString:@"thumb"])) {
             NSURL * imageURL = [NSURL URLWithString:sport_logo_thumb];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             image = [UIImage imageWithData:imageData];
             sportimage = image;
+            logosize = size;
         } else
             image = sportimage;
     }

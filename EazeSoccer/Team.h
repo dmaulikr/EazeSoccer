@@ -15,6 +15,7 @@
 @property(nonatomic, strong)NSString* title;
 @property(nonatomic, strong)NSString* team_name;
 @property(nonatomic, strong) NSString *team_logo;
+@property(nonatomic, strong) NSString *tiny_logo;
 
 @property(nonatomic, strong)UIImage *teamimage;
 

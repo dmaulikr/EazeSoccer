@@ -22,4 +22,9 @@
 @property(nonatomic, strong) NSString *stat;
 @property(nonatomic, strong) NSString *stattype;
 
+@property(nonatomic, strong) NSString *httperror;
+
+- (id)initWithDirectory:(NSDictionary *)alertDirectory;
+- (id)initDeleteAlert;
+
 @end

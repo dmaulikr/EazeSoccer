@@ -20,13 +20,14 @@
 @implementation NewsTableViewController  {
     NSArray *serverData;
     NSMutableData *theData;
-    NSMutableArray *newsfeed;
     int responseStatusCode;
     
     UIRefreshControl *refreshControl;
     
     NSIndexPath *deleteIndex;
 }
+
+@synthesize newsfeed;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {

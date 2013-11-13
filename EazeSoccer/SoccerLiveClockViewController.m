@@ -72,17 +72,9 @@
     _visitorCKLabel.text = [game.socceroppck stringValue];
     _visitorSavesLabel.text = [game.socceroppsaves stringValue];
     
-    int homeck = 0, homesaves = 0, homesog = 0;
-    
-    for (int i =0; i < currentSettings.roster.count; i++) {
-        homeck += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:game.id] cornerkicks] intValue];
-        homesaves += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:game.id] goalssaved] intValue];
-        homesog += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:game.id] shotstaken] intValue];
-    }
-    
-    _homeCKLabel.text = [NSString stringWithFormat:@"%d", homeck];
-    _homeSavesLabel.text = [NSString stringWithFormat:@"%d", homesaves];
-    _homeShotsLabel.text = [NSString stringWithFormat:@"%d", homesog];
+    _homeCKLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeCK]];
+    _homeSavesLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeSaves]];
+    _homeShotsLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeShots]];
 }
 
 - (IBAction)saveButtonClicked:(id)sender {

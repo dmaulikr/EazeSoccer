@@ -17,5 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *athleteLabel;
 @property (weak, nonatomic) IBOutlet UILabel *coachLabel;
 @property (weak, nonatomic) IBOutlet UILabel *gameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *playerdisplayLabel;
+@property (weak, nonatomic) IBOutlet UILabel *coachdisplayLabel;
 
 @end

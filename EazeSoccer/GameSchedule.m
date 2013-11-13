@@ -315,4 +315,34 @@
     }
 }
 
+- (int)soccerHomeCK {
+    int cornerKicks = 0;
+    
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+        cornerKicks += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:self.id] cornerkicks] intValue];
+    }
+    
+    return  cornerKicks;
+}
+
+- (int)soccerHomeShots {
+    int shots = 0;
+    
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+        shots += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:self.id] shotstaken] intValue];
+    }
+    
+    return  shots;
+}
+
+- (int)soccerHomeSaves {
+    int saves = 0;
+    
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+        saves += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:self.id] goalssaved] intValue];
+    }
+    
+    return  saves;
+}
+
 @end

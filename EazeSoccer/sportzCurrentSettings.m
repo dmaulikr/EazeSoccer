@@ -467,6 +467,29 @@
     }
 }
 
+- (void)retrieveAlerts {
+    NSURL *url = [NSURL URLWithString:[sportzServerInit getAlerts:self.user.userid Token:self.user.authtoken]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *error = nil;
+    NSData *result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+    NSArray *alertData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    int responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
+    
+    if (responseStatusCode == 200) {
+        alerts = [[NSMutableArray alloc] init];
+        for (int i = 0; i < alertData.count; i++) {
+            [alerts addObject:[[Alert alloc] initWithDirectory:[alertData objectAtIndex:i]]];
+        }
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error retrieving Alerts"
+                                                        message:[NSString stringWithFormat:@"%d", responseStatusCode]
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
 - (int)teamFouls:(NSString *)gameid {
     int teamfouls = 0;
     

@@ -10,4 +10,6 @@
 
 @interface NewsTableViewController : UITableViewController
 
+@property(nonatomic, strong) NSMutableArray *newsfeed;
+
 @end

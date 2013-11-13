@@ -10,7 +10,9 @@
 
 #import "EazesportzAppDelegate.h"
 
-@implementation Coach
+@implementation Coach {
+    NSString *imagesize;
+}
 
 @synthesize lastname;
 @synthesize firstname;
@@ -31,6 +33,14 @@
 @synthesize tinyimage;
 
 @synthesize httperror;
+
+- (id)init {
+    if (self = [super init]) {
+        imagesize = @"";
+        return self;
+    } else
+        return nil;
+}
 
 - (id)initWithDictionary:(NSDictionary *)coachDictionary {
     if ((self = [super init]) && (coachDictionary.count > 0)) {
@@ -90,11 +100,12 @@
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else if (self.processing) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
-        } else if ((self.tinyimage.CIImage == nil) && (self.tinyimage.CGImage == nil)) {
+        } else if (((self.tinyimage.CIImage == nil) && (self.tinyimage.CGImage == nil)) || (![imagesize isEqualToString:@"tiny"])) {
             NSURL * imageURL = [NSURL URLWithString:self.tiny];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             image = [UIImage imageWithData:imageData];
             self.tinyimage = image;
+            imagesize = size;
         } else
             image = self.tinyimage;
         
@@ -104,11 +115,12 @@
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else if (self.processing) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
-        } else if ((self.thumbimage.CIImage == nil) && (self.thumbimage.CGImage == nil)) {
+        } else if (((self.thumbimage.CIImage == nil) && (self.thumbimage.CGImage == nil)) || (![imagesize isEqualToString:@"tiny"])) {
             NSURL * imageURL = [NSURL URLWithString:self.thumb];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             image = [UIImage imageWithData:imageData];
             self.thumbimage = image;
+            imagesize = size;
         } else
             image = self.thumbimage;
         

@@ -9,7 +9,9 @@
 #import "Athlete.h"
 #import "EazesportzAppDelegate.h"
 
-@implementation Athlete
+@implementation Athlete {
+    NSString *imagesize;
+}
 
 @synthesize number;
 @synthesize lastname;
@@ -51,6 +53,7 @@
 
 - (id)init {
     if (self = [super init]) {
+        imagesize = @"";
         if ([currentSettings.sport.name isEqualToString:@"Football"])
             football_stats = [[NSMutableArray alloc] init];
         else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
@@ -172,6 +175,18 @@
     }
 }
 
+- (NSString *)getBasketballStatGameId:(NSString *)basketball_stat_id {
+    NSString *gameid = nil;
+    
+    for (int cnt = 0; cnt < basketball_stats.count; cnt++) {
+        if ([[[basketball_stats objectAtIndex:cnt] basketball_stat_id] isEqualToString:basketball_stat_id]) {
+            gameid = [[basketball_stats objectAtIndex:cnt] gameschedule_id];
+            break;
+        }
+    }
+    return gameid;
+}
+
 - (BasketballStats *)findBasketballGameStatEntries:(NSString *)gameid {
     BasketballStats *entry = [[BasketballStats alloc] init];
     for (int i = 0; i < [basketball_stats count]; i++) {
@@ -204,6 +219,18 @@
 
 - (BOOL)saveBasketballGameStats:(NSString *)gameid {
     return [[self findBasketballGameStatEntries:gameid] saveStats];
+}
+
+- (Soccer *)findSoccerStats:(NSString *)statid {
+    Soccer *thestat = nil;
+    
+    for (int cnt = 0; cnt < soccer_stats.count; cnt++) {
+        if ([[[soccer_stats objectAtIndex:cnt] soccerid] isEqualToString:statid]) {
+            thestat = [soccer_stats objectAtIndex:cnt];
+            break;
+        }
+    }
+    return thestat;
 }
 
 - (Soccer *)findSoccerGameStats:(NSString *)gameid {
@@ -263,6 +290,36 @@
     return result;
 }
 
+- (Soccer *)soccerSeasonTotals {
+    Soccer *thestats = [[Soccer alloc] init];
+    int goals = 0, goalsagainst = 0, saves = 0, cornerkicks = 0, steals = 0, assists = 0, shots = 0, minutes = 0, shutouts = 0;
+    
+    for (int i = 0; i < soccer_stats.count; i++) {
+        goals += [[[soccer_stats objectAtIndex:i] goals] intValue];
+        goalsagainst += [[[soccer_stats objectAtIndex:i] goalsagainst] intValue];
+        saves += [[[soccer_stats objectAtIndex:i] goalssaved] intValue];
+        cornerkicks += [[[soccer_stats objectAtIndex:i] cornerkicks] intValue];
+        assists += [[[soccer_stats objectAtIndex:i] assists] intValue];
+        shots += [[[soccer_stats objectAtIndex:i] shotstaken] intValue];
+        minutes += [[[soccer_stats objectAtIndex:i] minutesplayed] intValue];
+        steals += [[[soccer_stats objectAtIndex:i] steals] intValue];
+        
+        if (goalsagainst == 0)
+            shutouts += 1;
+    }
+    
+    thestats.goals = [NSNumber numberWithInt:goals];
+    thestats.goalsagainst = [NSNumber numberWithInt:goalsagainst];
+    thestats.goalssaved = [NSNumber numberWithInt:saves];
+    thestats.cornerkicks = [NSNumber numberWithInt:cornerkicks];
+    thestats.assists = [NSNumber numberWithInt:assists];
+    thestats.shotstaken = [NSNumber numberWithInt:shots];
+    thestats.minutesplayed = [NSNumber numberWithInt:minutes];
+    thestats.shutouts = [NSNumber numberWithInt:shutouts];
+    
+    return thestats;
+}
+
 - (UIImage *)getImage:(NSString *)size {
     UIImage *image;
     
@@ -272,11 +329,12 @@
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else if (self.processing) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
-        } else if ((self.tinyimage.CIImage == nil) && (self.tinyimage.CGImage == nil)) {
+        } else if (((self.tinyimage.CIImage == nil) && (self.tinyimage.CGImage == nil)) || (![imagesize isEqualToString:@"tiny"])) {
             NSURL * imageURL = [NSURL URLWithString:self.tinypic];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             image = [UIImage imageWithData:imageData];
             self.tinyimage = image;
+            imagesize = size;
         } else
             image = self.tinyimage;
         
@@ -286,11 +344,12 @@
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else if (self.processing) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
-        } else if ((self.thumbimage.CIImage == nil) && (self.thumbimage.CGImage == nil)) {
+        } else if (((self.thumbimage.CIImage == nil) && (self.thumbimage.CGImage == nil)) || (![imagesize isEqualToString:@"thumb"])) {
             NSURL * imageURL = [NSURL URLWithString:self.thumb];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             image = [UIImage imageWithData:imageData];
             self.thumbimage = image;
+            imagesize = size;
         } else
             image = self.thumbimage;
         
@@ -298,11 +357,12 @@
         
         if ([self.mediumpic isEqualToString:@"/pics/medium/missing.png"]) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-        } else if ((self.mediumimage.CIImage == nil) && (self.mediumimage.CGImage == nil)) {
+        } else if (((self.mediumimage.CIImage == nil) && (self.mediumimage.CGImage == nil)) || (![imagesize isEqualToString:@"medium"])) {
             NSURL * imageURL = [NSURL URLWithString:self.mediumpic];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             image = [UIImage imageWithData:imageData];
             self.mediumimage = image;
+            imagesize = size;
         } else
             image = self.mediumimage;
         

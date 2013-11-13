@@ -58,14 +58,18 @@
 
 - (FootballStats *)findFootballGameStatEntries:(NSString *)gameid;
 
+- (NSString *)getBasketballStatGameId:(BasketballStats *)basketball_stat_id;
 - (BasketballStats *)findBasketballGameStatEntries:(NSString *)gameid;
 - (void)updateBasketballGameStats:(BasketballStats *)bballstats;
 - (BOOL)saveBasketballGameStats:(NSString *)gameid;
 
+- (Soccer *)findSoccerStats:(NSString *)statid;
 - (Soccer *)findSoccerGameStats:(NSString *)gameid;
 - (void)updateSoccerGameStats:(Soccer *)soccerstat;
 - (BOOL)saveSoccerGameStats:(NSString *)gameid;
 - (BOOL)isSoccerGoalie;
+
+- (Soccer *)soccerSeasonTotals;
 
 - (UIImage *)getImage:(NSString *)size;
 

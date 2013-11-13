@@ -68,6 +68,8 @@
 - (void)retrievePlayers;
 - (BOOL)deletePlayer:(Athlete *)player;
 
+- (void)retrieveAlerts;
+
 - (void)retrieveTeams;
 - (NSMutableArray *)retrieveSportTeams:(NSString *)sportid;
 

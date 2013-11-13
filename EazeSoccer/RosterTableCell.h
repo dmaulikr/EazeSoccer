@@ -15,5 +15,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *playerNumberLabel;
 @property (weak, nonatomic) IBOutlet UILabel *playerPositionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *alertLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *alertImage;
 
 @end

@@ -9,5 +9,6 @@
 #import "GameScheduleViewController.h"
 
 @interface EazesportzGameScheduleViewController : GameScheduleViewController
+@property (weak, nonatomic) IBOutlet UITableView *scheduleTableView;
 
 @end

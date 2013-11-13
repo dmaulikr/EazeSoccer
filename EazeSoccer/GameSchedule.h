@@ -75,4 +75,8 @@
 
 //- (Gamelogs *)findGamelog:(NSString *)gamelogid;
 
+- (int)soccerHomeCK;
+- (int)soccerHomeSaves;
+- (int)soccerHomeShots;
+
 @end

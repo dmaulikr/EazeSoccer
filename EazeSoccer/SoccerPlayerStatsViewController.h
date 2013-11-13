@@ -15,6 +15,7 @@
 
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) Athlete *athlete;
+@property(nonatomic, strong) NSMutableArray *goalies;
 
 @property (weak, nonatomic) IBOutlet UITableView *soccerPlayerStatsTableView;
 @property (weak, nonatomic) IBOutlet UIView *soccerStatsContainer;

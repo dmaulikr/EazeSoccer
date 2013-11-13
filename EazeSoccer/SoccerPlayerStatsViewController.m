@@ -17,14 +17,13 @@
 @end
 
 @implementation SoccerPlayerStatsViewController {
-    NSMutableArray *goalies;
-    
     LiveSoccerStatsViewController *liveStatsController;
     UpdateSoccerTotalsViewController *totalStatsController;
 }
 
 @synthesize game;
 @synthesize athlete;
+@synthesize goalies;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

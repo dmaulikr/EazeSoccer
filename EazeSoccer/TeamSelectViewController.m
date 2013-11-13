@@ -175,6 +175,7 @@
         currentSettings.team = [teamList objectAtIndex:indexPath.row];
         [currentSettings retrieveCoaches];
         [currentSettings retrievePlayers];
+        [currentSettings retrieveAlerts];
         self.navigationItem.hidesBackButton = NO;
         self.tabBarController.tabBar.hidden = NO;
         [self.navigationController popToRootViewControllerAnimated:YES];
