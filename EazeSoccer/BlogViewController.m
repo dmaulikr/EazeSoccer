@@ -70,7 +70,7 @@
     [refreshControl addTarget:self action:@selector(startRefresh) forControlEvents:UIControlEventValueChanged];
     [_blogTableView addSubview:refreshControl];
     _activityIndicator.hidesWhenStopped = YES;
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBlogEntryButton, self.refreshButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBlogEntryButton, self.refreshButton, self.searchButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -349,6 +349,13 @@
     NSLog(@"%@", @"I am here");
 }
 
+- (IBAction)searchBurronClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Search" message:@"Select Search Criteria"
+                                 delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Player", @"Game", @"User", @"Coach", @"All", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
+}
+
 - (IBAction)refreshButtonClicked:(id)sender {
     [self getBlogs:nil];
 }
@@ -411,6 +418,29 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+    } else if ([title isEqualToString:@"Player"]) {
+        _playerSelectionContainer.hidden = NO;
+        playerController.player = nil;
+        [playerController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"Game"]) {
+        _gameScheduleContainer.hidden = NO;
+        gameController.thegame = nil;
+        [gameController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"User"]) {
+        _userContainer.hidden = NO;
+        usersController.user = nil;
+        [usersController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"Coach"]) {
+        _coachSelectionContainer.hidden = NO;
+        coachController.coach = nil;
+        [coachController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"All"]) {
+        team = currentSettings.team;
+        player = nil;
+        game = nil;
+        coach = nil;
+        user = nil;
+        [self getBlogs:nil];
     }
 }
 

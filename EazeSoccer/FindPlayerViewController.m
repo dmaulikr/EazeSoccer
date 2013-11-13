@@ -55,4 +55,8 @@
         return YES;
 }
 
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [textField resignFirstResponder];
+}
+
 @end

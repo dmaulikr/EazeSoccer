@@ -21,10 +21,9 @@
 //@property(nonatomic, strong) Gamelogs *gamelog;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-- (IBAction)gameButtonClicked:(id)sender;
-- (IBAction)playerButtonClicked:(id)sender;
-- (IBAction)userButtonClicked:(id)sender;
-- (IBAction)teamButtonClicked:(id)sender;
+- (IBAction)searchButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 
 @property (weak, nonatomic) IBOutlet UIView *gameSelectContainer;
 @property (weak, nonatomic) IBOutlet UIView *playerSelectContainer;

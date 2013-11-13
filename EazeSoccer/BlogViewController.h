@@ -23,15 +23,12 @@
 @property(nonatomic, strong) Coach *coach;
 @property(nonatomic, strong) User *user;
 //@property(nonatomic, strong) Gamelogs *gamelog;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
+- (IBAction)searchBurronClicked:(id)sender;
 
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *blogTableView;
 
-- (IBAction)userButtonClicked:(id)sender;
-- (IBAction)playerButtonClicked:(id)sender;
-- (IBAction)coachButtonClicked:(id)sender;
-- (IBAction)gameButtonClicked:(id)sender;
-- (IBAction)allButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *playerSelectionContainer;
 @property (weak, nonatomic) IBOutlet UIView *coachSelectionContainer;
 

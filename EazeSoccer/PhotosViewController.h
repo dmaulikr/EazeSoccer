@@ -20,11 +20,9 @@
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) User *user;
 
-- (IBAction)userButtonClicked:(id)sender;
-- (IBAction)playerButtonClicked:(id)sender;
-- (IBAction)gameButtonClicked:(id)sender;
-- (IBAction)teamButtonClicked:(id)sender;
-- (IBAction)refreshButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
+- (IBAction)searchButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 

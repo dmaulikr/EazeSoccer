@@ -1621,7 +1621,7 @@
                                     <action selector="submitButtonClicked:" destination="7Bi-XY-F13" eventType="touchUpInside" id="DY1-6L-15H"/>
                                 </connections>
                             </button>
-                            <containerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IQ2-D7-IhC">
+                            <containerView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IQ2-D7-IhC">
                                 <rect key="frame" x="0.0" y="65" width="320" height="456"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -1629,7 +1629,7 @@
                                     <segue destination="jNc-VP-XY2" kind="embed" identifier="PlayerSelectSegue" id="4Ll-gx-V2y"/>
                                 </connections>
                             </containerView>
-                            <containerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ag3-eu-aaf">
+                            <containerView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ag3-eu-aaf">
                                 <rect key="frame" x="0.0" y="65" width="320" height="456"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -1640,13 +1640,19 @@
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="ag3-eu-aaf" firstAttribute="top" secondItem="2Op-BT-bSB" secondAttribute="top" constant="65" id="07q-eP-YO1"/>
                             <constraint firstItem="C5s-bq-qOE" firstAttribute="leading" secondItem="JMZ-Hl-cx9" secondAttribute="trailing" constant="8" id="71f-3f-QRq"/>
+                            <constraint firstAttribute="centerX" secondItem="ag3-eu-aaf" secondAttribute="centerX" id="C0c-DI-xdz"/>
                             <constraint firstAttribute="trailing" secondItem="2Tg-g2-EXY" secondAttribute="trailing" constant="20" id="D9O-ky-5hE"/>
+                            <constraint firstItem="IQ2-D7-IhC" firstAttribute="top" secondItem="2Op-BT-bSB" secondAttribute="top" constant="65" id="FKx-ZQ-Gvd"/>
+                            <constraint firstAttribute="centerX" secondItem="IQ2-D7-IhC" secondAttribute="centerX" id="Ggo-Mc-puo"/>
+                            <constraint firstAttribute="centerY" secondItem="IQ2-D7-IhC" secondAttribute="centerY" id="IFM-cm-Cpx"/>
                             <constraint firstAttribute="trailing" secondItem="9YC-98-fu8" secondAttribute="trailing" constant="98" id="P1Y-L6-KW6"/>
                             <constraint firstItem="2Tg-g2-EXY" firstAttribute="leading" secondItem="S4Z-zg-Ich" secondAttribute="trailing" constant="8" id="U12-Pe-QCW"/>
                             <constraint firstAttribute="centerX" secondItem="AAW-13-XsZ" secondAttribute="centerX" id="UEv-9d-a3R"/>
                             <constraint firstAttribute="centerX" secondItem="9YC-98-fu8" secondAttribute="centerX" id="Z7s-Rl-XHD"/>
                             <constraint firstAttribute="trailing" secondItem="C5s-bq-qOE" secondAttribute="trailing" constant="20" id="s0E-1F-eKi"/>
+                            <constraint firstAttribute="centerY" secondItem="ag3-eu-aaf" secondAttribute="centerY" id="xBs-a9-hcW"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Photo's and Video's" id="EkB-Eu-88Y"/>
@@ -1683,7 +1689,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="60" id="IuO-Hg-v34">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RosterTableCell" rowHeight="60" id="IuO-Hg-v34" customClass="RosterTableCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IuO-Hg-v34" id="ty9-gc-629">
@@ -1734,6 +1740,11 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="alertLabel" destination="4HI-Ws-XOd" id="V7i-BG-t77"/>
+                                            <outlet property="playerNumberLabel" destination="EED-T8-dmm" id="ThF-CR-kLf"/>
+                                            <outlet property="playerPositionLabel" destination="PYX-vx-wIx" id="F9C-lP-Vd0"/>
+                                            <outlet property="playernameLabel" destination="T5S-VJ-nwY" id="yDT-dr-MKa"/>
+                                            <outlet property="rosterImage" destination="lFQ-JW-Emo" id="e5u-p2-Brd"/>
                                             <segue destination="snm-3n-P5a" kind="unwind" unwindAction="selectPhotoVideoPlayer:" id="FfP-8M-chi"/>
                                         </connections>
                                     </tableViewCell>
@@ -1798,6 +1809,7 @@
                     </view>
                     <toolbarItems/>
                     <connections>
+                        <outlet property="findPlayerContainer" destination="Urr-zV-D2a" id="bNP-zA-FhN"/>
                         <outlet property="playerTableView" destination="jIx-b3-Mqu" id="Pj0-dF-f0R"/>
                     </connections>
                 </viewController>
@@ -1871,19 +1883,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TTl-5B-TCN">
-                                <rect key="frame" x="0.0" y="63" width="320" height="457"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TTl-5B-TCN">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="457"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lrs-6f-Nhn">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lrs-6f-Nhn">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="457"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </imageView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="lrs-6f-Nhn" firstAttribute="centerX" secondItem="TTl-5B-TCN" secondAttribute="centerX" id="8by-QZ-sE9"/>
+                                    <constraint firstItem="lrs-6f-Nhn" firstAttribute="centerY" secondItem="TTl-5B-TCN" secondAttribute="centerY" id="QfT-OO-CdD"/>
+                                    <constraint firstItem="lrs-6f-Nhn" firstAttribute="leading" secondItem="TTl-5B-TCN" secondAttribute="leading" id="WJS-40-Avh"/>
+                                    <constraint firstAttribute="trailing" secondItem="lrs-6f-Nhn" secondAttribute="trailing" id="iw0-hF-Lxo"/>
+                                    <constraint firstItem="lrs-6f-Nhn" firstAttribute="top" secondItem="TTl-5B-TCN" secondAttribute="top" id="uen-bM-PL1"/>
+                                    <constraint firstAttribute="bottom" secondItem="lrs-6f-Nhn" secondAttribute="bottom" id="yqN-3E-XU2"/>
+                                </constraints>
                             </scrollView>
-                            <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7dM-fa-ad5">
+                            <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="7dM-fa-ad5">
                                 <rect key="frame" x="0.0" y="470" width="320" height="50"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="8Xv-lW-RG3"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="delegate" destination="hnh-qb-90U" id="2sq-Ww-3wo"/>
                                 </connections>
@@ -1891,7 +1914,13 @@
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="TTl-5B-TCN" secondAttribute="centerX" id="VPC-Fa-zLH"/>
+                            <constraint firstAttribute="trailing" secondItem="7dM-fa-ad5" secondAttribute="trailing" id="4SL-im-QLh"/>
+                            <constraint firstItem="7dM-fa-ad5" firstAttribute="top" secondItem="TTl-5B-TCN" secondAttribute="bottom" constant="13" id="URq-s9-2FT"/>
+                            <constraint firstItem="TTl-5B-TCN" firstAttribute="trailing" secondItem="7dM-fa-ad5" secondAttribute="trailing" id="Y24-ax-IGk"/>
+                            <constraint firstAttribute="bottom" secondItem="7dM-fa-ad5" secondAttribute="bottom" constant="48" id="dv6-OY-UXt"/>
+                            <constraint firstItem="TTl-5B-TCN" firstAttribute="top" secondItem="f31-Tt-ykb" secondAttribute="top" id="lmy-0L-aAQ"/>
+                            <constraint firstItem="7dM-fa-ad5" firstAttribute="leading" secondItem="f31-Tt-ykb" secondAttribute="leading" id="oZB-32-H6h"/>
+                            <constraint firstItem="TTl-5B-TCN" firstAttribute="leading" secondItem="7dM-fa-ad5" secondAttribute="leading" id="zkK-kW-ta6"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="LB4-PK-S8h">
@@ -2357,6 +2386,10 @@
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </view>
                     <toolbarItems/>
+                    <connections>
+                        <outlet property="numberTextField" destination="y5b-0N-GEf" id="1ZT-6v-ydu"/>
+                        <outlet property="positionTextField" destination="4bn-5C-a57" id="meQ-a5-hEf"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="buU-ef-zVO" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="rbo-Qg-L6r" userLabel="Exit" sceneMemberID="exit"/>

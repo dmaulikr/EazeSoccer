@@ -25,7 +25,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface PhotosViewController ()
+@interface PhotosViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -51,6 +51,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor clearColor];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -164,19 +167,6 @@
     // TODO: Deselect item
 }
 
-#pragma mark – UICollectionViewDelegateFlowLayout
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout
-                                sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGSize retval = CGSizeMake(150, 150);
-    return retval;
-}
-
-- (UIEdgeInsets)collectionView:
-(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    return UIEdgeInsetsMake(10, 10, 10, 10);
-}
-
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind
                                  atIndexPath:(NSIndexPath *)indexPath {
     UICollectionReusableView *reusableview = nil;
@@ -278,14 +268,14 @@
         
         if (photos.count == 0) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Photos" message:@"Try a different search"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Photo"
                                                         message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -358,6 +348,40 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [_activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (IBAction)searchButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Search"
+                        message:@"Select Photo Search Criteria"
+                        delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Player", @"Game", @"User", @"All", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Player"]) {
+        _playerContainer.hidden = NO;
+        playerSelectionController.player = nil;
+        [playerSelectionController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"Game"]) {
+        _gameContainer.hidden = NO;
+        gameSelectionController.thegame = nil;
+        [gameSelectionController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"User"]) {
+        _userSelectContainer.hidden = NO;
+        userSelectController.user = nil;
+        [userSelectController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"All"]) {
+        game = nil;
+        user = nil;
+        player = nil;
+        NSURL *url = [NSURL URLWithString:[sportzServerInit getTeamPhotos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        [_activityIndicator startAnimating];
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }
 }
 
 @end

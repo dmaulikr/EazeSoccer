@@ -24,7 +24,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface VideosViewController ()
+@interface VideosViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -58,6 +58,9 @@
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
     _activityIndicator.hidesWhenStopped = YES;
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -119,14 +122,14 @@
         
         if (videos.count == 0) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Videos" message:@"Try a different search"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Videos"
                                                         message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -320,6 +323,14 @@
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
+- (IBAction)searchButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Search"
+                                                    message:@"Select Video Search Criteria"
+                                                   delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Player", @"Game", @"User", @"All", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
+}
+
 - (void)getVideos {
     NSURL *url;
     
@@ -340,6 +351,32 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [_activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Player"]) {
+        _playerSelectContainer.hidden = NO;
+        playerSelectionController.player = nil;
+        [playerSelectionController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"Game"]) {
+        _gameSelectContainer.hidden = NO;
+        gameSelectionController.thegame = nil;
+        [gameSelectionController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"User"]) {
+        _userSelectionContainer.hidden = NO;
+        userSelectionController.user = nil;
+        [userSelectionController viewWillAppear:YES];
+    } else if ([title isEqualToString:@"All"]) {
+        player = nil;
+        game = nil;
+        user = nil;
+        NSURL *url = [NSURL URLWithString:[sportzServerInit getTeamVideos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        [_activityIndicator startAnimating];
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }
 }
 
 @end
