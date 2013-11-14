@@ -13,4 +13,5 @@
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UITextField *positionTextField;
 
+-(IBAction)backGroundTap:(id)sender;
 @end

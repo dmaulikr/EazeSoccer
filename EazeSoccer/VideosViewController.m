@@ -29,7 +29,7 @@
 @end
 
 @implementation VideosViewController {
-    NSMutableArray *videos, *serverData;
+    NSMutableArray *serverData;
     int responseStatusCode;
     NSMutableData *theData;
     
@@ -42,6 +42,7 @@
 @synthesize game;
 @synthesize user;
 //@synthesize gamelog;
+@synthesize videos;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -225,17 +226,6 @@
 }
 
 #pragma mark – UICollectionViewDelegateFlowLayout
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGSize retval = CGSizeMake(320, 160);
-    return retval;
-}
-
-- (UIEdgeInsets)collectionView:
-(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    return UIEdgeInsetsMake(10, 10, 10, 10);
-}
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind
                                  atIndexPath:(NSIndexPath *)indexPath {

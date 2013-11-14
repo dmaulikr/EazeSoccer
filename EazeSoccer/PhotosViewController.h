@@ -20,6 +20,8 @@
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) User *user;
 
+@property(nonatomic, strong) NSMutableArray *photos;
+
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 - (IBAction)searchButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;

@@ -1546,7 +1546,7 @@
                                     <rect key="frame" x="0.0" y="64" width="768" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xBf-oX-UdF">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xBf-oX-UdF">
                                             <rect key="frame" x="184" y="14" width="401" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -1555,6 +1555,9 @@
                                         </label>
                                     </subviews>
                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="centerX" secondItem="xBf-oX-UdF" secondAttribute="centerX" id="iev-XW-6Wg"/>
+                                    </constraints>
                                     <connections>
                                         <outlet property="headerLabel" destination="xBf-oX-UdF" id="tef-mj-12g"/>
                                     </connections>
@@ -1677,8 +1680,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OQ6-mP-hm8">
-                                <rect key="frame" x="366" y="0.0" width="402" height="981"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OQ6-mP-hm8">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="981"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="LDO-NU-iy2">
@@ -1717,7 +1720,7 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoHeaderCell" id="KWO-rW-Da9" customClass="HeaderSelectCollectionReusableView">
-                                    <rect key="frame" x="0.0" y="64" width="402" height="50"/>
+                                    <rect key="frame" x="0.0" y="64" width="768" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7W9-E6-pci">
@@ -1730,6 +1733,7 @@
                                     </subviews>
                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                     <constraints>
+                                        <constraint firstAttribute="centerX" secondItem="7W9-E6-pci" secondAttribute="centerX" id="bpC-7N-agm"/>
                                         <constraint firstAttribute="centerX" secondItem="7W9-E6-pci" secondAttribute="centerX" id="gGh-uQ-acs"/>
                                     </constraints>
                                     <connections>
@@ -1746,8 +1750,8 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="400" id="Ngp-8E-rND"/>
-                                    <constraint firstAttribute="width" constant="400" id="j8A-Dq-eRu"/>
+                                    <constraint firstAttribute="width" constant="400" id="23t-IF-Uc2"/>
+                                    <constraint firstAttribute="height" constant="400" id="Wc2-jG-E1Z"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="HeZ-Hj-SxL" kind="embed" identifier="PlayerSelectSegue" id="PRb-cj-tDw"/>
@@ -1758,8 +1762,8 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="600" id="Xw0-3H-4gs"/>
-                                    <constraint firstAttribute="height" constant="600" id="q5j-bP-6EK"/>
+                                    <constraint firstAttribute="width" constant="600" id="NkL-ke-ofx"/>
+                                    <constraint firstAttribute="height" constant="600" id="zDE-HH-7NB"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="IpE-dz-tdi" kind="embed" identifier="GameSelectSegue" id="J9U-1Z-1ly"/>
@@ -1770,8 +1774,8 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="400" id="ULW-vb-Keh"/>
-                                    <constraint firstAttribute="height" constant="400" id="X5C-lF-O0e"/>
+                                    <constraint firstAttribute="width" constant="400" id="JrR-Uv-dmt"/>
+                                    <constraint firstAttribute="height" constant="400" id="RmX-g8-onV"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="xhl-tk-sWB" kind="embed" identifier="UserSelectSegue" id="Rht-rn-thJ"/>
@@ -1784,17 +1788,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="He0-BB-Owo" secondAttribute="centerY" id="0Og-w9-NVa"/>
-                            <constraint firstAttribute="trailing" secondItem="OQ6-mP-hm8" secondAttribute="trailing" id="6J0-aK-Fh4"/>
-                            <constraint firstItem="OQ6-mP-hm8" firstAttribute="top" secondItem="HTh-P2-Yth" secondAttribute="top" id="9x0-WN-UAS"/>
-                            <constraint firstAttribute="centerY" secondItem="cvx-DZ-9Jz" secondAttribute="centerY" id="Awp-5T-Dt1"/>
-                            <constraint firstAttribute="centerX" secondItem="CQh-3c-gXK" secondAttribute="centerX" id="Ka5-rE-CuO"/>
-                            <constraint firstAttribute="centerY" secondItem="iaw-I4-4xg" secondAttribute="centerY" id="OMW-rr-xzZ"/>
-                            <constraint firstAttribute="centerY" secondItem="CQh-3c-gXK" secondAttribute="centerY" id="Pne-5Y-uo0"/>
-                            <constraint firstAttribute="centerX" secondItem="He0-BB-Owo" secondAttribute="centerX" id="htV-7R-0uq"/>
-                            <constraint firstAttribute="bottom" secondItem="OQ6-mP-hm8" secondAttribute="bottom" constant="43" id="nK1-og-O34"/>
-                            <constraint firstAttribute="centerX" secondItem="iaw-I4-4xg" secondAttribute="centerX" id="nwh-gv-e62"/>
-                            <constraint firstAttribute="centerX" secondItem="cvx-DZ-9Jz" secondAttribute="centerX" id="uBb-Kv-gkO"/>
+                            <constraint firstAttribute="bottom" secondItem="OQ6-mP-hm8" secondAttribute="bottom" constant="43" id="0xo-dy-30l"/>
+                            <constraint firstAttribute="centerX" secondItem="cvx-DZ-9Jz" secondAttribute="centerX" id="4kF-uU-kdv"/>
+                            <constraint firstAttribute="centerY" secondItem="cvx-DZ-9Jz" secondAttribute="centerY" id="FWT-Yd-f64"/>
+                            <constraint firstAttribute="centerX" secondItem="CQh-3c-gXK" secondAttribute="centerX" id="I48-J0-NQh"/>
+                            <constraint firstItem="OQ6-mP-hm8" firstAttribute="top" secondItem="HTh-P2-Yth" secondAttribute="top" id="Kcs-wg-wxD"/>
+                            <constraint firstAttribute="centerX" secondItem="He0-BB-Owo" secondAttribute="centerX" id="Ljj-nL-DeC"/>
+                            <constraint firstItem="OQ6-mP-hm8" firstAttribute="leading" secondItem="HTh-P2-Yth" secondAttribute="leading" id="OBO-gs-s0w"/>
+                            <constraint firstAttribute="centerY" secondItem="CQh-3c-gXK" secondAttribute="centerY" id="Tgr-dl-TbD"/>
+                            <constraint firstAttribute="centerY" secondItem="iaw-I4-4xg" secondAttribute="centerY" id="TsF-1c-iU1"/>
+                            <constraint firstItem="OQ6-mP-hm8" firstAttribute="centerX" secondItem="cvx-DZ-9Jz" secondAttribute="centerX" id="Zoh-CV-AGc"/>
+                            <constraint firstAttribute="centerX" secondItem="iaw-I4-4xg" secondAttribute="centerX" id="fRE-dj-Wlf"/>
+                            <constraint firstAttribute="centerY" secondItem="He0-BB-Owo" secondAttribute="centerY" id="vcW-jy-nNZ"/>
                         </constraints>
                     </view>
                     <toolbarItems>

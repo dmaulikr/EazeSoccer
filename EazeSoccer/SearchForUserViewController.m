@@ -12,7 +12,9 @@
 
 @end
 
-@implementation SearchForUserViewController
+@implementation SearchForUserViewController {
+    UITextField *atextField;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -39,6 +41,19 @@
     [super viewWillAppear:animated];
     _emailTextField.text = @"";
     _usernameTextField.text = @"";
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    [atextField resignFirstResponder];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    atextField = textField;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [atextField resignFirstResponder];
 }
 
 @end

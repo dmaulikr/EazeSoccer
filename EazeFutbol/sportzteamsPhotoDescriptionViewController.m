@@ -40,18 +40,7 @@
     _gameButton.layer.cornerRadius = 4;
     photoNameLabel.layer.cornerRadius = 4;
     _playerTableView.layer.cornerRadius = 4;
-    
-    if ([photo.athletes count] > 0) {
-        NSString *thePlayers = [[photo.athletes objectAtIndex:0] name];
-        thePlayers = [thePlayers stringByAppendingString:@"\n"];
-        if ([photo.athletes count] > 1) {
-            for (int i = 1; i < [photo.athletes count]; i++) {
-                thePlayers = [thePlayers stringByAppendingString:[[photo.athletes objectAtIndex:i] name]];
-                thePlayers = [thePlayers stringByAppendingString:@"\n"];
-            }
-        }
-    } else {
-    }    
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,6 +66,17 @@
             _gameButton.enabled = NO;
         }
         
+        if ([photo.athletes count] > 0) {
+            NSString *thePlayers = [[photo.athletes objectAtIndex:0] name];
+            thePlayers = [thePlayers stringByAppendingString:@"\n"];
+            if ([photo.athletes count] > 1) {
+                for (int i = 1; i < [photo.athletes count]; i++) {
+                    thePlayers = [thePlayers stringByAppendingString:[[photo.athletes objectAtIndex:i] name]];
+                    thePlayers = [thePlayers stringByAppendingString:@"\n"];
+                }
+            }
+        } else {
+        }    
     } else {
         
     }
@@ -121,7 +121,7 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"GameDetailSegue"]) {
+    if ([segue.identifier isEqualToString:@"GameInfoSegue"]) {
         EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:photo.schedule];
     } else if ([segue.identifier isEqualToString:@"PlayerInfoSegue"]) {

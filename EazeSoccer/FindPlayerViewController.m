@@ -12,7 +12,9 @@
 
 @end
 
-@implementation FindPlayerViewController
+@implementation FindPlayerViewController {
+    UITextField *atextField;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,8 +57,21 @@
         return YES;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    [textField resignFirstResponder];
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    atextField = textField;
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+-(IBAction)backGroundTap:(id)sender {
+    [atextField resignFirstResponder];
+}
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [atextField resignFirstResponder];
+}
 @end

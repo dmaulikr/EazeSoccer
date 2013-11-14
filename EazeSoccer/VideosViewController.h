@@ -20,6 +20,8 @@
 @property(nonatomic, strong) User *user;
 //@property(nonatomic, strong) Gamelogs *gamelog;
 
+@property(nonatomic, strong) NSMutableArray *videos;
+
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 - (IBAction)searchButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;

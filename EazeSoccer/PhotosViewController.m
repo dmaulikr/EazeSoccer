@@ -30,7 +30,6 @@
 @end
 
 @implementation PhotosViewController {
-    NSMutableArray *photos;
     NSArray *serverData;
     NSMutableData *theData;
     int responseStatusCode;
@@ -45,6 +44,7 @@
 @synthesize game;
 //@synthesize gamelog;
 @synthesize user;
+@synthesize photos;
 
 - (void)viewDidLoad
 {
