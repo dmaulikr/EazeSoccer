@@ -1748,6 +1748,7 @@
                                     </subviews>
                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                     <constraints>
+                                        <constraint firstAttribute="centerX" secondItem="Y2R-cr-mTP" secondAttribute="centerX" id="M0a-jo-Qo1"/>
                                         <constraint firstAttribute="centerX" secondItem="Y2R-cr-mTP" secondAttribute="centerX" id="Nau-mJ-yVX"/>
                                         <constraint firstItem="Y2R-cr-mTP" firstAttribute="centerY" secondItem="PF1-fN-TEH" secondAttribute="centerY" id="UHg-lE-rLd"/>
                                     </constraints>
@@ -1761,54 +1762,60 @@
                                 </connections>
                             </collectionView>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="POg-RL-sOE">
-                                <rect key="frame" x="154" y="162" width="400" height="400"/>
+                                <rect key="frame" x="184" y="312" width="400" height="400"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="400" id="92L-rB-kHz"/>
+                                    <constraint firstAttribute="height" constant="400" id="V1x-IH-Xk4"/>
+                                </constraints>
                                 <connections>
                                     <segue destination="wMw-5q-YhV" kind="embed" identifier="PlayerSelectSegue" id="fZF-7A-2yw"/>
                                 </connections>
                             </containerView>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yXR-am-tim">
-                                <rect key="frame" x="99" y="144" width="600" height="600"/>
+                                <rect key="frame" x="84" y="212" width="600" height="600"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="600" id="AU1-lv-nt3"/>
+                                    <constraint firstAttribute="width" constant="600" id="PSj-Ie-fhQ"/>
+                                </constraints>
                                 <connections>
                                     <segue destination="1XB-2X-UM0" kind="embed" identifier="GameSelectSegue" id="CJg-Ni-ete"/>
                                 </connections>
                             </containerView>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e9Y-hl-4Ws">
-                                <rect key="frame" x="124" y="169" width="400" height="400"/>
+                                <rect key="frame" x="184" y="312" width="400" height="400"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="400" id="Fr5-5n-Gen"/>
+                                    <constraint firstAttribute="width" constant="400" id="tBk-KC-aL5"/>
+                                </constraints>
                                 <connections>
                                     <segue destination="sk8-hr-dYq" kind="embed" identifier="UserSelectSegue" id="mcZ-Zy-FgQ"/>
                                 </connections>
                             </containerView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="cAS-YF-iqq">
-                                <rect key="frame" x="0.0" y="0.0" width="37" height="37"/>
+                                <rect key="frame" x="366" y="494" width="37" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="e9Y-hl-4Ws" firstAttribute="top" secondItem="O2r-Lw-Jcv" secondAttribute="bottom" constant="105" id="460-BL-M0t"/>
-                            <constraint firstItem="A83-MH-gCO" firstAttribute="top" secondItem="e9Y-hl-4Ws" secondAttribute="bottom" constant="411" id="4LX-xS-5di"/>
-                            <constraint firstItem="yXR-am-tim" firstAttribute="top" secondItem="O2r-Lw-Jcv" secondAttribute="bottom" constant="80" id="8LC-yK-9Br"/>
-                            <constraint firstAttribute="trailing" secondItem="POg-RL-sOE" secondAttribute="trailing" constant="214" id="Cag-b9-3Yc"/>
-                            <constraint firstItem="0R3-aU-XMS" firstAttribute="leading" secondItem="qsR-GD-Lh3" secondAttribute="leading" id="D97-pj-A1r"/>
-                            <constraint firstItem="POg-RL-sOE" firstAttribute="leading" secondItem="qsR-GD-Lh3" secondAttribute="leading" constant="154" id="EYv-ie-5DD"/>
-                            <constraint firstAttribute="trailing" secondItem="0R3-aU-XMS" secondAttribute="trailing" id="PpM-qy-0Am"/>
-                            <constraint firstItem="yXR-am-tim" firstAttribute="leading" secondItem="qsR-GD-Lh3" secondAttribute="leading" constant="99" id="W64-lV-LcK"/>
-                            <constraint firstItem="cAS-YF-iqq" firstAttribute="leading" secondItem="0R3-aU-XMS" secondAttribute="leading" id="W7x-zf-B1h"/>
-                            <constraint firstItem="e9Y-hl-4Ws" firstAttribute="leading" secondItem="qsR-GD-Lh3" secondAttribute="leading" constant="124" id="YvB-8T-C0M"/>
-                            <constraint firstAttribute="trailing" secondItem="e9Y-hl-4Ws" secondAttribute="trailing" constant="244" id="ZhO-y2-nQZ"/>
-                            <constraint firstItem="A83-MH-gCO" firstAttribute="top" secondItem="yXR-am-tim" secondAttribute="bottom" constant="236" id="hKd-dV-Vse"/>
-                            <constraint firstItem="0R3-aU-XMS" firstAttribute="top" secondItem="qsR-GD-Lh3" secondAttribute="top" id="iOF-EC-e5H"/>
-                            <constraint firstItem="POg-RL-sOE" firstAttribute="top" secondItem="O2r-Lw-Jcv" secondAttribute="bottom" constant="98" id="kuB-ey-I0p"/>
-                            <constraint firstItem="A83-MH-gCO" firstAttribute="top" secondItem="0R3-aU-XMS" secondAttribute="bottom" constant="4" id="pzC-HK-n2o"/>
-                            <constraint firstItem="0R3-aU-XMS" firstAttribute="top" secondItem="cAS-YF-iqq" secondAttribute="top" id="qJg-qu-Ycn"/>
-                            <constraint firstItem="A83-MH-gCO" firstAttribute="top" secondItem="POg-RL-sOE" secondAttribute="bottom" constant="418" id="uSV-y7-zM8"/>
-                            <constraint firstAttribute="trailing" secondItem="yXR-am-tim" secondAttribute="trailing" constant="69" id="v50-sm-5fB"/>
+                            <constraint firstItem="0R3-aU-XMS" firstAttribute="leading" secondItem="qsR-GD-Lh3" secondAttribute="leading" id="1Sq-as-3Ff"/>
+                            <constraint firstAttribute="centerY" secondItem="e9Y-hl-4Ws" secondAttribute="centerY" id="6YT-9z-C1a"/>
+                            <constraint firstAttribute="centerX" secondItem="cAS-YF-iqq" secondAttribute="centerX" id="9U4-ka-xbe"/>
+                            <constraint firstItem="A83-MH-gCO" firstAttribute="top" secondItem="0R3-aU-XMS" secondAttribute="bottom" constant="4" id="KAK-ef-AG8"/>
+                            <constraint firstAttribute="centerX" secondItem="e9Y-hl-4Ws" secondAttribute="centerX" id="QN5-Hs-35b"/>
+                            <constraint firstItem="0R3-aU-XMS" firstAttribute="top" secondItem="qsR-GD-Lh3" secondAttribute="top" id="W27-i4-tkN"/>
+                            <constraint firstAttribute="centerX" secondItem="POg-RL-sOE" secondAttribute="centerX" id="Xhi-hx-uyx"/>
+                            <constraint firstAttribute="centerY" secondItem="POg-RL-sOE" secondAttribute="centerY" id="kLR-ps-0Ei"/>
+                            <constraint firstAttribute="centerY" secondItem="cAS-YF-iqq" secondAttribute="centerY" id="mOn-vC-KDg"/>
+                            <constraint firstItem="0R3-aU-XMS" firstAttribute="centerX" secondItem="e9Y-hl-4Ws" secondAttribute="centerX" id="mmw-Vy-BMz"/>
+                            <constraint firstAttribute="centerY" secondItem="yXR-am-tim" secondAttribute="centerY" id="riZ-eO-5dY"/>
+                            <constraint firstAttribute="centerX" secondItem="yXR-am-tim" secondAttribute="centerX" id="yhM-Po-hHf"/>
                         </constraints>
                     </view>
                     <toolbarItems>
