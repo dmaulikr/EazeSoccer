@@ -27,7 +27,6 @@
 @end
 
 @implementation BlogViewController {
-    NSMutableArray *blogfeed;
     NSMutableArray *serverData;
     int responseStatusCode;
     NSMutableData *theData;
@@ -49,6 +48,7 @@
 @synthesize coach;
 @synthesize user;
 //@synthesize gamelog;
+@synthesize blogfeed;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -242,6 +242,31 @@
             blogfeed = [self extractBlogData:serverData];
         
         [_activityIndicator stopAnimating];
+        
+        if ((blogfeed.count == 0) && ((player) || (coach) || (user) || (game))) {
+            NSString *criteria;
+            
+            if (player)
+                criteria = player.logname;
+            else if (coach)
+                criteria = coach.fullname;
+            else if (user)
+                criteria = user.username;
+            else if (game)
+                criteria = game.game_name;
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Blogs" message:[NSString stringWithFormat:@"%@%@", @"No blogs for ", criteria]
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        } else if (blogfeed.count == 0) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Blogs" message:@"No blogs entered for team"
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
         [_blogTableView reloadData];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Blog Feed"

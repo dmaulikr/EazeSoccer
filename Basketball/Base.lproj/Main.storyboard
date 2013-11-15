@@ -27,6 +27,7 @@
                         <segue destination="WGA-0K-t6x" kind="relationship" relationship="viewControllers" id="Yyj-uG-hHQ"/>
                         <segue destination="4jx-BA-CYT" kind="relationship" relationship="viewControllers" id="MIv-BI-fP7"/>
                         <segue destination="An6-hX-aY6" kind="relationship" relationship="viewControllers" id="GeK-cq-2aV"/>
+                        <segue destination="rps-Bj-mtP" kind="relationship" relationship="viewControllers" id="I2w-xG-eMD"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -5341,8 +5342,8 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Logged in as:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jUa-gO-GhM">
-                                        <rect key="frame" x="20" y="72" width="110" height="21"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logged in as:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jUa-gO-GhM">
+                                        <rect key="frame" x="20" y="69" width="110" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -5355,15 +5356,15 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3xY-0a-QDW">
-                                        <rect key="frame" x="152" y="72" width="258" height="21"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3xY-0a-QDW">
+                                        <rect key="frame" x="152" y="69" width="258" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZjC-0r-RTV">
-                                        <rect key="frame" x="456" y="16" width="100" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZjC-0r-RTV">
+                                        <rect key="frame" x="447" y="14" width="118" height="33"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Change Team">
@@ -5373,11 +5374,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                             <action selector="changeTeamButtonClicked:" destination="pzN-9K-F1n" eventType="touchUpInside" id="O63-GO-f6t"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JSH-Mc-gVA">
-                                        <rect key="frame" x="456" y="72" width="100" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JSH-Mc-gVA">
+                                        <rect key="frame" x="456" y="69" width="100" height="33"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="73" id="QUo-QN-uRq"/>
+                                            <constraint firstAttribute="width" constant="100" id="QUo-QN-uRq"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Logout">
@@ -5390,7 +5391,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="ZjC-0r-RTV" secondAttribute="trailing" constant="44" id="3ko-nB-ag8"/>
+                                    <constraint firstAttribute="trailing" secondItem="ZjC-0r-RTV" secondAttribute="trailing" constant="35" id="3ko-nB-ag8"/>
                                     <constraint firstAttribute="width" constant="600" id="4js-rv-lk6"/>
                                     <constraint firstAttribute="bottom" secondItem="JSH-Mc-gVA" secondAttribute="bottom" constant="20" symbolic="YES" id="5nv-U8-qPB"/>
                                     <constraint firstAttribute="height" constant="122" id="FuS-dx-irA"/>
@@ -5398,12 +5399,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <constraint firstItem="3xY-0a-QDW" firstAttribute="top" secondItem="JSH-Mc-gVA" secondAttribute="top" id="VHz-0K-HAM"/>
                                     <constraint firstItem="sdL-Vj-02p" firstAttribute="leading" secondItem="3xY-0a-QDW" secondAttribute="leading" id="apl-L8-v6K"/>
                                     <constraint firstItem="3xY-0a-QDW" firstAttribute="trailing" secondItem="sdL-Vj-02p" secondAttribute="trailing" id="c3h-5v-DhI"/>
-                                    <constraint firstAttribute="trailing" secondItem="JSH-Mc-gVA" secondAttribute="trailing" constant="71" id="dLg-yg-2go"/>
+                                    <constraint firstAttribute="trailing" secondItem="JSH-Mc-gVA" secondAttribute="trailing" constant="44" id="dLg-yg-2go"/>
                                     <constraint firstItem="jUa-gO-GhM" firstAttribute="baseline" secondItem="3xY-0a-QDW" secondAttribute="baseline" id="dQQ-zk-gvd"/>
-                                    <constraint firstItem="ZjC-0r-RTV" firstAttribute="leading" secondItem="JSH-Mc-gVA" secondAttribute="leading" id="hWx-DD-hZn"/>
+                                    <constraint firstItem="ZjC-0r-RTV" firstAttribute="leading" secondItem="JSH-Mc-gVA" secondAttribute="leading" constant="-9" id="hWx-DD-hZn"/>
                                     <constraint firstItem="ZjC-0r-RTV" firstAttribute="baseline" secondItem="sdL-Vj-02p" secondAttribute="baseline" id="hqP-EH-BoE"/>
                                     <constraint firstItem="J2D-0l-5BD" firstAttribute="leading" secondItem="HQK-Ye-IP4" secondAttribute="leading" constant="20" symbolic="YES" id="nYp-s1-Wmb"/>
-                                    <constraint firstItem="ZjC-0r-RTV" firstAttribute="leading" secondItem="sdL-Vj-02p" secondAttribute="trailing" constant="46" id="pr4-Sn-KVP"/>
+                                    <constraint firstItem="ZjC-0r-RTV" firstAttribute="leading" secondItem="sdL-Vj-02p" secondAttribute="trailing" constant="37" id="pr4-Sn-KVP"/>
                                     <constraint firstItem="J2D-0l-5BD" firstAttribute="top" secondItem="HQK-Ye-IP4" secondAttribute="top" constant="20" symbolic="YES" id="qoC-kM-mc9"/>
                                     <constraint firstItem="jUa-gO-GhM" firstAttribute="trailing" secondItem="J2D-0l-5BD" secondAttribute="trailing" id="r0w-Y3-dHl"/>
                                     <constraint firstItem="sdL-Vj-02p" firstAttribute="baseline" secondItem="J2D-0l-5BD" secondAttribute="baseline" id="rRm-KA-OaS"/>
@@ -5812,7 +5813,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z9d-bd-YeB">
                                 <rect key="frame" x="0.0" y="63" width="768" height="910"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="hAt-z3-WWs">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hAt-z3-WWs">
                                         <rect key="frame" x="34" y="38" width="700" height="525"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="525" id="Y4o-f9-NL3"/>

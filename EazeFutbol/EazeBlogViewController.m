@@ -11,8 +11,10 @@
 #import "EazePlayerSelectViewController.h"
 #import "EazeGameSelectionViewController.h"
 #import "EazeUsersSelectViewController.h"
+#import "EazeCoachSelectionViewController.h"
+#import "EazeBlogDetailViewController.h"
 
-@interface EazeBlogViewController ()
+@interface EazeBlogViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -20,6 +22,7 @@
     EazeUsersSelectViewController *usersSelectController;
     EazeGameSelectionViewController *gameSelectController;
     EazePlayerSelectViewController *playerSelectController;
+    EazeCoachSelectionViewController *coachSelectController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -35,7 +38,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.refreshButton, self.addBlogEntryButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBlogEntryButton, self.refreshButton, self.searchButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -56,6 +59,9 @@
     } else if (usersSelectController) {
         if (usersSelectController.user)
             self.user = usersSelectController.user;
+    } else if (coachSelectController) {
+        if (coachSelectController.coach)
+            self.coach = coachSelectController.coach;
     }
     
     [super viewWillAppear:animated];
@@ -67,9 +73,58 @@
     } else if ([segue.identifier isEqualToString:@"GameSelectSegue"]) {
         gameSelectController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"BlogEntrySegue"]) {
+        NSIndexPath *indexPath = [self.blogTableView indexPathForSelectedRow];
+        EazeBlogDetailViewController *destController = segue.destinationViewController;
+        destController.blog = [self.blogfeed objectAtIndex:indexPath.row];
     } else if ([segue.identifier isEqualToString:@"UserSelectSegue"]) {
         usersSelectController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"CoachSelectSegue"]) {
+        coachSelectController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"NewBlogSegue"] ) {
+        
     }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Player"]) {
+        self.game = nil;
+        self.coach = nil;
+        self.user = nil;
+        gameSelectController = nil;
+        [self performSegueWithIdentifier:@"PlayerSelectSegue" sender:self];
+    } else if ([title isEqualToString:@"Game"]) {
+        self.player = nil;
+        self.coach = nil;
+        self.user = nil;
+        playerSelectController = nil;
+        [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
+    } else if ([title isEqualToString:@"User"]) {
+        self.player = nil;
+        self.game = nil;
+        self.coach = nil;
+        [self performSegueWithIdentifier:@"UserSelectSegue" sender:self];
+    } else if ([title isEqualToString:@"Coach"]) {
+        self.player = nil;
+        self.game = nil;
+        self.user = nil;
+        [self performSegueWithIdentifier:@"CoachSelectSegue" sender:self];
+    } else if ([title isEqualToString:@"All"]) {
+        self.team = currentSettings.team;
+        self.player = nil;
+        self.game = nil;
+        self.coach = nil;
+        self.user = nil;
+        [self getBlogs:nil];
+    }
+}
+
+- (IBAction)searchButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Search" message:@"Enter Blog Search Criteria"
+                         delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Player", @"Game", @"User", @"Coach", @"All", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 @end

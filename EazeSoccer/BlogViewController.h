@@ -23,6 +23,10 @@
 @property(nonatomic, strong) Coach *coach;
 @property(nonatomic, strong) User *user;
 //@property(nonatomic, strong) Gamelogs *gamelog;
+@property(nonatomic, strong) NSMutableArray *blogfeed;
+
+- (void)getBlogs:(NSString *)fromdate;
+
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 - (IBAction)searchBurronClicked:(id)sender;
 

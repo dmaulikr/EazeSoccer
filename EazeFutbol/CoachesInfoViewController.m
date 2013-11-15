@@ -21,7 +21,6 @@
 @synthesize years;
 @synthesize staffPosition;
 @synthesize coachImage;
-@synthesize nameLabel;
 @synthesize bioTextVeiw;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -37,9 +36,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor clearColor];
     self.years.layer.cornerRadius = 4;
-    nameLabel.layer.cornerRadius = 4;
-    nameLabel.numberOfLines = 2;
     bioTextVeiw.editable = NO;
     bioTextVeiw.layer.cornerRadius = 4;
     self.staffPosition.layer.cornerRadius = 4;
@@ -50,7 +48,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [nameLabel setText:coach.fullname];
     [years setText:[coach.years stringValue]];
     [bioTextVeiw setText:coach.bio];
     self.title = coach.fullname;

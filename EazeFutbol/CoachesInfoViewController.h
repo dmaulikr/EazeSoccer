@@ -17,9 +17,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *coachImage;
 @property (weak, nonatomic) IBOutlet UILabel *years;
 @property (weak, nonatomic) IBOutlet UILabel *staffPosition;
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UITextView *bioTextVeiw;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollview;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 
 @end
