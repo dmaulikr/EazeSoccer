@@ -219,6 +219,13 @@
 
 - (BOOL)saveBasketballGameStats:(NSString *)gameid {
     return [[self findBasketballGameStatEntries:gameid] saveStats];
+    BasketballStats *astats = [self findBasketballGameStatEntries:gameid];
+    
+    if ([astats saveStats]) {
+        [self updateBasketballGameStats:astats];
+        return YES;
+    } else
+        return NO;
 }
 
 - (Soccer *)findSoccerStats:(NSString *)statid {
@@ -264,7 +271,13 @@
 }
 
 - (BOOL)saveSoccerGameStats:(NSString *)gameid {
-    return [[self findSoccerGameStats:gameid] saveStats];
+    Soccer *astats = [self findSoccerGameStats:gameid];
+    
+    if ([astats saveStats]) {
+        [self updateSoccerGameStats:astats];
+        return YES;
+    } else
+        return NO;
 }
 
 - (BOOL)isSoccerGoalie {

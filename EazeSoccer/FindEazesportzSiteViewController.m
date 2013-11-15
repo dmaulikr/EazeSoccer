@@ -7,7 +7,7 @@
 //
 
 #import "FindEazesportzSiteViewController.h"
-#import "eazesportzAppDelegate.h"
+#import "EazesportzAppDelegate.h"
 #import "sportzCurrentSettings.h"
 #import "sportzServerInit.h"
 

@@ -115,7 +115,7 @@
         [jsonDict setValue:loginData forKey:@"user"];
         
         NSError *jsonSerializationError = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
         
         if (!jsonSerializationError) {
             NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -161,7 +161,7 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:nil error:nil];
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
     if (responseStatusCode == 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%@%@", @"Welcome ", _nameText.text]
@@ -172,7 +172,7 @@
         [alert show];
     } else if ((responseStatusCode == 400) || (responseStatusCode == 409)) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login"
-                             message:[NSString stringWithFormat:[serverData objectForKey:@"message"]]
+                             message:[serverData objectForKey:@"message"]
                              delegate:self cancelButtonTitle:@"Try Again"
                              otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
@@ -190,9 +190,13 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    
     if([title isEqualToString:@"Ok"]) {
-//        [self performSegueWithIdentifier: @"RegisterLoginEmailSegue" sender: self];
-        [self.navigationController popViewControllerAnimated:YES];
+        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        else
+            [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

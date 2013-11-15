@@ -1489,8 +1489,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="registerButtonClicked:" destination="9ey-ni-Aqi" eventType="touchUpInside" id="fIG-ef-gXN"/>
-                                            <segue destination="ZNv-X6-0Wr" kind="push" id="EoE-a5-up9"/>
+                                            <segue destination="ZNv-X6-0Wr" kind="push" identifier="RegisterClientUserSegue" id="EoE-a5-up9"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -2828,15 +2827,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Logout" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RdZ-Mi-074">
-                                <rect key="frame" x="20" y="237" width="172" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logout" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RdZ-Mi-074">
+                                <rect key="frame" x="20" y="86" width="172" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RBx-jY-jG6">
-                                <rect key="frame" x="200" y="271" width="100" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RBx-jY-jG6">
+                                <rect key="frame" x="200" y="120" width="100" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Change Team">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -2845,30 +2844,36 @@
                                     <action selector="changeTeamButtonClicked:" destination="Uoe-Y9-rUu" eventType="touchUpInside" id="X0A-NF-bxw"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Team" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ucs-mt-NHk">
-                                <rect key="frame" x="20" y="275" width="172" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ucs-mt-NHk">
+                                <rect key="frame" x="20" y="124" width="172" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Find Another Site:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V7n-5j-ufW">
-                                <rect key="frame" x="20" y="308" width="172" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Find Another Site:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V7n-5j-ufW">
+                                <rect key="frame" x="20" y="157" width="172" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0MW-Db-jnu">
-                                <rect key="frame" x="200" y="304" width="100" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0MW-Db-jnu">
+                                <rect key="frame" x="200" y="153" width="100" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Find Site">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="ZNv-X6-0Wr" kind="push" id="2NU-SW-qsk"/>
+                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8xo-UD-bbg">
-                                <rect key="frame" x="214" y="233" width="73" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8xo-UD-bbg">
+                                <rect key="frame" x="200" y="82" width="100" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="IXP-gB-2LV"/>
+                                </constraints>
                                 <state key="normal" title="Logout">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -2879,11 +2884,23 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="0MW-Db-jnu" firstAttribute="leading" secondItem="V7n-5j-ufW" secondAttribute="trailing" constant="8" id="Qp6-Yb-1w2"/>
-                            <constraint firstItem="RBx-jY-jG6" firstAttribute="leading" secondItem="Ucs-mt-NHk" secondAttribute="trailing" constant="8" id="X3a-K2-H8a"/>
-                            <constraint firstItem="V7n-5j-ufW" firstAttribute="leading" secondItem="Ucs-mt-NHk" secondAttribute="leading" id="XGr-VI-pvo"/>
-                            <constraint firstItem="V7n-5j-ufW" firstAttribute="leading" secondItem="RdZ-Mi-074" secondAttribute="leading" id="tip-tJ-GsH"/>
-                            <constraint firstItem="8xo-UD-bbg" firstAttribute="leading" secondItem="RdZ-Mi-074" secondAttribute="trailing" constant="22" id="uZW-Pg-5lH"/>
+                            <constraint firstItem="RBx-jY-jG6" firstAttribute="leading" secondItem="Ucs-mt-NHk" secondAttribute="trailing" constant="8" symbolic="YES" id="3BI-Kt-ynE"/>
+                            <constraint firstItem="8xo-UD-bbg" firstAttribute="trailing" secondItem="RBx-jY-jG6" secondAttribute="trailing" id="3KA-TG-EsP"/>
+                            <constraint firstItem="Ucs-mt-NHk" firstAttribute="leading" secondItem="V7n-5j-ufW" secondAttribute="leading" id="5ay-au-0TJ"/>
+                            <constraint firstItem="RBx-jY-jG6" firstAttribute="leading" secondItem="0MW-Db-jnu" secondAttribute="leading" id="711-lg-Xlj"/>
+                            <constraint firstAttribute="trailing" secondItem="8xo-UD-bbg" secondAttribute="trailing" constant="20" symbolic="YES" id="8hH-8m-UCs"/>
+                            <constraint firstItem="8xo-UD-bbg" firstAttribute="trailing" secondItem="0MW-Db-jnu" secondAttribute="trailing" id="9EU-gT-mmk"/>
+                            <constraint firstItem="0MW-Db-jnu" firstAttribute="top" secondItem="V7n-5j-ufW" secondAttribute="top" constant="-4" id="Bqw-Ch-KLk"/>
+                            <constraint firstItem="V7n-5j-ufW" firstAttribute="top" secondItem="Ucs-mt-NHk" secondAttribute="bottom" constant="12" id="IQh-yU-7oA"/>
+                            <constraint firstItem="RdZ-Mi-074" firstAttribute="leading" secondItem="gr8-aa-Zpg" secondAttribute="leading" constant="20" symbolic="YES" id="Ja2-di-C1f"/>
+                            <constraint firstItem="0MW-Db-jnu" firstAttribute="leading" secondItem="V7n-5j-ufW" secondAttribute="trailing" constant="8" symbolic="YES" id="Lpn-Qn-xAS"/>
+                            <constraint firstItem="8xo-UD-bbg" firstAttribute="leading" secondItem="RdZ-Mi-074" secondAttribute="trailing" constant="8" symbolic="YES" id="V5W-UD-A4p"/>
+                            <constraint firstItem="RdZ-Mi-074" firstAttribute="top" secondItem="gr8-aa-Zpg" secondAttribute="top" constant="86" id="Wv5-2q-3S7"/>
+                            <constraint firstItem="Ucs-mt-NHk" firstAttribute="top" secondItem="RBx-jY-jG6" secondAttribute="top" constant="4" id="egM-zq-FDo"/>
+                            <constraint firstItem="8xo-UD-bbg" firstAttribute="leading" secondItem="RBx-jY-jG6" secondAttribute="leading" id="jrV-lI-KZo"/>
+                            <constraint firstItem="8xo-UD-bbg" firstAttribute="top" secondItem="RdZ-Mi-074" secondAttribute="top" constant="-4" id="x6U-Kw-P6W"/>
+                            <constraint firstItem="Ucs-mt-NHk" firstAttribute="leading" secondItem="RdZ-Mi-074" secondAttribute="leading" id="xXP-WG-4SD"/>
+                            <constraint firstItem="Ucs-mt-NHk" firstAttribute="top" secondItem="RdZ-Mi-074" secondAttribute="bottom" constant="17" id="y5A-Cy-Zkr"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Settings" id="eiB-pp-CwX"/>
@@ -4056,7 +4073,7 @@
                                 <rect key="frame" x="34" y="80" width="253" height="251"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Eazesportz Basketball" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0VQ-cJ-ZJV">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Eazesportz Soccer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0VQ-cJ-ZJV">
                                         <rect key="frame" x="33" y="20" width="187" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
@@ -4106,7 +4123,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="submitButtonClicked:" destination="ZNv-X6-0Wr" eventType="touchUpInside" id="FlX-xH-hRZ"/>
+                                            <action selector="submitButtonClicked:" destination="ZNv-X6-0Wr" eventType="touchUpInside" id="0Mf-DZ-7Eh"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -4156,11 +4173,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Find Basketball Site" id="C33-ce-Bwe"/>
                     <connections>
-                        <outlet property="cityTextField" destination="SLA-ET-bYS" id="MbD-Fb-ErN"/>
-                        <outlet property="sitenameTextField" destination="azX-lr-gLO" id="Wof-bv-n2w"/>
-                        <outlet property="stateListContainer" destination="puJ-lA-3FO" id="Xig-0N-TG0"/>
-                        <outlet property="stateTextField" destination="Gmd-Ea-7nG" id="pb9-4M-mao"/>
-                        <outlet property="zipcodeTextfield" destination="gmT-Cb-Ty6" id="4vw-1e-AqF"/>
+                        <outlet property="cityTextField" destination="SLA-ET-bYS" id="RON-9N-7ev"/>
+                        <outlet property="sitenameTextField" destination="azX-lr-gLO" id="yCK-pe-1wL"/>
+                        <outlet property="stateListContainer" destination="puJ-lA-3FO" id="EIK-Mv-KnQ"/>
+                        <outlet property="stateTextField" destination="Gmd-Ea-7nG" id="2zA-qq-ABb"/>
+                        <outlet property="zipcodeTextfield" destination="gmT-Cb-Ty6" id="KLw-49-qlp"/>
                         <segue destination="NY0-Pm-yhE" kind="push" identifier="SelectSiteSegue" id="9Ca-a4-tKu"/>
                     </connections>
                 </viewController>
@@ -4273,7 +4290,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="q8f-2u-7gk" kind="unwind" unwindAction="selectStateFindSite:" id="ExQ-4I-cOD"/>
+                                            <segue destination="q8f-2u-7gk" kind="unwind" unwindAction="selectStateFindSite:" id="ucM-Fg-vcs"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -4289,7 +4306,7 @@
                                     <navigationItem title="Select State" id="jbc-uq-5Dz">
                                         <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="DvQ-i1-TBn">
                                             <connections>
-                                                <segue destination="q8f-2u-7gk" kind="unwind" unwindAction="selectStateFindSite:" id="LFc-ot-4p5"/>
+                                                <segue destination="q8f-2u-7gk" kind="unwind" unwindAction="selectStateFindSite:" id="ZOU-Gr-dlM"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -4300,7 +4317,7 @@
                     </view>
                     <toolbarItems/>
                     <connections>
-                        <outlet property="stateTableView" destination="B0w-8L-ons" id="e5B-iT-3AN"/>
+                        <outlet property="stateTableView" destination="B0w-8L-ons" id="Jxy-aK-b2E"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="paD-kq-Q33" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -4349,7 +4366,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Eazesportz Sites" id="fLx-AX-KAx"/>
                     <connections>
-                        <outlet property="siteTableView" destination="9b1-0v-A2T" id="rcz-jN-FEW"/>
+                        <outlet property="siteTableView" destination="9b1-0v-A2T" id="hKq-Sl-Mko"/>
                         <segue destination="Aqh-Sf-Om6" kind="push" identifier="RegisterSiteLoginSegue" id="Yid-Se-inE"/>
                     </connections>
                 </tableViewController>
@@ -4379,15 +4396,16 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="oCZ-Ym-pyo"/>
-        <segue reference="ILj-VT-dRY"/>
-        <segue reference="bRe-Ky-mGO"/>
+        <segue reference="4ti-0x-BUB"/>
         <segue reference="9fP-qa-tQC"/>
-        <segue reference="Xu5-QG-hvS"/>
         <segue reference="5TV-Iu-Rqf"/>
         <segue reference="DHD-ms-tmL"/>
         <segue reference="ryR-Ua-WCk"/>
+        <segue reference="Xu5-QG-hvS"/>
         <segue reference="Zh9-gh-1bb"/>
         <segue reference="wo7-gb-NEd"/>
+        <segue reference="oCZ-Ym-pyo"/>
+        <segue reference="bRe-Ky-mGO"/>
+        <segue reference="EoE-a5-up9"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -254,7 +254,7 @@
         } else if (currentSettings.team.teamid.length == 0) {
             [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Update Successul!"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Update Successfull!"
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];

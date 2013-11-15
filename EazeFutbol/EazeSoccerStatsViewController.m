@@ -122,11 +122,15 @@
         EazeSoccerPlayerStatsViewController *destController = segue.destinationViewController;
         
         if (self.game) {
-            destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+            if (indexPath.section == 0)
+                destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+            else
+                destController.player = [self.goalies objectAtIndex:indexPath.row];
+            
             destController.game = self.game;
         } else {
+            destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];            
             destController.player = self.athlete;
-            destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
         }
     }
 }

@@ -158,7 +158,7 @@
             GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
             cell.playerName.text = agame.opponent;
             stats = [athlete findSoccerGameStats:agame.id];
-            cell.imageView.image = [athlete getImage:@"tiny"];
+            cell.imageView.image = [agame opponentImage];
         }
 
         cell.label1.text = [stats.goalssaved stringValue];

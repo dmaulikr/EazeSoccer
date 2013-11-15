@@ -214,7 +214,9 @@
                 else
                     currentSettings.sport.id = @"";
                 
-                if ([currentSettings.user.admin intValue] > 0) {
+                NSBundle *mainBundle = [NSBundle mainBundle];
+                
+ //               if ([currentSettings.user.admin intValue] > 0) {
                     
                     if (![currentSettings initS3Bucket]) {
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Storage Access Issue. Please restart app!"
@@ -225,7 +227,6 @@
                     
                     if (currentSettings.sport.id.length > 0) {
                         [currentSettings retrieveSport];
-                        NSBundle *mainBundle = [NSBundle mainBundle];
                         
                         if (![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]) {
                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login" message:@"Sport does not match login"
@@ -235,16 +236,18 @@
                         } else  {
                             [self performSegueWithIdentifier:@"AlreadyLoggedInSegue" sender:self];
                         }
-                    } else {
+                    } else if (([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) &&
+                               ([currentSettings.user.admin intValue] > 0)) {
                         [self performSegueWithIdentifier:@"CreateSportSegue" sender:self];
+                    } else {
+                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must be an administrator to use this application"
+                                                                  delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                        
+                        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                        [alert show];
                     }
-                } else {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must be an administrator to use this application"
-                                                              delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                }
+//                } else {
+//                }
             } else {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving User"
                                                                 message:[NSString stringWithFormat:@"%d", responseStatusCode]
@@ -296,7 +299,13 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"RegisterUserSegue"]) {
         sportzteamsRegisterLoginViewController *destController = segue.destinationViewController;
-        destController.admin = YES;
+        NSBundle *mainBundle = [NSBundle mainBundle];
+        
+        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+            destController.admin = NO;
+        else
+            destController.admin = YES;
+        
         destController.sport = nil;
     } else if ([segue.identifier isEqualToString:@"CreateSportSegue"]) {
         ProgramInfoViewController *destController = segue.destinationViewController;

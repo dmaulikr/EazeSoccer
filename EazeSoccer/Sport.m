@@ -31,6 +31,7 @@
 @synthesize newsfeed_interval;
 @synthesize beta;
 @synthesize approved;
+@synthesize teamcount;
 
 @synthesize playerPositions;
 
@@ -67,6 +68,7 @@
         newsfeed_interval = [sportDictionary objectForKey:@"newsfeed_interval"];
         beta = [[sportDictionary objectForKey:@"beta"] boolValue];
         approved = [[sportDictionary objectForKey:@"approved"] boolValue];
+        teamcount = [sportDictionary objectForKey:@"teamcount"];
         
         if ([name isEqualToString:@"Soccer"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"soccer_positions"]];

@@ -546,7 +546,7 @@
     // Initialize the S3 Client.
     s3 = [[AmazonS3Client alloc] initWithAccessKey:self.user.awskeyid withSecretKey:self.user.awssecretkey];
 //    s3.endpoint = [AmazonEndpoints s3Endpoint:US_WEST_2];
-    if ((self.user.awskeyid) && ([self.user.admin boolValue])) {
+    if (self.user.awskeyid) {
         NSArray *buckets = s3.listBuckets;
         for (int i = 0; i < [buckets count]; i++) {
             if ([[[buckets objectAtIndex:i] name] isEqualToString:bucket]) {
@@ -554,7 +554,7 @@
             }
         }
         // Create the picture bucket.
-        if (s3bucket == nil) {
+        if ((s3bucket == nil) && ([self.user.admin boolValue]) && ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
             S3CreateBucketRequest *createBucketRequest = [[S3CreateBucketRequest alloc] initWithName:bucket andRegion:[S3Region USWest2]];
             S3CreateBucketResponse *createBucketResponse = [s3 createBucket:createBucketRequest];
             if(createBucketResponse.error != nil) {

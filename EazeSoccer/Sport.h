@@ -29,6 +29,7 @@
 @property(nonatomic, strong) NSNumber *newsfeed_interval;
 @property(nonatomic, assign) BOOL beta;
 @property(nonatomic, assign) BOOL approved;
+@property(nonatomic, strong) NSNumber *teamcount;
 
 @property(nonatomic, strong) NSMutableDictionary *playerPositions;
 

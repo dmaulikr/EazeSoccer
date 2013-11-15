@@ -1270,11 +1270,8 @@
 + (NSString *)changeDefaultSite:(NSString *)sportid Token:(NSString *)authtoken {
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/users/"];
-    serverUrlString = [serverUrlString stringByAppendingString:sportid];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports.json"];
-    serverUrlString = [serverUrlString stringByAppendingFormat:@"?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
+    return serverUrlString = [serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@", @"/users/", currentSettings.user.userid,
+                              @"/sitechange.json?sport_id=", sportid, @"&auth_token=", authtoken];
 }
 
 + (NSString *)getStatConsolePlayers:(NSString *)team Token:(NSString *)authtoken {
