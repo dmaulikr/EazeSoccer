@@ -41,6 +41,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor clearColor];
+    
     _bioLabel.layer.cornerRadius = 4;
     _blogLabel.layer.cornerRadius = 4;
     _statsLabel.layer.cornerRadius = 4;
@@ -64,51 +66,26 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getUser:currentSettings.user.userid Token:currentSettings.user.authtoken]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
-    if (responseStatusCode == 200) {
-        currentSettings.user.email = [userdata objectForKey:@"email"];
-        currentSettings.user.admin = [NSNumber numberWithInteger:[[userdata objectForKey:@"admin"] integerValue]];
-        currentSettings.user.userid = [userdata objectForKey:@"id"];
-        currentSettings.user.username = [userdata objectForKey:@"name"];
-        currentSettings.user.avatarprocessing = [[userdata objectForKey:@"avatarprocessing"] boolValue];
+    if (currentSettings.user.avatarprocessing) {
+        NSURL *url = [NSURL URLWithString:[sportzServerInit getUser:currentSettings.user.userid Token:currentSettings.user.authtoken]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        NSURLResponse* response;
+        NSError *error = nil;
+        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+        responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        NSDictionary *userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         
-        if ((NSNull *)[userdata objectForKey:@"avatarthumburl"] != [NSNull null])
-            currentSettings.user.userthumb = [userdata objectForKey:@"avatarthumburl"];
-        else
-            currentSettings.user.userthumb = @"";
-        
-        if ((NSNull *)[userdata objectForKey:@"avartartinyurl"] != [NSNull null])
-            currentSettings.user.tiny = [userdata objectForKey:@"avatartinyurl"];
-        else
-            currentSettings.user.tiny = @"";
-        
-        currentSettings.user.isactive = [NSNumber numberWithInteger:[[userdata objectForKey:@"is_active"] integerValue]];
-        currentSettings.user.bio_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"bio_alert"] integerValue]];
-        currentSettings.user.blog_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"blog_alert"] integerValue]];
-        currentSettings.user.media_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"media_alert"] integerValue]];
-        currentSettings.user.stat_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"stat_alert"] integerValue]];
-        currentSettings.user.score_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"score_alert"] integerValue]];
-        
-        if ((NSNull *)[userdata objectForKey:@"teamid"] != [NSNull null])
-            currentSettings.user.teammanagerid = [userdata objectForKey:@"teamid"];
-        else
-            currentSettings.user.teammanagerid = @"";
-        
-        currentSettings.user.awssecretkey = [userdata objectForKey:@"awskey"];
-        currentSettings.user.awskeyid = [userdata objectForKey:@"awskeyid"];
-        
-        if ((NSNull *)[userdata objectForKey:@"default_site"] != [NSNull null])
-            currentSettings.sport.id = [userdata objectForKey:@"default_site"];
-        else
-            currentSettings.sport.id = @"";
+        if (responseStatusCode == 200) {
+            currentSettings.user = [[User alloc] initWithDictionary:userdata];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:[NSString stringWithFormat:@"%d", responseStatusCode]
+                                                           delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     }
 
     [_usernameTextField setText:currentSettings.user.username];
@@ -121,7 +98,7 @@
     } else if (currentSettings.user.avatarprocessing) {
         image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
     } else {
-        image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"folder_black_web_upload.png"], 1)];
+        image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
     }
     [_userImage setImage:image];
     
@@ -149,6 +126,7 @@
         [_mediaSwitch setOn:YES];
     else
         [_mediaSwitch setOn:NO];
+ 
 }
 
 - (void)didReceiveMemoryWarning
@@ -385,11 +363,12 @@
     NSData* result = [NSURLConnection sendSynchronousRequest:urlrequest  returningResponse:&urlresponse error:&error];
     responseStatusCode = [(NSHTTPURLResponse*)urlresponse statusCode];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    NSDictionary *userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        NSDictionary *useravatardata = [athdata objectForKey:@"user"];
+        NSDictionary *useravatardata = [userdata objectForKey:@"user"];
         
+        currentSettings.user.avatarprocessing = [[useravatardata objectForKey:@"avatarprocessing"] boolValue];
         if ((NSNull *)[useravatardata objectForKey:@"avatarthumburl"] != [NSNull null])
             currentSettings.user.userthumb = [useravatardata objectForKey:@"avatarthumburl"];
         else
@@ -405,7 +384,7 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[userdata objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];

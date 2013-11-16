@@ -27,6 +27,7 @@
 @synthesize isactive;
 @synthesize avatarprocessing;
 @synthesize tier;
+@synthesize default_site;
 
 @synthesize awskeyid;
 @synthesize awssecretkey;
@@ -65,6 +66,12 @@
         awssecretkey = [userDictionary objectForKey:@"awskey"];
         awskeyid = [userDictionary objectForKey:@"awskeyid"];
         tier = [userDictionary objectForKey:@"tier"];
+        authtoken = [userDictionary objectForKey:@"authentication_token"];
+        
+        if ((NSNull *)[userDictionary objectForKey:@"default_site"] != [NSNull null])
+            default_site = [userDictionary objectForKey:@"default_site"];
+        else
+            default_site = @"";
         
         return self;
     } else {

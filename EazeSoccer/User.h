@@ -27,6 +27,7 @@
 @property(nonatomic, strong) NSNumber *isactive;
 @property(nonatomic, assign) BOOL avatarprocessing;
 @property(nonatomic, strong) NSString *tier;
+@property(nonatomic, strong) NSString *default_site;
 
 @property(nonatomic, strong) NSString *awssecretkey;
 @property(nonatomic, strong) NSString *awskeyid;
