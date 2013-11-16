@@ -22,7 +22,10 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     
     if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"]) {
-        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer.jpg"]];
+        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"EazeFutbol-Background.png"]];
+        else
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer.jpg"]];
     } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Basketball"]) {
         myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor.png"]];
     }
