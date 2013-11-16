@@ -112,7 +112,7 @@
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [_activityIndicator stopAnimating];
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:nil error:nil];
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
     if (responseStatusCode == 200) {
         videos = [[NSMutableArray alloc] init];

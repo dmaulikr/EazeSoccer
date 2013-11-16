@@ -14,8 +14,8 @@
 //#import "sportzteamsGameScheduleJSON.h"
 #import "EazeSoccerStatsViewController.h"
 #import "EazeAlertViewController.h"
-//#import "PhotosCollectionViewController.h"
-//#import "sportzteamsVideoCollectionViewController.h"
+#import "EazePhotosViewController.h"
+#import "EazesVideosViewController.h"
 
 @interface PlayerInfoViewController () {
     NSArray *serverData;
@@ -102,11 +102,11 @@
         EazeAlertViewController *destViewController = segue.destinationViewController;
         destViewController.player = player;
     } else if ([segue.identifier isEqualToString:@"PlayerPhotosSegue"] ) {
-//        PhotosCollectionViewController *destController = segue.destinationViewController;
-//        destController.player = player;
+        EazePhotosViewController *destController = segue.destinationViewController;
+        destController.player = player;
     } else if ([segue.identifier isEqualToString:@"PlayerVideosSegue"]) {
-//        sportzteamsVideoCollectionViewController *destController = segue.destinationViewController;
-//        destController.player = player;
+        EazesVideosViewController *destController = segue.destinationViewController;
+        destController.player = player;
     }
 
 }

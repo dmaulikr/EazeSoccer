@@ -15,8 +15,11 @@
 @property(nonatomic, strong) Video *videoclip;
 @property(nonatomic, strong) NSString *videoid;
 
-- (IBAction)playButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIImageView *videoImage;
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
+- (IBAction)playButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *gameButton;
+@property (weak, nonatomic) IBOutlet UILabel *gameButtonLabel;
+@property (weak, nonatomic) IBOutlet UITableView *playerTagTableView;
 
 @end

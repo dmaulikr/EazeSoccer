@@ -14,6 +14,11 @@
 
 @interface sportzteamsPhotoInfoViewController () <UIScrollViewDelegate>
 
+@property(nonatomic, strong) UIImageView *animage;
+- (void)centerScrollViewContents;
+- (void)scrollViewDoubleTapped:(UITapGestureRecognizer*)recognizer;
+- (void)scrollViewTwoFingerTapped:(UITapGestureRecognizer*)recognizer;
+
 @end
 
 @implementation sportzteamsPhotoInfoViewController {
@@ -39,10 +44,18 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor clearColor];
     
-    _scrollView.minimumZoomScale = 0.5f;
-    _scrollView.maximumZoomScale = 5.0f;
-    _scrollView.delegate = self;
+    // 3
+    UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewDoubleTapped:)];
+    doubleTapRecognizer.numberOfTapsRequired = 2;
+    doubleTapRecognizer.numberOfTouchesRequired = 1;
+    [self.scrollView addGestureRecognizer:doubleTapRecognizer];
+    
+    UITapGestureRecognizer *twoFingerTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTwoFingerTapped:)];
+    twoFingerTapRecognizer.numberOfTapsRequired = 1;
+    twoFingerTapRecognizer.numberOfTouchesRequired = 2;
+    [self.scrollView addGestureRecognizer:twoFingerTapRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,13 +69,36 @@
     
     if (photoid == nil) {
         self.title = photo.displayname;
-        NSURL * imageURL = [NSURL URLWithString:photo.medium_url];
+        NSURL * imageURL = [NSURL URLWithString:photo.large_url];
         NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
         UIImage * image = [UIImage imageWithData:imageData];
-        [photoImage setImage:image];
-        photoImage.frame = CGRectMake(0, 0, photoImage.image.size.width, photoImage.image.size.height);
-        _scrollView.contentSize = photoImage.image.size;
-        _scrollView.zoomScale = 2.0f;
+//        [photoImage setImage:image];
+//        photoImage.frame = CGRectMake(0, 0, photoImage.image.size.width, photoImage.image.size.height);
+//        _scrollView.contentSize = photoImage.image.size;
+//        _scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
+//                                       UIViewAutoresizingFlexibleHeight);
+//        photoImage.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
+//                                      UIViewAutoresizingFlexibleHeight);
+//        _scrollView.zoomScale = 4.0f;
+        self.animage = [[UIImageView alloc] initWithImage:image];
+        self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=image.size};
+        [self.scrollView addSubview:self.animage];
+        
+        // 2
+        self.scrollView.contentSize = image.size;
+        // 4
+        CGRect scrollViewFrame = self.scrollView.frame;
+        CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
+        CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
+        CGFloat minScale = MIN(scaleWidth, scaleHeight);
+        self.scrollView.minimumZoomScale = minScale;
+        
+        // 5
+        self.scrollView.maximumZoomScale = 1.0f;
+        self.scrollView.zoomScale = minScale;
+        
+        // 6
+        [self centerScrollViewContents];
     } else {
         NSURL *url = [NSURL URLWithString:[sportzServerInit getPhoto:photoid Token:currentSettings.user.authtoken]];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -74,9 +110,62 @@
 
 #pragma Zooming
 
+- (void)centerScrollViewContents {
+    CGSize boundsSize = self.scrollView.bounds.size;
+    CGRect contentsFrame = self.animage.frame;
+    
+    if (contentsFrame.size.width < boundsSize.width) {
+        contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0f;
+    } else {
+        contentsFrame.origin.x = 0.0f;
+    }
+    
+    if (contentsFrame.size.height < boundsSize.height) {
+        contentsFrame.origin.y = (boundsSize.height - contentsFrame.size.height) / 2.0f;
+    } else {
+        contentsFrame.origin.y = 0.0f;
+    }
+    
+    self.animage.frame = contentsFrame;
+}
+
+- (void)scrollViewDoubleTapped:(UITapGestureRecognizer*)recognizer {
+    // 1
+    CGPoint pointInView = [recognizer locationInView:self.animage];
+    
+    // 2
+    CGFloat newZoomScale = self.scrollView.zoomScale * 1.5f;
+    newZoomScale = MIN(newZoomScale, self.scrollView.maximumZoomScale);
+    
+    // 3
+    CGSize scrollViewSize = self.scrollView.bounds.size;
+    
+    CGFloat w = scrollViewSize.width / newZoomScale;
+    CGFloat h = scrollViewSize.height / newZoomScale;
+    CGFloat x = pointInView.x - (w / 2.0f);
+    CGFloat y = pointInView.y - (h / 2.0f);
+    
+    CGRect rectToZoomTo = CGRectMake(x, y, w, h);
+    
+    // 4
+    [self.scrollView zoomToRect:rectToZoomTo animated:YES];
+}
+
+- (void)scrollViewTwoFingerTapped:(UITapGestureRecognizer*)recognizer {
+    // Zoom out slightly, capping at the minimum zoom scale specified by the scroll view
+    CGFloat newZoomScale = self.scrollView.zoomScale / 1.5f;
+    newZoomScale = MAX(newZoomScale, self.scrollView.minimumZoomScale);
+    [self.scrollView setZoomScale:newZoomScale animated:YES];
+}
+
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
-    return photoImage;
+    return self.animage;
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    // The scroll view has zoomed, so you need to re-center the contents
+    [self centerScrollViewContents];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

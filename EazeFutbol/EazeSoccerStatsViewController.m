@@ -113,6 +113,12 @@
 
 - (IBAction)refreshBurronClicked:(id)sender {
     [currentSettings retrievePlayers];
+    
+    if (self.athlete)
+        self.athlete = [currentSettings findAthlete:self.athlete.athleteid];
+    else
+        self.game = [currentSettings findGame:self.game.id];
+    
     [self.soccerPlayerStatsTableView reloadData];
 }
 

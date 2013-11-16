@@ -64,7 +64,9 @@
 }
 
 - (IBAction)refreshButtonClicked:(id)sender {
+    [currentSettings retrievePlayers];
     game = [currentSettings retrieveGame:game.id];
+    [self viewWillAppear:YES];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

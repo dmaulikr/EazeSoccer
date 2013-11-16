@@ -13,6 +13,7 @@
 #import "EazeGameSelectionViewController.h"
 #import "sportzteamsMovieViewController.h"
 #import "sportzServerInit.h"
+#import "VideoCell.h"
 
 @interface EazesVideosViewController ()
 
@@ -22,7 +23,7 @@
     PlayerSelectionViewController *playerSelectController;
     EazeGameSelectionViewController *gameSelectController;
     EazeUsersSelectViewController *usersSelectController;
-}
+ }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,6 +62,27 @@
     }
     
     [super viewWillAppear:animated];
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    VideoCell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"VideoCell" forIndexPath:indexPath];
+    cell.layer.cornerRadius = 6;
+    cell.backgroundColor = [UIColor whiteColor];
+    Video *video = [self.videos objectAtIndex:indexPath.row];
+    NSURL * imageURL = [NSURL URLWithString:video.poster_url];
+    NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+    UIImage * image = [UIImage imageWithData:imageData];
+    [cell.videoImage setImage:image];
+    [cell.videoName setText:video.displayName];
+    [cell.videoDuration setText:[NSString stringWithFormat:@"%d", video.duration.intValue]];
+    
+    if (video.schedule.length > 0) {
+        cell.gametagLabel.hidden = NO;
+        cell.gametagLabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", [[currentSettings findGame:video.schedule] opponent_mascot]];
+    } else
+        cell.gametagLabel.hidden = YES;
+    
+    return cell;
 }
 
 - (IBAction)searchButtonClicked:(id)sender {
