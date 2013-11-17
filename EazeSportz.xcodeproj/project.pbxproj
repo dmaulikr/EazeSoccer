@@ -46,6 +46,12 @@
 		B439436C1833592800A178F2 /* biobutton.png in Resources */ = {isa = PBXBuildFile; fileRef = B439436B1833592800A178F2 /* biobutton.png */; };
 		B439436E1833593A00A178F2 /* play-button.png in Resources */ = {isa = PBXBuildFile; fileRef = B439436D1833593A00A178F2 /* play-button.png */; };
 		B43F6D5D183430830090BD2F /* EazePhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B43F6D5C183430830090BD2F /* EazePhotosViewController.m */; };
+		B448C36F183939CD00442835 /* BasketballStatTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B48E6620182D77F900C24913 /* BasketballStatTableCell.h */; };
+		B448C370183939CD00442835 /* BasketballStatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B48E6621182D77F900C24913 /* BasketballStatTableCell.m */; };
+		B448C371183939FC00442835 /* BasketballStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B48E661D182D6CF200C24913 /* BasketballStatsViewController.h */; };
+		B448C372183939FC00442835 /* BasketballStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B48E661E182D6CF200C24913 /* BasketballStatsViewController.m */; };
+		B448C3731839439200442835 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4911BDA18331C3C00E1D7DB /* iAd.framework */; };
+		B448C3741839471400442835 /* USStateAbbreviations.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4AA0BBF182154E100E39B32 /* USStateAbbreviations.plist */; };
 		B44C8F781822E29F009D0239 /* RosterTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F771822E29F009D0239 /* RosterTableCell.m */; };
 		B44C8F7B1822E415009D0239 /* PlayerSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F7A1822E415009D0239 /* PlayerSelectionViewController.m */; };
 		B44C8F7E1822E857009D0239 /* EditPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F7D1822E857009D0239 /* EditPlayerViewController.m */; };
@@ -1241,6 +1247,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B448C3731839439200442835 /* iAd.framework in Frameworks */,
 				B4A5AE2418320188002E2CCF /* QuartzCore.framework in Frameworks */,
 				B4A5AE2318320167002E2CCF /* Security.framework in Frameworks */,
 				B4A5AE3B183201C7002E2CCF /* AWSS3.framework in Frameworks */,
@@ -2057,6 +2064,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B448C3741839471400442835 /* USStateAbbreviations.plist in Resources */,
 				B49E2A3A1838407C003A989D /* play-button.png in Resources */,
 				B49E2A3B1838407C003A989D /* biobutton.png in Resources */,
 				B49E2A3C1838407C003A989D /* blog.png in Resources */,
@@ -2253,6 +2261,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B448C371183939FC00442835 /* BasketballStatsViewController.h in Sources */,
+				B448C372183939FC00442835 /* BasketballStatsViewController.m in Sources */,
+				B448C36F183939CD00442835 /* BasketballStatTableCell.h in Sources */,
+				B448C370183939CD00442835 /* BasketballStatTableCell.m in Sources */,
 				B46188CC18391B950057A648 /* EazesportzSoccerGameSummaryViewController.h in Sources */,
 				B46188CD18391B950057A648 /* EazesportzSoccerGameSummaryViewController.m in Sources */,
 				B46188CE18391B950057A648 /* EazeSoccerPlayerStatsViewController.h in Sources */,
@@ -3284,7 +3296,7 @@
 				);
 				INFOPLIST_FILE = "Basketball/Basketball-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CB53DC48-07CD-41CE-B7C8-0EDCFEB0F8E0";
+				PROVISIONING_PROFILE = "65B46FDA-276C-411B-AC86-94E5A17B1A24";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3305,7 +3317,7 @@
 				GCC_PREFIX_HEADER = "Basketball/Basketball-Prefix.pch";
 				INFOPLIST_FILE = "Basketball/Basketball-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "CB53DC48-07CD-41CE-B7C8-0EDCFEB0F8E0";
+				PROVISIONING_PROFILE = "65B46FDA-276C-411B-AC86-94E5A17B1A24";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

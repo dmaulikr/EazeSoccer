@@ -99,9 +99,9 @@
     NSURL *aurl;
     
     if (basketball_stat_id.length == 0)
-        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/athletes/",
-                                    athleteid, @"/basketball_stats.json?gameschedule_id=", gameschedule_id, @"/&auth_token=",
-                                     currentSettings.user.authtoken]];
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athleteid, @"/basketball_stats.json?gameschedule_id=",
+                                     gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
     else {
         aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
                                      @"/sports/", currentSettings.sport.id, @"/athletes/", athleteid, @"/basketball_stats/", basketball_stat_id,
@@ -110,7 +110,7 @@
     }
     
     NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id",
-                                     [twoattempt stringValue] , @"twoattempt", [twomade stringValue], @"towmade",
+                                     [twoattempt stringValue] , @"twoattempt", [twomade stringValue], @"twomade",
                                      [threeattempt stringValue], @"threeattempt", [threemade stringValue], @"threemade",
                                      [ftattempt stringValue], @"ftattempt", [ftmade stringValue], @"ftmade", [fouls stringValue], @"fouls",
                                      [assists stringValue], @"assists", [steals stringValue], @"steals", [blocks stringValue], @"blocks",

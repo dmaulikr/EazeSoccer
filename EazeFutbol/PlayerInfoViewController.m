@@ -16,7 +16,7 @@
 #import "EazeAlertViewController.h"
 #import "EazePhotosViewController.h"
 #import "EazesVideosViewController.h"
-#import "EazeBasketballPlayerStatsViewController.h"
+#import "EazeBasketballStatsViewController.h"
 
 @interface PlayerInfoViewController () {
     NSArray *serverData;
@@ -109,8 +109,8 @@
         EazesVideosViewController *destController = segue.destinationViewController;
         destController.player = player;
     } else if ([segue.identifier isEqualToString:@"BasketballPlayerStatsSegue"]) {
-        EazeBasketballPlayerStatsViewController *destController = segue.destinationViewController;
-        destController.player = player;
+        EazeBasketballStatsViewController *destController = segue.destinationViewController;
+        destController.athlete = player;
     }
 
 }

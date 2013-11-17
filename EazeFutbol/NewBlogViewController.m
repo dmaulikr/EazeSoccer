@@ -16,6 +16,7 @@
 #import "PlayerInfoViewController.h"
 #import "EazeCoachSelectionViewController.h"
 #import "CoachesInfoViewController.h"
+#import "EazeBasketballGameSummaryViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -347,6 +348,9 @@
     } else if ([segue.identifier isEqualToString:@"CoachInfoSegue"]) {
         CoachesInfoViewController *destController = segue.destinationViewController;
         destController.coach = coach;
+    } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
+        EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 

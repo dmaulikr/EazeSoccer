@@ -8,6 +8,7 @@
 
 #import "EazeBasketballGameSummaryViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "EazeBasketballStatsViewController.h"
 
 @interface EazeBasketballGameSummaryViewController ()
 
@@ -79,6 +80,13 @@
 - (IBAction)refreshButtonClicked:(id)sender {
     [currentSettings retrieveGame:game.id];
     [self viewWillAppear:YES];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"GameStatsSegue"]) {
+        EazeBasketballStatsViewController *destController = segue.destinationViewController;
+        destController.game = game;
+    }
 }
 
 @end

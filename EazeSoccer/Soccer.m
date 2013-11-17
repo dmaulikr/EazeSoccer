@@ -98,12 +98,13 @@
     NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
     
     if (soccerid.length > 0) {
-        aurl = [NSURL URLWithString:[serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/athletes/",
-                                     athleteid, @"/soccers/", soccerid, @".json?auth_token=", currentSettings.user.authtoken]];
+        aurl = [NSURL URLWithString:[serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athleteid, @"/soccers/", soccerid, @".json?auth_token=",
+                                     currentSettings.user.authtoken]];
 
     } else {
         aurl = [NSURL URLWithString:[serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/athletes/",
-                                     athleteid, @"/soccers.json?gameschedule_id=", gameschedule_id, @"/&auth_token=", currentSettings.user.authtoken]];
+                                     athleteid, @"/soccers.json?gameschedule_id=", gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
     }
     
     NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",

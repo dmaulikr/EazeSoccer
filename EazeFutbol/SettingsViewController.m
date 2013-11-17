@@ -90,7 +90,7 @@
       
         for (UIViewController *viewController in tabBarController.viewControllers)
         {
-            if([viewController isKindOfClass:[UINavigationController class]])
+            if ([viewController isKindOfClass:[UINavigationController class]])
                 [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
         }
         
@@ -119,7 +119,12 @@
 - (IBAction)changeTeamButtonClicked:(id)sender {
     currentSettings.team = nil;
     UITabBarController *tabBarController = self.tabBarController;
-//    [tabBarController setSelectedIndex:0];
+
+    for (UIViewController *viewController in tabBarController.viewControllers) {
+        if ([viewController isKindOfClass:[UINavigationController class]])
+            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+    }
+
     UIView * fromView = tabBarController.selectedViewController.view;
     UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
      
