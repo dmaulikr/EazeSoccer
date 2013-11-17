@@ -63,6 +63,8 @@
 - (void)updateBasketballGameStats:(BasketballStats *)bballstats;
 - (BOOL)saveBasketballGameStats:(NSString *)gameid;
 
+- (BasketballStats *)basketballSeasonTotals;
+
 - (Soccer *)findSoccerStats:(NSString *)statid;
 - (Soccer *)findSoccerGameStats:(NSString *)gameid;
 - (void)updateSoccerGameStats:(Soccer *)soccerstat;

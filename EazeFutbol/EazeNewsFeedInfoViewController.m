@@ -14,6 +14,7 @@
 #import "PlayerInfoViewController.h"
 #import "CoachesInfoViewController.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
+#import "EazeBasketballGameSummaryViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -120,6 +121,9 @@
         destController.coach = [currentSettings findCoach:newsitem.coach];
     } else if ([ segue.identifier isEqualToString:@"SoccerGameInfoSegue"]) {
         EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings findGame:newsitem.game];
+    } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
+        EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:newsitem.game];
     }
 }

@@ -345,4 +345,14 @@
     return  saves;
 }
 
+- (int)homeBasketballFouls {
+    int fouls = 0;
+    
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+        fouls += [[[[currentSettings.roster objectAtIndex:i] findBasketballGameStatEntries:self.id] fouls] intValue];
+    }
+    
+    return fouls;
+}
+
 @end

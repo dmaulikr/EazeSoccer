@@ -79,4 +79,6 @@
 - (int)soccerHomeSaves;
 - (int)soccerHomeShots;
 
+- (int)homeBasketballFouls;
+
 @end

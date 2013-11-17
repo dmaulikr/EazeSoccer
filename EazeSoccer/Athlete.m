@@ -333,6 +333,41 @@
     return thestats;
 }
 
+- (BasketballStats *)basketballSeasonTotals {
+    BasketballStats *thestats = [[BasketballStats alloc] init];
+    int fgm = 0, fga = 0, threefgm = 0, threefga = 0, ftm = 0, fta = 0, blocks = 0, steals = 0, assists = 0, orb = 0, drb = 0, fouls = 0;
+    
+    for (int i = 0; i < basketball_stats.count; i++) {
+        fgm += [[[basketball_stats objectAtIndex:i] twomade] intValue];
+        fga += [[[basketball_stats objectAtIndex:i] twoattempt] intValue];
+        threefgm += [[[basketball_stats objectAtIndex:i] threemade] intValue];
+        threefga += [[[basketball_stats objectAtIndex:i] threeattempt] intValue];
+        ftm += [[[basketball_stats objectAtIndex:i] ftmade] intValue];
+        fta += [[[basketball_stats objectAtIndex:i] ftattempt] intValue];
+        blocks += [[[basketball_stats objectAtIndex:i] blocks] intValue];
+        steals += [[[basketball_stats objectAtIndex:i] steals] intValue];
+        assists += [[[basketball_stats objectAtIndex:i] assists] intValue];
+        orb += [[[basketball_stats objectAtIndex:i] offrebound] intValue];
+        drb += [[[basketball_stats objectAtIndex:i] defrebound] intValue];
+        fouls += [[[basketball_stats objectAtIndex:i] fouls] intValue];
+    }
+    
+    thestats.twoattempt = [NSNumber numberWithInt:fga];
+    thestats.twomade = [NSNumber numberWithInt:fgm];
+    thestats.threeattempt = [NSNumber numberWithInt:threefga];
+    thestats.threemade = [NSNumber numberWithInt:threefgm];
+    thestats.ftattempt = [NSNumber numberWithInt:fta];
+    thestats.ftmade = [NSNumber numberWithInt:ftm];
+    thestats.blocks = [NSNumber numberWithInt:blocks];
+    thestats.steals = [NSNumber numberWithInt:steals];
+    thestats.assists = [NSNumber numberWithInt:assists];
+    thestats.offrebound = [NSNumber numberWithInt:orb];
+    thestats.defrebound = [NSNumber numberWithInt:drb];
+    thestats.fouls = [NSNumber numberWithInt:fouls];
+    
+    return thestats;
+}
+
 - (UIImage *)getImage:(NSString *)size {
     UIImage *image;
     

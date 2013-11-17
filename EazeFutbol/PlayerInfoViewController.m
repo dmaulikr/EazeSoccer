@@ -16,6 +16,7 @@
 #import "EazeAlertViewController.h"
 #import "EazePhotosViewController.h"
 #import "EazesVideosViewController.h"
+#import "EazeBasketballPlayerStatsViewController.h"
 
 @interface PlayerInfoViewController () {
     NSArray *serverData;
@@ -64,7 +65,7 @@
     
     playerImage.image = [player getImage:@"thumb"];
     [self.numberLabel setText:[player.number stringValue]];
-    [self.nameLabel setText:player.name];
+    [self.nameLabel setText:player.full_name];
     [self.yearLabel setText:player.year];
     [self.positionLabel setText:player.position];
     [self.heightLabel setText:player.height];
@@ -106,6 +107,9 @@
         destController.player = player;
     } else if ([segue.identifier isEqualToString:@"PlayerVideosSegue"]) {
         EazesVideosViewController *destController = segue.destinationViewController;
+        destController.player = player;
+    } else if ([segue.identifier isEqualToString:@"BasketballPlayerStatsSegue"]) {
+        EazeBasketballPlayerStatsViewController *destController = segue.destinationViewController;
         destController.player = player;
     }
 

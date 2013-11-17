@@ -8,6 +8,7 @@
 
 #import "EazeGameScheduleViewController.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
+#import "EazeBasketballGameSummaryViewController.h"
 #import "EazesportzAppDelegate.h"
 
 @interface EazeGameScheduleViewController ()
@@ -38,9 +39,12 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSIndexPath *indexPath = [_scheduleTableView indexPathForSelectedRow];
+    NSIndexPath *indexPath = [self.gamesTableView indexPathForSelectedRow];
     if ([segue.identifier isEqualToString:@"GameSummarySegue"]) {
         EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"BasketballGameSummarySegue"]) {
+        EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
     }
 }
