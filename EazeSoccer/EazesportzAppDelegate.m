@@ -23,11 +23,14 @@
     
     if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"]) {
         if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
-            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"EazeFutbol-Background.png"]];
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer-background.png"]];
         else
             myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer.jpg"]];
     } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Basketball"]) {
-        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor.png"]];
+        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor-iPhone-Background.png"]];
+        else
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor.png"]];
     }
     
     [self.window.rootViewController.view addSubview: myGraphic];
