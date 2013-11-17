@@ -12,6 +12,7 @@
 #import "sportzCurrentSettings.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "PlayerInfoViewController.h"
+#import "EazeBasketballGameSummaryViewController.h"
 
 @interface sportzteamsMovieViewController ()
 
@@ -165,7 +166,7 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:nil error:nil];
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     NSLog(@"%@", serverData);
     
     if (responseStatusCode == 200) {
@@ -189,6 +190,9 @@
     } else if ([segue.identifier isEqualToString:@"PlayerInfoSegue"]) {
         PlayerInfoViewController *destController = segue.destinationViewController;
         destController.player = [currentSettings findAthlete:[videoclip.players objectAtIndex:[[_playerTagTableView indexPathForSelectedRow] row]]];
+    } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
+        EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings findGame:videoclip.schedule];
     }
 }
 @end

@@ -14,6 +14,7 @@
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "PlayerInfoViewController.h"
 #import "CoachesInfoViewController.h"
+#import "EazeBasketballGameSummaryViewController.h"
 
 @interface EazeBlogDetailViewController () <UIAlertViewDelegate>
 
@@ -220,6 +221,9 @@
         destController.coach = [currentSettings findCoach:blog.coach];
     } else if ([segue.identifier isEqualToString:@"SoccerGameInfoSegue"]) {
         EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings findGame:blog.gameschedule];
+    } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
+        EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:blog.gameschedule];
     }
 }

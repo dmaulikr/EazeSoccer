@@ -13,6 +13,7 @@
 #import "sportzCurrentSettings.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "PlayerInfoViewController.h"
+#import "EazeBasketballGameSummaryViewController.h"
 
 @interface sportzteamsPhotoDescriptionViewController ()
 
@@ -128,6 +129,9 @@
         NSIndexPath *indexPath = [_playerTableView indexPathForSelectedRow];
         PlayerInfoViewController *destController = segue.destinationViewController;
         destController.player = [currentSettings findAthlete:[photo.players objectAtIndex:indexPath.row]];
+    } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
+        EazeBasketballGameSummaryViewController *destController = segue .destinationViewController;
+        destController.game = [currentSettings findGame:photo.schedule];
     }
 }
 

@@ -142,7 +142,7 @@
     }
     
     if (blog.gameschedule.length > 0) {
-        cell.gameLabel.text = [[currentSettings findGame:blog.gameschedule] game_name];
+        cell.gameLabel.text = [NSString stringWithFormat:@"%@%@", @"vs ", [[currentSettings findGame:blog.gameschedule] opponent_name]];
         
         //        if (blog.gamelog.length > 0)
         //            cell.gameplaylabel.text = [[[currentSettings findGame:blog.gameschedule] findGamelog:blog.gamelog] logentry];
