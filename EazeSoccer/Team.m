@@ -26,6 +26,7 @@
 - (id)init {
     if (self = [super init]) {
         logosize = @"";
+        teamimage = nil;
         return self;
     } else
         return nil;
