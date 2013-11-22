@@ -160,52 +160,23 @@
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
-    NSURL *aurl;
+    team.team_name = _teamnameTextField.text;
+    team.mascot = _mascotTextField.text;
     
-    if (newteam)
-        aurl = [NSURL URLWithString:[sportzServerInit addTeam:currentSettings.user.authtoken]];
-    else
-        aurl = [NSURL URLWithString:[sportzServerInit updateTeam:team.teamid Token:currentSettings.user.authtoken]];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:180];
-    NSError *jsonSerializationError = nil;
-    
-    NSMutableDictionary *teamDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[_teamnameTextField text], @"title",
-                                    [_mascotTextField text], @"mascot", nil];
-    
-/*    if (imageselected) {
-        UIImage *photoImage = _teamImage.image;
-        NSData *imageData = UIImageJPEGRepresentation(photoImage, 1.0);
-        NSString *imageDataEncodedString = [imageData base64EncodedString];
-        [teamDict setObject:imageDataEncodedString forKey:@"image_data"];
-        [teamDict setObject:@"image/jpg" forKey:@"content_type"];
-        NSString *name = [_teamnameTextField.text stringByAppendingFormat:@"%@%@%@", @"_", _mascotTextField.text, @".jpg"];
-        [teamDict setObject:name forKey:@"original_filename"];
-        imageselected = NO;
+    if ([team saveTeam]) {
+        currentSettings.team = nil;
+        
+        if (imageselected)
+            [self uploadImage:team];
+        else
+            [self.navigationController popViewControllerAnimated:YES];
+        
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Team" message:team.httpError
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
     }
-*/
-    
-    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:teamDict, @"team", nil];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
-    
-    if (jsonSerializationError) {
-        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-    }
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-    
-    if (!newteam)
-        [request setHTTPMethod:@"PUT"];
-    else
-        [request setHTTPMethod:@"POST"];
-    
-    [request setHTTPBody:jsonData];
-    
-    //Capturing server response
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [_activityIndicator startAnimating];
-    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
 }
 
 - (IBAction)deleteButtonClicked:(id)sender {
@@ -223,52 +194,6 @@
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    responseStatusCode = [httpResponse statusCode];
-    theData = [[NSMutableData alloc]init];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
-    
-    [theData appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [_activityIndicator stopAnimating];
-    
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
-    if (responseStatusCode == 200) {
-        NSDictionary *theteam = [serverData objectForKey:@"team"];
-        team.teamid = [theteam objectForKey:@"_id"];
-        team.team_logo = [theteam objectForKey:@"team_logo"];
-        team.mascot = [theteam objectForKey:@"mascot"];
-        team.team_name = [theteam objectForKey:@"title"];
-        currentSettings.team = nil;
-        
-        if (imageselected)
-            [self uploadImage:team];
-        else {
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Team"
-                                                        message:[serverData objectForKey:@"error"]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {

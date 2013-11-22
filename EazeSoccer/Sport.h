@@ -33,6 +33,10 @@
 
 @property(nonatomic, strong) NSMutableDictionary *playerPositions;
 
+@property(nonatomic, strong) NSMutableDictionary *footballOffensePositions;
+@property(nonatomic, strong) NSMutableDictionary *footballDefensePositions;
+@property(nonatomic, strong) NSMutableDictionary *footballSpecialTeamsPositions;
+
 @property(nonatomic, strong) UIImage *sportimage;
 
 - (UIImage *)getImage:(NSString *)size;

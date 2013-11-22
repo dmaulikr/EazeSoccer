@@ -38,8 +38,14 @@
 @synthesize hasvideos;
 @synthesize processing;
 
-@synthesize football_stats;
-@synthesize stats;
+@synthesize football_passing_stats;
+@synthesize football_rushing_stats;
+@synthesize football_receiving_stats;
+@synthesize football_defense_stats;
+@synthesize football_kicker_stats;
+@synthesize football_place_kicker_stats;
+@synthesize football_punter_stats;
+@synthesize football_returner_stats;
 
 @synthesize basketball_stats;
 
@@ -54,9 +60,12 @@
 - (id)init {
     if (self = [super init]) {
         imagesize = @"";
-        if ([currentSettings.sport.name isEqualToString:@"Football"])
-            football_stats = [[NSMutableArray alloc] init];
-        else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
+        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            football_passing_stats = [[NSMutableArray alloc] init];
+            football_rushing_stats = [[NSMutableArray alloc] init];
+            football_receiving_stats = [[NSMutableArray alloc] init];
+            football_defense_stats = [[NSMutableArray alloc] init];
+        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
             basketball_stats = [[NSMutableArray alloc] init];
         else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
             soccer_stats = [[NSMutableArray alloc] init];
@@ -102,29 +111,71 @@
         hasphotos = [[athleteDictionary objectForKey:@"hasphotos"] boolValue];
         
         if ([currentSettings.sport.name isEqualToString:@"Football"]) {
-            NSArray *fstats = [athleteDictionary objectForKey:@"football_stats"];
-            football_stats = [[NSMutableArray alloc] init];
             
-            for (int i = 0; i < [fstats count]; i++) {
-                NSDictionary *entry = [fstats objectAtIndex:i];
-                NSDictionary *fbstats = [entry objectForKey:@"football_stat"];
-                FootballStats *theentry = [[FootballStats alloc] init];
-                theentry.gameschedule_id = [fbstats objectForKey:@"gamescheduleid"];
-                theentry.football_stat = [fbstats objectForKey:@"football_stat_id"];
-                NSDictionary *statitem = [fbstats objectForKey:@"football_defense"];
-                theentry.defense = [statitem objectForKey:@"football_defense_id"];
-                statitem = [fbstats objectForKey:@"football_passing"];
-                theentry.passing = [statitem objectForKey:@"football_passing_id"];
-                statitem = [fbstats objectForKey:@"football_rushing"];
-                theentry.rushing = [statitem objectForKey:@"football_rushing_id"];
-                statitem = [fbstats objectForKey:@"football_receiving"];
-                theentry.receiving = [statitem objectForKey:@"football_receiving_id"];
-                statitem = [fbstats objectForKey:@"football_kicker"];
-                theentry.kickers = [statitem objectForKey:@"football_kicker_id"];
-                statitem = [fbstats objectForKey:@"football_returner"];
-                theentry.returners = [statitem objectForKey:@"football_returner_id"];
-                [football_stats addObject:theentry];
+            NSArray *passingstats = [athleteDictionary objectForKey:@"football_passings"];
+            football_passing_stats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < passingstats.count; i++) {
+                [football_passing_stats addObject:[[FootballPassingStat alloc] initWithDictionary:
+                                                   [[passingstats objectAtIndex:i] objectForKey:@"football_passing"]]];
             }
+            
+            NSArray *rushingstats = [athleteDictionary objectForKey:@"football_rushings"];
+            football_rushing_stats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < rushingstats.count; i++) {
+                [football_rushing_stats addObject:[[FootballRushingStat alloc] initWithDictionary:
+                                                   [[rushingstats objectAtIndex:i] objectForKey:@"football_rushing"]]];
+            }
+            
+            NSArray *receivingstats = [athleteDictionary objectForKey:@"football_receivings"];
+            football_receiving_stats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < receivingstats.count; i++) {
+                [football_receiving_stats addObject:[[FootballReceivingStat alloc] initWithDictionary:
+                                                   [[receivingstats objectAtIndex:i] objectForKey:@"football_receiving"]]];
+            }
+            
+            NSArray *defensestats = [athleteDictionary objectForKey:@"football_defenses"];
+            football_defense_stats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < defensestats.count; i++) {
+                [football_defense_stats addObject:[[FootballDefenseStats alloc] initWithDictionary:
+                                                     [[defensestats objectAtIndex:i] objectForKey:@"football_defense"]]];
+            }
+            
+            NSArray *placekickerstats = [athleteDictionary objectForKey:@"foortball_place_kickers"];
+            football_place_kicker_stats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < placekickerstats.count; i++) {
+                [football_place_kicker_stats addObject:[[FootballPlaceKickerStats alloc] initWithDictionary:
+                                                   [[placekickerstats objectAtIndex:i] objectForKey:@"football_place_kicker"]]];
+            }
+            
+            NSArray *kickerstats = [athleteDictionary objectForKey:@"foortball_kickers"];
+            football_place_kicker_stats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < kickerstats.count; i++) {
+                [football_kicker_stats addObject:[[FootballKickerStats alloc] initWithDictionary:
+                                                        [[kickerstats objectAtIndex:i] objectForKey:@"football_kicker"]]];
+            }
+            
+            NSArray *punterstats = [athleteDictionary objectForKey:@"foortball_punters"];
+            football_place_kicker_stats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < punterstats.count; i++) {
+                [football_punter_stats addObject:[[FootballPunterStats alloc] initWithDictionary:
+                                                        [[punterstats objectAtIndex:i] objectForKey:@"football_punter"]]];
+            }
+            
+            NSArray *returnerstats = [athleteDictionary objectForKey:@"foortball_returners"];
+            football_place_kicker_stats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < returnerstats.count; i++) {
+                [football_returner_stats addObject:[[FootballReturnerStats alloc] initWithDictionary:
+                                                        [[returnerstats objectAtIndex:i] objectForKey:@"football_returner"]]];
+            }
+            
         } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
             NSArray *bballstats = [athleteDictionary objectForKey:@"basketball_stats"];
             basketball_stats = [[NSMutableArray alloc] init];
@@ -418,5 +469,28 @@
     
     return image;
 }
+
+- (FootballPassingStat *)findFootballPassingStat:(NSString *)gameid {
+    FootballPassingStat *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_passing_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_passing_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_passing_stats objectAtIndex:cnt];
+    }
+    
+    return  thestat;
+}
+
+- (FootballRushingStat *)findFootballRushingStat:(NSString *)gameid {
+    FootballRushingStat *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_rushing_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_rushing_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_rushing_stats objectAtIndex:cnt];
+    }
+    
+    return  thestat;
+}
+
 
 @end

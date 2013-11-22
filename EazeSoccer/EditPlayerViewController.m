@@ -486,7 +486,35 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+    } else if ([title isEqualToString:@"Offense"]) {
+        positionkeys = [currentSettings.sport.footballOffensePositions allKeys];
+        positionvalues = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < [positionkeys count]; i++)
+            [positionvalues addObject:[currentSettings.sport.footballOffensePositions objectForKey:[positionkeys objectAtIndex:i]]];
+        
+        [self.positionPicker reloadAllComponents];
+        self.positionPicker.hidden = NO;
+    } else if ([title isEqualToString:@"Defense"]) {
+        positionkeys = [currentSettings.sport.footballDefensePositions allKeys];
+        positionvalues = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < [positionkeys count]; i++)
+            [positionvalues addObject:[currentSettings.sport.footballDefensePositions objectForKey:[positionkeys objectAtIndex:i]]];
+        
+        [self.positionPicker reloadAllComponents];
+        self.positionPicker.hidden = NO;
+    } else if ([title isEqualToString:@"Special Teams"]) {
+        positionkeys = [currentSettings.sport.footballSpecialTeamsPositions allKeys];
+        positionvalues = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < [positionkeys count]; i++)
+            [positionvalues addObject:[currentSettings.sport.footballSpecialTeamsPositions objectForKey:[positionkeys objectAtIndex:i]]];
+        
+        [self.positionPicker reloadAllComponents];
+        self.positionPicker.hidden = NO;
     }
+
 }
 
 - (BOOL)uploadImage:(Athlete *)athlete {
@@ -572,15 +600,21 @@
 }
 
 - (IBAction)addPositionControl:(id)sender {
-    
-    positionkeys = [currentSettings.sport.playerPositions allKeys];
-    positionvalues = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < [positionkeys count]; i++)
-        [positionvalues addObject:[currentSettings.sport.playerPositions objectForKey:[positionkeys objectAtIndex:i]]];
-    
-    [_positionPicker reloadAllComponents];
-    _positionPicker.hidden = NO;
+    if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Select" message:@"Select Position"
+                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Offense", @"Defense", @"Special Teams", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    } else {
+        positionkeys = [currentSettings.sport.playerPositions allKeys];
+        positionvalues = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < [positionkeys count]; i++)
+            [positionvalues addObject:[currentSettings.sport.playerPositions objectForKey:[positionkeys objectAtIndex:i]]];
+        
+        [_positionPicker reloadAllComponents];
+        _positionPicker.hidden = NO;
+    }
 }
 
 - (IBAction)statsButtonClicked:(id)sender {

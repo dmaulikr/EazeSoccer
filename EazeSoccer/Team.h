@@ -17,11 +17,24 @@
 @property(nonatomic, strong) NSString *team_logo;
 @property(nonatomic, strong) NSString *tiny_logo;
 
+@property(nonatomic, strong) NSMutableArray *fb_pass_players;
+@property(nonatomic, strong) NSMutableArray *fb_rush_players;
+@property(nonatomic, strong) NSMutableArray *fb_rec_players;
+@property(nonatomic, strong) NSMutableArray *fb_def_players;
+@property(nonatomic, strong) NSMutableArray *fb_placekickers;
+@property(nonatomic, strong) NSMutableArray *fb_punters;
+@property(nonatomic, strong) NSMutableArray *fb_kickers;
+@property(nonatomic, strong) NSMutableArray *fb_returners;
+
+@property(nonatomic, strong) NSString *httpError;
+
 @property(nonatomic, strong)UIImage *teamimage;
 
 - (id)initWithDictionary:(NSDictionary *)teamDictionary;
 
 - (UIImage *)getImage:(NSString *)size;
 - (BOOL)hasImage;
+
+- (BOOL)saveTeam;
 
 @end

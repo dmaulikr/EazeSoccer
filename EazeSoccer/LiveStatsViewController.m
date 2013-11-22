@@ -14,6 +14,7 @@
 #import "SoccerLiveClockViewController.h"
 #import "BasketballStatsViewController.h"
 #import "BasketballGameClockViewController.h"
+#import "EazesportzFootballStatsViewController.h"
 
 @interface LiveStatsViewController ()
 
@@ -25,6 +26,7 @@
     SoccerLiveClockViewController *soccerScoreboardController;
     BasketballStatsViewController *basketballStatsController;
     BasketballGameClockViewController *basketballGameCloclController;
+    EazesportzFootballStatsViewController *footballStatsController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -70,6 +72,9 @@
         } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
             basketballStatsController.game = gameController.thegame;
             [basketballStatsController viewWillAppear:YES];
+        } else if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            footballStatsController.game = gameController.thegame;
+            [footballStatsController viewWillAppear:YES];
         }
     }
     _gameContainer.hidden = YES;
@@ -86,6 +91,8 @@
         basketballStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"BasketballScoreboardSegue"]) {
         basketballGameCloclController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"FootballPlayerStatsSegue"]) {
+        footballStatsController = segue.destinationViewController;
     }
 }
 

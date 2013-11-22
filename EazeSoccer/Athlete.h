@@ -7,9 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "BasketballStats.h"
-#import "Stats.h"
-#import "FootballStats.h"
+
+#import "FootballPassingStat.h"
+#import "FootballDefenseStats.h"
+#import "FootballKickerStats.h"
+#import "FootballPlaceKickerStats.h"
+#import "FootballPunterStats.h"
+#import "FootballReceivingStat.h"
+#import "FootballRushingStat.h"
+#import "FootballReturnerStats.h"
+
 #import "Soccer.h"
 
 @interface Athlete : NSObject
@@ -39,8 +48,14 @@
 @property(nonatomic, assign) BOOL hasvideos;
 @property(nonatomic, assign) BOOL processing;
 
-@property(nonatomic, strong) NSMutableArray *football_stats;
-@property(nonatomic, strong) Stats *stats;
+@property(nonatomic, strong) NSMutableArray *football_passing_stats;
+@property(nonatomic, strong) NSMutableArray *football_rushing_stats;
+@property(nonatomic, strong) NSMutableArray *football_receiving_stats;
+@property(nonatomic, strong) NSMutableArray *football_defense_stats;
+@property(nonatomic, strong) NSMutableArray *football_place_kicker_stats;
+@property(nonatomic, strong) NSMutableArray *football_returner_stats;
+@property(nonatomic, strong) NSMutableArray *football_kicker_stats;
+@property(nonatomic, strong) NSMutableArray *football_punter_stats;
 
 @property(nonatomic, strong) NSMutableArray *basketball_stats;
 
@@ -56,7 +71,8 @@
 - (id)initWithDictionary:(NSDictionary *)athleteDictionary;
 - (id)initDeleteAthlete;
 
-- (FootballStats *)findFootballGameStatEntries:(NSString *)gameid;
+- (FootballPassingStat *)findFootballPassingStat:(NSString *)gameid;
+- (FootballRushingStat *)findFootballRushingStat:(NSString *)gameid;
 
 - (NSString *)getBasketballStatGameId:(BasketballStats *)basketball_stat_id;
 - (BasketballStats *)findBasketballGameStatEntries:(NSString *)gameid;

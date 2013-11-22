@@ -31,6 +31,11 @@
             myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor-iPhone-Background.png"]];
         else
             myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor.png"]];
+    } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Football"]) {
+        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+            ;
+        else
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"footballbackground.png"]];
     }
     
     [self.window.rootViewController.view addSubview: myGraphic];

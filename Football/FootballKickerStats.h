@@ -1,0 +1,23 @@
+//
+//  FootballKickerStats.h
+//  EazeSportz
+//
+//  Created by Gil on 11/20/13.
+//  Copyright (c) 2013 Gil. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface FootballKickerStats : NSObject
+
+@property(nonatomic, strong) NSNumber *koattempts;
+@property(nonatomic, strong) NSNumber *kotouchbacks;
+@property(nonatomic, strong) NSNumber *koreturned;
+
+@property(nonatomic, strong) NSString *football_kicker_id;
+@property(nonatomic, strong) NSString *athlete_id;
+@property(nonatomic, strong) NSString *gameschedule_id;
+
+- (id)initWithDictionary:(NSDictionary *)kickerDictionary;
+
+@end

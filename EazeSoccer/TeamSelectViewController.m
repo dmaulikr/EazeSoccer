@@ -20,6 +20,8 @@
 
 @implementation TeamSelectViewController {
     NSMutableArray *teamList;
+    
+    NSIndexPath *editTeamIndexPath;
 }
 
 @synthesize sport;
@@ -192,6 +194,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        editTeamIndexPath = indexPath;
         [self performSegueWithIdentifier:@"EditTeamSegue" sender:self];
     }
 }
@@ -202,9 +205,8 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"EditTeamSegue"]) {
-        NSIndexPath *indexPath = [_teamTableView indexPathForSelectedRow];
         EditTeamViewController *destController = segue.destinationViewController;
-        destController.team = [teamList objectAtIndex:indexPath.row];
+        destController.team = [teamList objectAtIndex:editTeamIndexPath.row];
     } else if ([segue.identifier isEqualToString:@"NewTeamSegue"]) {
         EditTeamViewController *destController = segue.destinationViewController;
         destController.team = nil;

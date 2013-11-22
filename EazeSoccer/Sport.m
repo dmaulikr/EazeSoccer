@@ -35,11 +35,18 @@
 
 @synthesize playerPositions;
 
+@synthesize footballDefensePositions;
+@synthesize footballOffensePositions;
+@synthesize footballSpecialTeamsPositions;
+
 @synthesize sportimage;
 
 - (id)init {
     if (self = [super init]) {
         playerPositions = [[NSMutableDictionary alloc] init];
+        footballSpecialTeamsPositions = [[NSMutableDictionary alloc] init];
+        footballOffensePositions = [[NSMutableDictionary alloc] init];
+        footballDefensePositions = [[NSMutableDictionary alloc] init];
         logosize = @"";
         return self;
     } else
@@ -74,6 +81,10 @@
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"soccer_positions"]];
         } else if ([name isEqualToString:@"Basketball"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"basketball_positions"]];
+        } else if ([name isEqualToString:@"Football"]) {
+            footballOffensePositions = [self parsePositions:[sportDictionary objectForKey:@"football_offense_position"]];
+            footballDefensePositions = [self parsePositions:[sportDictionary objectForKey:@"football_defense_position"]];
+            footballSpecialTeamsPositions = [self parsePositions:[sportDictionary objectForKey:@"football_specialteams_position"]];
         }
         
         return self;

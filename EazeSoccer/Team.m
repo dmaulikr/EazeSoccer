@@ -21,12 +21,35 @@
 @synthesize team_logo;
 @synthesize tiny_logo;
 
+@synthesize fb_def_players;
+@synthesize fb_kickers;
+@synthesize fb_pass_players;
+@synthesize fb_placekickers;
+@synthesize fb_punters;
+@synthesize fb_rec_players;
+@synthesize fb_returners;
+@synthesize fb_rush_players;
+
+@synthesize httpError;
+
 @synthesize teamimage;
 
 - (id)init {
     if (self = [super init]) {
         logosize = @"";
         teamimage = nil;
+        
+        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            fb_pass_players = [[NSMutableArray alloc] init];
+            fb_rec_players = [[NSMutableArray alloc] init];
+            fb_rush_players = [[NSMutableArray alloc] init];
+            fb_def_players = [[NSMutableArray alloc] init];
+            fb_kickers = [[NSMutableArray alloc] init];
+            fb_placekickers = [[NSMutableArray alloc] init];
+            fb_returners = [[NSMutableArray alloc] init];
+            fb_punters = [[NSMutableArray alloc] init];
+        }
+        
         return self;
     } else
         return nil;
@@ -48,6 +71,17 @@
             tiny_logo = [teamDictionary objectForKey:@"tiny_logo"];
         else
             tiny_logo = @"";
+        
+        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            fb_pass_players = [teamDictionary objectForKey:@"fb_pass_players"];
+            fb_rush_players = [teamDictionary objectForKey:@"fb_rush_players"];
+            fb_rec_players = [teamDictionary objectForKey:@"fb_rec_players"];
+            fb_def_players = [teamDictionary objectForKey:@"fb_def_players"];
+            fb_punters = [teamDictionary objectForKey:@"fb_punters"];
+            fb_placekickers = [teamDictionary objectForKey:@"fb_place_kickers"];
+            fb_kickers = [teamDictionary objectForKey:@"fb_kickers"];
+            fb_returners = [teamDictionary objectForKey:@"fb_returners"];
+        }
         
         return self;
     } else {
@@ -94,6 +128,89 @@
         return NO;
     } else {
         return YES;
+    }
+}
+
+- (BOOL)saveTeam {
+    NSURL *aurl;
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    
+    if (self.teamid.length > 0)
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", currentSettings.sport.id, @"/teams/",
+                                     teamid, @".json?auth_token=", currentSettings.user.authtoken]];
+    else
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", currentSettings.sport.id, @"/teams.json?auth_token=",
+                                     currentSettings.user.authtoken]];
+    
+    NSMutableDictionary *teamDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:team_name, @"title",
+                                     mascot, @"mascot", nil];
+    
+    if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        [teamDict setValue:fb_pass_players forKey:@"fb_pass_players"];
+        [teamDict setValue:fb_rush_players forKey:@"fb_rush_players"];
+        [teamDict setValue:fb_rec_players forKey:@"fb_rec_players"];
+        [teamDict setValue:fb_def_players forKey:@"fb_def_players"];
+        [teamDict setValue:fb_kickers forKey:@"fb_kickers"];
+        [teamDict setValue:fb_placekickers forKey:@"fb_placekickers"];
+        [teamDict setValue:fb_returners forKey:@"fb_returners"];
+        [teamDict setValue:fb_punters forKey:@"fb_punters"];
+    }
+    
+    /*    if (imageselected) {
+     UIImage *photoImage = _teamImage.image;
+     NSData *imageData = UIImageJPEGRepresentation(photoImage, 1.0);
+     NSString *imageDataEncodedString = [imageData base64EncodedString];
+     [teamDict setObject:imageDataEncodedString forKey:@"image_data"];
+     [teamDict setObject:@"image/jpg" forKey:@"content_type"];
+     NSString *name = [_teamnameTextField.text stringByAppendingFormat:@"%@%@%@", @"_", _mascotTextField.text, @".jpg"];
+     [teamDict setObject:name forKey:@"original_filename"];
+     imageselected = NO;
+     }
+     */
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:teamDict, @"team", nil];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    if (teamid.length > 0) {
+        [request setHTTPMethod:@"PUT"];
+    } else {
+        [request setHTTPMethod:@"POST"];
+    }
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *items = [serverData objectForKey:@"team"];
+    
+    if ([httpResponse statusCode] == 200) {
+        if (teamid.length == 0) {
+            teamid = [items objectForKey:@"id"];
+        }
+        return YES;
+    } else {
+        httpError = [items objectForKey:@"error"];
+        return NO;
     }
 }
 
