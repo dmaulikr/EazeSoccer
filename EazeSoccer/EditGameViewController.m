@@ -45,6 +45,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
+    _activityIndicator.hidesWhenStopped = YES;
     
     _selectDateButton.layer.cornerRadius = 6;
     _selectDateButton.backgroundColor = [UIColor greenColor];
