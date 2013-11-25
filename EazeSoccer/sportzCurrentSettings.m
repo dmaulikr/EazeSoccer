@@ -30,11 +30,30 @@
 @synthesize lastGameUpdate;
 @synthesize getRoster;
 
+@synthesize footballOL;
+@synthesize footballQB;
+@synthesize footballRB;
+@synthesize footballWR;
+@synthesize footballDEF;
+@synthesize footballK;
+@synthesize footballPK;
+@synthesize footballPUNT;
+@synthesize footballRET;
+
 - (id)init {
     if (self = [super init]) {
         user = [User alloc];
         sport = [Sport alloc];
         team = [Team alloc];
+        footballWR = [[NSMutableArray alloc] init];
+        footballQB = [[NSMutableArray alloc] init];
+        footballRB = [[NSMutableArray alloc] init];
+        footballOL = [[NSMutableArray alloc] init];
+        footballDEF = [[NSMutableArray alloc] init];
+        footballK = [[NSMutableArray alloc] init];
+        footballPK = [[NSMutableArray alloc] init];
+        footballPUNT = [[NSMutableArray alloc] init];
+        footballRET = [[NSMutableArray alloc] init];
         lastAlertUpdate = [NSDate dateWithTimeIntervalSinceNow:0];
         
         return self; 
@@ -99,16 +118,7 @@
     }
     return result;
 }
-/*
-- (Athlete *)addAthleteStats:(Athlete *)athlete Stats:(Stats *)stats {
-    Athlete *player = [self findAthlete:[athlete athleteid]];
-    
-    if (player != nil)
-        player.stats = stats;
-    
-    return player;
-}
-*/
+
 - (BOOL)followingAthlete:(NSString *)athleteid {
     for (int cnt = 0; cnt < [roster count]; cnt++) {
         if ([[[roster objectAtIndex:cnt] athleteid] isEqualToString:athleteid]) {
@@ -345,8 +355,24 @@
     NSArray *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     if ([httpResponse statusCode] == 200) {
         roster = [[NSMutableArray alloc] init];
-        for (int i = 0; i < serverData.count; i++) {
-            [roster addObject:[[Athlete alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+        footballQB = [[NSMutableArray alloc] init];
+        footballRB = [[NSMutableArray alloc] init];
+        footballWR = [[NSMutableArray alloc] init];
+        footballRET = [[NSMutableArray alloc] init];
+        footballDEF = [[NSMutableArray alloc] init];
+        footballPK = [[NSMutableArray alloc] init];
+        footballPUNT = [[NSMutableArray alloc] init];
+        footballK = [[NSMutableArray alloc] init];
+        footballOL = [[NSMutableArray alloc] init];
+        
+        
+         for (int i = 0; i < serverData.count; i++) {
+             Athlete *player = [[Athlete alloc] initWithDictionary:[serverData objectAtIndex:i]];
+            [roster addObject:player];
+             
+            if ([sport.name isEqualToString:@"Football"]) {
+                [self populatePositionLists:player];
+            }
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Players"
@@ -355,6 +381,35 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+}
+
+- (void)populatePositionLists:(Athlete *)player {
+        if ([player isQB:nil])
+            [footballQB addObject:player];
+        
+        if ([player isRB:nil])
+            [footballRB addObject:player];
+        
+        if ([player isWR:nil])
+            [footballWR addObject:player];
+        
+        if ([player isOL:nil])
+            [footballOL addObject:player];
+        
+        if ([player isDEF:nil])
+            [footballDEF addObject:player];
+        
+        if ([player isPK:nil])
+            [footballPK addObject:player];
+        
+        if ([player isKicker:nil])
+            [footballK addObject:player];
+        
+        if ([player isPunter:nil])
+            [footballPUNT addObject:player];
+        
+        if ([player isReturner:nil])
+            [footballRET addObject:player];
 }
 
 - (BOOL)deletePlayer:(Athlete *)player {

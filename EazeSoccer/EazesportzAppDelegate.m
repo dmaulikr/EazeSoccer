@@ -35,7 +35,7 @@
         if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
             ;
         else
-            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"footballbackground.png"]];
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg1.jpg"]];
     }
     
     [self.window.rootViewController.view addSubview: myGraphic];

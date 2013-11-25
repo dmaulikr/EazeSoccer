@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-//#import "Gamelogs.h"
+#import "Gamelogs.h"
 
 @interface GameSchedule : NSObject
 
@@ -61,6 +61,8 @@
 @property(nonatomic, strong) NSNumber *socceroppsog;
 @property(nonatomic, strong) NSNumber *socceroppsaves;
 
+@property(nonatomic, strong) NSMutableArray *gamelogs;
+
 @property(nonatomic, strong) NSString *httperror;
 
 - (id)initWithDictionary:(NSDictionary *)gameScheduleDictionary;
@@ -71,9 +73,8 @@
 
 - (UIImage *)opponentImage;
 
-//@property(nonatomic, strong) NSMutableArray *gamelogs;
-
-//- (Gamelogs *)findGamelog:(NSString *)gamelogid;
+- (Gamelogs *)findGamelog:(NSString *)gamelogid;
+- (void)updateGamelog:(Gamelogs *)gamelog;
 
 - (int)soccerHomeCK;
 - (int)soccerHomeSaves;

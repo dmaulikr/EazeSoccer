@@ -175,7 +175,7 @@
                 [football_returner_stats addObject:[[FootballReturnerStats alloc] initWithDictionary:
                                                         [[returnerstats objectAtIndex:i] objectForKey:@"football_returner"]]];
             }
-            
+                        
         } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
             NSArray *bballstats = [athleteDictionary objectForKey:@"basketball_stats"];
             basketball_stats = [[NSMutableArray alloc] init];
@@ -224,6 +224,10 @@
         httperror = [athdata objectForKey:@"error"];
         return self;
     }
+}
+
+- (NSString *)numberLogname {
+    return [NSString stringWithFormat:@"%@%@%@", [number stringValue], @" vs ", logname];
 }
 
 - (NSString *)getBasketballStatGameId:(NSString *)basketball_stat_id {
@@ -478,7 +482,24 @@
             thestat = [football_passing_stats objectAtIndex:cnt];
     }
     
+    if (thestat == nil)
+        thestat = [[FootballPassingStat alloc] init];
+    
     return  thestat;
+}
+
+- (void)updateFootballPassingGameStats:(FootballPassingStat *)passingstat {
+    int i;
+    for (i = 0; i < [football_passing_stats count]; i++) {
+        if ([[[football_passing_stats objectAtIndex:i] gameschedule_id] isEqualToString:passingstat.gameschedule_id]) {
+            break;
+        }
+    }
+    
+    if (i < football_passing_stats.count) {
+        [football_passing_stats removeObjectAtIndex:i];
+    }
+    [football_passing_stats addObject:passingstat];
 }
 
 - (FootballRushingStat *)findFootballRushingStat:(NSString *)gameid {
@@ -489,8 +510,306 @@
             thestat = [football_rushing_stats objectAtIndex:cnt];
     }
     
+    if (thestat == nil)
+        thestat = [[FootballRushingStat alloc] init];
+    
     return  thestat;
 }
 
+- (FootballReceivingStat *)findFootballReceivingStat:(NSString *)gameid {
+    FootballReceivingStat *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_receiving_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_receiving_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_receiving_stats objectAtIndex:cnt];
+    }
+    
+    if (thestat == nil)
+        thestat = [[FootballReceivingStat alloc] init];
+    
+    return  thestat;
+}
+
+- (FootballDefenseStats *)findFootballDefenseStat:(NSString *)gameid {
+    FootballDefenseStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_defense_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_defense_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_defense_stats objectAtIndex:cnt];
+    }
+    
+    if (thestat == nil)
+        thestat = [[FootballDefenseStats alloc] init];
+    
+    return  thestat;
+}
+
+- (FootballKickerStats *)findFootballKickerStat:(NSString *)gameid {
+    FootballKickerStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_kicker_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_kicker_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_kicker_stats objectAtIndex:cnt];
+    }
+    
+    if (thestat == nil)
+        thestat = [[FootballKickerStats alloc] init];
+    
+    return  thestat;
+}
+
+- (FootballPlaceKickerStats *)findFootballPlaceKickerStat:(NSString *)gameid {
+    FootballPlaceKickerStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_place_kicker_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_place_kicker_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_place_kicker_stats objectAtIndex:cnt];
+    }
+    
+    if (thestat == nil)
+        thestat = [[FootballPlaceKickerStats alloc] init];
+    
+    return  thestat;
+}
+
+- (FootballPunterStats *)findFootballPunterStat:(NSString *)gameid {
+    FootballPunterStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_punter_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_punter_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_punter_stats objectAtIndex:cnt];
+    }
+    
+    if (thestat == nil)
+        thestat = [[FootballPunterStats alloc] init];
+    
+    return  thestat;
+}
+
+- (FootballReturnerStats *)findFootballReturnerStat:(NSString *)gameid {
+    FootballReturnerStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_returner_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_returner_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_returner_stats objectAtIndex:cnt];
+    }
+    
+    if (thestat == nil)
+        thestat = [[FootballReturnerStats alloc] init];
+    
+    return  thestat;
+}
+
+- (BOOL)isQB:(NSString *)gameid {
+    BOOL isaQB = NO;
+    
+    if (gameid) {
+        for (int i = 0; i < football_passing_stats.count; i++) {
+            if (([[[football_passing_stats objectAtIndex:i] attempts] intValue] > 0) &&
+                ([[[football_passing_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+                isaQB = YES;
+                break;
+            }
+        }
+    } else {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        
+        for (int i = 0; i < positions.count; i++) {
+            if ([[positions objectAtIndex:i] isEqualToString:@"QB"]) {
+                isaQB = YES;
+                break;
+            }
+        }
+    }
+    return isaQB;
+}
+
+- (BOOL)isRB:(NSString *)gameid {
+    BOOL isaRB = NO;
+    
+    if (gameid) {
+        for (int i = 0; i < football_rushing_stats.count; i++) {
+            if (([[[football_rushing_stats objectAtIndex:i] attempts] intValue] > 0) &&
+                ([[[football_rushing_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+                isaRB = YES;
+                break;
+            }
+        }
+    } else {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        
+        for (int i = 0; i < positions.count; i++) {
+            if (([[positions objectAtIndex:i] isEqualToString:@"RB"]) || ([[positions objectAtIndex:i] isEqualToString:@"FB"]) ||
+                ([[positions objectAtIndex:i] isEqualToString:@"TB"])) {
+                isaRB = YES;
+                break;
+            }
+        }
+    }
+    return isaRB;
+}
+
+- (BOOL)isWR:(NSString *)gameid {
+    BOOL isaWR = NO;
+    
+    if (gameid) {
+        for (int i = 0; i < football_receiving_stats.count; i++) {
+            if (([[[football_receiving_stats objectAtIndex:i] attempts] intValue] > 0) &&
+                ([[[football_receiving_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+                isaWR = YES;
+                break;
+            }
+        }
+    } else {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        
+        for (int i = 0; i < positions.count; i++) {
+            if (([[positions objectAtIndex:i] isEqualToString:@"WR"]) || ([[positions objectAtIndex:i] isEqualToString:@"TE"])) {
+                isaWR = YES;
+                break;
+            }
+        }
+    }
+    return isaWR;
+}
+
+- (BOOL)isOL:(NSString *)gameid {
+    BOOL isaOL = NO;
+    
+    NSArray *positions = [position componentsSeparatedByString:@"/"];
+    
+    for (int i = 0; i < positions.count; i++) {
+        if (([[positions objectAtIndex:i] isEqualToString:@"OL"]) || ([[positions objectAtIndex:i] isEqualToString:@"C"]) ||
+            ([[positions objectAtIndex:i] isEqualToString:@"G"]) || ([[positions objectAtIndex:i] isEqualToString:@"T"])) {
+            isaOL = YES;
+            break;
+        }
+    }
+    return isaOL;
+}
+
+- (BOOL)isDEF:(NSString *)gameid {
+    BOOL isaDEF = NO;
+    
+    if (gameid) {
+        for (int i = 0; i < football_defense_stats.count; i++) {
+            if (([[[football_defense_stats objectAtIndex:i] attempts] intValue] > 0) &&
+                ([[[football_defense_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+                isaDEF = YES;
+                break;
+            }
+        }
+    } else {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        
+        for (int i = 0; i < positions.count; i++) {
+            if (([[positions objectAtIndex:i] isEqualToString:@"DL"]) || ([[positions objectAtIndex:i] isEqualToString:@"NG"]) ||
+                ([[positions objectAtIndex:i] isEqualToString:@"DT"]) || ([[positions objectAtIndex:i] isEqualToString:@"DE"]) ||
+                ([[positions objectAtIndex:i] isEqualToString:@"LB"]) || ([[positions objectAtIndex:i] isEqualToString:@"DB"]) ||
+                ([[positions objectAtIndex:i] isEqualToString:@"CB"]) || ([[positions objectAtIndex:i] isEqualToString:@"S"]) ||
+                ([[positions objectAtIndex:i] isEqualToString:@"SS"])) {
+                isaDEF = YES;
+                break;
+            }
+        }
+    }
+    return isaDEF;
+}
+
+- (BOOL)isPK:(NSString *)gameid {
+    BOOL isaPK = NO;
+    
+    if (gameid) {
+        for (int i = 0; i < football_place_kicker_stats.count; i++) {
+            if (([[[football_place_kicker_stats objectAtIndex:i] attempts] intValue] > 0) &&
+                ([[[football_place_kicker_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+                isaPK = YES;
+                break;
+            }
+        }
+    } else {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        
+        for (int i = 0; i < positions.count; i++) {
+            if (([[positions objectAtIndex:i] isEqualToString:@"PK"]) || ([[positions objectAtIndex:i] isEqualToString:@"PKP"])) {
+                isaPK = YES;
+                break;
+            }
+        }
+    }
+    return isaPK;
+}
+
+- (BOOL)isKicker:(NSString *)gameid {
+    BOOL isaKicker = NO;
+    
+    if (gameid) {
+        for (int i = 0; i < football_kicker_stats.count; i++) {
+            if (([[[football_kicker_stats objectAtIndex:i] attempts] intValue] > 0) &&
+                ([[[football_kicker_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+                isaKicker = YES;
+                break;
+            }
+        }
+    } else {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        
+        for (int i = 0; i < positions.count; i++) {
+            if (([[positions objectAtIndex:i] isEqualToString:@"K"]) || ([[positions objectAtIndex:i] isEqualToString:@"PKP"])) {
+                isaKicker = YES;
+                break;
+            }
+        }
+    }
+    return isaKicker;
+}
+
+- (BOOL)isPunter:(NSString *)gameid {
+    BOOL isaPunter = NO;
+    
+    if (gameid) {
+        for (int i = 0; i < football_punter_stats.count; i++) {
+            if (([[[football_punter_stats objectAtIndex:i] attempts] intValue] > 0) &&
+                ([[[football_punter_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+                isaPunter = YES;
+                break;
+            }
+        }
+    } else {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        
+        for (int i = 0; i < positions.count; i++) {
+            if ([[positions objectAtIndex:i] isEqualToString:@"P"]) {
+                isaPunter = YES;
+                break;
+            }
+        }
+    }
+    return isaPunter;
+}
+
+- (BOOL)isReturner:(NSString *)gameid {
+    BOOL isaReturner = NO;
+    
+    if (gameid) {
+        for (int i = 0; i < football_returner_stats.count; i++) {
+            if (([[[football_returner_stats objectAtIndex:i] attempts] intValue] > 0) &&
+                ([[[football_returner_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+                isaReturner = YES;
+                break;
+            }
+        }
+    } else {
+        NSArray *positions = [position componentsSeparatedByString:@"/"];
+        
+        for (int i = 0; i < positions.count; i++) {
+            if ([[positions objectAtIndex:i] isEqualToString:@"RET"]) {
+                isaReturner = YES;
+                break;
+            }
+        }
+    }
+    return isaReturner;
+}
 
 @end

@@ -228,11 +228,14 @@
                     if (currentSettings.sport.id.length > 0) {
                         [currentSettings retrieveSport];
                         
-                        if (![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]) {
+                        if ((![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]])
+                        && ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login" message:@"Sport does not match login"
                                                  delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                             [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                            [alert show];                        
+                            [alert show];
+                        } else if (![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]) {
+                            
                         } else  {
                             [self performSegueWithIdentifier:@"AlreadyLoggedInSegue" sender:self];
                         }

@@ -23,5 +23,8 @@
 - (IBAction)savestatsButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *statsTableView;
 @property (weak, nonatomic) IBOutlet UILabel *statLabel;
+@property (weak, nonatomic) IBOutlet UIView *playerSelectContainer;
+
+- (IBAction)otherPlayerFootballStat:(UIStoryboardSegue *)segue;
 
 @end

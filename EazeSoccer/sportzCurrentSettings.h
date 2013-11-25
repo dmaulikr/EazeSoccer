@@ -37,6 +37,16 @@
 @property(nonatomic, strong) NSDate *lastGameUpdate;
 @property(nonatomic, assign) BOOL getRoster;
 
+@property(nonatomic, strong) NSMutableArray *footballRB;
+@property(nonatomic, strong) NSMutableArray *footballQB;
+@property(nonatomic, strong) NSMutableArray *footballWR;
+@property(nonatomic, strong) NSMutableArray *footballOL;
+@property(nonatomic, strong) NSMutableArray *footballDEF;
+@property(nonatomic, strong) NSMutableArray *footballPK;
+@property(nonatomic, strong) NSMutableArray *footballK;
+@property(nonatomic, strong) NSMutableArray *footballPUNT;
+@property(nonatomic, strong) NSMutableArray *footballRET;
+
 - (UIImage *)getBannerImage;
 
 - (Athlete *)findAthlete:(NSString *)athleteid;

@@ -7,6 +7,7 @@
 //
 
 #import "FootballRushingStat.h"
+#import "EazesportzAppDelegate.h"
 
 @implementation FootballRushingStat
 
@@ -23,6 +24,8 @@
 @synthesize football_rushing_id;
 @synthesize athlete_id;
 @synthesize gameschedule_id;
+
+@synthesize httperror;
 
 - (id)init {
     if (self = [super init]) {
@@ -64,6 +67,91 @@
         return self;
     } else
         return nil;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    FootballRushingStat *copy;
+    copy.athlete_id = athlete_id;
+    copy.gameschedule_id = gameschedule_id;
+    copy.football_rushing_id = football_rushing_id;
+    
+    copy.attempts = attempts;
+    copy.average = average;
+    copy.fumbles_lost = fumbles_lost;
+    copy.fumbles = fumbles;
+    copy.longest = longest;
+    copy.td = td;
+    copy.yards = yards;
+    copy.firstdowns = firstdowns;
+    copy.twopointconv = twopointconv;
+    
+    return copy;
+}
+
+- (BOOL)saveStats {
+    NSURL *aurl;
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    
+    if (football_rushing_id.length > 0) {
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_rushings/", football_rushing_id,
+                                     @".json?auth_token=", currentSettings.user.authtoken]];
+        
+    } else {
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_rushings.json?gameschedule_id=",
+                                     gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
+    }
+    
+    NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
+                                     [attempts stringValue], @"attempts", [average stringValue], @"average",
+                                     [fumbles stringValue], @"fumbles", [fumbles_lost stringValue], @"fumbles_lost",
+                                     [longest stringValue], @"longest", [td stringValue], @"td", [yards stringValue], @"yards",
+                                     [firstdowns stringValue], @"firstdowns", [twopointconv stringValue], @"twopointconv", nil];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"football_rushing", nil];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    if (football_rushing_id.length > 0) {
+        [request setHTTPMethod:@"PUT"];
+    } else {
+        [request setHTTPMethod:@"POST"];
+    }
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *items = [serverData objectForKey:@"rushing"];
+    
+    if ([httpResponse statusCode] == 200) {
+        
+        if (football_rushing_id.length == 0)
+            football_rushing_id = [items objectForKey:@"_id"];
+        
+        return YES;
+    } else {
+        httperror = [items objectForKey:@"error"];
+        return NO;
+    }
 }
 
 @end

@@ -127,7 +127,7 @@
         
         if (game) {
             Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
-            cell.playerName.text = player.logname;
+            cell.playerName.text = player.numberLogname;
             stats = [player findSoccerGameStats:game.id];
             cell.imageView.image = [player getImage:@"tiny"];
         } else if (athlete) {
@@ -137,7 +137,7 @@
             cell.imageView.image = [agame opponentImage];
         } else {
             Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
-            cell.playerName.text = player.logname;
+            cell.playerName.text = player.numberLogname;
             stats = [[Soccer alloc] init];
             cell.imageView.image = [player getImage:@"tiny"];
         }
@@ -151,7 +151,7 @@
     } else {
         if (game) {
             Athlete *player = [goalies objectAtIndex:indexPath.row];
-            cell.playerName.text = player.logname;
+            cell.playerName.text = player.numberLogname;
             stats = [player findSoccerGameStats:game.id];
             cell.imageView.image = [player getImage:@"tiny"];
         } else {

@@ -155,7 +155,7 @@
     } else {
         Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
         stats = [player findBasketballGameStatEntries:game.id];
-        cell.nameLabel.text = player.logname;
+        cell.nameLabel.text = player.numberLogname;
         cell.playerImage.image = [player getImage:@"tiny"];
     }
     

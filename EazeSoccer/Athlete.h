@@ -67,12 +67,29 @@
 
 @property(nonatomic, strong) NSString *httperror;
 
+- (NSString *)numberLogname;
 
 - (id)initWithDictionary:(NSDictionary *)athleteDictionary;
 - (id)initDeleteAthlete;
 
 - (FootballPassingStat *)findFootballPassingStat:(NSString *)gameid;
+- (void)updateFootballPassingGameStats:(FootballPassingStat *)passingstat;
 - (FootballRushingStat *)findFootballRushingStat:(NSString *)gameid;
+- (FootballReceivingStat *)findFootballReceivingStat:(NSString *)gameid;
+- (FootballDefenseStats *)findFootballDefenseStat:(NSString *)gameid;
+- (FootballKickerStats *)findFootballKickerStat:(NSString *)gameid;
+- (FootballPlaceKickerStats *)findFootballPlaceKickerStat:(NSString *)gameid;
+- (FootballPunterStats *)findFootballPunterStat:(NSString *)gameid;
+- (FootballReturnerStats *)findFootballReturnerStat:(NSString *)gameid;
+- (BOOL)isQB:(NSString *)gameid;
+- (BOOL)isRB:(NSString *)gameid;
+- (BOOL)isWR:(NSString *)gameid;
+- (BOOL)isOL:(NSString *)gameid;
+- (BOOL)isDEF:(NSString *)gameid;
+- (BOOL)isPK:(NSString *)gameid;
+- (BOOL)isKicker:(NSString *)gameid;
+- (BOOL)isPunter:(NSString *)gameid;
+- (BOOL)isReturner:(NSString *)gameid;
 
 - (NSString *)getBasketballStatGameId:(BasketballStats *)basketball_stat_id;
 - (BasketballStats *)findBasketballGameStatEntries:(NSString *)gameid;

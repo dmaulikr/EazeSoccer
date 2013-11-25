@@ -18,11 +18,17 @@
 @property(nonatomic, strong) NSNumber *fumbles;
 @property(nonatomic, strong) NSNumber *fumbles_lost;
 @property(nonatomic, strong) NSNumber *twopointconv;
+@property(nonatomic, strong) NSNumber *firstdowns;
 
 @property(nonatomic, strong) NSString *football_receiving_id;
 @property(nonatomic, strong) NSString *athlete_id;
 @property(nonatomic, strong) NSString *gameschedule_id;
 
+@property(nonatomic, strong) NSString *httperror;
+
 - (id)initWithDictionary:(NSDictionary *)receivingDictionary;
+- (id)copyWithZone:(NSZone *)zone;
+
+- (BOOL)saveStats;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "GameSchedule.h"
 #import "EazesportzAppDelegate.h"
+#import "Gamelogs.h"
 
 @implementation GameSchedule
 
@@ -64,6 +65,8 @@
 @synthesize socceroppsaves;
 @synthesize socceroppsog;
 
+@synthesize gamelogs;
+
 @synthesize httperror;
 
 - (id)initWithDictionary:(NSDictionary *)gameScheduleDictionary {
@@ -116,45 +119,20 @@
         socceroppsaves = [gameScheduleDictionary objectForKey:@"socceroppsaves"];
         socceroppck = [gameScheduleDictionary objectForKey:@"socceroppck"];
         
-        /*
-         NSMutableArray *gamelogs = [gameScheduleDictionary objectForKey:@"gamelogs"];
-         for (int cnt = 0; cnt < [gamelogs count]; cnt++) {
-         NSDictionary *entry = [gamelogs objectAtIndex:cnt];
-         NSLog(@"%@", entry);
-         NSDictionary *thelog = [entry objectForKey:@"gamelog"];
-         Gamelogs *log = [[Gamelogs alloc] init];
-         log.gamelogid = [thelog objectForKey:@"id"];
-         log.logentry = [thelog objectForKey:@"logentrytext"];
-         log.period = [thelog objectForKey:@"period"];
-         log.score = [thelog objectForKey:@"score"];
-         log.time = [thelog objectForKey:@"time"];
-         log.hasvideos = [[thelog objectForKey:@"hasvideos"] boolValue];
-         log.hasphotos = [[thelog objectForKey:@"hasphotos"] boolValue];
-         [gamelogs addObject:log];
+        
+        NSMutableArray *logs = [gameScheduleDictionary objectForKey:@"gamelogs"];
+        gamelogs = [[NSMutableArray alloc] init];
+        
+         for (int cnt = 0; cnt < logs.count; cnt++) {
+             [gamelogs addObject:[[Gamelogs alloc] initWithDictionary:[[logs objectAtIndex:cnt] objectForKey:@"gamelog"]]];
          }
-         
-        playerlist = [[NSMutableArray alloc] init];
-        for (int i = 0; i < [keys count]; i++) {
-            Athlete *player = nil;
-            if ((player = [currentSettings findAthleteByLogname:[keys objectAtIndex:i]]) != nil) {
-                [playerlist addObject:[player athleteid]];
-                NSDictionary *gamestats = [gameScheduleDictionary objectForKey:[keys objectAtIndex:i]];
-                //            Stats *newstat = [[Stats alloc] init];
-                //            [currentSettings addAthleteStats:player Stats:[newstat parseStats:gamestats]];
-            }
-            if ((NSNull *)[gameScheduleDictionary objectForKey:@"football_stats"] != [NSNull null]) {
-                NSDictionary *stattotals = [gameScheduleDictionary objectForKey:@"football_stats"];
-                //            totals = [[Stats alloc] init];
-                //            [totals parseStatsTotals:stattotals];
-            }
-        } */
+        
+        
         return self;
     } else {
         return nil;
     }
 }
-
-/* @synthesize gamelogs;
 
 - (Gamelogs *)findGamelog:(NSString *)gamelogid {
     Gamelogs *gamelog = nil;
@@ -169,7 +147,20 @@
     
     return gamelog;
 }
-*/
+
+- (void)updateGamelog:(Gamelogs *)gamelog {
+    int i;
+    for (i = 0; i < [gamelogs count]; i++) {
+        if ([[[gamelogs objectAtIndex:i] gamelogid] isEqualToString:gamelog.gamelogid]) {
+            break;
+        }
+    }
+    
+    if (i < gamelogs.count) {
+        [gamelogs removeObjectAtIndex:i];
+    }
+    [gamelogs addObject:gamelog];
+}
 
 - (BOOL)saveGameschedule {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -201,26 +192,28 @@
                                      homeaway, @"homeaway", [homescore stringValue], @"homescore",
                                      [opponentscore stringValue], @"opponentscore", [[NSNumber numberWithBool:leaguegame] stringValue], @"league", nil];
     
+    NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
+    [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
+    [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
+
     if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
         [gamedict setValue:[socceroppsog stringValue] forKey:@"socceroppsog"];
         [gamedict setValue:[socceroppsaves stringValue] forKey:@"socceroppsaves"];
         [gamedict setValue:[socceroppck stringValue] forKey:@"socceroppck"];
         [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
-        NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
-        [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
-        [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
     } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
         [gamedict setValue:[visitorfouls stringValue] forKey:@"opponentfouls"];
         [gamedict setValue:[opponentscore stringValue] forKey:@"opponentscore"];
         [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
         [gamedict setValue:[[NSNumber numberWithBool:visitorbonus] stringValue] forKey:@"visitorbonus"];
         [gamedict setValue:[[NSNumber numberWithBool:homebonus] stringValue] forKey:@"homebonus"];
-        NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
-        [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
-        [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
         [gamedict setValue:possession forKey:@"bballpossessionarrow"];
         [gamedict setValue:[[NSNumber numberWithBool:homebonus] stringValue] forKey:@"homebonus"];
         [gamedict setValue:[[NSNumber numberWithBool:visitorbonus] stringValue] forKey:@"visitorbonus"];
+    } else if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        
+        for (int i = 0; i < gamelogs.count; i++)
+             [[gamelogs objectAtIndex:i] saveStats];
     }
     
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];

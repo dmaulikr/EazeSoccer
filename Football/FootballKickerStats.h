@@ -18,6 +18,11 @@
 @property(nonatomic, strong) NSString *athlete_id;
 @property(nonatomic, strong) NSString *gameschedule_id;
 
+@property(nonatomic, strong) NSString *httperror;
+
 - (id)initWithDictionary:(NSDictionary *)kickerDictionary;
+- (id)copyWithZone:(NSZone *)zone;
+
+- (BOOL)saveStats;
 
 @end
