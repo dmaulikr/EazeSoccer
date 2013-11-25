@@ -14,6 +14,8 @@
     S3Bucket *s3bucket;
 }
 
+@synthesize selectedTab;
+
 @synthesize user;
 @synthesize sport;
 @synthesize team;

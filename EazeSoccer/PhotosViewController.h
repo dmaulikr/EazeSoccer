@@ -35,6 +35,9 @@
 @property (weak, nonatomic) IBOutlet UIView *playerContainer;
 @property (weak, nonatomic) IBOutlet UIView *gameContainer;
 @property (weak, nonatomic) IBOutlet UIView *userSelectContainer;
+- (IBAction)teamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
+- (IBAction)changeTeamButtonClicked:(id)sender;
 
 @end

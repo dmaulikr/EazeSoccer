@@ -12,4 +12,5 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *standingTableView;
 
+- (IBAction)teamButtonClicked:(id)sender;
 @end

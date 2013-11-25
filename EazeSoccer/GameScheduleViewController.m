@@ -62,6 +62,11 @@
         _teamLabel.text = currentSettings.team.team_name;
         [currentSettings retrieveGameList];
         [_gamesTableView reloadData];
+        
+        if (currentSettings.selectedTab != 0) {
+            self.tabBarController.selectedIndex = currentSettings.selectedTab;
+            currentSettings.selectedTab = 0;
+        }
     }
 }
 

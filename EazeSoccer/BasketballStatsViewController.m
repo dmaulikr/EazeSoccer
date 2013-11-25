@@ -24,6 +24,7 @@
 
 @synthesize athlete;
 @synthesize game;
+@synthesize clock;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -63,6 +64,84 @@
     if ((game) || (athlete)) {
         [_basketballTableView reloadData];
     }
+    
+    // Update the clock
+    
+    _firstPeriodButton.layer.cornerRadius = 8;
+    _secondPeriodButton.layer.cornerRadius = 8;
+    _thirdPeriodButton.layer.cornerRadius = 8;
+    _fourthPeriodButton.layer.cornerRadius = 8;
+
+    _hometeamImage.image = [currentSettings.team getImage:@"thumb"];
+    _hometeamLabel.text = currentSettings.team.mascot;
+    
+    if (game) {
+        _visitorImage.hidden = NO;
+        _visitorImage.image = [game opponentImage];
+        _visitorteamLabel.text = game.opponent_mascot;
+        
+        if (game.visitorbonus)
+            _rightBonusImage.hidden = NO;
+        else
+            _rightBonusImage.hidden = YES;
+        
+        if (game.homebonus)
+            _leftBonusImage.hidden = NO;
+        else
+            _leftBonusImage.hidden = YES;
+        
+        if ([game.possession isEqualToString:@"Home"]) {
+            _homePossessionArrow.hidden = NO;
+            _visitorPossessionArrow.hidden = YES;
+        } else {
+            _homePossessionArrow.hidden = YES;
+            _visitorPossessionArrow.hidden = NO;
+        }
+        
+        NSArray *splitArray = [game.currentgametime componentsSeparatedByString:@":"];
+        _gameclockLabel.text = game.currentgametime;
+        _minutesTextField.text = [splitArray objectAtIndex:0];
+        _secondsTextField.text = [splitArray objectAtIndex:1];
+        _gameclockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
+        _homeScoreTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+        _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+        _homeFoulsTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamFouls:game.id]];
+        _visitorScoreLabel.text = [NSString stringWithFormat:@"%d", [game.opponentscore intValue]];
+        _visitorScoreTextField.text = [NSString stringWithFormat:@"%d", [game.opponentscore intValue]];
+        _visitorFoulsTextField.text = [NSString stringWithFormat:@"%d", [game.visitorfouls intValue]];
+        
+        switch ([game.period intValue]) {
+            case 1:
+                [self firstPeriodButtonClicked:self];
+                break;
+                
+            case 2:
+                [self secondPeriodButtonClicked:self];
+                break;
+                
+            case 3:
+                [self thirdPeriodButtonClicked:self];
+                break;
+                
+            default:
+                [self fourthPeriodButtonClicked:self];
+                break;
+        }
+    } else {
+        _gameclockLabel.text = @"00:00";
+        _visitorImage.hidden = YES;
+        _visitorteamLabel.text = @"Visitors";
+    }
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                    message:@"Make sure to press SAVE to post stats to cloud. \n Swipe cell to enter stats by total"
+                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (IBAction)saveButtonClicked:(id)sender {
@@ -89,7 +168,11 @@
             }
         }
     }
-    
+
+    game.opponentscore = [NSNumber numberWithInt:[_visitorScoreTextField.text intValue]];
+    game.visitorfouls = [NSNumber numberWithInt:[_visitorFoulsTextField.text intValue]];
+    [game saveGameschedule];
+
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stats Posted!"
                                                     message:[NSString stringWithFormat:@"%@%@%@", @"Stats for current players vs. ", game.opponent, @" saved!"]
                                                    delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -106,6 +189,7 @@
         [liveStatsController.player updateBasketballGameStats:liveStatsController.stats];
     
     [_basketballTableView reloadData];
+    [self viewWillAppear:YES];
 }
 
 - (IBAction)updateTotalBasketballStats:(UIStoryboardSegue *)segue {
@@ -116,7 +200,8 @@
     else
         [liveStatsController.player updateBasketballGameStats:liveStatsController.stats];
     
-    [_basketballTableView reloadData];
+//    [_basketballTableView reloadData];
+    [self viewWillAppear:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -262,6 +347,137 @@
         liveStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"TotalStatsSegue"]) {
         totalStatsController = segue.destinationViewController;
+    }
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if (textField == _homeScoreTextField) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"Score automatically computed from stats!"
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+        [textField resignFirstResponder];
+    } else if (textField == _homeFoulsTextField) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"Fouls automatically computed from stats!"
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+        [textField resignFirstResponder];
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if (textField == _minutesTextField) {
+        game.currentgametime = _gameclockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
+    } else if (textField == _secondsTextField) {
+        game.currentgametime = _gameclockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
+    } else if (textField == _visitorScoreTextField) {
+        _visitorScoreLabel.text = _visitorScoreTextField.text;
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    if ((textField == _minutesTextField) || (textField == _secondsTextField) || (textField == _homeFoulsTextField) ||
+        (textField == _visitorFoulsTextField) || (textField == _homeScoreTextField) || (textField == _visitorScoreTextField)) {
+        NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
+        NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+        BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+        
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (myStringMatchesRegEx)
+            
+            if ((textField == _minutesTextField) || (textField == _secondsTextField)) {
+                return (newLength > 2) ? NO : YES;
+            } else {
+                return (newLength > 3) ? NO : YES;
+            }
+            else
+                return NO;
+    } else
+        return YES;
+}
+
+- (IBAction)firstPeriodButtonClicked:(id)sender {
+    game.period = [NSNumber numberWithInt: 1];
+    _firstPeriodButton.backgroundColor = [UIColor redColor];
+    _secondPeriodButton.backgroundColor = [UIColor whiteColor];
+    _thirdPeriodButton.backgroundColor = [UIColor whiteColor];
+    _fourthPeriodButton.backgroundColor = [UIColor whiteColor];
+    _firstPeriodButton.selected = YES;
+    _secondPeriodButton.selected = NO;
+    _thirdPeriodButton.selected = NO;
+    _fourthPeriodButton.selected = NO;
+}
+
+- (IBAction)secondPeriodButtonClicked:(id)sender {
+    game.period = [NSNumber numberWithInt: 2];
+    _firstPeriodButton.backgroundColor = [UIColor whiteColor];
+    _secondPeriodButton.backgroundColor = [UIColor redColor];
+    _thirdPeriodButton.backgroundColor = [UIColor whiteColor];
+    _fourthPeriodButton.backgroundColor = [UIColor whiteColor];
+    _firstPeriodButton.selected = NO;
+    _secondPeriodButton.selected = YES;
+    _thirdPeriodButton.selected = NO;
+    _fourthPeriodButton.selected = NO;
+}
+
+- (IBAction)thirdPeriodButtonClicked:(id)sender {
+    game.period = [NSNumber numberWithInt: 3];
+    _firstPeriodButton.backgroundColor = [UIColor whiteColor];
+    _secondPeriodButton.backgroundColor = [UIColor whiteColor];
+    _thirdPeriodButton.backgroundColor = [UIColor redColor];
+    _fourthPeriodButton.backgroundColor = [UIColor whiteColor];
+    _firstPeriodButton.selected = NO;
+    _secondPeriodButton.selected = NO;
+    _thirdPeriodButton.selected = YES;
+    _fourthPeriodButton.selected = NO;
+}
+
+- (IBAction)fourthPeriodButtonClicked:(id)sender {
+    game.period = [NSNumber numberWithInt: 4];
+    _firstPeriodButton.backgroundColor = [UIColor whiteColor];
+    _secondPeriodButton.backgroundColor = [UIColor whiteColor];
+    _thirdPeriodButton.backgroundColor = [UIColor whiteColor];
+    _fourthPeriodButton.backgroundColor = [UIColor redColor];
+    _firstPeriodButton.selected = NO;
+    _secondPeriodButton.selected = NO;
+    _thirdPeriodButton.selected = NO;
+    _fourthPeriodButton.selected = YES;
+}
+
+- (IBAction)homeBonusButton:(id)sender {
+    if (!_leftBonusImage.hidden) {
+        _leftBonusImage.hidden = YES;
+        game.homebonus = NO;
+    } else {
+        _leftBonusImage.hidden = NO;
+        game.homebonus = YES;
+    }
+}
+
+- (IBAction)visitorBonusButton:(id)sender {
+    if (!_rightBonusImage.hidden) {
+        _rightBonusImage.hidden = YES;
+        game.visitorbonus = NO;
+    } else {
+        _rightBonusImage.hidden = NO;
+        game.visitorbonus = YES;
+    }
+}
+
+- (IBAction)saveClockButtonClicked:(id)sender {
+}
+
+- (IBAction)possessionArrorButtonClicked:(id)sender {
+    if ([game.possession isEqualToString:@"Home"]) {
+        _homePossessionArrow.hidden = YES;
+        _visitorPossessionArrow.hidden = NO;
+        game.possession = @"Visitor";
+    } else {
+        _homePossessionArrow.hidden = NO;
+        _visitorPossessionArrow.hidden = YES;
+        game.possession = @"Home";
     }
 }
 

@@ -39,7 +39,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.refreshButton, self.addButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.refreshButton, self.addButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -137,6 +137,32 @@
         destController.player = nil;
     }
 
+}
+
+- (IBAction)teamButtonClicked:(id)sender {
+    currentSettings.team = nil;
+    UITabBarController *tabBarController = self.tabBarController;
+    
+    for (UIViewController *viewController in tabBarController.viewControllers)
+    {
+        if ([viewController isKindOfClass:[UINavigationController class]])
+            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+    }
+    
+    UIView * fromView = tabBarController.selectedViewController.view;
+    UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+    currentSettings.selectedTab = tabBarController.selectedIndex;
+    
+    // Transition using a page curl.
+    [UIView transitionFromView:fromView
+                        toView:toView
+                      duration:0.5
+                       options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                    completion:^(BOOL finished) {
+                        if (finished) {
+                            tabBarController.selectedIndex = 0;
+                        }
+                    }];
 }
 
 @end

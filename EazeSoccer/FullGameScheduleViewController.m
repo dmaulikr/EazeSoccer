@@ -30,6 +30,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, self.teamButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -61,6 +64,11 @@
             [self.gamesTableView reloadData];
         }
     }
+}
+
+- (IBAction)teamButtonClicked:(id)sender {
+    currentSettings.team = nil;
+    [self viewDidAppear:YES];
 }
 
 @end

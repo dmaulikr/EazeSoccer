@@ -11,5 +11,8 @@
 @interface NewsTableViewController : UITableViewController
 
 @property(nonatomic, strong) NSMutableArray *newsfeed;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
+- (IBAction)changeTeamButtonClicked:(id)sender;
 
 @end

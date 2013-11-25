@@ -41,5 +41,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *homePossessionArrow;
 @property (weak, nonatomic) IBOutlet UIImageView *visitorPossessionArrow;
 - (IBAction)possessionArrorButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *homeScoreLabel;
+@property (weak, nonatomic) IBOutlet UILabel *visitorScoreLabel;
 
 @end

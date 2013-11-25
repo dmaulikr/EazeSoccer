@@ -36,5 +36,7 @@
 - (IBAction)selectvideoUser:(UIStoryboardSegue *)segue;
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
+- (IBAction)changeTeamButtonClicked:(id)sender;
 
 @end

@@ -298,7 +298,7 @@
         _FTALabel.text = [NSString stringWithFormat:@"%d", fta];
         _FTPLabel.text = [NSString stringWithFormat:@"%.02f", ftpct];
         stats.ftattempt = [NSNumber numberWithInt:fta];
-    } else if (([title isEqualToString:@"-FTM"]) && (fta > 0)) {
+    } else if (([title isEqualToString:@"-FTM"]) && (ftmade > 0)) {
         fta--;
         ftmade--;
         

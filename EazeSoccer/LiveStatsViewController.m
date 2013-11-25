@@ -42,7 +42,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.clockButton, self.gameButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.gameButton, self.teamButton, self.clockButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -57,11 +57,9 @@
     [super viewWillAppear:animated];
     
     _gameContainer.hidden = YES;
-    _soccerClockContainer.hidden = YES;
     
-//    if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
-        _soccerContainer.hidden = NO;
-//    }
+    if (([currentSettings.sport.name isEqualToString:@"Football"]) || ([currentSettings.sport.name isEqualToString:@"Soccer"]))
+        _soccerClockContainer.hidden = YES;
 }
 
 - (IBAction)selectGameLiveStats:(UIStoryboardSegue *)segue {
@@ -77,6 +75,7 @@
             [footballStatsController viewWillAppear:YES];
         }
     }
+    self.title = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", gameController.thegame.opponent];
     _gameContainer.hidden = YES;
 }
 
@@ -123,4 +122,34 @@
     _soccerClockContainer.hidden = YES;
 }
 
+- (IBAction)changeteamButtonClicked:(id)sender {
+    currentSettings.team = nil;
+    UITabBarController *tabBarController = self.tabBarController;
+    
+    for (UIViewController *viewController in tabBarController.viewControllers)
+    {
+        if ([viewController isKindOfClass:[UINavigationController class]])
+            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+    }
+    
+    UIView * fromView = tabBarController.selectedViewController.view;
+    UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+    currentSettings.selectedTab = tabBarController.selectedIndex;
+    
+    // Transition using a page curl.
+    [UIView transitionFromView:fromView
+                        toView:toView
+                      duration:0.5
+                       options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                    completion:^(BOOL finished) {
+                        if (finished) {
+                            tabBarController.selectedIndex = 0;
+                        }
+                    }];
+}
+
+- (IBAction)saveButtonClicked:(id)sender {
+    if ([currentSettings.sport.name isEqualToString:@"Basketball"])
+        [basketballStatsController saveButtonClicked:self];
+}
 @end

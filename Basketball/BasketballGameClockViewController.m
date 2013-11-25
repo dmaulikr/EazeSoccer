@@ -48,54 +48,64 @@
     [super viewWillAppear:animated];
     
     _hometeamImage.image = [currentSettings.team getImage:@"thumb"];
-    _visitorImage.image = [game opponentImage];
     _hometeamLabel.text = currentSettings.team.mascot;
-    _visitorteamLabel.text = game.opponent_mascot;
     
-    if (game.visitorbonus)
-        _rightBonusImage.hidden = NO;
-    else
-        _rightBonusImage.hidden = YES;
-    
-    if (game.homebonus)
-        _leftBonusImage.hidden = NO;
-    else
-        _leftBonusImage.hidden = YES;
-    
-    if ([game.possession isEqualToString:@"Home"]) {
-        _homePossessionArrow.hidden = NO;
-        _visitorPossessionArrow.hidden = YES;
+    if (game) {
+        _visitorImage.hidden = NO;
+        _visitorImage.image = [game opponentImage];
+        _visitorteamLabel.text = game.opponent_mascot;
+        
+        if (game.visitorbonus)
+            _rightBonusImage.hidden = NO;
+        else
+            _rightBonusImage.hidden = YES;
+        
+        if (game.homebonus)
+            _leftBonusImage.hidden = NO;
+        else
+            _leftBonusImage.hidden = YES;
+        
+        if ([game.possession isEqualToString:@"Home"]) {
+            _homePossessionArrow.hidden = NO;
+            _visitorPossessionArrow.hidden = YES;
+        } else {
+            _homePossessionArrow.hidden = YES;
+            _visitorPossessionArrow.hidden = NO;
+        }
+        
+        NSArray *splitArray = [game.currentgametime componentsSeparatedByString:@":"];
+        _gameclockLabel.text = game.currentgametime;
+        _minutesTextField.text = [splitArray objectAtIndex:0];
+        _secondsTextField.text = [splitArray objectAtIndex:1];
+        _gameclockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
+        _homeScoreTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+        _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+        _homeFoulsTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamFouls:game.id]];
+        _visitorScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamFouls:game.id]];
+        _visitorScoreTextField.text = [NSString stringWithFormat:@"%d", [game.opponentscore intValue]];
+        _visitorFoulsTextField.text = [NSString stringWithFormat:@"%d", [game.visitorfouls intValue]];
+        
+        switch ([game.period intValue]) {
+            case 1:
+                [self firstPeriodButtonClicked:self];
+                break;
+                
+            case 2:
+                [self secondPeriodButtonClicked:self];
+                break;
+                
+            case 3:
+                [self thirdPeriodButtonClicked:self];
+                break;
+                
+            default:
+                [self fourthPeriodButtonClicked:self];
+                break;
+        }
     } else {
-        _homePossessionArrow.hidden = YES;
-        _visitorPossessionArrow.hidden = NO;
-    }
-    
-    NSArray *splitArray = [game.currentgametime componentsSeparatedByString:@":"];
-    _gameclockLabel.text = game.currentgametime;
-    _minutesTextField.text = [splitArray objectAtIndex:0];
-    _secondsTextField.text = [splitArray objectAtIndex:1];
-    _gameclockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
-    _homeScoreTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
-    _homeFoulsTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamFouls:game.id]];
-    _visitorScoreTextField.text = [NSString stringWithFormat:@"%d", [game.opponentscore intValue]];
-    _visitorFoulsTextField.text = [NSString stringWithFormat:@"%d", [game.visitorfouls intValue]];
-    
-    switch ([game.period intValue]) {
-        case 1:
-            [self firstPeriodButtonClicked:self];
-            break;
-            
-        case 2:
-            [self secondPeriodButtonClicked:self];
-            break;
-            
-        case 3:
-            [self thirdPeriodButtonClicked:self];
-            break;
-            
-        default:
-            [self fourthPeriodButtonClicked:self];
-            break;
+        _gameclockLabel.text = @"00:00";
+        _visitorImage.hidden = YES;
+        _visitorteamLabel.text = @"Visitors";
     }
 }
 
@@ -120,6 +130,8 @@
         game.currentgametime = _gameclockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
     } else if (textField == _secondsTextField) {
         game.currentgametime = _gameclockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
+    } else if (textField == _visitorScoreTextField) {
+        _visitorScoreLabel.text = _visitorScoreTextField.text;
     }
 }
 

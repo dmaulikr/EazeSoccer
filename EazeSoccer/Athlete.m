@@ -227,7 +227,7 @@
 }
 
 - (NSString *)numberLogname {
-    return [NSString stringWithFormat:@"%@%@%@", [number stringValue], @" vs ", logname];
+    return [NSString stringWithFormat:@"%@%@%@", [number stringValue], @" - ", logname];
 }
 
 - (NSString *)getBasketballStatGameId:(NSString *)basketball_stat_id {

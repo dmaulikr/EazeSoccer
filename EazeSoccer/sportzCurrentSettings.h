@@ -21,6 +21,8 @@
 
 @interface sportzCurrentSettings : NSObject
 
+@property(nonatomic, assign) NSUInteger selectedTab;
+
 @property(nonatomic, strong) User *user;
 @property(nonatomic, strong) Sport *sport;
 @property(nonatomic, strong) Team *team;

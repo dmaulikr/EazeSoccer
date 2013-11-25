@@ -70,7 +70,7 @@
     [refreshControl addTarget:self action:@selector(startRefresh) forControlEvents:UIControlEventValueChanged];
     [_blogTableView addSubview:refreshControl];
     _activityIndicator.hidesWhenStopped = YES;
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBlogEntryButton, self.refreshButton, self.searchButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBlogEntryButton, self.refreshButton, self.searchButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -467,6 +467,31 @@
         user = nil;
         [self getBlogs:nil];
     }
+}
+
+- (IBAction)teamButtonClicked:(id)sender {
+    currentSettings.team = nil;
+    UITabBarController *tabBarController = self.tabBarController;
+    
+    for (UIViewController *viewController in tabBarController.viewControllers)
+    {
+        if ([viewController isKindOfClass:[UINavigationController class]])
+            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+    }
+    
+    UIView * fromView = tabBarController.selectedViewController.view;
+    UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+    
+    // Transition using a page curl.
+    [UIView transitionFromView:fromView
+                        toView:toView
+                      duration:0.5
+                       options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                    completion:^(BOOL finished) {
+                        if (finished) {
+                            tabBarController.selectedIndex = 0;
+                        }
+                    }];
 }
 
 @end

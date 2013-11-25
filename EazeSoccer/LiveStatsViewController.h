@@ -21,4 +21,8 @@
 - (IBAction)selectGameLiveStats:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UIView *soccerClockContainer;
 -(IBAction)soccerClockClose:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
+- (IBAction)changeteamButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
+- (IBAction)saveButtonClicked:(id)sender;
 @end
