@@ -40,6 +40,17 @@
     offense = YES;
     defense = NO;
     specialteams = NO;
+    
+    _togoTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _downTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _ballonTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _quarterTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _homeTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,9 +62,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-//    _basketballLiveStatsContainer.hidden = YES;
-//    _basketballTotalStatsContainer.hidden = YES;
     _playerSelectContainer.hidden = YES;
+    _gamelogContainer.hidden = YES;
     
     qbs = [currentSettings.footballQB copy];
     rbs = [currentSettings.footballRB copy];
@@ -78,16 +88,77 @@
         }
     }
 
-    if (game)
-        _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", game.opponent_name];
-    else if (athlete)
+    if (game) {
+         _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", game.opponent_name];
+       
+        _gameClockLabel.text = game.currentgametime;
+        NSArray *timearray = [game.currentgametime componentsSeparatedByString:@":"];
+        _minutesTextField.text = timearray[0];
+        _secondsTextField.text = timearray[1];
+        _homeImageView.image = [currentSettings.team getImage:@"tiny"];
+        _visitorImageView.image = [game opponentImage];
+        _homeLabel.text = currentSettings.team.mascot;
+        _visitorLabel.text = game.opponent;
+        _visitorScoreLabel.text = [game.opponentscore stringValue];
+        _visitorScoreTextField.text = [game.opponentscore stringValue];
+        
+        int totalscore = 0;
+        
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            Athlete *player = [currentSettings.roster objectAtIndex:i];
+            
+            for (int cnt = 0; cnt <  player.football_passing_stats.count; cnt++) {
+                if ([[[player.football_passing_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
+                    totalscore += [[[player.football_passing_stats objectAtIndex:cnt] td] intValue] * 6;
+                    break;
+                }
+            }
+            
+            for (int cnt = 0; cnt <  player.football_rushing_stats.count; cnt++) {
+                if ([[[player.football_rushing_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
+                    totalscore += [[[player.football_rushing_stats objectAtIndex:cnt] td] intValue] * 6;
+                    break;
+                }
+            }
+            
+            for (int cnt = 0; cnt <  player.football_defense_stats.count; cnt++) {
+                if ([[[player.football_defense_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
+                    totalscore += [[[player.football_defense_stats objectAtIndex:cnt] td] intValue] * 6;
+                    break;
+                }
+            }
+
+            for (int cnt = 0; cnt <  player.football_returner_stats.count; cnt++) {
+                if ([[[player.football_returner_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
+                    totalscore += [[[player.football_returner_stats objectAtIndex:cnt] td] intValue] * 6;
+                    break;
+                }
+            }
+ 
+            for (int cnt = 0; cnt <  player.football_place_kicker_stats.count; cnt++) {
+                if ([[[player.football_place_kicker_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
+                    totalscore += [[[player.football_place_kicker_stats objectAtIndex:cnt] fgmade] intValue] * 3;
+                    totalscore += [[[player.football_place_kicker_stats objectAtIndex:cnt] xpmade] intValue];
+                    break;
+                }
+            }
+        }
+        
+        _homeScoreLabel.text = [NSString stringWithFormat:@"%d", totalscore];
+        
+        _homeTimeOutsTextField.text = [game.hometimeouts stringValue];
+        _visitorTimeOutsTextField.text = [game.opoonenttimeouts stringValue];
+        _ballonTextField.text = [game.ballon stringValue];
+        _downTextField.text = [game.down stringValue];
+        _togoTextField.text = [game.togo stringValue];
+        _quarterTextField.text = game.currentqtr;
+        
+        [_statsTableView reloadData];
+    } else if (athlete)
         _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats for ", athlete.logname];
     else
         _statLabel.text = @"Select game to enter stats";
-    
-    if ((game) || (athlete)) {
-        [_statsTableView reloadData];
-    }
+
 }
 
 - (IBAction)offenseButtonClicked:(id)sender {
@@ -109,9 +180,6 @@
     defense = NO;
     specialteams = YES;
     [_statsTableView reloadData];
-}
-
-- (IBAction)addplayerButtonClicked:(id)sender {
 }
 
 - (IBAction)savestatsButtonClicked:(id)sender {
@@ -363,7 +431,7 @@
         cell.label10.text = [stat.safety stringValue];
         cell.label11.text = @"";
     }
-
+    
     return cell;
 }
 
@@ -389,7 +457,6 @@
         
     } else
         return @"                Defender              TK      ASST   SACK    INT    PDEF  RYDS  RLNG    TD     FUMREC   SFTY";
-
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -451,6 +518,44 @@
 
 - (IBAction)otherPlayerFootballStat:(UIStoryboardSegue *)segue {
     
+}
+
+- (IBAction)scoreLogButtonClicked:(id)sender {
+    if (_gamelogContainer.hidden)
+        _gamelogContainer.hidden = NO;
+    else
+        _gamelogContainer.hidden = YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    if ((textField == _minutesTextField) || (textField == _secondsTextField) || (textField == _visitorScoreTextField) ||
+        (textField == _homeTimeOutsTextField) || (textField == _visitorTimeOutsTextField) || (textField == _quarterTextField) ||
+        (textField == _downTextField) || (textField == _togoTextField) || (textField == _ballonTextField)) {
+        NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
+        NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+        BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+        
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (myStringMatchesRegEx)
+            
+            if ((textField == _minutesTextField) || (textField == _secondsTextField) || (textField == _ballonTextField)) {
+                return (newLength > 2) ? NO : YES;
+            } else if ((textField == _quarterTextField) || (textField == _downTextField) || (textField == _visitorTimeOutsTextField) ||
+                       (textField == _homeTimeOutsTextField)) {
+                return (newLength > 1) ? NO : YES;
+            } else if (textField == _visitorScoreTextField) {
+                return (newLength > 3 ? NO : YES);
+            } else
+                return NO;
+        else
+            return  NO;
+    } else
+        return YES;
+}
+
+- (IBAction)cancelGamelogTable:(UIStoryboardSegue *)segue {
+    _gamelogContainer.hidden = YES;
 }
 
 @end

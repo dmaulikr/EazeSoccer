@@ -15,6 +15,7 @@
 @property(nonatomic, strong) GameSchedule *game;
 
 @property(nonatomic, strong) UIPopoverController *popover;
+- (IBAction)scorelogButtonClicked:(id)sender;
 
 - (IBAction)submitButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;

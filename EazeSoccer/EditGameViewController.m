@@ -190,6 +190,9 @@
     [_gameDateTextField resignFirstResponder];
 }
 
+- (IBAction)scorelogButtonClicked:(id)sender {
+}
+
 - (IBAction)submitButtonClicked:(id)sender {
     if ((_opponentTextField.text.length > 0) && (_locationTextField.text.length > 0) &&
         (_gameDateTextField.text.length > 0) && (_gameTimeTextField.text.length > 0)) {

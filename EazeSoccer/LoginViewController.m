@@ -234,8 +234,14 @@
                                                  delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                             [alert setAlertViewStyle:UIAlertViewStyleDefault];
                             [alert show];
-                        } else if (![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]) {
-                            
+                        } else if ((![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]) &&
+                                   ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) &&
+                                   (currentSettings.user.admin)) {
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login"
+                                                 message:@"Admin user cannot be used to view other sports"
+                                                 delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                            [alert show];
                         } else  {
                             [self performSegueWithIdentifier:@"AlreadyLoggedInSegue" sender:self];
                         }

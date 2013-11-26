@@ -151,5 +151,7 @@
 - (IBAction)saveButtonClicked:(id)sender {
     if ([currentSettings.sport.name isEqualToString:@"Basketball"])
         [basketballStatsController saveButtonClicked:self];
+    else if ([currentSettings.sport.name isEqualToString:@"Football"])
+        [footballStatsController savestatsButtonClicked:self];
 }
 @end

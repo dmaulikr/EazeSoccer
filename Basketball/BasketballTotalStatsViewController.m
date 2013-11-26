@@ -86,7 +86,7 @@
         stats = originalStats;
     } else {
         stats.twoattempt = [NSNumber numberWithInt:[_fgaTextField.text intValue]];
-        stats.twomade = [NSNumber numberWithInt:[_fgaTextField.text intValue]];
+        stats.twomade = [NSNumber numberWithInt:[_fgmTextField.text intValue]];
         stats.threeattempt = [NSNumber numberWithInt:[_threefgaTextField.text intValue]];
         stats.threemade = [NSNumber numberWithInt:[_threefgmTextField.text intValue]];
         stats.ftattempt = [NSNumber numberWithInt:[_ftaTextField.text intValue]];

@@ -198,7 +198,7 @@
     if (athlete)
         [athlete updateBasketballGameStats:totalStatsController.stats];
     else
-        [liveStatsController.player updateBasketballGameStats:liveStatsController.stats];
+        [totalStatsController.player updateBasketballGameStats:totalStatsController.stats];
     
 //    [_basketballTableView reloadData];
     [self viewWillAppear:YES];

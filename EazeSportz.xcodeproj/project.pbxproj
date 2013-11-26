@@ -70,6 +70,7 @@
 		B448C372183939FC00442835 /* BasketballStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B48E661E182D6CF200C24913 /* BasketballStatsViewController.m */; };
 		B448C3731839439200442835 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4911BDA18331C3C00E1D7DB /* iAd.framework */; };
 		B448C3741839471400442835 /* USStateAbbreviations.plist in Resources */ = {isa = PBXBuildFile; fileRef = B4AA0BBF182154E100E39B32 /* USStateAbbreviations.plist */; };
+		B44B338318446F02000DC21B /* EazesportzGameLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44B338218446F02000DC21B /* EazesportzGameLogViewController.m */; };
 		B44C8F781822E29F009D0239 /* RosterTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F771822E29F009D0239 /* RosterTableCell.m */; };
 		B44C8F7B1822E415009D0239 /* PlayerSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F7A1822E415009D0239 /* PlayerSelectionViewController.m */; };
 		B44C8F7E1822E857009D0239 /* EditPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44C8F7D1822E857009D0239 /* EditPlayerViewController.m */; };
@@ -1203,6 +1204,8 @@
 		B439436D1833593A00A178F2 /* play-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play-button.png"; sourceTree = "<group>"; };
 		B43F6D5B183430830090BD2F /* EazePhotosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazePhotosViewController.h; sourceTree = "<group>"; };
 		B43F6D5C183430830090BD2F /* EazePhotosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazePhotosViewController.m; sourceTree = "<group>"; };
+		B44B338118446F02000DC21B /* EazesportzGameLogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzGameLogViewController.h; sourceTree = "<group>"; };
+		B44B338218446F02000DC21B /* EazesportzGameLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzGameLogViewController.m; sourceTree = "<group>"; };
 		B44C8F761822E29F009D0239 /* RosterTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RosterTableCell.h; sourceTree = "<group>"; };
 		B44C8F771822E29F009D0239 /* RosterTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RosterTableCell.m; sourceTree = "<group>"; };
 		B44C8F791822E415009D0239 /* PlayerSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerSelectionViewController.h; sourceTree = "<group>"; };
@@ -1742,6 +1745,8 @@
 				B4D0F208183D99A600D2FA5C /* Main.storyboard */,
 				B4D0F211183D99A600D2FA5C /* Images.xcassets */,
 				B4D0F1FD183D99A600D2FA5C /* Supporting Files */,
+				B44B338118446F02000DC21B /* EazesportzGameLogViewController.h */,
+				B44B338218446F02000DC21B /* EazesportzGameLogViewController.m */,
 				B4D0F300183E587800D2FA5C /* EazesportzFootballStatsViewController.h */,
 				B4D0F301183E587800D2FA5C /* EazesportzFootballStatsViewController.m */,
 				B491C2D7183E62F700655A19 /* EazesportzFootballStatsTableViewCell.h */,
@@ -3018,6 +3023,7 @@
 				B4E3025918405A900083802A /* EazesportzPassingStatsViewController.m in Sources */,
 				B4D0F2B5183D9CBA00D2FA5C /* User.m in Sources */,
 				B4D0F2B6183D9CBA00D2FA5C /* UserTableViewCell.h in Sources */,
+				B44B338318446F02000DC21B /* EazesportzGameLogViewController.m in Sources */,
 				B4D0F2B7183D9CBA00D2FA5C /* UserTableViewCell.m in Sources */,
 				B4D0F2B8183D9CBA00D2FA5C /* UsersViewController.h in Sources */,
 				B4D0F2B9183D9CBA00D2FA5C /* UsersViewController.m in Sources */,
@@ -3920,6 +3926,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-5";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-7";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/dirctdt/Development/IOS/sportzteams/EazeSoccer/Football,
@@ -3932,6 +3939,7 @@
 				);
 				INFOPLIST_FILE = "Football/Football-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "65B46FDA-276C-411B-AC86-94E5A17B1A24";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3942,7 +3950,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-5";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-7";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/dirctdt/Development/IOS/sportzteams/EazeSoccer/Football,
@@ -3951,6 +3959,7 @@
 				GCC_PREFIX_HEADER = "Football/Football-Prefix.pch";
 				INFOPLIST_FILE = "Football/Football-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "65B46FDA-276C-411B-AC86-94E5A17B1A24";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -4109,7 +4118,7 @@
 				);
 				INFOPLIST_FILE = "Basketball/Basketball-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "65B46FDA-276C-411B-AC86-94E5A17B1A24";
+				PROVISIONING_PROFILE = "CB53DC48-07CD-41CE-B7C8-0EDCFEB0F8E0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -4130,7 +4139,7 @@
 				GCC_PREFIX_HEADER = "Basketball/Basketball-Prefix.pch";
 				INFOPLIST_FILE = "Basketball/Basketball-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "65B46FDA-276C-411B-AC86-94E5A17B1A24";
+				PROVISIONING_PROFILE = "CB53DC48-07CD-41CE-B7C8-0EDCFEB0F8E0";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

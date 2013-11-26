@@ -35,6 +35,9 @@
     int responseStatusCode;
     NSMutableDictionary *serverData;
     NSMutableData *theData;
+    
+    BOOL stats;
+    BasketballStatsViewController *statsController;
 }
 
 @synthesize player;
@@ -469,8 +472,8 @@
         SoccerPlayerStatsViewController *destController = segue.destinationViewController;
         destController.athlete = player;
     } else if ([segue.identifier isEqualToString:@"BasketballStatsPlayerSegue"]) {
-        BasketballStatsViewController *destController = segue.destinationViewController;
-        destController.athlete = player;
+        statsController = segue.destinationViewController;
+        statsController.athlete = player;
     }
 }
 
@@ -620,11 +623,17 @@
 - (IBAction)statsButtonClicked:(id)sender {
     _soccerStatsContainer.hidden = NO;
     _doneButton.enabled = YES;
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.statsButton, self.doneButton, nil];
 }
 
 - (IBAction)doneButtonClicked:(id)sender {
     _soccerStatsContainer.hidden = YES;
     _doneButton.enabled = NO;
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.statsButton, self.doneButton, nil];
+}
+
+- (IBAction)saveButtonClicked:(id)sender {
+    [statsController saveButtonClicked:self];
 }
 
 @end

@@ -20,7 +20,7 @@
     NSMutableArray *minsArray, *secsArray, *quarters;
     NSString *gameminutes;
     
-    BOOL touchdown, removecompletion;
+    BOOL touchdown, twopoint, removecompletion;
     
     PlayerSelectionViewController *playerSelectionController;
 }
@@ -262,37 +262,59 @@
             [alert show];
         }
     } else if (([title isEqualToString:@"Delete TD"]) && ([stat.td intValue] > 0)) {
-        stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
-        _tdlabel.text = [stat.td stringValue];
-        _timeTextField.hidden = YES;
-        _timeTextField.enabled = NO;
-        _timeTextField.text = @"";
-        _quarterTextField.hidden = YES;
-        _quarterTextField.enabled = NO;
-        _quarterTextField.text = @"";
-        _quarterLabel.hidden = YES;
-        _timeofscoreLabel.hidden = YES;
-        touchdown = NO;
+        if (touchdown) {
+            stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
+            _tdlabel.text = [stat.td stringValue];
+            _timeTextField.hidden = YES;
+            _timeTextField.enabled = NO;
+            _timeTextField.text = @"";
+            _quarterTextField.hidden = YES;
+            _quarterTextField.enabled = NO;
+            _quarterTextField.text = @"";
+            _quarterLabel.hidden = YES;
+            _timeofscoreLabel.hidden = YES;
+            touchdown = NO;
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"No valid TD added. \n If you want to remove a score, delete the game log. The score will be removed from the QB and receiver simultaneously." delegate:nil
+                                                  cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     } else if ([title isEqualToString:@"Add 2PT"]) {
-        stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
-        _tdlabel.text = [stat.td stringValue];
-        _timeTextField.hidden = NO;
-        _timeTextField.enabled = YES;
-        _quarterTextField.hidden = NO;
-        _quarterTextField.enabled = YES;
-        _quarterLabel.hidden = NO;
-        _timeofscoreLabel.hidden = NO;
+        if (_receiverTextField.text.length > 0) {
+            stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
+            _tdlabel.text = [stat.td stringValue];
+            _timeTextField.hidden = NO;
+            _timeTextField.enabled = YES;
+            _quarterTextField.hidden = NO;
+            _quarterTextField.enabled = YES;
+            _quarterLabel.hidden = NO;
+            _timeofscoreLabel.hidden = NO;
+            twopoint = YES;
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Need to designate receiver before adding a Two Pont conversion!"
+                                                    delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     } else if (([title isEqualToString:@"Delete 2PT"]) && ([stat.td intValue] > 0)) {
-        stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
-        _tdlabel.text = [stat.td stringValue];
-        _timeTextField.hidden = YES;
-        _timeTextField.enabled = NO;
-        _timeTextField.text = @"";
-        _quarterTextField.hidden = YES;
-        _quarterTextField.enabled = NO;
-        _quarterTextField.text = @"";
-        _quarterLabel.hidden = YES;
-        _timeofscoreLabel.hidden = YES;
+        if (twopoint) {
+            stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
+            _tdlabel.text = [stat.td stringValue];
+            _timeTextField.hidden = YES;
+            _timeTextField.enabled = NO;
+            _timeTextField.text = @"";
+            _quarterTextField.hidden = YES;
+            _quarterTextField.enabled = NO;
+            _quarterTextField.text = @"";
+            _quarterLabel.hidden = YES;
+            _timeofscoreLabel.hidden = YES;
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"No valid Two Point conversion added. \n If you want to remove a score, delete the game log. The score will be removed from the QB and receiver simultaneously." delegate:nil
+                                                  cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     }
 }
 
