@@ -72,7 +72,7 @@
     cell.playernameLabel.text = aplayer.name;
     cell.playerNumberLabel.text = [aplayer.number stringValue];
     cell.playerPositionLabel.text = aplayer.position;
-    cell.rosterImage.image = [aplayer getImage:@"thumb"];
+    cell.rosterImage.image = [aplayer getImage:@"tiny"];
     
     if ([currentSettings hasAlerts:aplayer.athleteid] == NO)
         cell.alertLabel.textColor = [UIColor clearColor];
