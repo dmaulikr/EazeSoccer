@@ -211,9 +211,13 @@
         [gamedict setValue:[[NSNumber numberWithBool:homebonus] stringValue] forKey:@"homebonus"];
         [gamedict setValue:[[NSNumber numberWithBool:visitorbonus] stringValue] forKey:@"visitorbonus"];
     } else if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        [gamedict setValue:[ballon stringValue] forKey:@"ballon"];
+        [gamedict setValue:[togo stringValue] forKey:@"togo"];
+        [gamedict setValue:[down stringValue] forKey:@"down"];
+        [gamedict setValue:[period stringValue] forKey:@"period"];
         
         for (int i = 0; i < gamelogs.count; i++)
-             [[gamelogs objectAtIndex:i] saveStats];
+             [[gamelogs objectAtIndex:i] saveGamelog];
     }
     
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];

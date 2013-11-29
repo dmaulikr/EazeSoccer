@@ -91,7 +91,7 @@
     return copy;
 }
 
-- (BOOL)saveStats:(NSString *)quarter TimeOfScore:(NSString *)timeofscore {
+- (BOOL)saveStats {
     NSURL *aurl;
     NSBundle *mainBundle = [NSBundle mainBundle];
     

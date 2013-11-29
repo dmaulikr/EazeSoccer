@@ -21,8 +21,14 @@
 @synthesize hasvideos;
 @synthesize player;
 @synthesize assistplayer;
+@synthesize yards;
 
 @synthesize gameschedule_id;
+@synthesize football_defense_id;
+@synthesize football_passing_id;
+@synthesize football_place_kicker_id;
+@synthesize football_receiving_id;
+@synthesize football_rushing_id;
 
 @synthesize httperror;
 
@@ -40,6 +46,7 @@
         hasvideos = NO;
         player = @"";
         assistplayer = @"";
+        yards = [NSNumber numberWithInt:0];
         
         return self;
     } else
@@ -60,13 +67,14 @@
         hasphotos = [[gamelogDictionary objectForKey:@"hasphotos"] boolValue];
         player = [gamelogDictionary objectForKey:@"player"];
         assistplayer = [gamelogDictionary objectForKey:@"assist"];
+        yards = [gamelogDictionary objectForKey:@"yards"];
         
         return  self;
     } else
         return nil;
 }
 
-- (BOOL)saveStats {
+- (BOOL)saveGamelog {
     NSURL *aurl;
     NSBundle *mainBundle = [NSBundle mainBundle];
     
@@ -77,12 +85,33 @@
         
     } else {
         aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                     @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules", gameschedule_id,
+                                     @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules/", gameschedule_id,
                                      @"/gamelogs.json?auth_token=", currentSettings.user.authtoken]];
     }
     
     NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
-                                     logentry, @"logentry", period, @"period", time, @"time", score, @"score", player, @"player", assistplayer, @"assist", nil];
+                                     logentry, @"logentry", period, @"period", time, @"time", score, @"score", player, @"player", assistplayer, @"assist",
+                                     [yards stringValue], @"yards", nil];
+    
+    if (football_rushing_id.length > 0) {
+        [statDict setValue:football_rushing_id forKey:@"football_rushing_id"];
+    }
+    
+    if (football_passing_id.length > 0) {
+        [statDict setValue:football_passing_id forKey:@"football_passing_id"];
+    }
+    
+    if (football_receiving_id.length > 0) {
+        [statDict setValue:football_receiving_id forKey:@"football_receiving_id"];
+    }
+    
+    if (football_defense_id.length > 0) {
+        [statDict setValue:football_defense_id forKey:@"football_defense_id"];
+    }
+    
+    if (football_place_kicker_id.length > 0) {
+        [statDict setValue:football_place_kicker_id forKey:@"football_place_kicker_id"];
+    }
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"gamelog", nil];
@@ -115,7 +144,7 @@
     NSLog(@"%@", serverData);
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *items = [serverData objectForKey:@"punter"];
+    NSDictionary *items = [serverData objectForKey:@"gamelog"];
     
     if ([httpResponse statusCode] == 200) {
         

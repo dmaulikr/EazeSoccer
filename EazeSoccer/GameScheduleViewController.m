@@ -110,19 +110,23 @@
     [cell.dateLabel setText:[dateFormat stringFromDate:gamedate]];
     [cell.timeLabel setText:game.starttime];
     
-    int homeFinal = game.homeq1.intValue + game.homeq2.intValue+ game.homeq3.intValue + game.homeq4.intValue;
-    int visitorFinal = game.opponentq1.intValue + game.opponentq2.intValue + game.opponentq3.intValue + game.opponentq4.intValue;
+    int homeFinal = [currentSettings teamTotalPoints:game.id];
+    int visitorFinal = [game.opponentscore intValue];
+    
+    
     NSString *WonLost;
     
     NSDate *now = [NSDate date];
     
-    if (gamedate < now) {
+    if ([gamedate earlierDate:now]) {
+        
         if (homeFinal > visitorFinal)
             WonLost = [NSString stringWithFormat:@"W "];
         else if (homeFinal == visitorFinal)
             WonLost = @"T ";
         else
             WonLost = [NSString stringWithFormat:@"L "];
+        
         WonLost = [WonLost stringByAppendingString:[NSString stringWithFormat:@"%@", [NSNumber numberWithInt:homeFinal]]];
         WonLost = [WonLost stringByAppendingString:@"-"];
         WonLost = [WonLost stringByAppendingString:[NSString stringWithFormat:@"%@", [NSNumber numberWithInt:visitorFinal]]];

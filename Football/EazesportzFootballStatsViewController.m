@@ -10,6 +10,9 @@
 #import "EazesportzAppDelegate.h"
 #import "EazesportzFootballStatsTableViewCell.h"
 #import "EazesportzPassingStatsViewController.h"
+#import "EazesportzRushingStatsViewController.h"
+#import "EazesportzGameLogViewController.h"
+#import "PlayerSelectionViewController.h"
 
 @interface EazesportzFootballStatsViewController ()
 
@@ -19,6 +22,11 @@
     BOOL offense, defense, specialteams;
     
     NSMutableArray *qbs, *rbs, *wrs;
+    BOOL qb, rb, wr;
+    Athlete *otherplayer;
+    
+    PlayerSelectionViewController *playerController;
+    EazesportzGameLogViewController *gamelogController;
 }
 
 @synthesize athlete;
@@ -69,6 +77,8 @@
     rbs = [currentSettings.footballRB copy];
     wrs = [currentSettings.footballWR copy];
     
+    qb = NO, rb = NO, wr = NO;
+    
     for (int cnt = 0; cnt < currentSettings.roster.count; cnt++) {
         Athlete *player = [currentSettings.roster objectAtIndex:cnt];
         
@@ -102,56 +112,14 @@
         _visitorScoreLabel.text = [game.opponentscore stringValue];
         _visitorScoreTextField.text = [game.opponentscore stringValue];
         
-        int totalscore = 0;
-        
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            Athlete *player = [currentSettings.roster objectAtIndex:i];
-            
-            for (int cnt = 0; cnt <  player.football_passing_stats.count; cnt++) {
-                if ([[[player.football_passing_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
-                    totalscore += [[[player.football_passing_stats objectAtIndex:cnt] td] intValue] * 6;
-                    break;
-                }
-            }
-            
-            for (int cnt = 0; cnt <  player.football_rushing_stats.count; cnt++) {
-                if ([[[player.football_rushing_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
-                    totalscore += [[[player.football_rushing_stats objectAtIndex:cnt] td] intValue] * 6;
-                    break;
-                }
-            }
-            
-            for (int cnt = 0; cnt <  player.football_defense_stats.count; cnt++) {
-                if ([[[player.football_defense_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
-                    totalscore += [[[player.football_defense_stats objectAtIndex:cnt] td] intValue] * 6;
-                    break;
-                }
-            }
-
-            for (int cnt = 0; cnt <  player.football_returner_stats.count; cnt++) {
-                if ([[[player.football_returner_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
-                    totalscore += [[[player.football_returner_stats objectAtIndex:cnt] td] intValue] * 6;
-                    break;
-                }
-            }
- 
-            for (int cnt = 0; cnt <  player.football_place_kicker_stats.count; cnt++) {
-                if ([[[player.football_place_kicker_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:game.id]) {
-                    totalscore += [[[player.football_place_kicker_stats objectAtIndex:cnt] fgmade] intValue] * 3;
-                    totalscore += [[[player.football_place_kicker_stats objectAtIndex:cnt] xpmade] intValue];
-                    break;
-                }
-            }
-        }
-        
-        _homeScoreLabel.text = [NSString stringWithFormat:@"%d", totalscore];
+        _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
         
         _homeTimeOutsTextField.text = [game.hometimeouts stringValue];
         _visitorTimeOutsTextField.text = [game.opoonenttimeouts stringValue];
         _ballonTextField.text = [game.ballon stringValue];
         _downTextField.text = [game.down stringValue];
         _togoTextField.text = [game.togo stringValue];
-        _quarterTextField.text = game.currentqtr;
+        _quarterTextField.text = [game.period stringValue];
         
         [_statsTableView reloadData];
     } else if (athlete)
@@ -183,6 +151,45 @@
 }
 
 - (IBAction)savestatsButtonClicked:(id)sender {
+    game.period = [NSNumber numberWithInt:[_quarterTextField.text intValue]];
+    
+    if (offense) {
+        for (int i = 0; i < qbs.count; i++) {
+            if (![[qbs objectAtIndex:i] saveStats]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[[qbs objectAtIndex:i] httpError]
+                                                    delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
+                return;
+            }
+        }
+        
+        for (int i = 0; i < rbs.count; i++) {
+            if (![[rbs objectAtIndex:i] saveStats]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[[rbs objectAtIndex:i] httpError]
+                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
+                return;
+            }
+        }
+
+        for (int i = 0; i < wrs.count; i++) {
+            if (![[wrs objectAtIndex:i] saveStats]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[[wrs objectAtIndex:i] httpError]
+                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
+                return;
+            }
+        }
+    } else if (defense) {
+        
+    } else {
+        
+    }
+    
+    [self viewWillAppear:YES];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -243,7 +250,7 @@
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.attempts stringValue];
                 cell.label2.text = [stat.completions stringValue];
-                cell.label3.text = [stat.comp_percentage stringValue];
+                cell.label3.text = [NSString stringWithFormat:@"%.02f", [stat.comp_percentage floatValue]];
                 cell.label4.text = [stat.yards stringValue];
                 cell.label5.text = [stat.td stringValue];
                 cell.label6.text = [stat.interceptions stringValue];
@@ -275,7 +282,7 @@
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.attempts stringValue];
                 cell.label2.text = [stat.yards stringValue];
-                cell.label3.text = [stat.average stringValue];
+                cell.label3.text = [NSString stringWithFormat:@"%.02f", [stat.average floatValue]];
                 cell.label4.text = [stat.td stringValue];
                 cell.label5.text = [stat.firstdowns stringValue];
                 cell.label6.text = [stat.longest stringValue];
@@ -307,7 +314,7 @@
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.receptions stringValue];
                 cell.label2.text = [stat.yards stringValue];
-                cell.label3.text = [stat.average stringValue];
+                cell.label3.text = [NSString stringWithFormat:@"%.02f", [stat.average floatValue]];
                 cell.label4.text = [stat.longest stringValue];
                 cell.label5.text = [stat.fumbles stringValue];
                 cell.label7.text = [stat.fumbles_lost stringValue];
@@ -470,10 +477,22 @@
             if (indexPath.section == 0) {
                 if (indexPath.row < qbs.count)
                     [self performSegueWithIdentifier:@"PassingStatSegue" sender:self];
-                else
+                else {
                     _playerSelectContainer.hidden = NO;
-            } else if (indexPath.section == 1)
-                ;
+                    qb = YES;
+                }
+            } else if (indexPath.section == 1) {
+                if (indexPath.row < rbs.count)
+                    [self performSegueWithIdentifier:@"RushingStatSegue" sender:self];
+                else {
+                    _playerSelectContainer.hidden = NO;
+                    rb = YES;
+                }
+            }
+        } else if (defense) {
+            [self performSegueWithIdentifier:@"DefenseStatSegue" sender:self];
+        } else {
+            
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"  message:@"Select game to update stats for player!" delegate:nil
@@ -507,23 +526,55 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"PassingStatSegue"]) {
-        NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
         EazesportzPassingStatsViewController *destController = segue.destinationViewController;
-        destController.player = [currentSettings.footballQB objectAtIndex:indexPath.row];
+        if (!otherplayer) {
+            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
+            destController.player = [qbs objectAtIndex:indexPath.row];
+        } else {
+            destController.player = otherplayer;
+            otherplayer = nil;
+        }
         destController.game = game;
-    } else if ([segue.identifier isEqualToString:@"TotalStatsSegue"]) {
-//        totalStatsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"RushingStatSegue"]) {
+        EazesportzRushingStatsViewController *destController = segue.destinationViewController;
+        if (!otherplayer) {
+            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
+            destController.player = [rbs objectAtIndex:indexPath.row];
+        } else {
+            destController.player = otherplayer;
+            otherplayer = nil;
+        }
+        destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"DefenseStatSegue"]) {
+    } else if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
+        playerController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"GameLogSegue"]) {
+        gamelogController = segue.destinationViewController;
     }
 }
 
 - (IBAction)otherPlayerFootballStat:(UIStoryboardSegue *)segue {
-    
+    if (playerController.player) {
+        otherplayer = playerController.player;
+        if (offense) {
+            if (qb) {
+                [self performSegueWithIdentifier:@"PassingStatSegue" sender:self];
+            } else if (rb)
+                [self performSegueWithIdentifier:@"RushingStatSegue" sender:self];
+        } else if (defense) {
+            
+        } else {
+            
+        }
+    }
 }
 
 - (IBAction)scoreLogButtonClicked:(id)sender {
-    if (_gamelogContainer.hidden)
+    if (_gamelogContainer.hidden) {
         _gamelogContainer.hidden = NO;
-    else
+        gamelogController.game = game;
+        [gamelogController viewWillAppear:YES];
+    } else
         _gamelogContainer.hidden = YES;
 }
 

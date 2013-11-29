@@ -482,8 +482,11 @@
             thestat = [football_passing_stats objectAtIndex:cnt];
     }
     
-    if (thestat == nil)
+    if (thestat == nil) {
         thestat = [[FootballPassingStat alloc] init];
+        thestat.athlete_id = athleteid;
+        thestat.gameschedule_id = gameid;
+    }
     
     return  thestat;
 }
@@ -510,10 +513,27 @@
             thestat = [football_rushing_stats objectAtIndex:cnt];
     }
     
-    if (thestat == nil)
+    if (thestat == nil) {
         thestat = [[FootballRushingStat alloc] init];
+        thestat.athlete_id = athleteid;
+        thestat.gameschedule_id = gameid;
+    }
     
     return  thestat;
+}
+
+- (void)updateFootballRushingGameStats:(FootballRushingStat *)rushingstat {
+    int i;
+    for (i = 0; i < [football_rushing_stats count]; i++) {
+        if ([[[football_rushing_stats objectAtIndex:i] gameschedule_id] isEqualToString:rushingstat.gameschedule_id]) {
+            break;
+        }
+    }
+    
+    if (i < football_rushing_stats.count) {
+        [football_rushing_stats removeObjectAtIndex:i];
+    }
+    [football_rushing_stats addObject:rushingstat];
 }
 
 - (FootballReceivingStat *)findFootballReceivingStat:(NSString *)gameid {
@@ -524,10 +544,27 @@
             thestat = [football_receiving_stats objectAtIndex:cnt];
     }
     
-    if (thestat == nil)
+    if (thestat == nil) {
         thestat = [[FootballReceivingStat alloc] init];
+        thestat.athlete_id = athleteid;
+        thestat.gameschedule_id = gameid;
+    }
     
     return  thestat;
+}
+
+- (void)updateFootballReceivingGameStats:(FootballReceivingStat *)receivingstat {
+    int i;
+    for (i = 0; i < [football_receiving_stats count]; i++) {
+        if ([[[football_receiving_stats objectAtIndex:i] gameschedule_id] isEqualToString:receivingstat.gameschedule_id]) {
+            break;
+        }
+    }
+    
+    if (i < football_receiving_stats.count) {
+        [football_receiving_stats removeObjectAtIndex:i];
+    }
+    [football_receiving_stats addObject:receivingstat];
 }
 
 - (FootballDefenseStats *)findFootballDefenseStat:(NSString *)gameid {
@@ -538,8 +575,11 @@
             thestat = [football_defense_stats objectAtIndex:cnt];
     }
     
-    if (thestat == nil)
+    if (thestat == nil) {
         thestat = [[FootballDefenseStats alloc] init];
+        thestat.athlete_id = athleteid;
+        thestat.gameschedule_id = gameid;
+    }
     
     return  thestat;
 }
@@ -552,8 +592,11 @@
             thestat = [football_kicker_stats objectAtIndex:cnt];
     }
     
-    if (thestat == nil)
+    if (thestat == nil) {
         thestat = [[FootballKickerStats alloc] init];
+        thestat.athlete_id = athleteid;
+        thestat.gameschedule_id = gameid;
+    }
     
     return  thestat;
 }
@@ -566,8 +609,11 @@
             thestat = [football_place_kicker_stats objectAtIndex:cnt];
     }
     
-    if (thestat == nil)
+    if (thestat == nil) {
         thestat = [[FootballPlaceKickerStats alloc] init];
+        thestat.athlete_id = athleteid;
+        thestat.gameschedule_id = gameid;
+    }
     
     return  thestat;
 }
@@ -580,8 +626,11 @@
             thestat = [football_punter_stats objectAtIndex:cnt];
     }
     
-    if (thestat == nil)
+    if (thestat == nil) {
         thestat = [[FootballPunterStats alloc] init];
+        thestat.athlete_id = athleteid;
+        thestat.gameschedule_id = gameid;
+    }
     
     return  thestat;
 }
@@ -594,8 +643,11 @@
             thestat = [football_returner_stats objectAtIndex:cnt];
     }
     
-    if (thestat == nil)
+    if (thestat == nil) {
         thestat = [[FootballReturnerStats alloc] init];
+        thestat.athlete_id = athleteid;
+        thestat.gameschedule_id = gameid;
+    }
     
     return  thestat;
 }

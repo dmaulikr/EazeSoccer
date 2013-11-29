@@ -30,6 +30,6 @@
 - (id)initWithDictionary:(NSDictionary *)passingDictionary;
 - (id)copyWithZone:(NSZone *)zone;
 
-- (BOOL)saveStats:(NSString *)quarter TimeOfScore:(NSString *)timeofscore;
+- (BOOL)saveStats;
 
 @end
