@@ -584,6 +584,20 @@
     return  thestat;
 }
 
+- (void)updateFootballDefenseGameStats:(FootballDefenseStats *)defensestat {
+    int i;
+    for (i = 0; i < [football_defense_stats count]; i++) {
+        if ([[[football_defense_stats objectAtIndex:i] gameschedule_id] isEqualToString:defensestat.gameschedule_id]) {
+            break;
+        }
+    }
+    
+    if (i < football_defense_stats.count) {
+        [football_defense_stats removeObjectAtIndex:i];
+    }
+    [football_defense_stats addObject:defensestat];
+}
+
 - (FootballKickerStats *)findFootballKickerStat:(NSString *)gameid {
     FootballKickerStats *thestat = nil;
     
@@ -599,6 +613,20 @@
     }
     
     return  thestat;
+}
+
+- (void)updateFootballKickerGameStats:(FootballKickerStats *)kickerstat {
+    int i;
+    for (i = 0; i < [football_kicker_stats count]; i++) {
+        if ([[[football_kicker_stats objectAtIndex:i] gameschedule_id] isEqualToString:kickerstat.gameschedule_id]) {
+            break;
+        }
+    }
+    
+    if (i < football_kicker_stats.count) {
+        [football_kicker_stats removeObjectAtIndex:i];
+    }
+    [football_kicker_stats addObject:kickerstat];
 }
 
 - (FootballPlaceKickerStats *)findFootballPlaceKickerStat:(NSString *)gameid {
@@ -618,6 +646,20 @@
     return  thestat;
 }
 
+- (void)updateFootballPlaceKickerGameStats:(FootballPlaceKickerStats *)placekickerstat {
+    int i;
+    for (i = 0; i < [football_place_kicker_stats count]; i++) {
+        if ([[[football_place_kicker_stats objectAtIndex:i] gameschedule_id] isEqualToString:placekickerstat.gameschedule_id]) {
+            break;
+        }
+    }
+    
+    if (i < football_place_kicker_stats.count) {
+        [football_place_kicker_stats removeObjectAtIndex:i];
+    }
+    [football_place_kicker_stats addObject:placekickerstat];
+}
+
 - (FootballPunterStats *)findFootballPunterStat:(NSString *)gameid {
     FootballPunterStats *thestat = nil;
     
@@ -635,6 +677,20 @@
     return  thestat;
 }
 
+- (void)updateFootballPunterGameStats:(FootballPunterStats *)punterstat {
+    int i;
+    for (i = 0; i < [football_punter_stats count]; i++) {
+        if ([[[football_punter_stats objectAtIndex:i] gameschedule_id] isEqualToString:punterstat.gameschedule_id]) {
+            break;
+        }
+    }
+    
+    if (i < football_punter_stats.count) {
+        [football_punter_stats removeObjectAtIndex:i];
+    }
+    [football_punter_stats addObject:punterstat];
+}
+
 - (FootballReturnerStats *)findFootballReturnerStat:(NSString *)gameid {
     FootballReturnerStats *thestat = nil;
     
@@ -650,6 +706,20 @@
     }
     
     return  thestat;
+}
+
+- (void)updateFootballReturnerGameStats:(FootballReturnerStats *)returnerstat {
+    int i;
+    for (i = 0; i < [football_returner_stats count]; i++) {
+        if ([[[football_returner_stats objectAtIndex:i] gameschedule_id] isEqualToString:returnerstat.gameschedule_id]) {
+            break;
+        }
+    }
+    
+    if (i < football_returner_stats.count) {
+        [football_returner_stats removeObjectAtIndex:i];
+    }
+    [football_returner_stats addObject:returnerstat];
 }
 
 - (BOOL)isQB:(NSString *)gameid {
@@ -706,7 +776,7 @@
     
     if (gameid) {
         for (int i = 0; i < football_receiving_stats.count; i++) {
-            if (([[[football_receiving_stats objectAtIndex:i] attempts] intValue] > 0) &&
+            if (([[[football_receiving_stats objectAtIndex:i] receptions] intValue] > 0) &&
                 ([[[football_receiving_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
                 isaWR = YES;
                 break;
@@ -745,7 +815,9 @@
     
     if (gameid) {
         for (int i = 0; i < football_defense_stats.count; i++) {
-            if (([[[football_defense_stats objectAtIndex:i] attempts] intValue] > 0) &&
+            FootballDefenseStats *stats = [football_defense_stats objectAtIndex:i];
+            if ((([[stats tackles] intValue] > 0) || ([stats.assists intValue] > 0) || ([stats.pass_defended intValue] > 0) ||
+                 ([stats.interceptions intValue] > 0) || ([stats.sacks intValue] > 0) || ([stats.td intValue] > 0)) &&
                 ([[[football_defense_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
                 isaDEF = YES;
                 break;
@@ -773,7 +845,8 @@
     
     if (gameid) {
         for (int i = 0; i < football_place_kicker_stats.count; i++) {
-            if (([[[football_place_kicker_stats objectAtIndex:i] attempts] intValue] > 0) &&
+            if ((([[[football_place_kicker_stats objectAtIndex:i] xpattempts] intValue] > 0) ||
+                 ([[[football_place_kicker_stats objectAtIndex:i] fgattempts] intValue ] > 0)) &&
                 ([[[football_place_kicker_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
                 isaPK = YES;
                 break;
@@ -797,7 +870,7 @@
     
     if (gameid) {
         for (int i = 0; i < football_kicker_stats.count; i++) {
-            if (([[[football_kicker_stats objectAtIndex:i] attempts] intValue] > 0) &&
+            if (([[[football_kicker_stats objectAtIndex:i] koattempts] intValue] > 0) &&
                 ([[[football_kicker_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
                 isaKicker = YES;
                 break;
@@ -821,7 +894,7 @@
     
     if (gameid) {
         for (int i = 0; i < football_punter_stats.count; i++) {
-            if (([[[football_punter_stats objectAtIndex:i] attempts] intValue] > 0) &&
+            if (([[[football_punter_stats objectAtIndex:i] punts] intValue] > 0) &&
                 ([[[football_punter_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
                 isaPunter = YES;
                 break;
@@ -845,7 +918,8 @@
     
     if (gameid) {
         for (int i = 0; i < football_returner_stats.count; i++) {
-            if (([[[football_returner_stats objectAtIndex:i] attempts] intValue] > 0) &&
+            if ((([[[football_returner_stats objectAtIndex:i] koreturn] intValue] > 0) ||
+                 ([[[football_returner_stats objectAtIndex:i] punt_return] intValue] > 0)) &&
                 ([[[football_returner_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
                 isaReturner = YES;
                 break;
@@ -863,5 +937,34 @@
     }
     return isaReturner;
 }
+
+- (BOOL)saveFootballGameStats:(NSString *)gameid {
+    FootballPassingStat *astats = [self findFootballPassingStat:gameid];
+    
+    if (astats.football_passing_id.length > 0) {
+        if (![astats saveStats]) {
+            return NO;
+        }
+    }
+    
+    FootballReceivingStat *recstats = [self findFootballReceivingStat:gameid];
+    
+    if (recstats.football_receiving_id.length > 0) {
+        if (![recstats saveStats]) {
+            return NO;
+        }
+    }
+    
+    FootballRushingStat *rushstats = [self findFootballRushingStat:gameid];
+    
+    if (rushstats.football_rushing_id.length > 0) {
+        if (![rushstats saveStats]) {
+            return NO;
+        }
+    }
+        
+    return YES;
+}
+
 
 @end

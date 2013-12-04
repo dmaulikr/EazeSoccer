@@ -43,4 +43,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *minutesTextField;
 @property (strong, nonatomic) IBOutlet UIView *colonLabel;
 @property (weak, nonatomic) IBOutlet UITextField *secondsTextField;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *totalsButton;
 @end

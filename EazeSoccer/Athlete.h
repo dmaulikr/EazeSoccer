@@ -79,10 +79,16 @@
 - (FootballReceivingStat *)findFootballReceivingStat:(NSString *)gameid;
 - (void)updateFootballReceivingGameStats:(FootballReceivingStat *)receivingstat;
 - (FootballDefenseStats *)findFootballDefenseStat:(NSString *)gameid;
+- (void)updateFootballDefenseGameStats:(FootballDefenseStats *)defensestat;
 - (FootballKickerStats *)findFootballKickerStat:(NSString *)gameid;
+- (void)updateFootballKickerGameStats:(FootballKickerStats *)kickerstat;
 - (FootballPlaceKickerStats *)findFootballPlaceKickerStat:(NSString *)gameid;
+- (void)updateFootballPlaceKickerGameStats:(FootballPlaceKickerStats *)placekickerstat;
 - (FootballPunterStats *)findFootballPunterStat:(NSString *)gameid;
+- (void)updateFootballPunterGameStats:(FootballPunterStats *)punterstat;
 - (FootballReturnerStats *)findFootballReturnerStat:(NSString *)gameid;
+- (void)updateFootballReturnerGameStats:(FootballReturnerStats *)returnerstat;
+- (BOOL)saveFootballGameStats:(NSString *)gameid;
 - (BOOL)isQB:(NSString *)gameid;
 - (BOOL)isRB:(NSString *)gameid;
 - (BOOL)isWR:(NSString *)gameid;

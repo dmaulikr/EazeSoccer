@@ -18,10 +18,11 @@
 #import "User.h"
 
 #import "PlayerSelectionViewController.h"
-#import "GameScheduleViewController.h"
 #import "UsersViewController.h"
 #import "PhotoInfoViewController.h"
 //#import "GamePlayViewController.h"
+#import "GameScheduleViewController.h"
+
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -45,6 +46,7 @@
 //@synthesize gamelog;
 @synthesize user;
 @synthesize photos;
+@synthesize activityIndicator;
 
 - (void)viewDidLoad
 {
@@ -68,7 +70,7 @@
     _playerContainer.hidden = YES;
     _gameContainer.hidden = YES;
     _userSelectContainer.hidden = YES;
-    _activityIndicator.hidesWhenStopped = YES;
+    activityIndicator.hidesWhenStopped = YES;
     
 //    if ((player) || (gamelog) || (game) || (user))
     if ((player) || (game) || (user))
@@ -99,7 +101,7 @@
     player = nil;
     NSURL *url = [NSURL URLWithString:[sportzServerInit getTeamPhotos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [_activityIndicator startAnimating];
+    [activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
@@ -263,7 +265,7 @@
         for (int i = 0; i < [serverData count]; i++) {
             [photos addObject:[[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]]];
         }
-        [_activityIndicator stopAnimating];
+        [activityIndicator stopAnimating];
         [_collectionView reloadData];
         
         if (photos.count == 0) {
@@ -346,7 +348,7 @@
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [_activityIndicator startAnimating];
+    [activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
@@ -379,7 +381,7 @@
         player = nil;
         NSURL *url = [NSURL URLWithString:[sportzServerInit getTeamPhotos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [_activityIndicator startAnimating];
+        [activityIndicator startAnimating];
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
     }
 }

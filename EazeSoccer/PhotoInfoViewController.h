@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 
 #import "Photo.h"
+#import "GameScheduleViewController.h"
+
 
 @interface PhotoInfoViewController : UIViewController
 
@@ -25,7 +27,7 @@
 
 - (IBAction)selectPhotoGameEdit:(UIStoryboardSegue *)segue;
 - (IBAction)selectPhotoPlayersEdit:(UIStoryboardSegue *)segue;
-- (IBAction)selectPhotoGamePlayEdit:(UIStoryboardSegue *)segue;
+//- (IBAction)selectPhotoGamePlayEdit:(UIStoryboardSegue *)segue;
 
 @property (weak, nonatomic) IBOutlet UIImageView *photoImage;
 @property (weak, nonatomic) IBOutlet UITextField *photonameTextField;
@@ -50,5 +52,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *cameraRollButton;
 - (IBAction)cameraButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *cameraButton;
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField;
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
+
+@property(nonatomic, strong) GameScheduleViewController *gameController;
 
 @end

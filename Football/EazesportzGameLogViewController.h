@@ -13,6 +13,7 @@
 @interface EazesportzGameLogViewController : UIViewController
 
 @property(nonatomic, strong) GameSchedule *game;
+@property(nonatomic, strong) Gamelogs *gamelog;
 
 @property (weak, nonatomic) IBOutlet UITableView *gamelogTableView;
 @end

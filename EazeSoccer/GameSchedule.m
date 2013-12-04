@@ -53,7 +53,7 @@
 @synthesize togo;
 
 @synthesize hometimeouts;
-@synthesize opoonenttimeouts;
+@synthesize opponenttimeouts;
 
 @synthesize homefouls;
 @synthesize visitorfouls;
@@ -108,7 +108,7 @@
         homescore = [gameScheduleDictionary objectForKey:@"homescore"];
         opponentscore = [gameScheduleDictionary objectForKey:@"opponentscore"];
         hometimeouts = [gameScheduleDictionary objectForKey:@"hometimeouts"];
-        opoonenttimeouts = [gameScheduleDictionary objectForKey:@"opponenttimeouts"];
+        opponenttimeouts = [gameScheduleDictionary objectForKey:@"opponenttimeouts"];
         homebonus = [[gameScheduleDictionary objectForKey:@"homebonus"] boolValue];
         homefouls = [gameScheduleDictionary objectForKey:@"homefouls"];
         visitorbonus = [[gameScheduleDictionary objectForKey:@"visitorbonus"] boolValue];
@@ -195,16 +195,15 @@
     NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
     [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
     [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
+    [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
 
     if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
         [gamedict setValue:[socceroppsog stringValue] forKey:@"socceroppsog"];
         [gamedict setValue:[socceroppsaves stringValue] forKey:@"socceroppsaves"];
         [gamedict setValue:[socceroppck stringValue] forKey:@"socceroppck"];
-        [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
     } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
         [gamedict setValue:[visitorfouls stringValue] forKey:@"opponentfouls"];
         [gamedict setValue:[opponentscore stringValue] forKey:@"opponentscore"];
-        [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
         [gamedict setValue:[[NSNumber numberWithBool:visitorbonus] stringValue] forKey:@"visitorbonus"];
         [gamedict setValue:[[NSNumber numberWithBool:homebonus] stringValue] forKey:@"homebonus"];
         [gamedict setValue:possession forKey:@"bballpossessionarrow"];
@@ -214,7 +213,13 @@
         [gamedict setValue:[ballon stringValue] forKey:@"ballon"];
         [gamedict setValue:[togo stringValue] forKey:@"togo"];
         [gamedict setValue:[down stringValue] forKey:@"down"];
-        [gamedict setValue:[period stringValue] forKey:@"period"];
+        [gamedict setValue:[opponentscore stringValue] forKey:@"opponentscore"];
+        [gamedict setValue:[opponentq1 stringValue] forKey:@"opponentq1"];
+        [gamedict setValue:[opponentq2 stringValue] forKey:@"opponentq2"];
+        [gamedict setValue:[opponentq3 stringValue] forKey:@"opponentq3"];
+        [gamedict setValue:[opponentq4 stringValue] forKey:@"opponentq4"];
+        [gamedict setValue:[opponenttimeouts stringValue] forKey:@"opponenttimeouts"];
+        [gamedict setValue:[hometimeouts stringValue] forKey:@"hometimeouts"];
         
         for (int i = 0; i < gamelogs.count; i++)
              [[gamelogs objectAtIndex:i] saveGamelog];

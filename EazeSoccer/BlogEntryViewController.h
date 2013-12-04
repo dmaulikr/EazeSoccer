@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "Blog.h"
+#import "GameScheduleViewController.h"
 
 @interface BlogEntryViewController : UIViewController
 
@@ -39,5 +40,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *gameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *coachTextField;
 @property (weak, nonatomic) IBOutlet UITextField *playerTextField;
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField;
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
+
+@property(nonatomic, strong) GameScheduleViewController *gameSelectionController;
 
 @end

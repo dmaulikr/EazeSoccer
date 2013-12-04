@@ -42,15 +42,12 @@
 @property (weak, nonatomic) IBOutlet UISwitch *receiverFumbleSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *receverFumbleLostSwitch;
 @property (weak, nonatomic) IBOutlet UITextField *quarterTextField;
-@property (weak, nonatomic) IBOutlet UITextField *timeTextField;
 - (IBAction)submitButtonClicked:(id)sender;
 - (IBAction)cancelButtonClicked:(id)sender;
 - (IBAction)completionButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *playerContainer;
 
 - (IBAction)selectPassingReceiverPlayer:(UIStoryboardSegue *)segue;
-@property (weak, nonatomic) IBOutlet UIPickerView *quarterPicker;
-@property (weak, nonatomic) IBOutlet UIPickerView *timeofscorePicker;
 
 @property (weak, nonatomic) IBOutlet UILabel *receiverFumbleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *receiverFumbleLostLabel;
@@ -58,4 +55,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeofscoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *receiverLabel;
 @property (weak, nonatomic) IBOutlet UILabel *compyardsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *colonLabel;
+@property (weak, nonatomic) IBOutlet UITextField *secondsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *minutesTextField;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *totalsButton;
 @end

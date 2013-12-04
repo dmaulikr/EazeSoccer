@@ -14,6 +14,7 @@
 #import "Coach.h"
 #import "User.h"
 
+
 @interface PhotosViewController : UIViewController
 
 @property(nonatomic, strong) Athlete* player;
@@ -31,6 +32,9 @@
 - (IBAction)selectPhotoPlayer:(UIStoryboardSegue *)segue;
 - (IBAction)selectPhotoGame:(UIStoryboardSegue *)segue;
 - (IBAction)selectPhotoUser:(UIStoryboardSegue *)segue;
+
+- (void)getPhotos;
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @property (weak, nonatomic) IBOutlet UIView *playerContainer;
 @property (weak, nonatomic) IBOutlet UIView *gameContainer;

@@ -20,12 +20,13 @@
 @property(nonatomic, strong) NSNumber *td;
 @property(nonatomic, strong) NSNumber *fumbles_recovered;
 @property(nonatomic, strong) NSNumber *safety;
+@property(nonatomic, strong) NSNumber *sackassist;
 
 @property(nonatomic, strong) NSString *football_defense_id;
 @property(nonatomic, strong) NSString *athlete_id;
 @property(nonatomic, strong) NSString *gameschedule_id;
 
-@property(nonatomic, strong) NSThread *httperror;
+@property(nonatomic, strong) NSString *httperror;
 
 - (id)initWithDictionary:(NSDictionary *)defenseDirectory;
 - (id)copyWithZone:(NSZone *)zone;

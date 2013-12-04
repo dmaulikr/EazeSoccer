@@ -8,6 +8,7 @@
 
 #import "EazesportzRushingStatsViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzFootballRushingTotalsViewController.h"
 
 @interface EazesportzRushingStatsViewController () <UIAlertViewDelegate>
 
@@ -42,6 +43,10 @@
     _quarterTextField.keyboardType = UIKeyboardTypeNumberPad;
     _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.totalsButton, nil];
+    
+    self.toolbar.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -336,6 +341,15 @@
 - (IBAction)cancelButtonClicked:(id)sender {
     if (originalStat != nil)
         [player updateFootballRushingGameStats:originalStat];
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"TotalsRushingSegue"]) {
+        EazesportzFootballRushingTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = game;
+    }
+}
 @end

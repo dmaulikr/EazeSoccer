@@ -15,7 +15,6 @@
 //#import "GameSummaryViewController.h"
 #import "EditUserViewController.h"
 #import "PlayerSelectionViewController.h"
-#import "GameScheduleViewController.h"
 #import "CoachSelectionViewController.h"
 #import "EditGameViewController.h"
 
@@ -27,11 +26,11 @@
 
 @implementation BlogEntryViewController {
     PlayerSelectionViewController *playerSelectionController;
-    GameScheduleViewController *gameSelectionController;
     CoachSelectionViewController *coachSelectionController;
 }
 
 @synthesize blog;
+@synthesize gameSelectionController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

@@ -17,7 +17,6 @@
 #import "CoachSelectionViewController.h"
 #import "UsersViewController.h"
 #import "BlogEntryViewController.h"
-#import "GameScheduleViewController.h"
 //#import "GamePlayViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -33,7 +32,6 @@
     
     PlayerSelectionViewController *playerController;
     CoachSelectionViewController *coachController;
-    GameScheduleViewController *gameController;
     UsersViewController *usersController;
 //    GamePlayViewController *gameplayController;
     
@@ -48,7 +46,9 @@
 @synthesize coach;
 @synthesize user;
 //@synthesize gamelog;
+@synthesize gameController;
 @synthesize blogfeed;
+@synthesize activityIndicator;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -69,7 +69,7 @@
     refreshControl = UIRefreshControl.alloc.init;
     [refreshControl addTarget:self action:@selector(startRefresh) forControlEvents:UIControlEventValueChanged];
     [_blogTableView addSubview:refreshControl];
-    _activityIndicator.hidesWhenStopped = YES;
+    activityIndicator.hidesWhenStopped = YES;
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBlogEntryButton, self.refreshButton, self.searchButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
@@ -241,7 +241,7 @@
         else
             blogfeed = [self extractBlogData:serverData];
         
-        [_activityIndicator stopAnimating];
+        [activityIndicator stopAnimating];
         
         if ((blogfeed.count == 0) && ((player) || (coach) || (user) || (game))) {
             NSString *criteria;
@@ -254,6 +254,8 @@
                 criteria = user.username;
             else if (game)
                 criteria = game.game_name;
+            else
+                criteria = @"Search Criteria.";
             
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Blogs" message:[NSString stringWithFormat:@"%@%@", @"No blogs for ", criteria]
                                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -376,7 +378,7 @@
 
 - (IBAction)searchBurronClicked:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Search" message:@"Select Search Criteria"
-                                 delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Player", @"Game", @"User", @"Coach", @"All", nil];
+                delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Player", @"Game", @"User", @"Coach", @"All", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }
@@ -421,11 +423,11 @@
         url = [NSURL URLWithString:[sportzServerInit getUserBlogs:user.userid updatedAt:fromdate Token:currentSettings.user.authtoken]];
 //    } else if (gamelog) {
 //        url = [NSURL URLWithString:[sportzServerInit getBigPlayBlogs:gamelog.gamelogid updatedAt:fromdate Token:currentSettings.user.authtoken]];
-    } else {
+    } else if (team) {
         url = [NSURL URLWithString:[sportzServerInit getBlogs:currentSettings.team.teamid updatedAt:fromdate Token:currentSettings.user.authtoken]];
     }
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [_activityIndicator startAnimating];
+    [activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 

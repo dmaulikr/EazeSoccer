@@ -27,7 +27,7 @@
 @synthesize football_defense_id;
 @synthesize football_passing_id;
 @synthesize football_place_kicker_id;
-@synthesize football_receiving_id;
+@synthesize football_returner_id;
 @synthesize football_rushing_id;
 
 @synthesize httperror;
@@ -36,6 +36,11 @@
     if (self = [super init]) {
         gamelogid = @"";
         gameschedule_id = @"";
+        football_returner_id = @"";
+        football_rushing_id = @"";
+        football_place_kicker_id = @"";
+        football_defense_id = @"";
+        football_passing_id = @"";
         
         logentry = @"";
         logentrytext = @"";
@@ -57,6 +62,12 @@
     if ((self = [super init]) && (gamelogDictionary.count > 0)) {
         gameschedule_id = [gamelogDictionary objectForKey: @"gameschedule_id"];
         gamelogid = [gamelogDictionary objectForKey:@"id"];
+        
+        football_passing_id = [gamelogDictionary objectForKey:@"football_passing_id"];
+        football_defense_id = [gamelogDictionary objectForKey:@"football_defense_id"];
+        football_place_kicker_id = [gamelogDictionary objectForKey:@"football_place_kicker_id"];
+        football_returner_id = [gamelogDictionary objectForKey:@"football_returner_id"];
+        football_rushing_id = [gamelogDictionary objectForKey:@"football_rushing_id"];
         
         logentry = [gamelogDictionary objectForKey:@"logentry"];
         logentrytext = [gamelogDictionary objectForKey:@"logentrytext"];
@@ -101,8 +112,8 @@
         [statDict setValue:football_passing_id forKey:@"football_passing_id"];
     }
     
-    if (football_receiving_id.length > 0) {
-        [statDict setValue:football_receiving_id forKey:@"football_receiving_id"];
+    if (football_returner_id.length > 0) {
+        [statDict setValue:football_returner_id forKey:@"football_returner_id"];
     }
     
     if (football_defense_id.length > 0) {
@@ -147,6 +158,7 @@
     NSDictionary *items = [serverData objectForKey:@"gamelog"];
     
     if ([httpResponse statusCode] == 200) {
+        logentrytext = [items objectForKey:@"logentrytext"];
         
         if (gamelogid.length == 0)
             gamelogid = [items objectForKey:@"_id"];

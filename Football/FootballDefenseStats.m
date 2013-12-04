@@ -21,6 +21,7 @@
 @synthesize td;
 @synthesize assists;
 @synthesize safety;
+@synthesize sackassist;
 
 @synthesize football_defense_id;
 @synthesize athlete_id;
@@ -40,6 +41,7 @@
         td = [NSNumber numberWithInt:0];
         assists = [NSNumber numberWithInt:0];
         safety = [NSNumber numberWithInt:0];
+        sackassist = [NSNumber numberWithInt:0];
         
         athlete_id = @"";
         gameschedule_id = @"";
@@ -62,6 +64,7 @@
         td = [defenseDirectory objectForKey:@"int_td"];
         safety = [defenseDirectory objectForKey:@"safety"];
         fumbles_recovered = [defenseDirectory objectForKey:@"fumbles_recovered"];
+        sackassist = [defenseDirectory objectForKey:@"sackassist"];
         
         athlete_id = [defenseDirectory objectForKey:@"athlete_id"];
         gameschedule_id = [defenseDirectory objectForKey:@"gameschedule_id"];
@@ -88,6 +91,7 @@
     copy.td = td;
     copy.assists = assists;
     copy.safety = safety;
+    copy.sackassist = sackassist;
     
     return copy;
 }
@@ -112,7 +116,7 @@
                                      [int_long stringValue], @"int_long", [int_yards stringValue], @"int_yards",
                                      [interceptions stringValue], @"interceptions", [pass_defended stringValue], @"pass_defended",
                                      [sacks stringValue], @"sacks", [td stringValue], @"td", [assists stringValue], @"assists",
-                                     [safety stringValue], @"safety", nil];
+                                     [safety stringValue], @"safety", [sackassist stringValue], @"sackassist", nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"football_defense", nil];

@@ -13,7 +13,6 @@
 
 #import "Athlete.h"
 #import "EditPlayerViewController.h"
-#import "GameScheduleViewController.h"
 #import "EditUserViewController.h"
 #import "PlayerSelectionViewController.h"
 #import "EditGameViewController.h"
@@ -27,7 +26,6 @@
 @end
 
 @implementation PhotoInfoViewController {
-    GameScheduleViewController *gameController;
     PlayerSelectionViewController *playerSelectController;
     
     BOOL newPhoto, newmedia, imageselected;
@@ -41,6 +39,7 @@
 
 @synthesize photo;
 @synthesize popover;
+@synthesize gameController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

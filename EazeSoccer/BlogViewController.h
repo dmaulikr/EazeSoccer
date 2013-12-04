@@ -14,6 +14,7 @@
 #import "Coach.h"
 #import "User.h"
 //#import "Gamelogs.h"
+#import "GameScheduleViewController.h"
 
 @interface BlogViewController : UIViewController
 
@@ -23,9 +24,12 @@
 @property(nonatomic, strong) Coach *coach;
 @property(nonatomic, strong) User *user;
 //@property(nonatomic, strong) Gamelogs *gamelog;
+@property(nonatomic, strong) GameScheduleViewController *gameController;
+
 @property(nonatomic, strong) NSMutableArray *blogfeed;
 
 - (void)getBlogs:(NSString *)fromdate;
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 - (IBAction)searchBurronClicked:(id)sender;

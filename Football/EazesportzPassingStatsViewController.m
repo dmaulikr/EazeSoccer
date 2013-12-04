@@ -10,8 +10,9 @@
 #import "EazesportzAppDelegate.h"
 #import "PlayerSelectionViewController.h"
 #import "Gamelogs.h"
+#import "EazesportzFootballPassingTotalsViewController.h"
 
-@interface EazesportzPassingStatsViewController () <UIAlertViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
+@interface EazesportzPassingStatsViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -19,9 +20,7 @@
     FootballPassingStat *originalStat, *stat;
     Athlete *receiver;
     FootballReceivingStat *recstats;
-    NSMutableArray *minsArray, *secsArray;
-    NSString *gameminutes;
-    
+
     BOOL touchdown, twopoint, removecompletion;
     
     PlayerSelectionViewController *playerSelectionController;
@@ -47,23 +46,12 @@
     self.title = @"Passing Statistics";
     _completionYardsTextField.keyboardType = UIKeyboardTypeNumberPad;
     _sackyardslostTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
     
-//    _receiverTextField.inputView = _playerContainer.inputView;
-    minsArray = [[NSMutableArray alloc] init];
-    secsArray = [[NSMutableArray alloc] init];
-    NSString *strVal = [[NSString alloc] init];
-    gameminutes = @"";
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.totalsButton, nil];
     
-    for (int i = 0; i < 16; i++) {
-        strVal = [NSString stringWithFormat:@"%d", i];
-        [minsArray addObject:strVal];
-    }
-    for(int i=0; i<60; i++){
-        strVal = [NSString stringWithFormat:@"%d", i];
-        //create arrays with 0-60 secs/mins
-        [secsArray addObject:strVal];
-    }
-//    quarters = [[NSMutableArray alloc] initWithObjects:@"Q1", @"Q2", @"Q3", @"Q4", nil];
+    self.toolbar.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,8 +70,6 @@
     _receverFumbleLostSwitch.hidden = YES;
     
     _playerContainer.hidden = YES;
-    _quarterPicker.hidden = YES;
-    _timeofscorePicker.hidden = YES;
     
     touchdown = NO;
     
@@ -98,8 +84,11 @@
     _quarterTextField.hidden = YES;
     _quarterTextField.text = [game.period stringValue];
     
-    _timeTextField.enabled = NO;
-    _timeTextField.hidden = YES;
+    _minutesTextField.enabled = NO;
+    _minutesTextField.hidden = YES;
+    _secondsTextField.enabled = NO;
+    _secondsTextField.hidden = YES;
+    _colonLabel.hidden = YES;
     _receiverLabel.hidden = YES;
     _receiverFumbleLabel.hidden = YES;
     _receiverFumbleLostLabel.hidden = YES;
@@ -224,11 +213,11 @@
         [receiver updateFootballReceivingGameStats:recstats];
     }
     
-    if ((_timeTextField.text.length > 0) && (_quarterTextField.text.length > 0)) {
+    if ((_minutesTextField.text.length > 0) && (_quarterTextField.text.length > 0)) {
         Gamelogs *gamelog = [[Gamelogs alloc] init];
         gamelog.gameschedule_id = game.id;
         gamelog.period = _quarterTextField.text;
-        gamelog.time = _timeTextField.text;
+        gamelog.time = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
         gamelog.player = player.athleteid;
         gamelog.yards = [NSNumber numberWithInt:[_completionYardsTextField.text intValue]];
         gamelog.football_passing_id = stat.football_passing_id;
@@ -238,9 +227,9 @@
         
         gamelog.logentry = @"yard pass to";
         
-        if ((_timeTextField.text.length > 0) && (touchdown))
+        if (touchdown)
             gamelog.score = @"TD";
-        else if (_timeTextField.text.length > 0)
+        else
             gamelog.score = @"2P";
         
 //        gamelog.logentrytext = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@%@", gamelog.period, @":", gamelog.time, @" - ",  player.logname, @" ",
@@ -255,6 +244,8 @@
 - (IBAction)cancelButtonClicked:(id)sender {
     if (originalStat != nil)
         [player updateFootballPassingGameStats:originalStat];
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -295,8 +286,11 @@
         if (_receiverTextField.text.length > 0) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
             _tdlabel.text = [stat.td stringValue];
-            _timeTextField.hidden = NO;
-            _timeTextField.enabled = YES;
+            _minutesTextField.hidden = NO;
+            _minutesTextField.enabled = YES;
+            _secondsTextField.hidden = NO;
+            _secondsTextField.enabled = YES;
+            _colonLabel.hidden = NO;
             _quarterTextField.hidden = NO;
             _quarterTextField.enabled = YES;
             _quarterLabel.hidden = NO;
@@ -312,9 +306,13 @@
         if (touchdown) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
             _tdlabel.text = [stat.td stringValue];
-            _timeTextField.hidden = YES;
-            _timeTextField.enabled = NO;
-            _timeTextField.text = @"";
+            _minutesTextField.hidden = YES;
+            _minutesTextField.enabled = NO;
+            _minutesTextField.text = @"";
+            _secondsTextField.hidden = YES;
+            _secondsTextField.enabled = NO;
+            _secondsTextField.text = @"";
+            _colonLabel.hidden = YES;
             _quarterTextField.hidden = YES;
             _quarterTextField.enabled = NO;
             _quarterTextField.text = @"";
@@ -331,8 +329,11 @@
         if (_receiverTextField.text.length > 0) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
             _tdlabel.text = [stat.td stringValue];
-            _timeTextField.hidden = NO;
-            _timeTextField.enabled = YES;
+            _minutesTextField.hidden = NO;
+            _minutesTextField.enabled = YES;
+            _secondsTextField.hidden = NO;
+            _secondsTextField.enabled = YES;
+            _colonLabel.hidden = NO;
             _quarterTextField.hidden = NO;
             _quarterTextField.enabled = YES;
             _quarterLabel.hidden = NO;
@@ -348,9 +349,13 @@
         if (twopoint) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
             _tdlabel.text = [stat.td stringValue];
-            _timeTextField.hidden = YES;
-            _timeTextField.enabled = NO;
-            _timeTextField.text = @"";
+            _minutesTextField.hidden = YES;
+            _minutesTextField.enabled = NO;
+            _minutesTextField.text = @"";
+            _secondsTextField.hidden = YES;
+            _secondsTextField.enabled = NO;
+            _secondsTextField.text = @"";
+            _colonLabel.hidden = YES;
             _quarterTextField.hidden = YES;
             _quarterTextField.enabled = NO;
             _quarterTextField.text = @"";
@@ -368,6 +373,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
         playerSelectionController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"TotalsPassingSegue"]) {
+        EazesportzFootballPassingTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = game;
     }
 }
 
@@ -375,14 +384,6 @@
     if (textField == _receiverTextField) {
         [textField resignFirstResponder];
         _playerContainer.hidden = NO;
-//    } else if (textField == _quarterTextField) {
-//        _quarterTextField.text = @"";
-//        _quarterPicker.hidden = NO;
-//        [_quarterTextField resignFirstResponder];
-    } else if (textField == _timeTextField) {
-        _timeofscorePicker.hidden = NO;
-        _timeTextField.text = @"";
-        [_timeTextField resignFirstResponder];
     }
 }
 
@@ -427,9 +428,11 @@
                 _quarterTextField.hidden = YES;
                 _quarterTextField.text = @"";
                 _timeofscoreLabel.hidden = YES;
-                _timeTextField.hidden = YES;
-                _timeTextField.text = @"";
-            }
+                _minutesTextField.hidden = YES;
+                _minutesTextField.text = @"";
+                _secondsTextField.hidden = YES;
+                _secondsTextField.text = @"";
+           }
         } else {
             receiver = [currentSettings findAthlete:playerSelectionController.player.athleteid];
             recstats = [receiver findFootballReceivingStat:game.id];
@@ -460,92 +463,6 @@
     }
 }
 
-//Method to define how many columns/dials to show
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    if (pickerView == _quarterPicker)
-        return 1;
-    else
-        return 2;
-}
-
-// Method to define the numberOfRows in a component using the array.
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
-//    if (pickerView == _quarterPicker) {
-//        return [quarters count];
-//    } else
-    if (pickerView == _timeofscorePicker) {
-        switch (component) {
-            case 0:
-                return [minsArray count];
-                break;
-                
-            default:
-                return [secsArray count];
-                break;
-        }
-    }
-    return 0;
-}
-
-// Method to show the title of row for a component.
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-//    if (pickerView == _quarterPicker) {
-//        return [quarters objectAtIndex:row];
-//    } else
-    if (pickerView == _timeofscorePicker) {
-        switch (component) {
-            case 0:
-                return [minsArray objectAtIndex:row];
-                break;
-                
-            default:
-                return [secsArray objectAtIndex:row];
-                break;
-        }
-    }
-    return nil;
-}
-
--(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    int seconds;
-    
-    if (pickerView == _timeofscorePicker) {
-        switch (component) {
-            case 0:
-                gameminutes = [minsArray objectAtIndex:row];
-                break;
-            case 1:
-                seconds = [[secsArray objectAtIndex:row] intValue];
-                NSString *newsecs;
-                NSString *newmins;
-                int minutes = [gameminutes intValue];
-                
-                if ((seconds >= 0) && (seconds <= 9)) {
-                    newsecs = @"0";
-                    newsecs = [newsecs stringByAppendingString:[NSString stringWithFormat:@"%d", seconds]];
-                } else
-                    newsecs = [NSString stringWithFormat:@"%d", seconds];
-                
-                if ((minutes >= 0) && (minutes <= 9)) {
-                    newmins = @"0";
-                    newmins = [newmins stringByAppendingString:gameminutes];
-                } else
-                    newmins = gameminutes;
-                
-                NSString *gametime = newmins;
-                gametime = [gametime stringByAppendingString:@":"];
-                gametime = [gametime stringByAppendingString:newsecs];
-                [_timeTextField setText:gametime];
-                _timeofscorePicker.hidden = YES;
-                
-                break;
-        }
-//    } else if (pickerView == _quarterPicker) {
-//        [_quarterTextField setText:[quarters objectAtIndex:row]];
-//        _quarterPicker.hidden = YES;
-    }
-}
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if ((textField == _completionYardsTextField) || (textField == _sackyardslostTextField)) {
         NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
@@ -563,6 +480,17 @@
             }
         else
             return  NO;
+    } else if ((textField == _minutesTextField) || (textField == _secondsTextField)) {
+        NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
+        NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+        BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+        
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (myStringMatchesRegEx)
+            return (newLength > 2) ? NO : YES;
+        else
+            return NO;
     } else if (textField == _quarterTextField) {
         NSString *validRegEx =@"^[1-4.]*$"; //change this regular expression as your requirement
         NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
@@ -577,6 +505,5 @@
     } else
         return YES;
 }
-
 
 @end

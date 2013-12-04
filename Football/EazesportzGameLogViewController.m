@@ -15,6 +15,7 @@
 @implementation EazesportzGameLogViewController
 
 @synthesize game;
+@synthesize gamelog;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -89,6 +90,13 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSIndexPath *indexPath = [_gamelogTableView indexPathForSelectedRow];
+    
+    if (indexPath.length > 0) {
+        gamelog = [game.gamelogs objectAtIndex:indexPath.row];
+    } else {
+        gamelog = nil;
+    }
 }
 
 @end

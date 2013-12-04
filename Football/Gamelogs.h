@@ -24,7 +24,7 @@
 
 @property(nonatomic, strong) NSString *football_passing_id;
 @property(nonatomic, strong) NSString *football_rushing_id;
-@property(nonatomic, strong) NSString *football_receiving_id;
+@property(nonatomic, strong) NSString *football_returner_id;
 @property(nonatomic, strong) NSString *football_defense_id;
 @property(nonatomic, strong) NSString *football_place_kicker_id;
 

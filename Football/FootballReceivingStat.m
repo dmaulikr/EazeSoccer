@@ -94,7 +94,7 @@
     
     if (football_receiving_id.length > 0) {
         aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_recveivings/", football_receiving_id,
+                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_receivings/", football_receiving_id,
                                      @".json?auth_token=", currentSettings.user.authtoken]];
         
     } else {

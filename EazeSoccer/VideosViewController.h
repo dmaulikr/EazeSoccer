@@ -35,6 +35,9 @@
 - (IBAction)selectVideoPlayer:(UIStoryboardSegue *)segue;
 - (IBAction)selectvideoUser:(UIStoryboardSegue *)segue;
 
+- (void)getVideos;
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
+
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeTeamButtonClicked:(id)sender;
