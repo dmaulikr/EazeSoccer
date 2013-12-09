@@ -303,15 +303,15 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *image = info[UIImagePickerControllerOriginalImage];
+        NSData *imgData=UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
+        NSLog(@"%d", [imgData length]);
+        UIImage *image = [[UIImage alloc] initWithData:imgData];
         
-        _userimage.image = image;
         if (newmedia)
-            UIImageWriteToSavedPhotosAlbum(image,
-                                           self,
-                                           @selector(image:finishedSavingWithError:contextInfo:),
-                                           nil);
-        imageselected = YES;
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
+        
+        _userimage.image = [currentSettings normalizedImage:image scaledToSize:512];
+         imageselected = YES;
     }
     else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
     {
@@ -352,7 +352,7 @@
     por.contentType = @"image/jpeg";
 
     UIImage *image = _userimage.image;
-    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
     por.data = imageData;
     por.delegate = self;
     

@@ -60,6 +60,7 @@
         [self performSegueWithIdentifier:@"ChangeTeamSegue" sender:self];
     } else {
         _teamLabel.text = currentSettings.team.team_name;
+        
         [currentSettings retrieveGameList];
         [_gamesTableView reloadData];
         

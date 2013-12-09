@@ -219,24 +219,14 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *image = info[UIImagePickerControllerOriginalImage];
+        NSData *imgData=UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
+        NSLog(@"%d", [imgData length]);
+        UIImage *image = [[UIImage alloc] initWithData:imgData];
         
-        _coachImage.image = image;
-/*        CGSize imageviewsize;
-        
-        if (_coachImage.image.size.width > _coachImage.image.size.height) {
-            imageviewsize = CGSizeMake(100.0, 75.0);
-            _coachImage.frame = CGRectMake(_coachImage.frame.origin.x, _coachImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
-        } else {
-            imageviewsize = CGSizeMake(75.0, 100.0);
-            _coachImage.frame = CGRectMake(_coachImage.frame.origin.x, _coachImage.frame.origin.y, imageviewsize.width,
-                                            imageviewsize.height);
-        } */
         if (newmedia)
-            UIImageWriteToSavedPhotosAlbum(image,
-                                           self,
-                                           @selector(image:finishedSavingWithError:contextInfo:),
-                                           nil);
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
+        
+        _coachImage.image = [currentSettings normalizedImage:image scaledToSize:512];
         imageselected = YES;
     }
     else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
@@ -335,7 +325,7 @@
     por.contentType = @"image/jpeg";
     
     UIImage *image = _coachImage.image;
-    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
     por.data = imageData;
     int imagesize = imageData.length;
     por.delegate = self;

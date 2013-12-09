@@ -35,6 +35,9 @@
 - (IBAction)selectVideoPlayer:(UIStoryboardSegue *)segue;
 - (IBAction)selectvideoUser:(UIStoryboardSegue *)segue;
 
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
+
 - (void)getVideos;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 

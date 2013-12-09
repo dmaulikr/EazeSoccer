@@ -27,6 +27,10 @@
 
 - (IBAction)selectPhotoGameEdit:(UIStoryboardSegue *)segue;
 - (IBAction)selectPhotoPlayersEdit:(UIStoryboardSegue *)segue;
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
+
 //- (IBAction)selectPhotoGamePlayEdit:(UIStoryboardSegue *)segue;
 
 @property (weak, nonatomic) IBOutlet UIImageView *photoImage;

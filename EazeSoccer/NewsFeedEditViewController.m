@@ -118,14 +118,7 @@
         _coachButton.enabled = NO;
         _teamLabel.text = currentSettings.team.team_name;
         newsitem.team = currentSettings.team.teamid;
-    
-        if ([currentSettings.sport.sport_logo isEqualToString:@"sport_logo/large/missing.png"]) {
-            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"teambutton.png"], 1)];
-        } else {
-            NSURL * imageURL = [NSURL URLWithString:currentSettings.sport.sport_logo];
-            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-            image = [UIImage imageWithData:imageData];
-        }
+        image = [currentSettings.sport getImage:@"thumb"];
     }
     _newsFeedImageView.image = image;
 }
@@ -187,6 +180,10 @@
 }
 
 - (IBAction)newsfeedPlayerSelected:(UIStoryboardSegue *)segue {
+    [self playerSelected:segue];
+}
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
     if (playerController.player) {
         _playerTextField.text = playerController.player.name;
         newsitem.athlete = playerController.player.athleteid;
@@ -205,6 +202,10 @@
 }
 
 - (IBAction)newsfeedGameSelected:(UIStoryboardSegue *)segue {
+    [self gameSelected:segue];
+}
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
         _gameTextField.text = gameController.thegame.game_name;
         newsitem.game = gameController.thegame.id;

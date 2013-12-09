@@ -1,4 +1,4 @@
-//
+ //
 //  sportzCurrentSettings.m
 //  sportzSoftwareFootball
 //
@@ -20,6 +20,8 @@
 @synthesize sport;
 @synthesize team;
 @synthesize game;
+
+@synthesize refreshGames;
 
 @synthesize roster;
 @synthesize gameList;
@@ -57,6 +59,8 @@
         footballPUNT = [[NSMutableArray alloc] init];
         footballRET = [[NSMutableArray alloc] init];
         lastAlertUpdate = [NSDate dateWithTimeIntervalSinceNow:0];
+        
+        refreshGames = YES;
         
         return self; 
     } else
@@ -212,24 +216,28 @@
 }
 
 - (void)retrieveGameList {
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getGameSchedule:self.team.teamid Token:self.user.authtoken]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    NSArray *games = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    if ([httpResponse statusCode] == 200) {
-        self.gameList = [[NSMutableArray alloc] init];
-        for (int i = 0; i < [games count]; i++ ) {
-            [gameList addObject:[[GameSchedule alloc] initWithDictionary:[games objectAtIndex:i]]];
+    if (refreshGames) {
+        NSURL *url = [NSURL URLWithString:[sportzServerInit getGameSchedule:self.team.teamid Token:self.user.authtoken]];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        NSURLResponse* response;
+        NSError *error = nil;
+        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+        NSArray *games = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+        if ([httpResponse statusCode] == 200) {
+            self.gameList = [[NSMutableArray alloc] init];
+            for (int i = 0; i < [games count]; i++ ) {
+                [gameList addObject:[[GameSchedule alloc] initWithDictionary:[games objectAtIndex:i]]];
+            }
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Games"
+                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
         }
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Games"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        
+        refreshGames = NO;
     }
 }
 
@@ -667,13 +675,70 @@
     return s3;
 }
 
-- (UIImage *)normalizedImage:(UIImage *)image {
-    if (image.imageOrientation == UIImageOrientationUp) return image;
+- (UIImage *)normalizedImage:(UIImage *)image scaledToSize:(int)size {
+    UIImage *normalizedImage;
     
-    UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
-    [image drawInRect:(CGRect){0, 0, image.size}];
-    UIImage *normalizedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+//    if (image.imageOrientation == UIImageOrientationUp) {
+    
+    if (image.size.height < image.size.width) {
+        switch (size) {
+            case 50:
+                UIGraphicsBeginImageContext(CGSizeMake(50.0, 50.0));
+                [image drawInRect:CGRectMake(0, 0 , 50.0, 50.0)];
+                break;
+                
+            case 125:
+                UIGraphicsBeginImageContext(CGSizeMake(125.0, 125.0));
+                [image drawInRect:CGRectMake(0, 0 , 125.0, 125.0)];
+                break;
+                
+            case 512:
+                UIGraphicsBeginImageContext(CGSizeMake(512.0, 345.0));
+                [image drawInRect:CGRectMake(0, 0 , 512.0, 345.0)];
+                break;
+                
+            default:
+                UIGraphicsBeginImageContext(CGSizeMake(1024.0, 680.0));
+                [image drawInRect:CGRectMake(0, 0 , 1024.0, 680.0)];
+                break;
+        }
+    } else if (image.size.height > image.size.width) {
+        switch (size) {
+            case 50:
+                UIGraphicsBeginImageContext(CGSizeMake(50.0, 50.0));
+                [image drawInRect:CGRectMake(0, 0 , 50.0, 50.0)];
+                break;
+                
+            case 125:
+                UIGraphicsBeginImageContext(CGSizeMake(125.0, 125.0));
+                [image drawInRect:CGRectMake(0, 0 , 125.0, 125.0)];
+                break;
+                
+            case 512:
+                UIGraphicsBeginImageContext(CGSizeMake(345.0, 512.0));
+                [image drawInRect:CGRectMake(0, 0 , 345.0, 512.0)];
+                break;
+                
+            default:
+                UIGraphicsBeginImageContext(CGSizeMake(680.0, 1024.0));
+                [image drawInRect:CGRectMake(0, 0 , 680.0, 1024.0)];
+                break;
+        }
+    } else {
+        UIGraphicsBeginImageContext(CGSizeMake((float)size, (float)size));
+        [image drawInRect:CGRectMake(0, 0 , (float)size, (float)size)];
+    }
+
+        normalizedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+/*    } else {
+        UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+        [image drawInRect:(CGRect){0, 0, image.size}];
+        normalizedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+ */
+    
     return normalizedImage;
 }
 

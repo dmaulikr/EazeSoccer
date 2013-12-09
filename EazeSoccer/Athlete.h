@@ -88,7 +88,9 @@
 - (void)updateFootballPunterGameStats:(FootballPunterStats *)punterstat;
 - (FootballReturnerStats *)findFootballReturnerStat:(NSString *)gameid;
 - (void)updateFootballReturnerGameStats:(FootballReturnerStats *)returnerstat;
+
 - (BOOL)saveFootballGameStats:(NSString *)gameid;
+
 - (BOOL)isQB:(NSString *)gameid;
 - (BOOL)isRB:(NSString *)gameid;
 - (BOOL)isWR:(NSString *)gameid;

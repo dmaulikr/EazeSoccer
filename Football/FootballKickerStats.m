@@ -123,7 +123,7 @@
         
         return YES;
     } else {
-        httperror = [items objectForKey:@"error"];
+        httperror = [serverData objectForKey:@"error"];
         return NO;
     }
 }

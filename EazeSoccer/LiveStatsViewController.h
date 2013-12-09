@@ -19,6 +19,8 @@
 @property (weak, nonatomic) IBOutlet UIView *gameContainer;
 
 - (IBAction)selectGameLiveStats:(UIStoryboardSegue *)segue;
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
+
 @property (weak, nonatomic) IBOutlet UIView *soccerClockContainer;
 -(IBAction)soccerClockClose:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;

@@ -205,11 +205,11 @@
     
     if ([httpResponse statusCode] == 200) {
         if (teamid.length == 0) {
-            teamid = [items objectForKey:@"id"];
+            teamid = [items objectForKey:@"_id"];
         }
         return YES;
     } else {
-        httpError = [items objectForKey:@"error"];
+        httpError = [serverData objectForKey:@"error"];
         return NO;
     }
 }

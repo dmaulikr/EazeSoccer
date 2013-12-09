@@ -261,7 +261,7 @@
     por.contentType = @"image/jpeg";
     
     UIImage *image = _opponentImageButton.imageView.image;
-    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
     por.data = imageData;
     int imagesize = imageData.length;
     por.delegate = self;
@@ -413,24 +413,13 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *image = info[UIImagePickerControllerOriginalImage];
+        NSData *imgData=UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
+        UIImage *image = [[UIImage alloc] initWithData:imgData];
         
-        _opponentImageButton.imageView.image = image;
-        /*        CGSize imageviewsize;
-         
-         if (_playerImage.image.size.width > _playerImage.image.size.height) {
-         imageviewsize = CGSizeMake(100.0, 75.0);
-         _playerImage.frame = CGRectMake(_playerImage.frame.origin.x, _playerImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
-         } else {
-         imageviewsize = CGSizeMake(75.0, 100.0);
-         _playerImage.frame = CGRectMake(_playerImage.frame.origin.x, _playerImage.frame.origin.y, imageviewsize.width,
-         imageviewsize.height);
-         } */
         if (newmedia)
-            UIImageWriteToSavedPhotosAlbum(image,
-                                           self,
-                                           @selector(image:finishedSavingWithError:contextInfo:),
-                                           nil);
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
+        
+        _opponentImageButton.imageView.image = [currentSettings normalizedImage:image scaledToSize:125];
         oppImage = YES;
     }
     else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])

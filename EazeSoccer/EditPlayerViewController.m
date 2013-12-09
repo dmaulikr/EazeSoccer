@@ -15,6 +15,8 @@
 #import "SoccerPlayerStatsViewController.h"
 #import "BasketballStatsViewController.h"
 
+#import "EazesportzFootballPlayerStatsViewController.h"
+
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -311,16 +313,16 @@
             } else {
                 if (_positionTextField.text.length > 0) {
                     NSArray *positions = [_positionTextField.text componentsSeparatedByString:@"/"];
-                    if (positions.count == 1)
-                        _positionTextField.text = @"";
-                    else {
+                     _positionTextField.text = @"";
+                   
+                    if (positions.count > 1) {
                         for (int i = 0; i < positions.count; i++) {
                             NSString *aposition = [positions objectAtIndex:i];
                             if (![aposition isEqualToString:[positionvalues objectAtIndex:row]]) {
                                 if (i > 0)
                                     _positionTextField.text = [_positionTextField.text stringByAppendingString:@"/"];
                                 
-                                _positionTextField.text = [positions objectAtIndex:i];
+                                _positionTextField.text = [_positionTextField.text stringByAppendingString:[positions objectAtIndex:i]];
                             }
                         }
                     }
@@ -387,24 +389,15 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *image = info[UIImagePickerControllerOriginalImage];
+        NSData *imgData=UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
+        NSLog(@"%d", [imgData length]);
+        UIImage *image = [[UIImage alloc] initWithData:imgData];
         
-        _playerImage.image = image;
-/*        CGSize imageviewsize;
-        
-        if (_playerImage.image.size.width > _playerImage.image.size.height) {
-            imageviewsize = CGSizeMake(100.0, 75.0);
-            _playerImage.frame = CGRectMake(_playerImage.frame.origin.x, _playerImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
-        } else {
-            imageviewsize = CGSizeMake(75.0, 100.0);
-            _playerImage.frame = CGRectMake(_playerImage.frame.origin.x, _playerImage.frame.origin.y, imageviewsize.width,
-                                           imageviewsize.height);
-        } */
         if (newmedia)
-            UIImageWriteToSavedPhotosAlbum(image,
-                                           self,
-                                           @selector(image:finishedSavingWithError:contextInfo:),
-                                           nil);
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
+        
+       _playerImage.image = [currentSettings normalizedImage:image scaledToSize:512];
+        
         imageselected = YES;
     }
     else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
@@ -474,6 +467,9 @@
     } else if ([segue.identifier isEqualToString:@"BasketballStatsPlayerSegue"]) {
         statsController = segue.destinationViewController;
         statsController.athlete = player;
+    } else if ([segue.identifier isEqualToString:@"FootballPlayerStatsSegue"]) {
+        EazesportzFootballPlayerStatsViewController *destController = segue.destinationViewController;
+        destController.player = player;
     }
 }
 
@@ -530,8 +526,11 @@
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:photopath inBucket:[[currentSettings getBucket] name]];
     por.contentType = @"image/jpeg";
     
-    UIImage *image = _playerImage.image;
-    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
+//    UIImage *image = [currentSettings normalizedImage:_playerImage.image scaledToSize:512];
+    NSData *imageData = UIImageJPEGRepresentation(_playerImage.image, 1.0);
+    
+    NSLog(@"%d", imageData.length);
+    
     por.data = imageData;
     int imagesize = imageData.length;
     por.delegate = self;

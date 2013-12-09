@@ -874,18 +874,6 @@
         return @"                Defender              TK      SACK    INT    PDEF  RYDS  RLNG    TD     FUMREC   SFTY";
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (offense) {
-        if ((indexPath.section == 0) || (indexPath.section == 1))
-            return YES;
-        else
-            return NO;
-    } else if (defense)
-        return YES;
-    else
-        return YES;
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     playerController.player = nil;
     
@@ -908,7 +896,7 @@
             } else {
                 if (indexPath.row < wrs.count)
                     [self performSegueWithIdentifier:@"TotalsReceivingSegue" sender:self];
-                else {
+                else if (indexPath.row == (wrs.count + 1)) {
                     _playerSelectContainer.hidden = NO;
                     wr = YES;
                 }
@@ -923,30 +911,30 @@
             if (indexPath.section == 0) {
                 if (indexPath.row < pks.count)
                     [self performSegueWithIdentifier:@"PlaceKickerStatSegue" sender:self];
-                else {
+                else if (indexPath.row == (pks.count + 1)) {
                     _playerSelectContainer.hidden = NO;
                     pk = YES;
                 }
             } else if (indexPath.section == 1) {
+                if (indexPath.row < kickerlist.count)
+                    [self performSegueWithIdentifier:@"KickerStatSegue" sender:self];
+                else if (indexPath.row == (kickerlist.count + 1)) {
+                    _playerSelectContainer.hidden = NO;
+                    kicker = YES;
+                }
+            } else if (indexPath.section == 2) {
                 if (indexPath.row < punterlist.count)
                     [self performSegueWithIdentifier:@"PunterStatSegue" sender:self];
-                else {
+                else if (indexPath.row == (punterlist.count + 1)) {
                     _playerSelectContainer.hidden = NO;
                     punter = YES;
                 }
-            } else if (indexPath.section == 2) {
+            } else {
                 if (indexPath.row < returnerlist.count)
                     [self performSegueWithIdentifier:@"ReturnerStatSegue" sender:self];
-                else {
+                else if (indexPath.row == (returnerlist.count + 1)) {
                     _playerSelectContainer.hidden = NO;
                     returner = YES;
-                }
-            } else {
-                if (indexPath.row < kickerlist.count)
-                    [self performSegueWithIdentifier:@"KickerStatSegue" sender:self];
-                else {
-                    _playerSelectContainer.hidden = NO;
-                    kicker = YES;
                 }
             }
         }
@@ -957,27 +945,6 @@
         [alert show];
         return;
     }
-}
-
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
-        if (athlete) {
-//            totalStatsController.player = athlete;
-//            totalStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
-        } else {
-//            totalStatsController.game = game;
-//            totalStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
-        }
-        
-//        [totalStatsController viewWillAppear:YES];
-//        _basketballTotalStatsContainer.hidden = NO;
-    }
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return @"Enter Totals";
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -1021,7 +988,7 @@
             playerController.player = nil;
         }
         destController.game = game;
-    } else if ([segue.identifier isEqualToString:@"KickoffStatSegue"]) {
+    } else if ([segue.identifier isEqualToString:@"KickerStatSegue"]) {
         EazesportzKickoffStatsViewController *destController = segue.destinationViewController;
         if (!playerController.player) {
             NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
@@ -1063,12 +1030,12 @@
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
         playerController = segue.destinationViewController;
-    } else if ([segue.identifier isEqualToString:@"GameLogSegue"]) {
+    } else if ([segue.identifier isEqualToString:@"GamelogSelectSegue"]) {
         gamelogController = segue.destinationViewController;
     }
 }
 
-- (IBAction)otherPlayerFootballStat:(UIStoryboardSegue *)segue {
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
     if (playerController.player) {
         if (offense) {
             if (qb) {
@@ -1084,7 +1051,7 @@
             if (pk) {
                 [self performSegueWithIdentifier:@"PlaceKickerStatSegue" sender:self];
             } else if (kicker)
-                [self performSegueWithIdentifier:@"KickoffStatSegue" sender:self];
+                [self performSegueWithIdentifier:@"KickerStatSegue" sender:self];
             else if (punter)
                 [self performSegueWithIdentifier:@"PunterStatSegue" sender:self];
             else
@@ -1097,9 +1064,16 @@
 
 - (IBAction)scoreLogButtonClicked:(id)sender {
     if (_gamelogContainer.hidden) {
-        _gamelogContainer.hidden = NO;
-        gamelogController.game = game;
-        [gamelogController viewWillAppear:YES];
+        if (game) {
+            _gamelogContainer.hidden = NO;
+            gamelogController.game = game;
+            [gamelogController viewWillAppear:YES];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"No game selected to display scores."
+                                                           delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     } else
         _gamelogContainer.hidden = YES;
 }
@@ -1116,7 +1090,8 @@
         
         if (myStringMatchesRegEx)
             
-            if ((textField == _minutesTextField) || (textField == _secondsTextField) || (textField == _ballonTextField)) {
+            if ((textField == _minutesTextField) || (textField == _secondsTextField) || (textField == _ballonTextField) ||
+                (textField == _togoTextField)) {
                 return (newLength > 2) ? NO : YES;
             } else if ((textField == _quarterTextField) || (textField == _downTextField) || (textField == _visitorTimeOutsTextField) ||
                        (textField == _homeTimeOutsTextField)) {
@@ -1138,6 +1113,8 @@
                                                        delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Q1", @"Q2", @"Q3", @"Q4", nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
+    } else {
+        textField.text = @"";
     }
 }
 
@@ -1263,7 +1240,7 @@
     [alert show];
 }
 
-- (IBAction)cancelGamelogTable:(UIStoryboardSegue *)segue {
+- (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
     _gamelogContainer.hidden = YES;
 }
 

@@ -10,6 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "Video.h"
+#import "GameScheduleViewController.h"
 
 @interface VideoInfoViewController : UIViewController
 
@@ -46,6 +47,16 @@
 - (IBAction)playButtonClicked:(id)sender;
 
 - (IBAction)selectVideoClipGame:(UIStoryboardSegue *)segue;
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
+
 - (IBAction)selectVideoClipPlayer:(UIStoryboardSegue *)segue;
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+
+@property(nonatomic, strong) GameScheduleViewController *gameController;
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
+- (void)textFieldDidBeginEditing:(UITextField *)textField;
 
 @end

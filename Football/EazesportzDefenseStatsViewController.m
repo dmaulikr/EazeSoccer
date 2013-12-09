@@ -17,7 +17,8 @@
 @implementation EazesportzDefenseStatsViewController {
     FootballDefenseStats *originalStat, *stat;
     
-    BOOL touchdown, safety;
+    BOOL touchdown, safety, interception;
+    UITextField *lastTextField;
 }
 
 @synthesize player;
@@ -43,6 +44,10 @@
     _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
     _quarterTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.totalsButton, nil];
+    
+    self.toolbar.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,7 +59,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    touchdown = safety = NO;
+    touchdown = safety = interception = NO;
     
     _playerImageView.image = [player getImage:@"tiny"];
     _playerNumbeLabel.text = [player.number stringValue];
@@ -91,6 +96,8 @@
     _fumbleRecoverecLabel.text = [stat.fumbles_recovered stringValue];
     _intLabel.text = [stat.interceptions stringValue];
     _sackassistLabel.text = [stat.sackassist stringValue];
+    
+    _returnyardsTextField.hidden = YES;
  }
 
 - (IBAction)tackleButtonClicked:(id)sender {
@@ -188,14 +195,35 @@
         Gamelogs *gamelog = [[Gamelogs alloc] init];
         gamelog.football_defense_id = stat.football_defense_id;
         gamelog.gameschedule_id = game.id;
-        gamelog.period = _quarterTextField.text;
+        
+        switch ([_quarterTextField.text intValue]) {
+            case 1:
+                gamelog.period = @"Q1";
+                break;
+                
+            case 2:
+                gamelog.period = @"Q2";
+                break;
+                
+            case 3:
+                gamelog.period = @"Q3";
+                break;
+                
+            default:
+                gamelog.period = @"Q4";
+                break;
+        }
+        
         gamelog.time = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
         gamelog.player = player.athleteid;
         gamelog.yards = [NSNumber numberWithInt:[_returnyardsTextField.text intValue]];
         
-        gamelog.logentry = @"yard run";
-        
         if (touchdown) {
+            if (interception)
+                gamelog.logentry = @"yard interception return";
+            else
+                gamelog.logentry = @"yard fumble return";
+            
             gamelog.score = @"TD";
             touchdown = NO;
         } else {
@@ -220,6 +248,8 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     if (textField == _returnyardsTextField)
         _retYardsLabel.text = _returnyardsTextField.text;
+    
+    lastTextField = textField;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -300,18 +330,20 @@
         else
              _sacksLabel.text = [stat.assists stringValue];
         
+        _sacksLabel.text = [stat.sacks stringValue];
     } else if (([title isEqualToString:@"Delete Sack"]) && ([stat.sacks intValue] > 0)){
         stat.sacks = [NSNumber numberWithInt:[stat.sacks intValue] - 1];
         _sacksLabel.text = [stat.assists stringValue];
     } else if ([title isEqualToString:@"Add Interception"]) {
         stat.interceptions = [NSNumber numberWithInt:[stat.interceptions intValue] + 1];
         _intLabel.text = [stat.interceptions stringValue];
-        _returnyardsTextField.hidden = NO;
+        interception = YES;
+        [self interceptionFields:YES];
     } else if (([title isEqualToString:@"Delete Interception"]) && ([stat.interceptions intValue] > 0)){
         stat.interceptions = [NSNumber numberWithInt:[stat.interceptions intValue] - 1];
         _intLabel.text = [stat.interceptions stringValue];
-        _returnyardsTextField.hidden = YES;
-        _returnyardsTextField.text = @"";
+        interception = NO;
+        [self interceptionFields:NO];
     } else if ([title isEqualToString:@"Add Pass Defended"]) {
         stat.pass_defended = [NSNumber numberWithInt:[stat.pass_defended intValue] + 1];
         _passdefendedlabel.text = [stat.pass_defended stringValue];
@@ -334,7 +366,7 @@
         _tdLabel.text = [stat.td stringValue];
         [self toggleTimeQuarterFields:NO];
         touchdown = NO;
-    } else if ([title isEqualToString:@"Add Saftey"]) {
+    } else if ([title isEqualToString:@"Add Safety"]) {
         stat.safety = [NSNumber numberWithInt:[stat.safety intValue] + 1];
         _safetylabel.text = [stat.safety stringValue];
         [self toggleTimeQuarterFields:YES];
@@ -367,7 +399,7 @@
         _minutesTextField.hidden = NO;
         _secondsTextField.hidden = NO;
         _colonLabel.hidden = NO;
-        _retYardsLabel.hidden = NO;
+        _returnyardsLabel.hidden = NO;
         
         _quarterTextField.enabled = YES;
         _minutesTextField.enabled = YES;
@@ -380,11 +412,21 @@
         _minutesTextField.hidden = YES;
         _secondsTextField.hidden = YES;
         _colonLabel.hidden = YES;
-        _retYardsLabel.hidden = YES;
+        _returnyardsLabel.hidden = YES;
         
         _quarterTextField.enabled = NO;
         _minutesTextField.enabled = NO;
         _secondsTextField.enabled = NO;
+        _returnyardsTextField.enabled = NO;
+    }
+}
+
+- (void)interceptionFields:(BOOL)interception {
+    if (interception) {
+        _returnyardsLabel.hidden = NO;
+        _returnyardsTextField.enabled = YES;
+    } else {
+        _returnyardsLabel.hidden = YES;
         _returnyardsTextField.enabled = NO;
     }
 }
@@ -402,6 +444,8 @@
         destController.player = player;
         destController.game = game;
     }
+    
+    [lastTextField resignFirstResponder];
 }
 
 @end

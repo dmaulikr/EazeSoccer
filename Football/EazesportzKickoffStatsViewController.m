@@ -15,6 +15,8 @@
 
 @implementation EazesportzKickoffStatsViewController {
     FootballKickerStats *stat, *originalstat;
+    
+    UITextField *lastTextField;
 }
 
 @synthesize player;
@@ -108,8 +110,15 @@
         _kickoffsLabel.text = [stat.koattempts stringValue];
         [self computeReturnedStats];
     } else if ([title isEqualToString:@"Add Touchback"]) {
-        stat.kotouchbacks = [NSNumber numberWithInt:[stat.kotouchbacks intValue] + 1];
-        _touchbacksLabel.text = [stat.kotouchbacks stringValue];
+        if ([stat.kotouchbacks intValue] < [stat.koattempts intValue]) {
+            stat.kotouchbacks = [NSNumber numberWithInt:[stat.kotouchbacks intValue] + 1];
+            _touchbacksLabel.text = [stat.kotouchbacks stringValue];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Touchbacks cannot exceed Kickoff attempts" delegate:nil
+                                                  cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
         [self computeReturnedStats];
     } else if (([title isEqualToString:@"Delete Touchback"]) && ([stat.kotouchbacks intValue] > 0)) {
         stat.kotouchbacks = [NSNumber numberWithInt:[stat.kotouchbacks intValue] - 1];

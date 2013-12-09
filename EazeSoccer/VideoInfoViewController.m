@@ -12,7 +12,6 @@
 #import "sportzServerInit.h"
 #import "ShuffleAlphabet.h"
 
-#import "GameScheduleViewController.h"
 #import "PlayerSelectionViewController.h"
 #import "EditPlayerViewController.h"
 #import "EditUserViewController.h"
@@ -31,7 +30,6 @@
 @end
 
 @implementation VideoInfoViewController{
-    GameScheduleViewController *gameController;
     PlayerSelectionViewController *playerSelectController;
     
     BOOL newVideo, newmedia, videoselected;
@@ -46,6 +44,7 @@
 
 
 @synthesize video;
+@synthesize gameController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -334,8 +333,11 @@
     }
 }
 
-
 - (IBAction)selectVideoClipGame:(UIStoryboardSegue *)segue {
+    [self gameSelected:segue];
+}
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
         _gameTextField.text = gameController.thegame.game_name;
         video.schedule = gameController.thegame.id;
@@ -353,6 +355,10 @@
 }
 
 - (IBAction)selectVideoClipPlayer:(UIStoryboardSegue *)segue {
+    [self playerSelected:segue];
+}
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
     if (playerSelectController.player) {
         BOOL insert = YES;
         for (int i = 0; i < video.athletes.count; i++) {

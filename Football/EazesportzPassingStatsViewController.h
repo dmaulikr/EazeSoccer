@@ -47,7 +47,7 @@
 - (IBAction)completionButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *playerContainer;
 
-- (IBAction)selectPassingReceiverPlayer:(UIStoryboardSegue *)segue;
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 
 @property (weak, nonatomic) IBOutlet UILabel *receiverFumbleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *receiverFumbleLostLabel;

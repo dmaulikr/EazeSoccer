@@ -46,4 +46,8 @@
 
 @property(nonatomic, strong) GameScheduleViewController *gameSelectionController;
 
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
+- (IBAction)coachSelected:(UIStoryboardSegue *)segue;
+
 @end

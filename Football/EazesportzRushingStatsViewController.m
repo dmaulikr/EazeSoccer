@@ -163,12 +163,31 @@
     if ((_minutesTextField.text.length > 0) && (_quarterTextField.text.length > 0)) {
         Gamelogs *gamelog = [[Gamelogs alloc] init];
         gamelog.gameschedule_id = game.id;
-        gamelog.period = _quarterTextField.text;
+        
+        switch ([_quarterTextField.text intValue]) {
+            case 1:
+                gamelog.period = @"Q1";
+                break;
+                
+            case 2:
+                gamelog.period = @"Q2";
+                break;
+                
+            case 3:
+                gamelog.period = @"Q3";
+                break;
+                
+            default:
+                gamelog.period = @"Q4";
+                break;
+        }
+        
         gamelog.time = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
         gamelog.player = player.athleteid;
         gamelog.yards = [NSNumber numberWithInt:[_rushyardsTextField.text intValue]];
         
         gamelog.logentry = @"yard run";
+        gamelog.football_rushing_id = stat.football_rushing_id;
         
         if (touchdown) {
             gamelog.score = @"TD";

@@ -30,8 +30,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 
 - (IBAction)newsfeedPlayerSelected:(UIStoryboardSegue *)segue;
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+
 - (IBAction)newsfeedCoachSelected:(UIStoryboardSegue *)segue;
+
 - (IBAction)newsfeedGameSelected:(UIStoryboardSegue *)segue;
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 
 @property (weak, nonatomic) IBOutlet UIView *playerSelectionContainer;
 @property (weak, nonatomic) IBOutlet UIView *coachSelectionContainer;

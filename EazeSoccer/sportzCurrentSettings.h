@@ -28,6 +28,8 @@
 @property(nonatomic, strong) Team *team;
 @property(nonatomic, strong) GameSchedule *game;
 
+@property(nonatomic, assign) BOOL refreshGames;
+
 @property(nonatomic, strong) NSMutableArray *roster;
 @property(nonatomic, strong) NSMutableArray *gameList;
 @property(nonatomic, strong) NSMutableArray *coaches;
@@ -94,7 +96,7 @@
 - (S3Bucket *)getBucket;
 - (AmazonS3Client *)getS3;
 
-- (UIImage *)normalizedImage:(UIImage *)image;
+- (UIImage *)normalizedImage:(UIImage *)image scaledToSize:(int)size;
 
 @end
 

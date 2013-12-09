@@ -45,6 +45,7 @@
     self.view.backgroundColor = [UIColor clearColor];
     _emailLabel.layer.cornerRadius = 4;
     _passwordLabel.layer.cornerRadius = 4;
+    email.keyboardType = UIKeyboardTypeEmailAddress;
 //    self.title = [NSString stringWithFormat:@"Login"];
 }
 

@@ -18,6 +18,7 @@
     FootballPlaceKickerStats *stat, *originalStat;
     
     BOOL xp, fg;
+    UITextField *lastTextField;
 }
 
 @synthesize player;
@@ -43,6 +44,10 @@
     _quarterTextField.keyboardType = UIKeyboardTypeNumberPad;
     _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.totalsButton, nil];
+    
+    self.toolbar.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -158,7 +163,25 @@
         Gamelogs *gamelog = [[Gamelogs alloc] init];
         gamelog.football_place_kicker_id = stat.football_place_kicker_id;
         gamelog.gameschedule_id = game.id;
-        gamelog.period = _quarterTextField.text;
+        
+        switch ([_quarterTextField.text intValue]) {
+            case 1:
+                gamelog.period = @"Q1";
+                break;
+                
+            case 2:
+                gamelog.period = @"Q2";
+                break;
+                
+            case 3:
+                gamelog.period = @"Q3";
+                break;
+                
+            default:
+                gamelog.period = @"Q4";
+                break;
+        }
+        
         gamelog.time = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
         gamelog.player = player.athleteid;
         
@@ -197,12 +220,16 @@
         stat.fgattempts = [NSNumber numberWithInt:[stat.fgattempts intValue] - 1];
         _fgaLabel.text = [stat.fgattempts stringValue];
     } else if ([title isEqualToString:@"Add FGM"]) {
-        stat.fgmade = [NSNumber numberWithInt:[stat.fgattempts intValue] + 1];
+        stat.fgmade = [NSNumber numberWithInt:[stat.fgmade intValue] + 1];
+        stat.fgattempts = [NSNumber numberWithInt:[stat.fgattempts intValue] + 1];
         _fgmLabel.text = [stat.fgmade stringValue];
+        _fgaLabel.text = [stat.fgattempts stringValue];
         [self toggleTimeQuarterFields:YES FG:YES];
         fg = YES;
     } else if (([title isEqualToString:@"Delete FGM"]) && ([stat.fgmade intValue] > 0)) {
         stat.fgmade = [NSNumber numberWithInt:[stat.fgmade intValue] - 1];
+        stat.fgattempts = [NSNumber numberWithInt:[stat.fgattempts intValue] - 1];
+        _fgaLabel.text = [stat.fgattempts stringValue];
         _fgmLabel.text = [stat.fgmade stringValue];
         [self toggleTimeQuarterFields:NO FG:YES];
     } else if ([title isEqualToString:@"Add FG Blocked"]) {
@@ -219,11 +246,15 @@
         _xpaLabel.text = [stat.xpattempts stringValue];
     } else if ([title isEqualToString:@"Add XP Made"]) {
         stat.xpmade = [NSNumber numberWithInt:[stat.xpmade intValue] + 1];
+        stat.xpattempts = [NSNumber numberWithInt:[stat.xpattempts intValue] + 1];
+        _xpaLabel.text = [stat.xpattempts stringValue];
         _xpmLabel.text = [stat.xpmade stringValue];
         xp = YES;
         [self toggleTimeQuarterFields:YES FG:NO];
     } else if (([title isEqualToString:@"Delete XP Made"]) && ([stat.xpmade intValue] > 0)) {
         stat.xpmade = [NSNumber numberWithInt:[stat.xpmade intValue] - 1];
+        stat.xpattempts = [NSNumber numberWithInt:[stat.xpattempts intValue] - 1];
+        _xpaLabel.text = [stat.xpattempts stringValue];
         _xpmLabel.text = [stat.xpmade stringValue];
         [self toggleTimeQuarterFields:NO FG:NO];
     } else if ([title isEqualToString:@"Add XP Blocked"]) {
@@ -237,11 +268,13 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     if (textField == _fgyardsTextField) {
-        _fgyardsLabel.text = _fgyardsTextField.text;
-        
-        if ([stat.fglong intValue] < [_fgyardsTextField.text intValue])
+        if ([stat.fglong intValue] < [_fgyardsTextField.text intValue]) {
+            _longLabel.text = _fgyardsTextField.text;
             stat.fglong = [NSNumber numberWithInt:[_fgyardsTextField.text intValue]];
+        }
     }
+    
+    lastTextField = textField;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -329,6 +362,8 @@
         destController.player = player;
         destController.game = game;
     }
+    
+    [lastTextField resignFirstResponder];
 }
 
 @end

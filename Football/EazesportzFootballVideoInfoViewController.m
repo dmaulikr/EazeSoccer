@@ -1,21 +1,21 @@
 //
-//  EazesportzFootballPhotoInfoViewController.m
+//  EazesportzFootballVideoInfoViewController.m
 //  EazeSportz
 //
 //  Created by Gil on 12/4/13.
 //  Copyright (c) 2013 Gil. All rights reserved.
 //
 
-#import "EazesportzFootballPhotoInfoViewController.h"
+#import "EazesportzFootballVideoInfoViewController.h"
 #import "EazesportzGameLogViewController.h"
 #import "sportzServerInit.h"
 #import "EazesportzAppDelegate.h"
 
-@interface EazesportzFootballPhotoInfoViewController ()
+@interface EazesportzFootballVideoInfoViewController ()
 
 @end
 
-@implementation EazesportzFootballPhotoInfoViewController {
+@implementation EazesportzFootballVideoInfoViewController {
     EazesportzGameLogViewController *gamelogController;
 }
 
@@ -34,7 +34,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    _gameplayTextField.inputView = _gamelogContainer.inputView;
+    _gameplayTextField.inputView = _gameplayContainer.inputView;
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,10 +46,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _gamelogContainer.hidden = YES;
+    _gameplayContainer.hidden = YES;
     
-    if (self.photo.gamelog) {
-        _gameplayTextField.text = [[[currentSettings findGame:self.photo.schedule] findGamelog:self.photo.gamelog] logentrytext];
+    if (self.video.gamelog) {
+        _gameplayTextField.text = [[[currentSettings findGame:self.video.schedule] findGamelog:self.video.gamelog] logentrytext];
     } else {
         _gameplayTextField.text = @"";
     }
@@ -57,25 +57,25 @@
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
     if (gamelogController.gamelog) {
-        self.photo.gamelog = gamelogController.gamelog.gamelogid;
+        self.video.gamelog = gamelogController.gamelog.gamelogid;
         _gameplayTextField.text = gamelogController.gamelog.logentrytext;
     } else {
-        self.photo.gamelog = @"";
+        self.video.gamelog = @"";
         _gameplayTextField.text = @"";
     }
-    _gamelogContainer.hidden = YES;
+    _gameplayContainer.hidden = YES;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     if (textField == _gameplayTextField) {
         [textField resignFirstResponder];
         if (self.gameController.thegame) {
-            _gamelogContainer.hidden = NO;
+            _gameplayContainer.hidden = NO;
             gamelogController.game = self.gameController.thegame;
             gamelogController.gamelog = nil;
             [gamelogController viewWillAppear:YES];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Select a game before tagging photo by play"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Select a game before tagging video by play"
                                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];

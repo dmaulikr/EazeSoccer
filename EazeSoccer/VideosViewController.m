@@ -137,6 +137,10 @@
 }
 
 - (IBAction)selectVideoGame:(UIStoryboardSegue *)segue {
+    [self gameSelected:segue];
+}
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     game = gameSelectionController.thegame;
     if (game) {
         player = nil;
@@ -149,12 +153,16 @@
 }
 
 - (IBAction)selectVideoPlayer:(UIStoryboardSegue *)segue {
+    [self playerSelected:segue];
+}
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
     player = playerSelectionController.player;
     if (player) {
         game = nil;
         user = nil;
         videos = nil;
-//        gamelog = nil;
+        //        gamelog = nil;
         [self getVideos];
     }
     _playerSelectContainer.hidden = YES;

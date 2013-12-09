@@ -175,6 +175,10 @@
 }
 
 - (IBAction)selectPhotoGameEdit:(UIStoryboardSegue *)segue {
+    [self gameSelected:segue];
+}
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
         _gameTextField.text = gameController.thegame.game_name;
         _gameButton.enabled = YES;
@@ -191,6 +195,10 @@
 }
 
 - (IBAction)selectPhotoPlayersEdit:(UIStoryboardSegue *)segue {
+    [self playerSelected:segue];
+}
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
     if (playerSelectController.player) {
         BOOL insert = YES;
         for (int i = 0; i < photo.athletes.count; i++) {
@@ -559,11 +567,14 @@
     [self.popover dismissPopoverAnimated:YES];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *image = info[UIImagePickerControllerOriginalImage];
+        NSData *imgData=UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
+        NSLog(@"%d", [imgData length]);
+        UIImage *image = [[UIImage alloc] initWithData:imgData];
         
-        _photoImage.image = image;
-        NSLog(@"width = %f", image.size.width);
-        NSLog(@"height = %f", image.size.height);
+        if (newmedia)
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
+        
+        _photoImage.image = [currentSettings normalizedImage:image scaledToSize:700];
         CGSize imageviewsize;
         
         if (image.size.width > image.size.height)
@@ -577,11 +588,6 @@
 //        _photoImage.frame = CGRectMake(_photoImage.frame.origin.x, _photoImage.frame.origin.x, CGRectGetWidth(_photoImage.bounds),
 //                                       corrrectImageViewHeight);
         _photoImage.frame = CGRectMake(_photoImage.frame.origin.x,_photoImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
-        if (newmedia) 
-            UIImageWriteToSavedPhotosAlbum(image,
-                                           self,
-                                           @selector(image:finishedSavingWithError:contextInfo:),
-                                           nil);
         imageselected = YES;
     }
     else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
@@ -620,7 +626,7 @@
         
         por.contentType = @"image/jpeg";
         UIImage *image = _photoImage.image;
-        NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
+        NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
         por.data = imageData;
         imagesize = imageData.length;
         por.delegate = self;

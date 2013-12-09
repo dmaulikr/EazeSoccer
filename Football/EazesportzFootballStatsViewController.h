@@ -24,7 +24,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *statLabel;
 @property (weak, nonatomic) IBOutlet UIView *playerSelectContainer;
 
-- (IBAction)otherPlayerFootballStat:(UIStoryboardSegue *)segue;
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+
 @property (weak, nonatomic) IBOutlet UIView *gamelogContainer;
 - (IBAction)scoreLogButtonClicked:(id)sender;
 
@@ -45,6 +46,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *visitorTimeOutsTextField;
 @property (weak, nonatomic) IBOutlet UITextField *homeTimeOutsTextField;
 
-- (IBAction)cancelGamelogTable:(UIStoryboardSegue *)segue;
+- (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue;
 
 @end

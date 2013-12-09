@@ -41,4 +41,7 @@
 - (IBAction)cancelButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *totalsButton;
+@property (weak, nonatomic) IBOutlet UIButton *kickoffReturnButton;
+@property (weak, nonatomic) IBOutlet UIButton *puntReturnButton;
+@property (weak, nonatomic) IBOutlet UILabel *returnYardsLabel;
 @end

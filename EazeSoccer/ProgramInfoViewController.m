@@ -315,7 +315,7 @@
     por.contentType = @"image/jpeg";
     
     UIImage *image = _logoImage.image;
-    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image], 1.0);
+    NSData *imageData = UIImageJPEGRepresentation([currentSettings normalizedImage:image scaledToSize:125], 1.0);
     por.data = imageData;
     por.delegate = self;
     

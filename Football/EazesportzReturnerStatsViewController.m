@@ -17,7 +17,9 @@
 @implementation EazesportzReturnerStatsViewController {
     FootballReturnerStats *stat, *originalstat;
     
-    BOOL koreturn, puntreturn, kotd, puntreturntd;
+    BOOL kotd, puntreturntd;
+    
+    UITextField *lastTextField;
 }
 
 @synthesize player;
@@ -44,6 +46,9 @@
     _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
     
+    _returnYardsTextField.hidden = YES;
+    _returnYardsLabel.hidden = YES;
+    
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.totalsButton, nil];
     
     self.toolbar.hidden = YES;
@@ -58,7 +63,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    koreturn = puntreturn = kotd = puntreturntd = NO;
+    kotd = puntreturntd = NO;
+    _kickoffReturnButton.enabled = YES;
+    _puntReturnButton.enabled = YES;
     
     [self toggleTimeQuarterFields:NO];
     
@@ -99,7 +106,7 @@
 }
 
 - (IBAction)tdButtonClicked:(id)sender {
-    if ((koreturn) || (puntreturn)) {
+    if ((_kickoffReturnButton.enabled) || (_puntReturnButton.enabled)) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"TD Return"  message:@"Update TD Return Stats" delegate:self
                                               cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add TD Return", @"Delete TD Return", nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
@@ -182,8 +189,9 @@
     if ([title isEqualToString:@"Add KO Return"]) {
         stat.koreturn = [NSNumber numberWithInt:[stat.koreturn intValue] + 1];
         _koreturnsLabel.text = [stat.koreturn stringValue];
-        koreturn = YES;
-        puntreturn = NO;
+        _puntReturnButton.enabled = NO;
+        _returnYardsLabel.hidden = NO;
+        _returnYardsTextField.hidden = NO;
     } else if (([title isEqualToString:@"Delete KO Return"]) && ([stat.koreturn intValue] > 0)) {
         if (kotd) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Delete Kickoff TD before removing kickoff return" delegate:nil
@@ -194,12 +202,15 @@
         }
         stat.koreturn = [NSNumber numberWithInt:[stat.koreturn intValue] - 1];
         _koreturnsLabel.text = [stat.koreturn stringValue];
-        koreturn = NO;
+        _puntReturnButton.enabled = YES;
+        _returnYardsTextField.hidden = YES;
+        _returnYardsLabel.hidden = YES;
     } else if ([title isEqualToString:@"Add Punt Return"]) {
         stat.punt_return = [NSNumber numberWithInt:[stat.punt_return intValue] + 1];
         _puntreturnsLabel.text = [stat.punt_return stringValue];
-        koreturn = NO;
-        puntreturn = YES;
+        _kickoffReturnButton.enabled = NO;
+        _returnYardsLabel.hidden = NO;
+        _returnYardsTextField.hidden = NO;
     } else if (([title isEqualToString:@"Delete Punt Return"]) && ([stat.punt_return intValue] > 0)) {
         if (puntreturntd) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Delete Punt Return TD before removing kickoff return" delegate:nil
@@ -210,9 +221,11 @@
         }
         stat.punt_return = [NSNumber numberWithInt:[stat.punt_return intValue] - 1];
         _puntreturnsLabel.text = [stat.punt_return stringValue];
-        puntreturn = NO;
+        _kickoffReturnButton.enabled = YES;
+        _returnYardsTextField.hidden = YES;
+        _returnYardsLabel.hidden = YES;
     } else if ([title isEqualToString:@"Add TD Return"]) {
-        if (koreturn) {
+        if (_kickoffReturnButton.enabled) {
             stat.kotd = [NSNumber numberWithInt:[stat.kotd intValue] + 1];
             _kotdLabel.text = [stat.kotd stringValue];
             kotd = YES;
@@ -238,7 +251,7 @@
     if (textField == _returnYardsTextField) {
         _returnYardsTextField.text = _returnYardsTextField.text;
         
-        if (koreturn ) {
+        if (_kickoffReturnButton.enabled ) {
             if ([stat.kolong intValue] < [_returnYardsTextField.text intValue])
                 stat.kolong = [NSNumber numberWithInt:[_returnYardsTextField.text intValue]];
         } else {
@@ -246,6 +259,7 @@
                 stat.punt_returnlong = [NSNumber numberWithInt:[_returnYardsTextField.text intValue]];
         }
     }
+    lastTextField = textField;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -321,6 +335,7 @@
         destController.player = player;
         destController.game = game;
     }
+    [lastTextField resignFirstResponder];
 }
 
 @end

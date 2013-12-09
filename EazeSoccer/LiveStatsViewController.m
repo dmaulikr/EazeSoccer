@@ -63,6 +63,10 @@
 }
 
 - (IBAction)selectGameLiveStats:(UIStoryboardSegue *)segue {
+    [self gameSelected:segue];
+}
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
         if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
             soccerStatsController.game = gameController.thegame;

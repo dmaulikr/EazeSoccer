@@ -20,8 +20,6 @@
 @synthesize banner;
 @synthesize season;
 @synthesize name;
-@synthesize sport_logo;
-@synthesize sport_logo_medium;
 @synthesize sport_logo_thumb;
 @synthesize sport_logo_tiny;
 @synthesize siteid;
@@ -62,9 +60,7 @@
         mascot = [sportDictionary objectForKey:@"mascot"];
         year = [sportDictionary objectForKey:@"year"];
         zip = [sportDictionary objectForKey:@"zip"];
-        sport_logo = [sportDictionary objectForKey:@"sport_logo"];
         sport_logo_thumb = [sportDictionary objectForKey:@"sport_logo_thumb"];
-        sport_logo_medium = [sportDictionary objectForKey:@"sport_logo_medium"];
         sport_logo_tiny = [sportDictionary objectForKey:@"sport_logo_tiny"];
         banner = [sportDictionary objectForKey:@"banner_url"];
         name = [sportDictionary objectForKey:@"name"];

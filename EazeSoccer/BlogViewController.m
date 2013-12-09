@@ -191,15 +191,21 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"PlayerSelectionSegue"])
         playerController = segue.destinationViewController;
+    else if ([segue.identifier isEqualToString:@"PlayerSelectSegue"])
+        playerController = segue.destinationViewController;
     else if ([segue.identifier isEqualToString:@"GameSelectionSegue"])
+        gameController = segue.destinationViewController;
+    else if ([segue.identifier isEqualToString:@"GameSelectSegue"])
         gameController = segue.destinationViewController;
     else if ([segue.identifier isEqualToString:@"BlogEntrySegue"]) {
         NSIndexPath *indexPath = [_blogTableView indexPathForSelectedRow];
         BlogEntryViewController *destController = segue.destinationViewController;
         destController.blog = [blogfeed objectAtIndex:indexPath.row];
-    } else if ([segue.identifier isEqualToString:@"CoachSelectionSegue"]) {
+    } else if ([segue.identifier isEqualToString:@"CoachSelectionSegue"])
         coachController = segue.destinationViewController;
-    } else if ([segue.identifier isEqualToString:@"UsersSegue"]) {
+    else if ([segue.identifier isEqualToString:@"CoachSelectSegue"])
+        coachController = segue.destinationViewController;
+    else if ([segue.identifier isEqualToString:@"UsersSegue"]) {
         usersController = segue.destinationViewController;
 //    } else if ([segue.identifier isEqualToString:@"GamePlaySelectionSegue"]) {
 //        gameplayController = segue.destinationViewController;
@@ -331,6 +337,10 @@
 }
 
 - (IBAction)selectBlogSearchCoach:(UIStoryboardSegue *)segue {
+    [self coachSelected:segue];
+}
+
+- (IBAction)coachSelected:(UIStoryboardSegue *)segue {
     coach = coachController.coach;
     
     if (coach != nil) {
@@ -338,13 +348,17 @@
         player = nil;
         team = nil;
         user = nil;
-//        gamelog = nil;
+        //        gamelog = nil;
         [self getBlogs:nil];
     }
     _coachSelectionContainer.hidden = YES;
 }
 
 - (IBAction)selectBlogSearchGame:(UIStoryboardSegue *)segue {
+    [self gameSelected:segue];
+}
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     game = gameController.thegame;
     
     if (game != nil) {
@@ -352,7 +366,7 @@
         player = nil;
         coach = nil;
         user = nil;
-//        gamelog = nil;
+        //        gamelog = nil;
         [self getBlogs:nil];
     }
     _gameScheduleContainer.hidden = YES;
@@ -495,5 +509,20 @@
                         }
                     }];
 }
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
+    player = playerController.player;
+    
+    if (player != nil) {
+        game = nil;
+        team = nil;
+        coach = nil;
+        user = nil;
+        //        gamelog = nil;
+        [self getBlogs:nil];
+    }
+    _playerSelectionContainer.hidden = YES;
+}
+
 
 @end

@@ -53,4 +53,8 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)teamButtonClicked:(id)sender;
 
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
+- (IBAction)coachSelected:(UIStoryboardSegue *)segue;
+
 @end

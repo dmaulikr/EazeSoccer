@@ -10,7 +10,9 @@
 #import "EazesportzAppDelegate.h"
 #import "Gamelogs.h"
 
-@implementation GameSchedule
+@implementation GameSchedule {
+    UIImage *opponentImage;
+}
 
 @synthesize id;
 @synthesize startdate;
@@ -178,11 +180,6 @@
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//    [formatter setDateFormat:@"yyyy-MM-dd"];
-//    NSDate *pickerDate = [formatter dateFromString:startdate];
-//    [formatter setDateFormat:@"yyyy-MM-dd"];
-    
     NSArray *time = [starttime componentsSeparatedByString:@":"];
     
     NSMutableDictionary *gamedict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:opponent, @"opponent",
@@ -196,6 +193,7 @@
     [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
     [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
     [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
+    [gamedict setValue:currentgametime forKey:@"current_game_time"];
 
     if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
         [gamedict setValue:[socceroppsog stringValue] forKey:@"socceroppsog"];
@@ -258,6 +256,8 @@
     
     if ([httpResponse statusCode] == 200) {
         
+        currentSettings.refreshGames = YES;
+        
         if (self.id.length == 0)
             self.id = [[serverData objectForKey:@"schedule"] objectForKey:@"_id"];
         
@@ -301,6 +301,7 @@
     if ([httpResponse statusCode] == 200) {
         self = nil;
         return self;
+        currentSettings.refreshGames = YES;
     } else {
         httperror = [serverData objectForKey:@"error"];
         return  self;
@@ -308,12 +309,21 @@
 }
 
 - (UIImage *)opponentImage {
-    if (([opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) || ([opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
-        return [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    UIImage *image;
+    
+    if (opponentImage) {
+        return opponentImage;
     } else {
-        NSURL * imageURL = [NSURL URLWithString:opponentpic];
-        NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-        return [UIImage imageWithData:imageData];
+        if (([opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) || ([opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        } else {
+            NSURL * imageURL = [NSURL URLWithString:opponentpic];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            image = [UIImage imageWithData:imageData];
+        }
+        
+        opponentImage = image;
+        return image;
     }
 }
 

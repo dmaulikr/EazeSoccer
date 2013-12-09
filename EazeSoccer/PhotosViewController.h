@@ -30,7 +30,11 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
 - (IBAction)selectPhotoPlayer:(UIStoryboardSegue *)segue;
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+
 - (IBAction)selectPhotoGame:(UIStoryboardSegue *)segue;
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
+
 - (IBAction)selectPhotoUser:(UIStoryboardSegue *)segue;
 
 - (void)getPhotos;
