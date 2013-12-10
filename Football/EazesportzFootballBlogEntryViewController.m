@@ -92,6 +92,8 @@
     } else {
         self.blog.gamelog = nil;
         _gameplayTextField.text = @"";
+        self.blog.gamelog = @"";
+        _gameplayButton.enabled = NO;
     }
     _gamelogContainer.hidden = YES;
 }

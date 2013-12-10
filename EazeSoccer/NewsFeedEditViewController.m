@@ -118,7 +118,7 @@
         _coachButton.enabled = NO;
         _teamLabel.text = currentSettings.team.team_name;
         newsitem.team = currentSettings.team.teamid;
-        image = [currentSettings.sport getImage:@"thumb"];
+        image = [currentSettings.team getImage:@"thumb"];
     }
     _newsFeedImageView.image = image;
 }

@@ -14,8 +14,10 @@
 @synthesize mascot;
 @synthesize leaguelosses;
 @synthesize leaguewins;
+@synthesize leagueties;
 @synthesize nonleaguelosses;
 @synthesize nonleaguewins;
+@synthesize nonleagueties;
 @synthesize sportid;
 @synthesize gameschedule_id;
 @synthesize oppimageurl;
@@ -27,8 +29,10 @@
         mascot = [standingsDirectory objectForKey:@"mascot"];
         leaguewins = [standingsDirectory objectForKey:@"leaguewins"];
         leaguelosses = [standingsDirectory objectForKey:@"leaguelosses"];
+        leagueties = [standingsDirectory objectForKey:@"leagueties"];
         nonleaguewins = [standingsDirectory objectForKey:@"nonleaguewins"];
         nonleaguelosses = [standingsDirectory objectForKey:@"nonleaguelosses"];
+        nonleagueties = [standingsDirectory objectForKey:@"nonleagueties"];
         gameschedule_id = [standingsDirectory objectForKey:@"gameschedule_id"];
         sportid = [standingsDirectory objectForKey:@"sportid"];
         teamid = [standingsDirectory objectForKey:@"teamid"];

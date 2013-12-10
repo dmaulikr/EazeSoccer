@@ -16,6 +16,9 @@
 @property(nonatomic, strong) Athlete *athlete;
 @property(nonatomic, strong) GameSchedule *game;
 
+- (IBAction)finalButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *finalButton;
+@property (weak, nonatomic) IBOutlet UILabel *finalLabel;
 - (IBAction)offenseButtonClicked:(id)sender;
 - (IBAction)defenseButtonClicked:(id)sender;
 - (IBAction)specialteamsButtonClicked:(id)sender;

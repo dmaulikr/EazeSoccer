@@ -44,7 +44,7 @@
 @property(nonatomic, strong) NSString *our;
 @property(nonatomic, strong) NSNumber *down;
 @property(nonatomic, strong) NSString *currentqtr;
-@property(nonatomic, strong) NSNumber *gameisfinal;
+@property(nonatomic, assign) BOOL gameisfinal;
 @property(nonatomic, strong) NSNumber *togo;
 
 @property(nonatomic, strong) NSNumber *homescore;

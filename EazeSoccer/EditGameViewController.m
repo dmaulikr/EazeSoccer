@@ -97,7 +97,7 @@
         _gameDateTextField.text = [dateFormat stringFromDate:gamedate];
         
         _gameTimeTextField.text = game.starttime;
-        _homeScoreTextField.text = _homescoreLabel.text = [[game homescore] stringValue];
+        _homeScoreTextField.text = _homescoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
         _visitorScoreTextField.text = _visitorscoreLabel.text = [[game opponentscore] stringValue];
         
         NSString *datestring = [game.startdate stringByAppendingString:@" "];

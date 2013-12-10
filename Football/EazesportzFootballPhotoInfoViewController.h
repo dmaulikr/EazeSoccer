@@ -17,5 +17,6 @@
 @property (nonatomic, strong) Gamelogs *gamelog;
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollview;
 
 @end

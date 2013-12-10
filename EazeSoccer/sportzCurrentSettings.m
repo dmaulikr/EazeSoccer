@@ -602,6 +602,7 @@
             for (int cnt = 0; cnt <  player.football_passing_stats.count; cnt++) {
                 if ([[[player.football_passing_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:gameid]) {
                     totalpoints += [[[player.football_passing_stats objectAtIndex:cnt] td] intValue] * 6;
+                    totalpoints += [[[player.football_passing_stats objectAtIndex:cnt] twopointconv] intValue] * 2;
                     break;
                 }
             }
@@ -609,6 +610,7 @@
             for (int cnt = 0; cnt <  player.football_rushing_stats.count; cnt++) {
                 if ([[[player.football_rushing_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:gameid]) {
                     totalpoints += [[[player.football_rushing_stats objectAtIndex:cnt] td] intValue] * 6;
+                    totalpoints += [[[player.football_rushing_stats objectAtIndex:cnt] twopointconv] intValue] * 2;
                     break;
                 }
             }
@@ -616,6 +618,7 @@
             for (int cnt = 0; cnt <  player.football_defense_stats.count; cnt++) {
                 if ([[[player.football_defense_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:gameid]) {
                     totalpoints += [[[player.football_defense_stats objectAtIndex:cnt] td] intValue] * 6;
+                    totalpoints += [[[player.football_defense_stats objectAtIndex:cnt] safety] intValue] * 2;
                     break;
                 }
             }

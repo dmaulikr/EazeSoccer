@@ -158,11 +158,22 @@
         _togoTextField.text = [game.togo stringValue];
         _quarterTextField.text = [game.period stringValue];
         
+        if (!game.gameisfinal) {
+            _finalLabel.hidden = YES;
+        }
+        
+         _finalButton.enabled = YES;
+        _finalButton.hidden = NO;
+       
         [_statsTableView reloadData];
     } else if (athlete)
         _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats for ", athlete.logname];
-    else
+    else {
         _statLabel.text = @"Select game to enter stats";
+        _finalLabel.hidden = YES;
+        _finalButton.enabled = NO;
+        _finalButton.hidden = YES;
+    }
 
 }
 
@@ -1076,6 +1087,8 @@
         }
     } else
         _gamelogContainer.hidden = YES;
+    
+    [self viewWillAppear:YES];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -1244,4 +1257,13 @@
     _gamelogContainer.hidden = YES;
 }
 
+- (IBAction)finalButtonClicked:(id)sender {
+    if (_finalLabel.hidden) {
+        _finalLabel.hidden = NO;
+        game.gameisfinal = YES;
+    } else {
+        _finalLabel.hidden = YES;
+        game.gameisfinal = NO;
+    }
+}
 @end

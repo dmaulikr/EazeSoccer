@@ -7,6 +7,7 @@
 //
 
 #import "EazesportzGameLogViewController.h"
+#import "EazesportzAppDelegate.h"
 
 @interface EazesportzGameLogViewController () <UIAlertViewDelegate>
 
@@ -114,6 +115,7 @@
         if (![alog initDeleteGameLog]) {
             [game.gamelogs removeObjectAtIndex:deleteIndexPath.row];
             [_gamelogTableView reloadData];
+            [currentSettings retrievePlayers];          // Need to optimize and only retrieve stats
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[alog httperror]
                                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];

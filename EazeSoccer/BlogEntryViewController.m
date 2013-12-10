@@ -324,6 +324,10 @@
         _playerTextField.text = [[currentSettings findAthlete:blog.athlete] logname];
         _tagPlayerButton.enabled = YES;
         [_tagPlayerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    } else {
+        blog.athlete = @"";
+        _playerTextField.text = @"";
+        _tagPlayerButton.enabled = NO;
     }
     _playerContainer.hidden = YES;
 }
@@ -340,6 +344,10 @@
         _gameTextField.text = [[currentSettings findGame:blog.gameschedule] game_name];
         _tagGameButton.enabled = YES;
         [_tagGameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    } else {
+        _gameTextField.text = @"";
+        blog.gameschedule = @"";
+        _tagGameButton.enabled = NO;
     }
     _gameContainer.hidden = YES;
 }
@@ -356,6 +364,10 @@
         _coachTextField.text = [[currentSettings findCoach:blog.coach] fullname];
         _tagCoachButton.enabled = YES;
         [_tagCoachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    } else {
+        blog.coach = @"";
+        _tagCoachButton.enabled = NO;
+        _coachTextField.text = @"";
     }
     _coachContainer.hidden = YES;
 }
@@ -383,6 +395,10 @@
         _playerTextField.text = [[currentSettings findAthlete:blog.athlete] logname];
         _tagPlayerButton.enabled = YES;
         [_tagPlayerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    } else {
+        _playerTextField.text = @"";
+        blog.athlete = @"";
+        _tagPlayerButton.enabled = NO;
     }
     _playerContainer.hidden = YES;
 }

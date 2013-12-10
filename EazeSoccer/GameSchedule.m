@@ -105,7 +105,7 @@
         our = [gameScheduleDictionary objectForKey:@"our"];
         possession = [gameScheduleDictionary objectForKey:@"possession"];
         currentqtr = [gameScheduleDictionary objectForKey:@"currentqtr"];
-        gameisfinal = [gameScheduleDictionary objectForKey:@"final"];
+        gameisfinal = [[gameScheduleDictionary objectForKey:@"final"] boolValue];
         togo = [gameScheduleDictionary objectForKey:@"togo"];
         homescore = [gameScheduleDictionary objectForKey:@"homescore"];
         opponentscore = [gameScheduleDictionary objectForKey:@"opponentscore"];
@@ -202,7 +202,8 @@
                                      event, @"event", startdate, @"gamedate",
                                      [time objectAtIndex:0], @"starttime(4i)", [time objectAtIndex:1], @"starttime(5i)",
                                      homeaway, @"homeaway", [homescore stringValue], @"homescore",
-                                     [opponentscore stringValue], @"opponentscore", [[NSNumber numberWithBool:leaguegame] stringValue], @"league", nil];
+                                     [opponentscore stringValue], @"opponentscore", [[NSNumber numberWithBool:leaguegame] stringValue], @"league",
+                                     [[NSNumber numberWithBool:gameisfinal] stringValue], @"gameisfinal", nil];
     
     NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
     [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];

@@ -110,9 +110,11 @@
         cell.teamImage.image = [currentSettings.team getImage:@"thumb"];
     }
     
-    cell.overallLabel.text = [NSString stringWithFormat:@"%d%@%d", [standing.leaguewins intValue] + [standing.nonleaguewins intValue], @"-",
-                              [standing.leaguelosses intValue] + [standing.nonleaguelosses intValue]];
-    cell.leagueLabel.text = [NSString stringWithFormat:@"%d%@%d", [standing.leaguewins intValue], @"-", [standing.leaguelosses intValue]];
+    cell.overallLabel.text = [NSString stringWithFormat:@"%d%@%d%@%d", [standing.leaguewins intValue] + [standing.nonleaguewins intValue], @"-",
+                              [standing.leaguelosses intValue] + [standing.nonleaguelosses intValue], @"-",
+                              [standing.leagueties intValue] + [standing.nonleagueties intValue]];
+    cell.leagueLabel.text = [NSString stringWithFormat:@"%d%@%d%@%d", [standing.leaguewins intValue], @"-", [standing.leaguelosses intValue], @"-",
+                             [standing.leagueties intValue]];
     cell.streakLabel.text = @"";
     
     return cell;
