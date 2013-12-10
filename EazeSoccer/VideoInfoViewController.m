@@ -364,7 +364,7 @@
         for (int i = 0; i < video.athletes.count; i++) {
             if ([[[video.athletes objectAtIndex:i] athleteid] isEqualToString:playerSelectController.player.athleteid]) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Athlete already tagged"
-                                                               delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert setAlertViewStyle:UIAlertViewStyleDefault];
                 [alert show];
                 insert = NO;
@@ -473,7 +473,7 @@
     if ([httpResponse statusCode] != 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data"
                                                         message:[json objectForKey:@"error"]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -512,7 +512,7 @@
     if ([httpResponse statusCode] != 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating videoclip data"
                                                         message:[json objectForKey:@"error"]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -638,7 +638,7 @@
  
         return YES;
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must select a video and give it a name!" delegate:self
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must select a video and give it a name!" delegate:nil
                                               cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -741,13 +741,13 @@
         }
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload sucessful!"
                                                         message:@"Video uploaded"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error uploading video"
                                                         message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -755,7 +755,7 @@
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Upload Error" delegate:self
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Upload Error" delegate:nil
                                           cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
@@ -898,7 +898,7 @@
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Video"
                                                             message:[photoDict objectForKey:@"error"]
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }

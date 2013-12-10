@@ -420,13 +420,13 @@
             }
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update sucessful!"
                                                             message:@"Photo updated"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data"
                                                             message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
@@ -493,7 +493,7 @@
     if ([httpResponse statusCode] != 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data"
                                                         message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -531,7 +531,7 @@
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     if ([httpResponse statusCode] != 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data" message:[json objectForKey:@"error"]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -637,7 +637,7 @@
         [[currentSettings getS3] putObject:por];
         return YES;
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must select an image or give it a name!" delegate:self
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must select an image or give it a name!" delegate:nil
                                               cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
