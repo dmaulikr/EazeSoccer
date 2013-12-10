@@ -1131,6 +1131,16 @@
     }
 }
 
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if (textField == _minutesTextField) {
+        NSArray *clockentries = [_gameClockLabel.text componentsSeparatedByString:@":"];
+        _gameClockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", clockentries[1]];
+    } else if (textField == _secondsTextField) {
+        NSArray *clockentries = [_gameClockLabel.text componentsSeparatedByString:@":"];
+        _gameClockLabel.text = [NSString stringWithFormat:@"%@%@%@", clockentries[0], @":", _secondsTextField.text];
+    }
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     

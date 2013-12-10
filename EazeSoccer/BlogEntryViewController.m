@@ -83,32 +83,23 @@
         
         if (blog.athlete.length > 0) {
             _tagPlayerButton.enabled = YES;
-//            _tagPlayerButton.backgroundColor = [UIColor greenColor];
             _playerTextField.text = [[currentSettings findAthlete:blog.athlete] logname];
         } else {
             _tagPlayerButton.enabled = NO;
-            [_tagPlayerButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-//            _tagPlayerButton.backgroundColor = [UIColor redColor];
         }
         
         if (blog.coach.length > 0) {
             _tagCoachButton.enabled = YES;
-//            _tagCoachButton.backgroundColor = [UIColor greenColor];
             _coachTextField.text = [[currentSettings findCoach:blog.coach] fullname];
         } else {
             _tagCoachButton.enabled = NO;
-//            _tagCoachButton.backgroundColor = [UIColor redColor];
-            [_tagCoachButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
         
         if (blog.gameschedule.length > 0) {
             _tagGameButton.enabled = YES;
-//            _tagGameButton.backgroundColor = [UIColor greenColor];
             _gameTextField.text = [[currentSettings findGame:blog.gameschedule] game_name];
         } else {
             _tagGameButton.enabled = NO;
-//            _tagGameButton.backgroundColor = [UIColor redColor];
-            [_tagGameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
         
         if (blog.tinyavatar.length == 0) {
