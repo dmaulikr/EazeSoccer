@@ -89,69 +89,73 @@
 }
 
 - (BOOL)saveStats {
-    NSURL *aurl;
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    
-    if (football_returner_id.length > 0) {
-        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_returners/", football_returner_id,
-                                     @".json?auth_token=", currentSettings.user.authtoken]];
+    if (([punt_return intValue] > 0) || ([punt_returnlong intValue] > 0) || ([punt_returntd intValue] > 0) || ([punt_returnyards intValue] > 0) ||
+        ([kolong intValue] > 0) || ([koreturn intValue] > 0) || ([kotd intValue] > 0) || ([koyards intValue] > 0)) {
+        NSURL *aurl;
+        NSBundle *mainBundle = [NSBundle mainBundle];
         
-    } else {
-        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_returners.json?gameschedule_id=",
-                                     gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
-    }
-    
-    NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
-                                     [punt_return stringValue], @"punt_return", [punt_returnlong stringValue], @"punt_returnlong",
-                                     [punt_returntd stringValue], @"punt_returntd", [punt_returnyards stringValue], @"punt_returnyards",
-                                     [kolong stringValue], @"kolong", [koreturn stringValue], @"koreturn", [kotd stringValue], @"kotd",
-                                     [koyards stringValue], @"koyards", nil];
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
-    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"football_returner", nil];
-    
-    NSError *jsonSerializationError = nil;
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
-    if (football_returner_id.length > 0) {
-        [request setHTTPMethod:@"PUT"];
-    } else {
-        [request setHTTPMethod:@"POST"];
-    }
-    
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-    
-    if (!jsonSerializationError) {
-        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"Serialized JSON: %@", serJson);
-    } else {
-        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-    }
-    
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPBody:jsonData];
-    
-    //Capturing server response
-    NSURLResponse* response;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-    NSLog(@"%@", serverData);
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *items = [serverData objectForKey:@"punter"];
-    
-    if ([httpResponse statusCode] == 200) {
+        if (football_returner_id.length > 0) {
+            aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                         @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_returners/", football_returner_id,
+                                         @".json?auth_token=", currentSettings.user.authtoken]];
+            
+        } else {
+            aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                         @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_returners.json?gameschedule_id=",
+                                         gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
+        }
         
-        if (football_returner_id.length == 0)
-            football_returner_id = [items objectForKey:@"_id"];
+        NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
+                                         [punt_return stringValue], @"punt_return", [punt_returnlong stringValue], @"punt_returnlong",
+                                         [punt_returntd stringValue], @"punt_returntd", [punt_returnyards stringValue], @"punt_returnyards",
+                                         [kolong stringValue], @"kolong", [koreturn stringValue], @"koreturn", [kotd stringValue], @"kotd",
+                                         [koyards stringValue], @"koyards", nil];
         
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+        NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"football_returner", nil];
+        
+        NSError *jsonSerializationError = nil;
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+        if (football_returner_id.length > 0) {
+            [request setHTTPMethod:@"PUT"];
+        } else {
+            [request setHTTPMethod:@"POST"];
+        }
+        
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+        
+        if (!jsonSerializationError) {
+            NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            NSLog(@"Serialized JSON: %@", serJson);
+        } else {
+            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+        }
+        
+        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPBody:jsonData];
+        
+        //Capturing server response
+        NSURLResponse* response;
+        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+        NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+        NSLog(@"%@", serverData);
+        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        NSDictionary *items = [serverData objectForKey:@"returner"];
+        
+        if ([httpResponse statusCode] == 200) {
+            
+            if (football_returner_id.length == 0)
+                football_returner_id = [items objectForKey:@"_id"];
+            
+            return YES;
+        } else {
+            httperror = [serverData objectForKey:@"error"];
+            return NO;
+        }
+    } else
         return YES;
-    } else {
-        httperror = [serverData objectForKey:@"error"];
-        return NO;
-    }
 }
 
 @end

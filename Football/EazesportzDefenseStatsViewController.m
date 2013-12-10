@@ -362,20 +362,34 @@
         [self toggleTimeQuarterFields:YES];
         touchdown = YES;
     } else if (([title isEqualToString:@"Delete TD"]) && ([stat.td intValue] > 0)){
-        stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
-        _tdLabel.text = [stat.td stringValue];
-        [self toggleTimeQuarterFields:NO];
-        touchdown = NO;
+        if (touchdown) {
+            stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
+            _tdLabel.text = [stat.td stringValue];
+            [self toggleTimeQuarterFields:NO];
+            touchdown = NO;
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"No valid TD added. \n If you want to remove a score, delete the game log. The score will be removed from the defender automatically." delegate:nil
+                                                  cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     } else if ([title isEqualToString:@"Add Safety"]) {
         stat.safety = [NSNumber numberWithInt:[stat.safety intValue] + 1];
         _safetylabel.text = [stat.safety stringValue];
         [self toggleTimeQuarterFields:YES];
         safety = YES;
     } else if (([title isEqualToString:@"Delete Safety"]) && ([stat.safety intValue] > 0)){
-        stat.safety = [NSNumber numberWithInt:[stat.safety intValue] - 1];
-        _safetylabel.text = [stat.safety stringValue];
-        [self toggleTimeQuarterFields:NO];
-        safety = NO;
+        if (safety) {
+            stat.safety = [NSNumber numberWithInt:[stat.safety intValue] - 1];
+            _safetylabel.text = [stat.safety stringValue];
+            [self toggleTimeQuarterFields:NO];
+            safety = NO;
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"No valid Safety added. \n If you want to remove a score, delete the game log. The safety will be removed from the defender automatically." delegate:nil
+                                                  cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     } else if ([title isEqualToString:@"Add Sack Assist"]) {
         stat.sackassist = [NSNumber numberWithInt:[stat.sackassist intValue] + 1];
         _sackassistLabel.text = [stat.sackassist stringValue];
@@ -400,6 +414,7 @@
         _secondsTextField.hidden = NO;
         _colonLabel.hidden = NO;
         _returnyardsLabel.hidden = NO;
+        _returnyardsTextField.hidden = NO;
         
         _quarterTextField.enabled = YES;
         _minutesTextField.enabled = YES;
@@ -413,6 +428,7 @@
         _secondsTextField.hidden = YES;
         _colonLabel.hidden = YES;
         _returnyardsLabel.hidden = YES;
+        _returnyardsTextField.hidden = YES;
         
         _quarterTextField.enabled = NO;
         _minutesTextField.enabled = NO;
@@ -421,12 +437,14 @@
     }
 }
 
-- (void)interceptionFields:(BOOL)interception {
-    if (interception) {
+- (void)interceptionFields:(BOOL)anint {
+    if (anint) {
         _returnyardsLabel.hidden = NO;
+        _returnyardsTextField.hidden = NO;
         _returnyardsTextField.enabled = YES;
     } else {
         _returnyardsLabel.hidden = YES;
+        _returnyardsTextField.hidden = YES;
         _returnyardsTextField.enabled = NO;
     }
 }

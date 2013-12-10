@@ -864,7 +864,7 @@
         if (section == 0)
             return @"                Place Kicker        FGA    FGM   FGBLK  FGLNG XPA   XPM  XPBLK";
         else if (section == 1)
-            return @"                Kicker                Kickoffs      Touchbacks      Returned";
+            return @"                Kicker                Kickoffs      Returned      Touchbacks";
         else if (section== 2)
             return @"                Punter                Punts    Blkd    Yards   Long    AVG";
         else

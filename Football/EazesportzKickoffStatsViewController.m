@@ -112,7 +112,9 @@
     } else if ([title isEqualToString:@"Add Touchback"]) {
         if ([stat.kotouchbacks intValue] < [stat.koattempts intValue]) {
             stat.kotouchbacks = [NSNumber numberWithInt:[stat.kotouchbacks intValue] + 1];
+            stat.koattempts = [NSNumber numberWithInt:[stat.koattempts intValue] + 1];
             _touchbacksLabel.text = [stat.kotouchbacks stringValue];
+            _kickoffsLabel.text = [stat.koattempts stringValue];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Touchbacks cannot exceed Kickoff attempts" delegate:nil
                                                   cancelButtonTitle:@"Ok" otherButtonTitles:nil];
@@ -123,15 +125,20 @@
     } else if (([title isEqualToString:@"Delete Touchback"]) && ([stat.kotouchbacks intValue] > 0)) {
         stat.kotouchbacks = [NSNumber numberWithInt:[stat.kotouchbacks intValue] - 1];
         _touchbacksLabel.text = [stat.kotouchbacks stringValue];
+        stat.koattempts = [NSNumber numberWithInt:[stat.koattempts intValue] - 1];
+        _kickoffsLabel.text = [stat.koattempts stringValue];
         [self computeReturnedStats];
     }
 }
 
 - (void)computeReturnedStats {
-    if ([stat.koattempts intValue] > 0)
+    if ([stat.koattempts intValue] > 0) {
         _returnedLabel.text = [[NSNumber numberWithInt:[stat.koattempts intValue] - [stat.kotouchbacks intValue]] stringValue];
-    else
+        stat.koreturned = [NSNumber numberWithInt:[stat.koattempts intValue] - [stat.kotouchbacks intValue]];
+    } else {
         _returnedLabel.text = [stat.koattempts stringValue];
+        stat.koreturned = stat.koattempts;
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

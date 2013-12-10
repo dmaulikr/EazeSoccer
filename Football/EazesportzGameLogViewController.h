@@ -16,4 +16,5 @@
 @property(nonatomic, strong) Gamelogs *gamelog;
 
 @property (weak, nonatomic) IBOutlet UITableView *gamelogTableView;
+@property (weak, nonatomic) IBOutlet UILabel *swipetodeleteLabel;
 @end

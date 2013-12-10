@@ -156,15 +156,36 @@
         gamelog.period = _quarterTextField.text;
         gamelog.time = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
         gamelog.player = player.athleteid;
-        
+        gamelog.score = @"TD";
         gamelog.logentry = player.logname;
         
+        
+        switch ([_quarterTextField.text intValue]) {
+            case 1:
+                gamelog.period = @"Q1";
+                game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 6];
+                break;
+                
+            case 2:
+                gamelog.period = @"Q2";
+                game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 6];
+                break;
+                
+            case 3:
+                gamelog.period = @"Q3";
+                game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 6];
+                break;
+                
+            default:
+                gamelog.period = @"Q4";
+                game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 6];
+                break;
+        }
+        
         if (kotd) {
-            gamelog.score = @"TD";
             gamelog.yards = [NSNumber numberWithInt:[_returnYardsTextField.text intValue]];
             kotd = NO;
         } else {
-            gamelog.score = @"TD";
             gamelog.yards = [NSNumber numberWithInt:[_returnYardsTextField.text intValue]];
             puntreturntd = NO;
         }
@@ -243,20 +264,30 @@
             stat.punt_returntd = [NSNumber numberWithInt:[stat.punt_returntd intValue] - 1];
             _puntreturntdLabel.text = [stat.punt_returntd stringValue];
             puntreturntd = NO;
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"No valid TD added. \n If you want to remove a score, delete the game log. The score will be removed from the player automatically." delegate:nil
+                                                  cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
         }
     }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     if (textField == _returnYardsTextField) {
-        _returnYardsTextField.text = _returnYardsTextField.text;
         
         if (_kickoffReturnButton.enabled ) {
-            if ([stat.kolong intValue] < [_returnYardsTextField.text intValue])
+            stat.koyards = [NSNumber numberWithInt:[stat.koyards intValue] + [_returnYardsTextField.text intValue]];
+            if ([stat.kolong intValue] < [_returnYardsTextField.text intValue]) {
                 stat.kolong = [NSNumber numberWithInt:[_returnYardsTextField.text intValue]];
+                _koreturnyardsLabel.text = _returnYardsTextField.text;
+            }
         } else {
-            if ([stat.punt_returnlong intValue] < [_returnYardsTextField.text intValue])
+            stat.punt_returnyards = [NSNumber numberWithInt:[stat.punt_returnyards intValue] + [_returnYardsTextField.text intValue]];
+            if ([stat.punt_returnlong intValue] < [_returnYardsTextField.text intValue]) {
                 stat.punt_returnlong = [NSNumber numberWithInt:[_returnYardsTextField.text intValue]];
+                _puntreturnyardsLabel.text = _returnYardsTextField.text;
+            }
         }
     }
     lastTextField = textField;

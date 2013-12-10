@@ -8,11 +8,13 @@
 
 #import "EazesportzGameLogViewController.h"
 
-@interface EazesportzGameLogViewController ()
+@interface EazesportzGameLogViewController () <UIAlertViewDelegate>
 
 @end
 
-@implementation EazesportzGameLogViewController
+@implementation EazesportzGameLogViewController {
+    NSIndexPath *deleteIndexPath;
+}
 
 @synthesize game;
 @synthesize gamelog;
@@ -85,7 +87,12 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
+        deleteIndexPath = indexPath;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"Stats will be automatically updated. Click Confirm to Proceed"
+                                                       delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
     }
 }
 
@@ -96,6 +103,23 @@
         gamelog = [game.gamelogs objectAtIndex:indexPath.row];
     } else {
         gamelog = nil;
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if([title isEqualToString:@"Confirm"]) {
+        Gamelogs *alog = [game.gamelogs objectAtIndex:deleteIndexPath.row];
+        if (![alog initDeleteGameLog]) {
+            [game.gamelogs removeObjectAtIndex:deleteIndexPath.row];
+            [_gamelogTableView reloadData];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[alog httperror]
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     }
 }
 

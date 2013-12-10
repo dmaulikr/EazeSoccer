@@ -31,6 +31,7 @@
     BOOL newPhoto, newmedia, imageselected;
     int imagesize;
     NSString *imagepath;
+    NSData *imgData;
     
     User *user;
     
@@ -567,7 +568,7 @@
     [self.popover dismissPopoverAnimated:YES];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        NSData *imgData=UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
+        imgData = UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
         NSLog(@"%d", [imgData length]);
         UIImage *image = [[UIImage alloc] initWithData:imgData];
         
@@ -625,7 +626,8 @@
         S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:_photonameTextField.text inBucket:photopath];
         
         por.contentType = @"image/jpeg";
-        UIImage *image = _photoImage.image;
+        UIImage *image = [currentSettings normalizedImage:[[UIImage alloc] initWithData:imgData] scaledToSize:1024];
+        imgData = nil;
         NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
         por.data = imageData;
         imagesize = imageData.length;

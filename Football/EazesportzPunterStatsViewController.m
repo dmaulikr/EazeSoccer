@@ -64,7 +64,7 @@
     _playerNumberLabel.text = [player.number stringValue];
     _playerNameLabel.text = player.logname;
     
-    _yardsTextField.text = [stat.punts_yards stringValue];
+    _yardsLabel.text = [stat.punts_yards stringValue];
     _puntsLabel.text = [stat.punts stringValue];
     _longLabel.text = [stat.punts_long stringValue];
     _blockedLabel.text = [stat.punts_blocked stringValue];
@@ -125,6 +125,7 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     if (textField == _yardsTextField) {
         _yardsLabel.text = _yardsTextField.text;
+        stat.punts_yards = [NSNumber numberWithInt:[stat.punts_yards intValue] + [_yardsTextField.text intValue]];
         
         if ([stat.punts_long intValue] < [_yardsTextField.text intValue])
             stat.punts_long = [NSNumber numberWithInt:[_yardsTextField.text intValue]];

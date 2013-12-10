@@ -79,6 +79,10 @@
     _blockedLabel.text = [stat.fgblocked stringValue];
     _longLabel.text = [stat.fglong stringValue];
     
+    _fgyardsTextField.hidden = YES;
+    _fgyardsLabel.hidden = YES;
+    _fgyardsTextField.enabled = NO;
+    
     _xpaLabel.text = [stat.xpattempts stringValue];
     _xpmLabel.text = [stat.xpmade stringValue];
     _xpblockedLabel.text = [stat.xpblocked stringValue];
@@ -167,18 +171,34 @@
         switch ([_quarterTextField.text intValue]) {
             case 1:
                 gamelog.period = @"Q1";
+                if (fg )
+                    game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 3];
+                else
+                    game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 1];
                 break;
                 
             case 2:
                 gamelog.period = @"Q2";
-                break;
+                if (fg )
+                    game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 3];
+                else
+                    game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 1];
+               break;
                 
             case 3:
                 gamelog.period = @"Q3";
+                if (fg )
+                    game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 3];
+                else
+                    game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 1];
                 break;
                 
             default:
                 gamelog.period = @"Q4";
+                if (fg )
+                    game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 3];
+                else
+                    game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 1];
                 break;
         }
         
@@ -266,6 +286,10 @@
     }
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    textField.text = @"";
+}
+
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     if (textField == _fgyardsTextField) {
         if ([stat.fglong intValue] < [_fgyardsTextField.text intValue]) {
@@ -332,6 +356,7 @@
         if (fieldgoal) {
             _fgyardsTextField.hidden = NO;
             _fgyardsTextField.enabled = YES;
+            _fgyardsLabel.hidden = NO;
         }
         
         _quarterTextField.enabled = YES;
@@ -347,6 +372,7 @@
         
         if (fieldgoal) {
             _fgyardsTextField.hidden = YES;
+            _fgyardsLabel.hidden = YES;
             _fgyardsTextField.enabled = NO;
         }
         

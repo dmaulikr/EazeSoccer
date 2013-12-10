@@ -76,8 +76,6 @@
         originalStat = [stat copy];
     else {
         originalStat = nil;
-        stat.athlete_id = player.athleteid;
-        stat.gameschedule_id = game.id;
     }
     _attemptLabel.text = [stat.attempts stringValue];
     _yardsLabel.text = [stat.yards stringValue];
@@ -167,18 +165,34 @@
         switch ([_quarterTextField.text intValue]) {
             case 1:
                 gamelog.period = @"Q1";
+                if (touchdown )
+                    game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 6];
+                else
+                    game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 2];
                 break;
                 
             case 2:
                 gamelog.period = @"Q2";
+                if (touchdown )
+                    game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 6];
+                else
+                    game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 2];
                 break;
                 
             case 3:
                 gamelog.period = @"Q3";
+                if (touchdown )
+                    game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 6];
+                else
+                    game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 2];
                 break;
                 
             default:
                 gamelog.period = @"Q4";
+                if (touchdown )
+                    game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 6];
+                else
+                    game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 2];
                 break;
         }
         

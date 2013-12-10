@@ -33,6 +33,7 @@
 @property(nonatomic, strong) NSString *httperror;
 
 - (id)initWithDictionary:(NSDictionary *)gamelogDictionary;
+- (id)initDeleteGameLog;
 
 - (BOOL)saveGamelog;
 

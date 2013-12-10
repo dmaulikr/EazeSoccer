@@ -622,7 +622,8 @@
             
             for (int cnt = 0; cnt <  player.football_returner_stats.count; cnt++) {
                 if ([[[player.football_returner_stats objectAtIndex:cnt] gameschedule_id] isEqualToString:gameid]) {
-                    totalpoints += [[[player.football_returner_stats objectAtIndex:cnt] td] intValue] * 6;
+                    totalpoints += [[[player.football_returner_stats objectAtIndex:cnt] kotd] intValue] * 6;
+                    totalpoints += [[[player.football_returner_stats objectAtIndex:cnt] punt_returntd] intValue] * 6;
                     break;
                 }
             }

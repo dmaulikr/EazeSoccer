@@ -121,19 +121,34 @@
         socceroppsaves = [gameScheduleDictionary objectForKey:@"socceroppsaves"];
         socceroppck = [gameScheduleDictionary objectForKey:@"socceroppck"];
         
-        
-        NSMutableArray *logs = [gameScheduleDictionary objectForKey:@"gamelogs"];
-        gamelogs = [[NSMutableArray alloc] init];
-        
-         for (int cnt = 0; cnt < logs.count; cnt++) {
-             [gamelogs addObject:[[Gamelogs alloc] initWithDictionary:[[logs objectAtIndex:cnt] objectForKey:@"gamelog"]]];
-         }
-        
+        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            NSMutableArray *logs = [gameScheduleDictionary objectForKey:@"gamelogs"];
+            gamelogs = [[NSMutableArray alloc] init];
+            
+             for (int cnt = 0; cnt < logs.count; cnt++) {
+                 [gamelogs addObject:[[Gamelogs alloc] initWithDictionary:[[logs objectAtIndex:cnt] objectForKey:@"gamelog"]]];
+             }
+            [self sortGamelog];
+        }
         
         return self;
     } else {
         return nil;
     }
+}
+
+- (void)sortGamelog {
+    NSString *quarter = @"period";
+    NSString *timeentry = @"time";
+    
+    NSSortDescriptor *lastDescriptor = [[NSSortDescriptor alloc] initWithKey:quarter ascending:YES
+                                        selector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:timeentry ascending:YES
+                                        selector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    NSArray *descriptors = [NSArray arrayWithObjects:lastDescriptor, firstDescriptor, nil];
+    [gamelogs sortUsingDescriptors:descriptors];
 }
 
 - (Gamelogs *)findGamelog:(NSString *)gamelogid {
@@ -216,11 +231,17 @@
         [gamedict setValue:[opponentq2 stringValue] forKey:@"opponentq2"];
         [gamedict setValue:[opponentq3 stringValue] forKey:@"opponentq3"];
         [gamedict setValue:[opponentq4 stringValue] forKey:@"opponentq4"];
+        [gamedict setValue:[homeq1 stringValue] forKey:@"homeq1"];
+        [gamedict setValue:[homeq2 stringValue] forKey:@"homeq2"];
+        [gamedict setValue:[homeq3 stringValue] forKey:@"homeq3"];
+        [gamedict setValue:[homeq4 stringValue] forKey:@"homeq4"];
         [gamedict setValue:[opponenttimeouts stringValue] forKey:@"opponenttimeouts"];
         [gamedict setValue:[hometimeouts stringValue] forKey:@"hometimeouts"];
         
         for (int i = 0; i < gamelogs.count; i++)
              [[gamelogs objectAtIndex:i] saveGamelog];
+        
+        [self sortGamelog];
     }
     
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];

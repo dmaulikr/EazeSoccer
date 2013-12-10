@@ -65,6 +65,10 @@
             football_rushing_stats = [[NSMutableArray alloc] init];
             football_receiving_stats = [[NSMutableArray alloc] init];
             football_defense_stats = [[NSMutableArray alloc] init];
+            football_kicker_stats = [[NSMutableArray alloc] init];
+            football_place_kicker_stats = [[NSMutableArray alloc] init];
+            football_returner_stats = [[NSMutableArray alloc] init];
+            football_punter_stats = [[NSMutableArray alloc] init];
         } else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
             basketball_stats = [[NSMutableArray alloc] init];
         else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
@@ -144,7 +148,7 @@
                                                      [[defensestats objectAtIndex:i] objectForKey:@"football_defense"]]];
             }
             
-            NSArray *placekickerstats = [athleteDictionary objectForKey:@"foortball_place_kickers"];
+            NSArray *placekickerstats = [athleteDictionary objectForKey:@"football_place_kickers"];
             football_place_kicker_stats = [[NSMutableArray alloc] init];
             
             for (int i = 0; i < placekickerstats.count; i++) {
@@ -152,24 +156,24 @@
                                                    [[placekickerstats objectAtIndex:i] objectForKey:@"football_place_kicker"]]];
             }
             
-            NSArray *kickerstats = [athleteDictionary objectForKey:@"foortball_kickers"];
-            football_place_kicker_stats = [[NSMutableArray alloc] init];
+            NSArray *kickerstats = [athleteDictionary objectForKey:@"football_kickers"];
+            football_kicker_stats = [[NSMutableArray alloc] init];
             
             for (int i = 0; i < kickerstats.count; i++) {
                 [football_kicker_stats addObject:[[FootballKickerStats alloc] initWithDictionary:
                                                         [[kickerstats objectAtIndex:i] objectForKey:@"football_kicker"]]];
             }
             
-            NSArray *punterstats = [athleteDictionary objectForKey:@"foortball_punters"];
-            football_place_kicker_stats = [[NSMutableArray alloc] init];
+            NSArray *punterstats = [athleteDictionary objectForKey:@"football_punters"];
+            football_punter_stats = [[NSMutableArray alloc] init];
             
             for (int i = 0; i < punterstats.count; i++) {
                 [football_punter_stats addObject:[[FootballPunterStats alloc] initWithDictionary:
                                                         [[punterstats objectAtIndex:i] objectForKey:@"football_punter"]]];
             }
             
-            NSArray *returnerstats = [athleteDictionary objectForKey:@"foortball_returners"];
-            football_place_kicker_stats = [[NSMutableArray alloc] init];
+            NSArray *returnerstats = [athleteDictionary objectForKey:@"football_returners"];
+            football_returner_stats = [[NSMutableArray alloc] init];
             
             for (int i = 0; i < returnerstats.count; i++) {
                 [football_returner_stats addObject:[[FootballReturnerStats alloc] initWithDictionary:
@@ -478,8 +482,10 @@
     FootballPassingStat *thestat = nil;
     
     for (int cnt = 0; cnt < football_passing_stats.count; cnt++) {
-        if ([gameid isEqualToString:[[football_passing_stats objectAtIndex:cnt] gameschedule_id]])
+        if ([gameid isEqualToString:[[football_passing_stats objectAtIndex:cnt] gameschedule_id]]) {
             thestat = [football_passing_stats objectAtIndex:cnt];
+            break;
+        }
     }
     
     if (thestat == nil) {
@@ -617,6 +623,7 @@
 
 - (void)updateFootballKickerGameStats:(FootballKickerStats *)kickerstat {
     int i;
+    
     for (i = 0; i < [football_kicker_stats count]; i++) {
         if ([[[football_kicker_stats objectAtIndex:i] gameschedule_id] isEqualToString:kickerstat.gameschedule_id]) {
             break;
@@ -626,6 +633,7 @@
     if (i < football_kicker_stats.count) {
         [football_kicker_stats removeObjectAtIndex:i];
     }
+    
     [football_kicker_stats addObject:kickerstat];
 }
 
