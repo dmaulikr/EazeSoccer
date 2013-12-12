@@ -39,6 +39,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     _infoImage.image = [currentSettings getBannerImage];
+    _periodTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorCKTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorSavesTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorShotsTextfield.keyboardType = UIKeyboardTypeNumberPad;
+    _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,15 +56,44 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     _soccerStatsContainer.hidden = YES;
     _totalStatsContainer.hidden = YES;
     
-    if (game)
-        _infoLabel.text = game.game_name;
-    else if (athlete)
-        _infoLabel.text = athlete.full_name;
-    else
-        _infoLabel.text = @"Select a game to enter stats!";
+    if (game) {
+        self.title = game.game_name;
+        _finalButton.enabled = YES;
+        _finalButton.hidden = NO;
+        
+        if (game.gameisfinal)
+            _finalLabel.hidden = NO;
+        else
+            _finalLabel.hidden = YES;
+        
+        _clockLabel.text = game.currentgametime;
+        _homeImageView.image = [currentSettings.team getImage:@"tiny"];
+        _visitorImageView.image = [game opponentImage];
+        
+        _homeTeamLabel.text = currentSettings.team.mascot;
+        _visitorTeamLabel.text = game.opponent_mascot;
+        _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+        _visitorScoreLabel.text = [game.opponentscore stringValue];
+        _periodTextField.text = [game.period stringValue];
+        _visitorShotsLabel.text = [game.socceroppsog stringValue];
+        _visitorCKLabel.text = [game.socceroppck stringValue];
+        _visitorSavesLabel.text = [game.socceroppsaves stringValue];
+        
+        _homeCKLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeCK]];
+        _homeSavesLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeSaves]];
+        _homeShotsLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeShots]];
+    } else if (athlete)
+        self.title = athlete.full_name;
+    else {
+        self.title = @"Select a game to enter stats!";
+        _finalButton.enabled = NO;
+        _finalButton.hidden = YES;
+        _finalLabel.hidden = YES;
+    }
     
     if ((game) || (athlete)) {
         [_soccerPlayerStatsTableView reloadData];
@@ -175,14 +211,14 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 0) {
         if (game)
-            return @"               Player                   Goals    Shots    Assists   Steals   C/K      Points";
+            return @"               Player                  Goals     Shots    Assists   Steals       C/K      Points";
         else
-            return @"               Game                     Goals    Shots    Assists   Steals   C/K      Points";
+            return @"               Game                    Goals     Shots    Assists   Steals       C/K      Points";
     } else {
         if (game)
-            return @"               Goalie                   Saves    Goals Against      Minutes";
+            return @"               Goalie                  Saves    Goals Against      Minutes";
         else
-            return @"Goalie Stats for Game       Saves    Goals Against      Minutes";
+            return @"Goalie Stats for Game     Saves    Goals Against      Minutes";
     }
 }
 
@@ -256,7 +292,8 @@
 - (IBAction)liveSoccerPlayerStats:(UIStoryboardSegue *)segue {
     [liveStatsController.player updateSoccerGameStats:liveStatsController.playerStats];
     _soccerStatsContainer.hidden = YES;
-    [_soccerPlayerStatsTableView reloadData];
+//    [_soccerPlayerStatsTableView reloadData];
+    [self viewWillAppear:YES];
 }
 
 - (IBAction)updateTotalSoccerStats:(UIStoryboardSegue *)segue {
@@ -290,11 +327,73 @@
         }
     }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stats Posted!"
+    game.socceroppck = [NSNumber numberWithInt:[_visitorCKTextField.text intValue]];
+    game.socceroppsaves = [NSNumber numberWithInt:[_visitorSavesTextField.text intValue]];
+    game.socceroppsog = [NSNumber numberWithInt:[_visitorShotsTextfield.text intValue]];
+    game.currentgametime = _clockLabel.text;
+    game.period = [NSNumber numberWithInt:[_periodTextField.text intValue]];
+    game.opponentscore = [NSNumber numberWithInt:[_visitorScoreTextField.text intValue]];
+    
+    [game saveGameschedule];
+    
+/*    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stats Posted!"
                                                     message:[NSString stringWithFormat:@"%@%@%@", @"Stats for current players vs. ", game.opponent, @" saved!"]
                                                    delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
+    [alert show]; */
+}
+
+- (IBAction)finalButtonClicked:(id)sender {
+    if (_finalLabel.hidden) {
+        _finalLabel.hidden = NO;
+        game.gameisfinal = YES;
+    } else {
+        _finalLabel.hidden = YES;
+        game.gameisfinal = NO;
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (textField == _periodTextField) {
+        NSString *validRegEx =@"^[0-4.]*$"; //change this regular expression as your requirement
+        NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+        BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+        
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (myStringMatchesRegEx) {
+            return (newLength > 1) ? NO : YES;
+        } else
+            return NO;
+    } else {
+        NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
+        NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+        BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+        
+        NSUInteger newLength = [textField.text length] + [string length] - range.length;
+        
+        if (myStringMatchesRegEx) {
+            
+            if ((textField == _minutesTextField) || (textField == _secondsTextField)) {
+                return (newLength > 2) ? NO : YES;
+            } else
+                return (newLength > 1) ? NO : YES;
+        } else
+            return  NO;
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if ((textField == _minutesTextField) || (textField == _secondsTextField))
+        _clockLabel.text = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
+    else if (textField == _visitorShotsTextfield)
+        _visitorShotsLabel.text = _visitorShotsTextfield.text;
+    else if (textField == _visitorScoreTextField)
+        _visitorScoreLabel.text = _visitorScoreTextField.text;
+    else if (textField == _visitorSavesTextField)
+        _visitorSavesLabel.text = _visitorSavesTextField.text;
+    else if (textField == _visitorCKTextField)
+        _visitorCKLabel.text = _visitorCKTextField.text;
 }
 
 @end

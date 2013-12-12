@@ -12,5 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *soccerPlayerStatsTableView;
 - (IBAction)refreshBurronClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UITableView *goalieStatsTableView;
 
 @end

@@ -18,5 +18,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *label4;
 @property (weak, nonatomic) IBOutlet UILabel *label5;
 @property (weak, nonatomic) IBOutlet UILabel *label6;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel1;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel2;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel3;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel4;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel5;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel6;
 
 @end

@@ -10,7 +10,6 @@
 
 @interface LiveStatsViewController : UIViewController
 
-- (IBAction)clockButtonClicked:(id)sender;
 - (IBAction)gameButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *clockButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *gameButton;
@@ -21,8 +20,6 @@
 - (IBAction)selectGameLiveStats:(UIStoryboardSegue *)segue;
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 
-@property (weak, nonatomic) IBOutlet UIView *soccerClockContainer;
--(IBAction)soccerClockClose:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeteamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;

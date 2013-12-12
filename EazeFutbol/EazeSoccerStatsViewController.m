@@ -53,10 +53,12 @@
         
         if (self.game) {
             Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
+            cell.playerImage.image = [player getImage:@"tiny"];
             cell.playerName.text = player.logname;
             stats = [player findSoccerGameStats:self.game.id];
         } else if (self.athlete) {
             GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
+            cell.playerImage.image = [agame opponentImage];
             cell.playerName.text = agame.opponent;
             stats = [self.athlete findSoccerGameStats:agame.id];
         } else {
@@ -74,19 +76,27 @@
     } else {
         if (self.game) {
             Athlete *player = [self.goalies objectAtIndex:indexPath.row];
+            cell.playerImage.image = [player getImage:@"tiny"];
             cell.playerName.text = player.logname;
             stats = [player findSoccerGameStats:self.game.id];
         } else {
             GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
+            cell.playerImage.image = [agame opponentImage];
             cell.playerName.text = agame.opponent;
             stats = [self.athlete findSoccerGameStats:agame.id];
         }
         
+        cell.titleLabel1.text = @"Saves";
         cell.label1.text = [stats.goalssaved stringValue];
+        cell.titleLabel2.text = @"GA";
         cell.label2.text = [stats.goalsagainst stringValue];
-        cell.label3.text = @"";
-        cell.label4.text = [stats.minutesplayed stringValue];
+        cell.titleLabel3.text = @"Minutes";
+        cell.label3.text = [stats.minutesplayed stringValue];
+        cell.titleLabel4.text = @"";
+        cell.label4.text = @"";
+        cell.titleLabel5.text = @"";
         cell.label5.text = @"";
+        cell.titleLabel6.text = @"";
         cell.label6.text = @"";
     }
     
@@ -94,16 +104,26 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+
     if (section == 0) {
-        if (self.game)
-            return @"Player       G     Sht     Ast    Stl    C/K      Pts";
-        else
-            return @"Game        G     Sht     Ast    Stl    C/K      Pts";
+        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            return @"Opponent";
+        } else {
+            if (self.game)
+                    return @"Player       G     Sht     Ast    Stl    C/K      Pts";
+            else
+                    return @"Game        G     Sht     Ast    Stl    C/K      Pts";
+        }
     } else {
-        if (self.game)
-            return @"Goalie     Save   GA         Minutes";
-        else
-            return @"Game       Save   GA         Minutes";
+        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            return @"Goalie";
+        } else {
+            if (self.game)
+                return @"Goalie     Save   GA         Minutes";
+            else
+                return @"Game       Save   GA         Minutes";
+        }
     }
 }
 

@@ -12,7 +12,7 @@
 #import "sportzCurrentSettings.h"
 #import "PhotosViewController.h"
 #import "VideosViewController.h"
-#import "SoccerPlayerStatsViewController.h"
+#import "EazeSoccerStatsViewController.h"
 #import "BasketballStatsViewController.h"
 
 #import "EazesportzFootballPlayerStatsViewController.h"
@@ -462,7 +462,7 @@
         VideosViewController *destController = segue.destinationViewController;
         destController.player = player;
     } else if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
-        SoccerPlayerStatsViewController *destController = segue.destinationViewController;
+        EazeSoccerStatsViewController *destController = segue.destinationViewController;
         destController.athlete = player;
     } else if ([segue.identifier isEqualToString:@"BasketballStatsPlayerSegue"]) {
         statsController = segue.destinationViewController;
