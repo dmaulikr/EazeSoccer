@@ -189,23 +189,17 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"PlayerSelectionSegue"])
+    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"])
         playerController = segue.destinationViewController;
-    else if ([segue.identifier isEqualToString:@"PlayerSelectSegue"])
-        playerController = segue.destinationViewController;
-    else if ([segue.identifier isEqualToString:@"GameSelectionSegue"])
-        gameController = segue.destinationViewController;
     else if ([segue.identifier isEqualToString:@"GameSelectSegue"])
         gameController = segue.destinationViewController;
     else if ([segue.identifier isEqualToString:@"BlogEntrySegue"]) {
         NSIndexPath *indexPath = [_blogTableView indexPathForSelectedRow];
         BlogEntryViewController *destController = segue.destinationViewController;
         destController.blog = [blogfeed objectAtIndex:indexPath.row];
-    } else if ([segue.identifier isEqualToString:@"CoachSelectionSegue"])
+    } else if ([segue.identifier isEqualToString:@"CoachSelectSegue"])
         coachController = segue.destinationViewController;
-    else if ([segue.identifier isEqualToString:@"CoachSelectSegue"])
-        coachController = segue.destinationViewController;
-    else if ([segue.identifier isEqualToString:@"UsersSegue"]) {
+    else if ([segue.identifier isEqualToString:@"UserSelectSegue"]) {
         usersController = segue.destinationViewController;
 //    } else if ([segue.identifier isEqualToString:@"GamePlaySelectionSegue"]) {
 //        gameplayController = segue.destinationViewController;
@@ -322,24 +316,6 @@
     [coachController viewWillAppear:YES];
 }
 
-- (IBAction)selectBlogSearchPlayer:(UIStoryboardSegue *)segue {
-    player = playerController.player;
-    
-    if (player != nil) {
-        game = nil;
-        team = nil;
-        coach = nil;
-        user = nil;
-//        gamelog = nil;
-        [self getBlogs:nil];
-     }
-    _playerSelectionContainer.hidden = YES;
-}
-
-- (IBAction)selectBlogSearchCoach:(UIStoryboardSegue *)segue {
-    [self coachSelected:segue];
-}
-
 - (IBAction)coachSelected:(UIStoryboardSegue *)segue {
     coach = coachController.coach;
     
@@ -352,10 +328,6 @@
         [self getBlogs:nil];
     }
     _coachSelectionContainer.hidden = YES;
-}
-
-- (IBAction)selectBlogSearchGame:(UIStoryboardSegue *)segue {
-    [self gameSelected:segue];
 }
 
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
@@ -372,7 +344,7 @@
     _gameScheduleContainer.hidden = YES;
 }
 
-- (IBAction)selectBlogSearchUser:(UIStoryboardSegue *)segue {
+- (IBAction)selectUser:(UIStoryboardSegue *)segue {
     user = usersController.user;
     
     if (user != nil) {

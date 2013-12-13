@@ -136,10 +136,6 @@
     }
 }
 
-- (IBAction)selectVideoGame:(UIStoryboardSegue *)segue {
-    [self gameSelected:segue];
-}
-
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     game = gameSelectionController.thegame;
     if (game) {
@@ -150,10 +146,6 @@
         [self getVideos];
     }
     _gameSelectContainer.hidden = YES;
-}
-
-- (IBAction)selectVideoPlayer:(UIStoryboardSegue *)segue {
-    [self playerSelected:segue];
 }
 
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue {
@@ -168,7 +160,7 @@
     _playerSelectContainer.hidden = YES;
 }
 
-- (IBAction)selectvideoUser:(UIStoryboardSegue *)segue {
+- (IBAction)selectUser:(UIStoryboardSegue *)segue {
     user = userSelectionController.user;
     if (user) {
         player = nil;

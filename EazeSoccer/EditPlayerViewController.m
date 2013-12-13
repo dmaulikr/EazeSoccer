@@ -13,7 +13,7 @@
 #import "PhotosViewController.h"
 #import "VideosViewController.h"
 #import "EazeSoccerStatsViewController.h"
-#import "BasketballStatsViewController.h"
+#import "EazeBasketballStatsViewController.h"
 
 #import "EazesportzFootballPlayerStatsViewController.h"
 
@@ -39,7 +39,6 @@
     NSMutableData *theData;
     
     BOOL stats;
-    BasketballStatsViewController *statsController;
 }
 
 @synthesize player;
@@ -465,8 +464,8 @@
         EazeSoccerStatsViewController *destController = segue.destinationViewController;
         destController.athlete = player;
     } else if ([segue.identifier isEqualToString:@"BasketballStatsPlayerSegue"]) {
-        statsController = segue.destinationViewController;
-        statsController.athlete = player;
+        EazeBasketballStatsViewController *destController = segue.destinationViewController;
+        destController.athlete = player;
     } else if ([segue.identifier isEqualToString:@"FootballPlayerStatsSegue"]) {
         EazesportzFootballPlayerStatsViewController *destController = segue.destinationViewController;
         destController.player = player;
@@ -632,7 +631,7 @@
 }
 
 - (IBAction)saveButtonClicked:(id)sender {
-    [statsController saveButtonClicked:self];
+//    [statsController saveButtonClicked:self];
 }
 
 @end

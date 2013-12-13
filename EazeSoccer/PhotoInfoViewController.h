@@ -25,9 +25,6 @@
 
 @property (weak, nonatomic) IBOutlet UIView *gameSelectContainer;
 
-- (IBAction)selectPhotoGameEdit:(UIStoryboardSegue *)segue;
-- (IBAction)selectPhotoPlayersEdit:(UIStoryboardSegue *)segue;
-
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 

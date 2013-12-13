@@ -34,9 +34,6 @@
 
 @property (weak, nonatomic) IBOutlet UIView *gameContainer;
 
-- (IBAction)blogTagPlayerSelected:(UIStoryboardSegue *)segue;
-- (IBAction)blogTagGameSelected:(UIStoryboardSegue *)segue;
-- (IBAction)blogTagCoachSelected:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UITextField *gameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *coachTextField;
 @property (weak, nonatomic) IBOutlet UITextField *playerTextField;

@@ -80,13 +80,6 @@
     else
         _fieldGoalPercentageLabel.text = @"0.00";
     
-    _foulLabel.text = [NSString stringWithFormat:@"%d", [stats.fouls intValue]];
-    _blockLabel.text = [NSString stringWithFormat:@"%d", [stats.blocks intValue]];
-    _stealLabel.text = [NSString stringWithFormat:@"%d", [stats.steals intValue]];
-    _offrbLabel.text = [NSString stringWithFormat:@"%d", [stats.offrebound intValue]];
-    _defrbLabel.text = [NSString stringWithFormat:@"%d", [stats.defrebound intValue]];
-    _assistsLabel.text = [NSString stringWithFormat:@"%d", [stats.assists intValue]];
-    
     twofga = [stats.twoattempt intValue];
     twofgm = [stats.twomade intValue];
     twofgpct = (float)[stats.twomade intValue] / (float)[stats.twoattempt intValue];
@@ -328,54 +321,6 @@
         _FTALabel.text = [NSString stringWithFormat:@"%d", fta];
         _FTPLabel.text = [NSString stringWithFormat:@"%0.2f", ftpct];
         stats.ftattempt = [NSNumber numberWithInt:fta];
-    } else if ([title isEqualToString:@"Add Foul"]) {
-        fouls++;
-        _foulLabel.text = [NSString stringWithFormat:@"%d", fouls];
-        stats.fouls = [NSNumber numberWithInt:fouls];
-    } else if (([title isEqualToString:@"Remove Foul"]) && (fouls > 0)) {
-        fouls--;
-        _foulLabel.text = [NSString stringWithFormat:@"%d", fouls];
-        stats.fouls = [NSNumber numberWithInt:fouls];
-    } else if ([title isEqualToString:@"Add Steal"]) {
-        steals++;
-        _stealLabel.text = [NSString stringWithFormat:@"%d", steals];
-        stats.steals = [NSNumber numberWithInt:steals];
-    } else if (([title isEqualToString:@"Remove Steal"]) && (steals > 0)) {
-        steals--;
-        _stealLabel.text = [NSString stringWithFormat:@"%d", steals];
-        stats.steals = [NSNumber numberWithInt:steals];
-    } else if ([title isEqualToString:@"Add Block"]) {
-        blocks++;
-        _blockLabel.text = [NSString stringWithFormat:@"%d", blocks];
-        stats.blocks = [NSNumber numberWithInt:blocks];
-    } else if (([title isEqualToString:@"Remove Block"]) && (blocks > 0)) {
-        blocks--;
-        _blockLabel.text = [NSString stringWithFormat:@"%d", blocks];
-        stats.blocks = [NSNumber numberWithInt:blocks];
-    } else if ([title isEqualToString:@"Add Offensive Rebound"] ) {
-        offrebound++;
-        _offrbLabel.text = [NSString stringWithFormat:@"%d", offrebound];
-        stats.offrebound = [NSNumber numberWithInt:offrebound];
-    } else if (([title isEqualToString:@"Remove Offensive Rebound"]) && (offrebound > 0)) {
-        offrebound--;
-        _offrbLabel.text = [NSString stringWithFormat:@"%d", offrebound];
-        stats.offrebound = [NSNumber numberWithInt:offrebound];
-    } else if ([title isEqualToString:@"Add Defensive Rebound"] ) {
-        defrebound++;
-        _defrbLabel.text = [NSString stringWithFormat:@"%d", defrebound];
-        stats.defrebound = [NSNumber numberWithInt:defrebound];
-    } else if (([title isEqualToString:@"Remove Defensive Rebound"]) && (defrebound > 0)) {
-        defrebound--;
-        _defrbLabel.text = [NSString stringWithFormat:@"%d", defrebound];
-        stats.defrebound = [NSNumber numberWithInt:defrebound];
-    } else if ([title isEqualToString:@"Add Assist"]) {
-        assists++;
-        _assistsLabel.text = [NSString stringWithFormat:@"%d", assists];
-        stats.assists = [NSNumber numberWithInt:assists];
-    } else if (([title isEqualToString:@"Remove Assist"]) && (assists > 0)) {
-        assists--;
-        _assistsLabel.text = [NSString stringWithFormat:@"%d", assists];
-        stats.assists = [NSNumber numberWithInt:assists];
     }
     
     _totalPointsLabel.text = [NSString stringWithFormat:@"%d", (twofgm *2) + (threefgm *3) + ftmade];

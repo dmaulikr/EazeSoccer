@@ -12,6 +12,7 @@
 #import "BasketballStats.h"
 #import "LiveBasketballStatsViewController.h"
 #import "BasketballTotalStatsViewController.h"
+#import "EazesportzBasketballNonScoreStatsViewController.h"
 
 @interface BasketballStatsViewController ()
 
@@ -20,6 +21,7 @@
 @implementation BasketballStatsViewController {
     LiveBasketballStatsViewController *liveStatsController;
     BasketballTotalStatsViewController *totalStatsController;
+    EazesportzBasketballNonScoreStatsViewController *nonscoreStatsController;
 }
 
 @synthesize athlete;
@@ -53,6 +55,7 @@
     
     _basketballLiveStatsContainer.hidden = YES;
     _basketballTotalStatsContainer.hidden = YES;
+    _nonscoreStatsContainer.hidden = YES;
     
     if (game)
         _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", game.opponent_name];
@@ -207,16 +210,13 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if (athlete)
-        return [currentSettings.gameList count];
-    else
-        return [currentSettings.roster count];
+    return [currentSettings.roster count] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -230,71 +230,164 @@
     }
     
     BasketballStats *stats;
-    BOOL hasstats = NO;
     
-    if (athlete) {
-        GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
-        stats = [athlete findBasketballGameStatEntries:agame.id];
-        cell.nameLabel.text = agame.opponent;
-        cell.playerImage.image = [agame opponentImage];
-    } else {
+    if (indexPath.row < currentSettings.roster.count) {
         Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
         stats = [player findBasketballGameStatEntries:game.id];
         cell.nameLabel.text = player.numberLogname;
         cell.playerImage.image = [player getImage:@"tiny"];
+    } else {
+        stats = [[BasketballStats alloc] init];
+        cell.nameLabel.text = @"Totals";
+        cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
     }
     
-    if (stats) {
-        hasstats = YES;
-        cell.fgmLabel.text = [stats.twomade stringValue];
-        cell.fgaLabel.text = [stats.twoattempt stringValue];
-        
-        if ([stats.twomade intValue] > 0)
-            cell.fgpLabel.text = [NSString stringWithFormat:@"%.02f", (float)[stats.twomade intValue] / (float)[stats.twoattempt intValue]];
-        else
-            cell.fgpLabel.text = @"0.00";
-        
-        cell.threepmLabel.text = [stats.threemade stringValue];
-        cell.threepaLabel.text = [stats.threeattempt stringValue];
-        
-        if ([stats.threemade intValue] > 0)
-            cell.threepctLabel.text = [NSString stringWithFormat:@"%.02f", (float)[stats.threemade intValue] / (float)[stats.threeattempt intValue]];
-        else
-            cell.threepctLabel.text = @"0.00";
-        
-        cell.ftmLabel.text = [stats.ftmade stringValue];
-        cell.ftaLabel.text = [stats.ftattempt stringValue];
-        
-        if ([stats.ftmade intValue] > 0)
-            cell.ftpctLabel.text = [NSString stringWithFormat:@"%.02f", (float)[stats.ftmade intValue] / (float)[stats.ftattempt intValue]];
-        else
-            cell.ftpctLabel.text = @"0.00";
-        
-        cell.foulLabel.text = [stats.fouls stringValue];
-        cell.pointsLabel.text = [NSString stringWithFormat:@"%D",([stats.twomade intValue] * 2) + ([stats.threemade intValue] * 3) +
-                                 [stats.ftmade intValue]];
+    if (indexPath.section == 0) {
+        if (indexPath.row < currentSettings.roster.count) {
+            if (stats) {
+                cell.fgmLabel.text = [stats.twomade stringValue];
+                cell.fgaLabel.text = [stats.twoattempt stringValue];
+                
+                if ([stats.twomade intValue] > 0)
+                    cell.fgpLabel.text = [NSString stringWithFormat:@"%.02f", (float)[stats.twomade intValue] / (float)[stats.twoattempt intValue]];
+                else
+                    cell.fgpLabel.text = @"0.00";
+                
+                cell.threepmLabel.text = [stats.threemade stringValue];
+                cell.threepaLabel.text = [stats.threeattempt stringValue];
+                
+                if ([stats.threemade intValue] > 0)
+                    cell.threepctLabel.text = [NSString stringWithFormat:@"%.02f", (float)[stats.threemade intValue] / (float)[stats.threeattempt intValue]];
+                else
+                    cell.threepctLabel.text = @"0.00";
+                
+                cell.ftmLabel.text = [stats.ftmade stringValue];
+                cell.ftaLabel.text = [stats.ftattempt stringValue];
+                
+                if ([stats.ftmade intValue] > 0)
+                    cell.ftpctLabel.text = [NSString stringWithFormat:@"%.02f", (float)[stats.ftmade intValue] / (float)[stats.ftattempt intValue]];
+                else
+                    cell.ftpctLabel.text = @"0.00";
+                
+                cell.pointsLabel.text = [NSString stringWithFormat:@"%D",([stats.twomade intValue] * 2) + ([stats.threemade intValue] * 3) +
+                                         [stats.ftmade intValue]];
+            } else {
+                cell.fgmLabel.text = @"0";
+                cell.fgaLabel.text = @"0";
+                cell.fgpLabel.text = @"0.00";
+                cell.threepmLabel.text = @"0";
+                cell.threepaLabel.text = @"0";
+                cell.threepctLabel.text = @"0.00";
+                cell.ftmLabel.text = @"0";
+                cell.ftaLabel.text = @"0";
+                cell.ftpctLabel.text = @"0.00";
+                cell.pointsLabel.text = @"0";
+            }
+        } else {
+            int fgm = 0, fga = 0, threefgm = 0, threefga = 0, ftm = 0, fta = 0, points = 0;
+            float fgp = 0.0, threefgp = 0.0, ftp = 0.0;
+            
+            for (int i = 0; i < currentSettings.roster.count; i++) {
+                BasketballStats *astat = [[currentSettings.roster objectAtIndex:i] findBasketballGameStatEntries:game.id];
+                fgm += [astat.twomade intValue];
+                fga += [astat.twoattempt intValue];
+                
+                if ([astat.twomade intValue] > 0)
+                    fgp += [astat.twomade floatValue]/[astat.twoattempt floatValue];
+                
+                threefga += [astat.threeattempt intValue];
+                threefgm += [astat.threemade intValue];
+                
+                if ([astat.threemade intValue] > 0)
+                    threefgp += [astat.threemade floatValue]/[astat.threeattempt floatValue];
+                
+                ftm += [astat.ftmade intValue];
+                fta += [astat.ftattempt intValue];
+                
+                if ([astat.ftmade intValue] > 0)
+                    ftp += [astat.ftmade floatValue]/[astat.ftattempt floatValue];
+                
+                points += ([astat.threemade intValue] * 3) + ([astat.twomade intValue] * 2) + [astat.ftmade intValue];
+            }
+            
+            cell.fgmLabel.text = [NSString stringWithFormat:@"%d", fgm];
+            cell.fgaLabel.text = [NSString stringWithFormat:@"%d", fga];
+            cell.fgpLabel.text = [NSString stringWithFormat:@"%.2f", fgp];
+            cell.threepmLabel.text = [NSString stringWithFormat:@"%d", threefgm];
+            cell.threepaLabel.text = [NSString stringWithFormat:@"%d", threefga];
+            cell.threepctLabel.text = [NSString stringWithFormat:@"%.2f", threefgp];
+            cell.ftmLabel.text = [NSString stringWithFormat:@"%d", ftm];
+            cell.ftaLabel.text = [NSString stringWithFormat:@"%d", fta];
+            cell.ftpctLabel.text = [NSString stringWithFormat:@"%.2f", ftp];
+            cell.pointsLabel.text = [NSString stringWithFormat:@"%d", points];
+        }
     } else {
-        cell.fgmLabel.text = @"0";
-        cell.fgaLabel.text = @"0";
-        cell.fgpLabel.text = @"0.00";
-        cell.threepmLabel.text = @"0";
-        cell.threepaLabel.text = @"0";
-        cell.threepctLabel.text = @"0.00";
-        cell.ftmLabel.text = @"0";
-        cell.ftaLabel.text = @"0";
-        cell.ftpctLabel.text = @"0.00";
-        cell.foulLabel.text = @"0";
-        cell.pointsLabel.text = @"0";
+        if (indexPath.row < currentSettings.roster.count) {
+            if (stats) {
+                cell.fgmLabel.text = [stats.fouls stringValue];
+                cell.fgaLabel.text = [stats.offrebound stringValue];
+                cell.fgpLabel.text = [stats.defrebound stringValue];
+                cell.threepmLabel.text = [stats.assists stringValue];
+                cell.threepaLabel.text = [stats.steals stringValue];
+                cell.threepctLabel.text = [stats.blocks stringValue];
+                cell.ftmLabel.text = [stats.turnovers stringValue];
+                cell.ftaLabel.text = @"";
+                cell.ftpctLabel.text = @"";
+                cell.pointsLabel.text = @"";
+            } else {
+                cell.fgmLabel.text = @"0";
+                cell.fgaLabel.text = @"0";
+                cell.fgpLabel.text = @"0.00";
+                cell.threepmLabel.text = @"0";
+                cell.threepaLabel.text = @"0";
+                cell.threepctLabel.text = @"0.00";
+                cell.ftmLabel.text = @"0";
+                cell.ftaLabel.text = @"0";
+                cell.ftpctLabel.text = @"0.00";
+                cell.pointsLabel.text = @"0";
+            }
+        } else {
+            int fouls = 0, orb = 0, drb = 0, assist = 0, steals = 0, blocks = 0, turnovers = 0;
+            
+            for (int i = 0; i < currentSettings.roster.count; i++) {
+                BasketballStats *astat = [[currentSettings.roster objectAtIndex:i] findBasketballGameStatEntries:game.id];
+                fouls += [astat.fouls intValue];
+                orb += [astat.offrebound intValue];
+                drb += [astat.defrebound intValue];
+                assist += [astat.assists intValue];
+                steals += [astat.steals intValue];
+                blocks += [astat.blocks intValue];
+                turnovers += [astat.turnovers intValue];
+            }
+            
+            cell.fgmLabel.text = [NSString stringWithFormat:@"%d", fouls];
+            cell.fgaLabel.text = [NSString stringWithFormat:@"%d", orb];
+            cell.fgpLabel.text = [NSString stringWithFormat:@"%d", drb];
+            cell.threepmLabel.text = [NSString stringWithFormat:@"%d", assist];
+            cell.threepaLabel.text = [NSString stringWithFormat:@"%d", steals];
+            cell.threepctLabel.text = [NSString stringWithFormat:@"%d", blocks];
+            cell.ftmLabel.text = [NSString stringWithFormat:@"%d", turnovers];
+            cell.ftaLabel.text = @"";
+            cell.ftpctLabel.text = @"";
+            cell.pointsLabel.text = @"";
+        }
     }
     
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (game)
-        return @"              Player                FGM    FGA      FGP   3PA    3PM       3FGP  FTM     FTA        FTP  FOULS POINTS";
-    else
-        return @"              Game                  FGM    FGA      FGP   3PA    3PM       3FGP  FTM     FTA        FTP  FOULS POINTS";
+    if (section == 0) {
+        if (game)
+            return @"              Player                         FGM     FGA      FGP    3PA     3PM      3FGP  FTM     FTA       FTP  PTS";
+        else
+            return @"              Game                           FGM     FGA      FGP    3PA     3PM      3FGP  FTM     FTA       FTP  PTS";
+    } else {
+        if (game)
+            return @"              Player                       FOULS    ORB    DRB     AST      STL    BLK      TO";
+        else
+            return @"              Game                         FOULS    ORB    DRB     AST      STL    BLK      TO";
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -304,11 +397,20 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
    
     if (game) {
-        liveStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
-        liveStatsController.game = game;
-    } else if (athlete) {
-        liveStatsController.player = athlete;
-        liveStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        if (indexPath.section == 0) {
+            liveStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+            liveStatsController.game = game;
+            [liveStatsController viewWillAppear:YES];
+            _basketballLiveStatsContainer.hidden = NO;
+       } else {
+            nonscoreStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+            nonscoreStatsController.game = game;
+            _nonscoreStatsContainer.hidden = NO;
+            [nonscoreStatsController viewWillAppear:YES];
+       }
+//    } else if (athlete) {
+//        liveStatsController.player = athlete;
+//        liveStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"  message:@"Select game to update stats for player!"
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -317,8 +419,6 @@
         return;
     }
     
-    [liveStatsController viewWillAppear:YES];
-    _basketballLiveStatsContainer.hidden = NO;
 }
 
 
@@ -347,6 +447,8 @@
         liveStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"TotalStatsSegue"]) {
         totalStatsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"NonscoreStatsSegue"]) {
+        nonscoreStatsController = segue.destinationViewController;
     }
 }
 
@@ -479,6 +581,13 @@
         _visitorPossessionArrow.hidden = YES;
         game.possession = @"Home";
     }
+}
+
+- (IBAction)nonscoreBasketballPlayerStats:(UIStoryboardSegue *)segue {
+    _nonscoreStatsContainer.hidden = YES;
+    [nonscoreStatsController.player updateBasketballGameStats:nonscoreStatsController.stats];    
+    [_basketballTableView reloadData];
+    [self viewWillAppear:YES];
 }
 
 @end

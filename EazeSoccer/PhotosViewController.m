@@ -283,15 +283,10 @@
     }
 }
 
-- (IBAction)selectPhotoPlayer:(UIStoryboardSegue *)segue {
-    [self playerSelected:segue];
-}
-
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue {
     player = playerSelectionController.player;
     if (player) {
         game = nil;
-        //        gamelog = nil;
         user = nil;
         photos = nil;
         [self getPhotos];
@@ -299,28 +294,22 @@
     _playerContainer.hidden = YES;
 }
 
-- (IBAction)selectPhotoGame:(UIStoryboardSegue *)segue {
-    [self gameSelected:segue];
-}
-
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     game = gameSelectionController.thegame;
     if (game) {
         player = nil;
         user = nil;
-        //        gamelog = nil;
         photos = nil;
         [self getPhotos];
     }
     _gameContainer.hidden = YES;
 }
 
-- (IBAction)selectPhotoUser:(UIStoryboardSegue *)segue {
+- (IBAction)selectUser:(UIStoryboardSegue *)segue {
     user = userSelectController.user;
     if (userSelectController.user) {
         game = nil;
         player = nil;
-//        gamelog = nil;
         photos = nil;
         [self getPhotos];
     }

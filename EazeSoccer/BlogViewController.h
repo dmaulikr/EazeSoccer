@@ -40,10 +40,7 @@
 @property (weak, nonatomic) IBOutlet UIView *playerSelectionContainer;
 @property (weak, nonatomic) IBOutlet UIView *coachSelectionContainer;
 
-- (IBAction)selectBlogSearchPlayer:(UIStoryboardSegue *)segue;
-- (IBAction)selectBlogSearchCoach:(UIStoryboardSegue *)segue;
-- (IBAction)selectBlogSearchUser:(UIStoryboardSegue *)segue;
-- (IBAction)selectBlogSearchGame:(UIStoryboardSegue *)segue;
+- (IBAction)selectUser:(UIStoryboardSegue *)segue;
 
 @property (weak, nonatomic) IBOutlet UIView *gameScheduleContainer;
 @property (weak, nonatomic) IBOutlet UIView *userContainer;

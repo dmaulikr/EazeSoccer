@@ -46,11 +46,7 @@
 - (IBAction)playerButtonClicked:(id)sender;
 - (IBAction)playButtonClicked:(id)sender;
 
-- (IBAction)selectVideoClipGame:(UIStoryboardSegue *)segue;
-
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue;
-
-- (IBAction)selectVideoClipPlayer:(UIStoryboardSegue *)segue;
 
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 

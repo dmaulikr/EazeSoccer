@@ -174,10 +174,6 @@
     _playerSelectContainer.hidden = YES;
 }
 
-- (IBAction)selectPhotoGameEdit:(UIStoryboardSegue *)segue {
-    [self gameSelected:segue];
-}
-
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
         _gameTextField.text = gameController.thegame.game_name;
@@ -192,10 +188,6 @@
         _gameTextField.text = @"";
     }
     _gameSelectContainer.hidden = YES;
-}
-
-- (IBAction)selectPhotoPlayersEdit:(UIStoryboardSegue *)segue {
-    [self playerSelected:segue];
 }
 
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue {

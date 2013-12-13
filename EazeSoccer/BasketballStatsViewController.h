@@ -19,8 +19,10 @@
 @property (weak, nonatomic) IBOutlet UITableView *basketballTableView;
 - (IBAction)saveButtonClicked:(id)sender;
 
--(IBAction)liveBasketballPlayerStats:(UIStoryboardSegue *)segue;
--(IBAction)updateTotalBasketballStats:(UIStoryboardSegue *)segue;
+- (IBAction)liveBasketballPlayerStats:(UIStoryboardSegue *)segue;
+- (IBAction)nonscoreBasketballPlayerStats:(UIStoryboardSegue *)segue;
+- (IBAction)updateTotalBasketballStats:(UIStoryboardSegue *)segue;
+
 @property (weak, nonatomic) IBOutlet UIView *basketballLiveStatsContainer;
 @property (weak, nonatomic) IBOutlet UIView *basketballTotalStatsContainer;
 @property (weak, nonatomic) IBOutlet UIImageView *bannerImage;
@@ -57,5 +59,6 @@
 - (IBAction)possessionArrorButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *homeScoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *visitorScoreLabel;
+@property (weak, nonatomic) IBOutlet UIView *nonscoreStatsContainer;
 
 @end

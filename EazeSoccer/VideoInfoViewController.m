@@ -333,10 +333,6 @@
     }
 }
 
-- (IBAction)selectVideoClipGame:(UIStoryboardSegue *)segue {
-    [self gameSelected:segue];
-}
-
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
         _gameTextField.text = gameController.thegame.game_name;
@@ -352,10 +348,6 @@
         _gameTextField.text = @"";
     }
     _gameSelectContainer.hidden = YES;
-}
-
-- (IBAction)selectVideoClipPlayer:(UIStoryboardSegue *)segue {
-    [self playerSelected:segue];
 }
 
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue {
@@ -471,8 +463,7 @@
     NSDictionary* json = [NSJSONSerialization JSONObjectWithData:result options:kNilOptions error:&jsonSerializationError];
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     if ([httpResponse statusCode] != 200) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data"
-                                                        message:[json objectForKey:@"error"]
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating videoclip data" message:[json objectForKey:@"error"]
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];

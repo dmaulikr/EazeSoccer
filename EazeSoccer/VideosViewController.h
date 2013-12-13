@@ -31,9 +31,7 @@
 @property (weak, nonatomic) IBOutlet UIView *playerSelectContainer;
 @property (weak, nonatomic) IBOutlet UIView *userSelectionContainer;
 
-- (IBAction)selectVideoGame:(UIStoryboardSegue *)segue;
-- (IBAction)selectVideoPlayer:(UIStoryboardSegue *)segue;
-- (IBAction)selectvideoUser:(UIStoryboardSegue *)segue;
+- (IBAction)selectUser:(UIStoryboardSegue *)segue;
 
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue;

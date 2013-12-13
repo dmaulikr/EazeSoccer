@@ -23,6 +23,7 @@
 @synthesize blocks;
 @synthesize offrebound;
 @synthesize defrebound;
+@synthesize turnovers;
 
 @synthesize gameschedule_id;
 @synthesize basketball_stat_id;
@@ -44,6 +45,7 @@
         self.assists = [NSNumber numberWithInt:0];
         self.defrebound = [NSNumber numberWithInt:0];
         self.offrebound = [NSNumber numberWithInt:0];
+        self.turnovers = [NSNumber numberWithInt:0];
         self.gameschedule_id = @"";
         self.basketball_stat_id = @"";
         return self;
@@ -65,6 +67,8 @@
         blocks = [basketballStatDirectory objectForKey:@"blocks"];
         offrebound = [basketballStatDirectory objectForKey:@"offrebound"];
         defrebound = [basketballStatDirectory objectForKey:@"defrebound"];
+        turnovers = [basketballStatDirectory objectForKey:@"turnovers"];
+        
         basketball_stat_id = [basketballStatDirectory objectForKey:@"basketball_stat_id"];
         gameschedule_id = [basketballStatDirectory objectForKey:@"gameschedule_id"];
         athleteid = playerid;
@@ -88,6 +92,8 @@
     copy.assists = assists;
     copy.defrebound = defrebound;
     copy.offrebound = offrebound;
+    copy.turnovers = turnovers;
+    
     copy.gameschedule_id = gameschedule_id;
     copy.basketball_stat_id = basketball_stat_id;
     copy.athleteid = athleteid;
@@ -114,7 +120,8 @@
                                      [threeattempt stringValue], @"threeattempt", [threemade stringValue], @"threemade",
                                      [ftattempt stringValue], @"ftattempt", [ftmade stringValue], @"ftmade", [fouls stringValue], @"fouls",
                                      [assists stringValue], @"assists", [steals stringValue], @"steals", [blocks stringValue], @"blocks",
-                                     [offrebound stringValue], @"offrebound", [defrebound stringValue], @"defrebound", @"Totals", @"livestats", nil];
+                                     [offrebound stringValue], @"offrebound", [defrebound stringValue], @"defrebound", [turnovers stringValue], @"turnovers",
+                                     @"Totals", @"livestats", nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"basketball_stat", nil];

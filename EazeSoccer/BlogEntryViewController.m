@@ -307,26 +307,6 @@
     
 }
 
-- (IBAction)blogTagPlayerSelected:(UIStoryboardSegue *)segue {
-    Athlete *player = playerSelectionController.player;
-    
-    if (player != nil) {
-        blog.athlete = player.athleteid;
-        _playerTextField.text = [[currentSettings findAthlete:blog.athlete] logname];
-        _tagPlayerButton.enabled = YES;
-        [_tagPlayerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    } else {
-        blog.athlete = @"";
-        _playerTextField.text = @"";
-        _tagPlayerButton.enabled = NO;
-    }
-    _playerContainer.hidden = YES;
-}
-
-- (IBAction)blogTagGameSelected:(UIStoryboardSegue *)segue {
-    [self gameSelected:segue];
-}
-
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     GameSchedule *game = gameSelectionController.thegame;
     
@@ -341,10 +321,6 @@
         _tagGameButton.enabled = NO;
     }
     _gameContainer.hidden = YES;
-}
-
-- (IBAction)blogTagCoachSelected:(UIStoryboardSegue *)segue {
-    [self coachSelected:segue];
 }
 
 - (IBAction)coachSelected:(UIStoryboardSegue *)segue {

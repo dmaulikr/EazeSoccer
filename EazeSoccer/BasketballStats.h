@@ -22,6 +22,7 @@
 @property(nonatomic, strong) NSNumber *blocks;
 @property(nonatomic, strong) NSNumber *offrebound;
 @property(nonatomic, strong) NSNumber *defrebound;
+@property(nonatomic, strong) NSNumber *turnovers;
 
 @property(nonatomic, strong) NSString *gameschedule_id;
 @property(nonatomic, strong) NSString *basketball_stat_id;
