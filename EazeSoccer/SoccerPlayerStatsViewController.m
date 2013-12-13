@@ -121,7 +121,7 @@
     // Return the number of rows in the section.
     if (game) {
         if (section == 0)
-            return currentSettings.roster.count;
+            return currentSettings.roster.count + 1;
         else {
            goalies = [[NSMutableArray alloc] init];
             
@@ -131,13 +131,13 @@
                     [goalies addObject:aplayer];
                 }
             }
-            return goalies.count;
+            return goalies.count + 1;
         }
     } else if (athlete) {
         if (section == 0)
-            return currentSettings.gameList.count;
+            return currentSettings.gameList.count + 1;
         else if ([athlete isSoccerGoalie]) {
-            return currentSettings.gameList.count;
+            return currentSettings.gameList.count + 1;
         } else {
             return 0;
         }
@@ -162,15 +162,49 @@
     if (indexPath.section == 0) {
         
         if (game) {
-            Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
-            cell.playerName.text = player.numberLogname;
-            stats = [player findSoccerGameStats:game.id];
-            cell.imageView.image = [player getImage:@"tiny"];
+            if (indexPath.row < currentSettings.roster.count) {
+                Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
+                cell.playerName.text = player.numberLogname;
+                stats = [player findSoccerGameStats:game.id];
+                cell.imageView.image = [player getImage:@"tiny"];
+            } else {
+                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
+                cell.playerName.text = @"Totals";
+                stats = [[Soccer alloc] init];
+                
+                int goals = 0, shots = 0, assists = 0, steals = 0, cornerkicks = 0;
+                    
+                for (int i = 0; i < currentSettings.roster.count; i++) {
+                    Soccer *astat = [[currentSettings.roster objectAtIndex:i] findSoccerGameStats:game.id];
+                    goals += [astat.goals intValue];
+                    shots += [astat.shotstaken intValue];
+                    assists += [astat.assists intValue];
+                    steals += [astat.steals intValue];
+                    cornerkicks += [astat.cornerkicks intValue];
+                }
+            }
         } else if (athlete) {
-            GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
-            cell.playerName.text = agame.opponent;
-            stats = [athlete findSoccerGameStats:agame.id];
-            cell.imageView.image = [agame opponentImage];
+            if (indexPath.row < currentSettings.gameList.count) {
+                GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
+                cell.playerName.text = agame.opponent;
+                stats = [athlete findSoccerGameStats:agame.id];
+                cell.imageView.image = [agame opponentImage];
+            } else {
+                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
+                cell.playerName.text = @"Totals";
+                stats = [[Soccer alloc] init];
+                
+                int goals = 0, shots = 0, assists = 0, steals = 0, cornerkicks = 0;
+                
+                for (int i = 0; i < currentSettings.gameList.count; i++) {
+                    Soccer *astat = [athlete findSoccerGameStats:[[currentSettings.gameList objectAtIndex:i] id]];
+                    goals += [astat.goals intValue];
+                    shots += [astat.shotstaken intValue];
+                    assists += [astat.assists intValue];
+                    steals += [astat.steals intValue];
+                    cornerkicks += [astat.cornerkicks intValue];
+                }
+            }
         } else {
             Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
             cell.playerName.text = player.numberLogname;
@@ -186,15 +220,45 @@
         cell.label6.text = [NSString stringWithFormat:@"%d", ([stats.goals intValue] * 2) + [stats.assists intValue]];
     } else {
         if (game) {
-            Athlete *player = [goalies objectAtIndex:indexPath.row];
-            cell.playerName.text = player.numberLogname;
-            stats = [player findSoccerGameStats:game.id];
-            cell.imageView.image = [player getImage:@"tiny"];
+            if (indexPath.row < goalies.count) {
+                Athlete *player = [goalies objectAtIndex:indexPath.row];
+                cell.playerName.text = player.numberLogname;
+                stats = [player findSoccerGameStats:game.id];
+                cell.imageView.image = [player getImage:@"tiny"];
+            } else {
+                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
+                cell.playerName.text = @"Totals";
+                stats = [[Soccer alloc] init];
+                
+                int goalssaved = 0, goalsagainst = 0, minutesplayed = 0;
+                
+                for (int i = 0; i < goalies.count; i++) {
+                    Soccer *astat = [[goalies objectAtIndex:i] findSoccerGameStats:game.id];
+                    goalsagainst += [astat.goalsagainst intValue];
+                    goalssaved += [astat.goalssaved intValue];
+                    minutesplayed += [astat.minutesplayed intValue];
+                }
+            }
         } else {
-            GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
-            cell.playerName.text = agame.opponent;
-            stats = [athlete findSoccerGameStats:agame.id];
-            cell.imageView.image = [agame opponentImage];
+            if (indexPath.row < currentSettings.gameList.count) {
+                GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
+                cell.playerName.text = agame.opponent;
+                stats = [athlete findSoccerGameStats:agame.id];
+                cell.imageView.image = [agame opponentImage];
+            } else {
+                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
+                cell.playerName.text = @"Totals";
+                stats = [[Soccer alloc] init];
+                
+                int goalssaved = 0, goalsagainst = 0, minutesplayed = 0;
+                
+                for (int i = 0; i < currentSettings.gameList.count; i++) {
+                    Soccer *astat = [athlete findSoccerGameStats:[[currentSettings.gameList objectAtIndex:i] id]];
+                    goalsagainst += [astat.goalsagainst intValue];
+                    goalssaved += [astat.goalssaved intValue];
+                    minutesplayed += [astat.minutesplayed intValue];
+                }
+            }
         }
 
         cell.label1.text = [stats.goalssaved stringValue];
@@ -226,19 +290,31 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (game) {
-        if (indexPath.section == 0)
-            liveStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
-        else
-            liveStatsController.player = [goalies objectAtIndex:indexPath.row];
+        if (indexPath.section == 0) {
+            if (indexPath.row < currentSettings.roster.count) {
+                liveStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+                _soccerStatsContainer.hidden = NO;
+                liveStatsController.game = game;
+                [liveStatsController viewWillAppear:YES];
+            }
+        } else {
+            if (indexPath.row < goalies.count) {
+                liveStatsController.player = [goalies objectAtIndex:indexPath.row];
+                _soccerStatsContainer.hidden = NO;
+                liveStatsController.game = game;
+                [liveStatsController viewWillAppear:YES];
+            }
+        }
         
-        liveStatsController.game = game;
     } else if (athlete) {
-        if (indexPath.section == 0)
+        if (indexPath.row < currentSettings.gameList.count) {
             liveStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
-        else
+            liveStatsController.player = athlete;
+            _soccerStatsContainer.hidden = NO;
+            [liveStatsController viewWillAppear:YES];
             liveStatsController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        }
         
-        liveStatsController.player = athlete;
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"  message:@"Select game to update stats for player!"
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -246,9 +322,6 @@
         [alert show];
         return;
     }
-    
-    [liveStatsController viewWillAppear:YES];
-    _soccerStatsContainer.hidden = NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

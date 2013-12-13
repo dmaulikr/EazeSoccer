@@ -398,15 +398,19 @@
    
     if (game) {
         if (indexPath.section == 0) {
-            liveStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
-            liveStatsController.game = game;
-            [liveStatsController viewWillAppear:YES];
-            _basketballLiveStatsContainer.hidden = NO;
+            if (indexPath.row < currentSettings.roster.count) {
+                liveStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+                liveStatsController.game = game;
+                [liveStatsController viewWillAppear:YES];
+                _basketballLiveStatsContainer.hidden = NO;
+            }
        } else {
-            nonscoreStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
-            nonscoreStatsController.game = game;
-            _nonscoreStatsContainer.hidden = NO;
-            [nonscoreStatsController viewWillAppear:YES];
+           if (indexPath.row < currentSettings.roster.count) {
+                nonscoreStatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+                nonscoreStatsController.game = game;
+                _nonscoreStatsContainer.hidden = NO;
+                [nonscoreStatsController viewWillAppear:YES];
+           }
        }
 //    } else if (athlete) {
 //        liveStatsController.player = athlete;

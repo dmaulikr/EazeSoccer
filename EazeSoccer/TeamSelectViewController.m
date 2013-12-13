@@ -178,6 +178,7 @@
         [currentSettings retrieveCoaches];
         [currentSettings retrievePlayers];
         [currentSettings retrieveAlerts];
+        currentSettings.refreshGames = YES;
         self.navigationItem.hidesBackButton = NO;
         self.tabBarController.tabBar.hidden = NO;
         [self.navigationController popToRootViewControllerAnimated:YES];

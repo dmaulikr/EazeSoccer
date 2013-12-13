@@ -103,7 +103,7 @@
             float fgp = 0.0, threefgp = 0.0, ftp = 0.0;
             
             for (int i = 0; i < currentSettings.gameList.count; i++) {
-                BasketballStats *astat = [self.athlete findBasketballGameStatEntries:[currentSettings.gameList objectAtIndex:i]];
+                BasketballStats *astat = [self.athlete findBasketballGameStatEntries:[[currentSettings.gameList objectAtIndex:i] id]];
                 fgm += [astat.twomade intValue];
                 fga += [astat.twoattempt intValue];
                 
@@ -162,7 +162,7 @@
             int fouls = 0, orb = 0, drb = 0, assist = 0, steals = 0, blocks = 0, turnovers = 0;
             
             for (int i = 0; i < currentSettings.gameList.count; i++) {
-                BasketballStats *astat = [self.athlete findBasketballGameStatEntries:[currentSettings.gameList objectAtIndex:i]];
+                BasketballStats *astat = [self.athlete findBasketballGameStatEntries:[[currentSettings.gameList objectAtIndex:i] id]];
                 fouls += [astat.fouls intValue];
                 orb += [astat.offrebound intValue];
                 drb += [astat.defrebound intValue];
