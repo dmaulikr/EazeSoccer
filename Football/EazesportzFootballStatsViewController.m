@@ -1085,10 +1085,9 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
-    } else
+    } else {
         _gamelogContainer.hidden = YES;
-    
-    [self viewWillAppear:YES];
+    }
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -1265,6 +1264,7 @@
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
     _gamelogContainer.hidden = YES;
+    [self viewWillAppear:YES];
 }
 
 - (IBAction)finalButtonClicked:(id)sender {

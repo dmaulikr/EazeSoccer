@@ -89,17 +89,7 @@
     } else if (newsitem.team.length > 0) {
         _imageView.image = [[currentSettings findTeam:newsitem.team] getImage:@"thumb"];
     } else {
-        UIImage *image;
-        
-        if ([currentSettings.sport.sport_logo isEqualToString:@"sport_logo/large/missing.png"]) {
-            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"teambutton.png"], 1)];
-        } else {
-            NSURL * imageURL = [NSURL URLWithString:currentSettings.sport.sport_logo];
-            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-            image = [UIImage imageWithData:imageData];
-        }
-        //        cell.imageView.image = image;
-        _imageView.image = image;
+        _imageView.image = [currentSettings.sport getImage:@"thumb"];
     }
     
     [_newsTextView setText:newsitem.news];

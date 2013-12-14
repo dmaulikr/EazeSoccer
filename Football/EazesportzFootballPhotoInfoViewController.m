@@ -69,9 +69,9 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     if (textField == _gameplayTextField) {
         [textField resignFirstResponder];
-        if (self.gameController.thegame) {
+        if (self.photo.game) {
             _gamelogContainer.hidden = NO;
-            gamelogController.game = self.gameController.thegame;
+            gamelogController.game = self.photo.game;
             gamelogController.gamelog = nil;
             [gamelogController viewWillAppear:YES];
         } else {

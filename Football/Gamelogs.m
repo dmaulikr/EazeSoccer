@@ -105,6 +105,7 @@
     NSDictionary *gamelogdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
+        [currentSettings retrievePlayers];
         return nil;
     } else {
         httperror = [gamelogdata objectForKey:@"error"];
