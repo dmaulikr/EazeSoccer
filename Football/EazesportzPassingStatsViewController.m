@@ -321,6 +321,7 @@
     } else if ([title isEqualToString:@"Add TD"]) {
         if (_receiverTextField.text.length > 0) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
+            recstats.td =[NSNumber numberWithInt:[recstats.td intValue] + 1];
             _tdlabel.text = [stat.td stringValue];
             _minutesTextField.hidden = NO;
             _minutesTextField.enabled = YES;
@@ -341,6 +342,7 @@
     } else if (([title isEqualToString:@"Delete TD"]) && ([stat.td intValue] > 0)) {
         if (touchdown) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
+            recstats.td = [NSNumber numberWithInt:[recstats.td intValue] - 1];
             _tdlabel.text = [stat.td stringValue];
             _minutesTextField.hidden = YES;
             _minutesTextField.enabled = NO;
@@ -363,7 +365,8 @@
         }
     } else if ([title isEqualToString:@"Add 2PT"]) {
         if (_receiverTextField.text.length > 0) {
-            stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
+            stat.twopointconv = [NSNumber numberWithInt:[stat.twopointconv intValue] + 1];
+            recstats.twopointconv = [NSNumber numberWithInt:[recstats.twopointconv intValue] + 1];
             _tdlabel.text = [stat.td stringValue];
             _minutesTextField.hidden = NO;
             _minutesTextField.enabled = YES;
@@ -383,7 +386,8 @@
         }
     } else if (([title isEqualToString:@"Delete 2PT"]) && ([stat.td intValue] > 0)) {
         if (twopoint) {
-            stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
+            stat.twopointconv = [NSNumber numberWithInt:[stat.twopointconv intValue] - 1];
+            recstats.twopointconv = [NSNumber numberWithInt:[recstats.twopointconv intValue] - 1];
             _tdlabel.text = [stat.td stringValue];
             _minutesTextField.hidden = YES;
             _minutesTextField.enabled = NO;
