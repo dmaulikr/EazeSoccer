@@ -373,6 +373,8 @@
         _opponentTextField.text = teamSelectController.team.title;
         _mascotTextField.text = teamSelectController.team.mascot;
         
+        
+        
         if (([teamSelectController.team.team_logo isEqualToString:@"/team_logos/thumb/missing.png"]) ||
             (teamSelectController.team.team_logo.length == 0)) {
             [_opponentImageButton setImage:[findSiteController.sport getImage:@"thumb"] forState:UIControlStateNormal];

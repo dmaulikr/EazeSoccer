@@ -28,4 +28,6 @@
 
 - (id)initWithDirectory:(NSDictionary *)items;
 
+- (UIImage *)getImage:(NSString *)size;
+
 @end

@@ -148,6 +148,10 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
+    return request;
+}
+
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;

@@ -6274,7 +6274,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <navigationItem title="Select User" id="yqN-rX-fP5">
                                         <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="e3v-KH-3U7">
                                             <connections>
-                                                <segue destination="9M0-uN-Fbq" kind="unwind" unwindAction="selectPhotoUser:" id="JV0-sy-bfg"/>
+                                                <segue destination="9M0-uN-Fbq" kind="unwind" unwindAction="selectUser:" id="lQ8-Uw-di8"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -6385,7 +6385,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ndo-eG-JF9">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ndo-eG-JF9">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wxx-4K-3fm">
@@ -7126,6 +7126,18 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                             <constraint firstAttribute="height" constant="75" id="tI1-6J-grA"/>
                                         </constraints>
                                     </imageView>
+                                    <containerView contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xrH-KG-WnJ">
+                                        <rect key="frame" x="70" y="11" width="400" height="400"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="400" id="RN3-rx-mas"/>
+                                            <constraint firstAttribute="height" constant="400" id="nk2-Qb-FCL"/>
+                                        </constraints>
+                                        <connections>
+                                            <segue destination="R4j-4D-sdX" kind="embed" identifier="PlayerSelectSegue" id="Leb-gU-dqA"/>
+                                        </connections>
+                                    </containerView>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
@@ -7133,18 +7145,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <constraint firstAttribute="width" constant="540" id="RMo-EQ-u7A"/>
                                 </constraints>
                             </view>
-                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xrH-KG-WnJ">
-                                <rect key="frame" x="184" y="257" width="400" height="400"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="400" id="RN3-rx-mas"/>
-                                    <constraint firstAttribute="height" constant="400" id="nk2-Qb-FCL"/>
-                                </constraints>
-                                <connections>
-                                    <segue destination="R4j-4D-sdX" kind="embed" identifier="PlayerSelectSegue" id="Leb-gU-dqA"/>
-                                </connections>
-                            </containerView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WMk-b5-mgr">
                                 <rect key="frame" x="0.0" y="870" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -7159,8 +7159,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="xrH-KG-WnJ" secondAttribute="centerY" id="Tl0-JF-3dw"/>
-                            <constraint firstAttribute="centerX" secondItem="xrH-KG-WnJ" secondAttribute="centerX" id="YAk-4D-mUM"/>
                             <constraint firstAttribute="centerY" secondItem="mWw-fc-VL2" secondAttribute="centerY" id="v2y-nD-ZGc"/>
                             <constraint firstAttribute="centerX" secondItem="mWw-fc-VL2" secondAttribute="centerX" id="yB0-sG-fT0"/>
                         </constraints>
@@ -12262,24 +12260,24 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="aqc-bk-6zL"/>
-        <segue reference="pN4-ro-CCO"/>
-        <segue reference="f0P-6U-OPl"/>
-        <segue reference="qlN-w6-KzJ"/>
-        <segue reference="KTT-89-8ag"/>
-        <segue reference="YQu-f9-cjB"/>
         <segue reference="Xrw-07-iPA"/>
         <segue reference="P3c-7y-cT1"/>
-        <segue reference="5ig-Ed-ChJ"/>
-        <segue reference="Vsf-eC-qwe"/>
+        <segue reference="f0P-6U-OPl"/>
+        <segue reference="qlN-w6-KzJ"/>
+        <segue reference="pN4-ro-CCO"/>
         <segue reference="LKU-zm-6a0"/>
+        <segue reference="Vsf-eC-qwe"/>
+        <segue reference="5ig-Ed-ChJ"/>
         <segue reference="nDU-ek-b2Q"/>
-        <segue reference="SSV-B6-dgy"/>
+        <segue reference="aqc-bk-6zL"/>
         <segue reference="4br-S9-kIP"/>
+        <segue reference="SSV-B6-dgy"/>
         <segue reference="z7d-Xi-znF"/>
         <segue reference="ztU-dp-Jsr"/>
         <segue reference="Lj6-Vz-tkW"/>
         <segue reference="Mfv-G7-pwV"/>
         <segue reference="R7n-6F-Oo2"/>
+        <segue reference="KTT-89-8ag"/>
+        <segue reference="Leb-gU-dqA"/>
     </inferredMetricsTieBreakers>
 </document>

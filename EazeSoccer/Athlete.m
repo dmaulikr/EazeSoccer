@@ -114,6 +114,8 @@
         hasvideos = [[athleteDictionary objectForKey:@"hasvideos"] boolValue];
         hasphotos = [[athleteDictionary objectForKey:@"hasphotos"] boolValue];
         
+        [self getImage:@"tiny"];
+        
         if ([currentSettings.sport.name isEqualToString:@"Football"]) {
             
             NSArray *passingstats = [athleteDictionary objectForKey:@"football_passings"];
@@ -733,15 +735,14 @@
 - (BOOL)isQB:(NSString *)gameid {
     BOOL isaQB = NO;
     
-    if (gameid) {
-        for (int i = 0; i < football_passing_stats.count; i++) {
-            if (([[[football_passing_stats objectAtIndex:i] attempts] intValue] > 0) &&
-                ([[[football_passing_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
-                isaQB = YES;
-                break;
-            }
+    for (int i = 0; i < football_passing_stats.count; i++) {
+        if (([[[football_passing_stats objectAtIndex:i] attempts] intValue] > 0) &&
+            ([[[football_passing_stats objectAtIndex:i] gameschedule_id] isEqualToString:gameid])) {
+            isaQB = YES;
+            break;
         }
-    } else {
+    }
+    if (!isaQB) {
         NSArray *positions = [position componentsSeparatedByString:@"/"];
         
         for (int i = 0; i < positions.count; i++) {

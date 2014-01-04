@@ -53,7 +53,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor clearColor];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, self.teamButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, self.featuredButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }

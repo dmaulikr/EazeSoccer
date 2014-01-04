@@ -450,378 +450,7 @@
     serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/passing.json?auth_token="];
     return serverUrlString = [serverUrlString stringByAppendingString:authtoken];    
 }
-/*
-+ (NSString *)updatePlayerPassingStats:(Athlete *)player Token:(NSString *)authtoken {
-    FootballStats *statids = [player findGameStatEntries:[currentSettings.game id]];
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids football_stat]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_passings/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids passing]];
-    serverUrlString = [serverUrlString stringByAppendingString:@".json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
 
-+ (NSString *)getPlayerRushingStats:(NSString *)player Token:(NSString *)authtoken {
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:player];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/rushing.json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)updatePlayerRushingStats:(Athlete *)player Token:(NSString *)authtoken {
-    FootballStats *statids = [player findGameStatEntries:[currentSettings.game id]];
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids football_stat]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_rushings/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids rushing]];
-    serverUrlString = [serverUrlString stringByAppendingString:@".json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)getPlayerReceivingStats:(NSString *)player Token:(NSString *)authtoken {
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:player];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/receiving.json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)updatePlayerReceivingStats:(Athlete *)player Token:(NSString *)authtoken {
-    FootballStats *statids = [player findGameStatEntries:[currentSettings.game id]];
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids football_stat]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_receivings/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids receiving]];
-    serverUrlString = [serverUrlString stringByAppendingString:@".json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)getPlayerDefenseStats:(NSString *)player Token:(NSString *)authtoken {
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:player];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/defense.json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)updatePlayerDefenseStats:(Athlete *)player Token:(NSString *)authtoken {
-    FootballStats *statids = [player findGameStatEntries:[currentSettings.game id]];
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids football_stat]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_defenses/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids defense]];
-    serverUrlString = [serverUrlString stringByAppendingString:@".json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)getPlayerSpecialTeamsStats:(NSString *)player Token:(NSString *)authtoken {
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:player];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/specialteams.json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)updatePlayerPlaceKickerStats:(Athlete *)player Token:(NSString *)authtoken {
-    FootballStats *statids = [player findGameStatEntries:[currentSettings.game id]];
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids football_stat]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_kickers/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids kickers]];
-    serverUrlString = [serverUrlString stringByAppendingString:@".json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)updatePlayerReturnerStats:(Athlete *)player Token:(NSString *)authtoken {
-    FootballStats *statids = [player findGameStatEntries:[currentSettings.game id]];
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids football_stat]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_returners/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[statids returners]];
-    serverUrlString = [serverUrlString stringByAppendingString:@".json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-
-+ (NSString *)addPlayerPassingStat:(Athlete *)player Stats:(NSDictionary *)stats Token:(NSString *)authtoken {
-    FootballStats *rbstats = [player findGameStatEntries:[currentSettings.game id]];
-    if ([[rbstats football_stat] length] > 0) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-        serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[rbstats football_stat]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_passings/addattempt.json"];
-        NSArray *keys = [stats allKeys];
-        if ([keys count] > 0) {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?"];       
-            for (int i = 0; i < [keys count]; i++) {
-                serverUrlString = [serverUrlString stringByAppendingString:[keys objectAtIndex:i]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"="];
-                serverUrlString = [serverUrlString stringByAppendingString:[stats objectForKey:[keys objectAtIndex:i]]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"&"];
-            }
-            serverUrlString = [serverUrlString stringByAppendingString:@"auth_token="];
-        } else {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?auth_token="];        
-        }
-        return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-    } else {
-        return nil;
-    }
-}
-
-+ (NSString *)addPlayerRushingStat:(Athlete *)player Stats:(NSDictionary *)stats Token:(NSString *)authtoken {
-    FootballStats *rbstats = [player findGameStatEntries:[currentSettings.game id]];
-    if ([[rbstats football_stat] length] > 0) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-        serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[rbstats football_stat]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_rushings/addcarry.json"];
-        NSArray *keys = [stats allKeys];
-        if ([keys count] > 0) {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?"];
-            for (int i = 0; i < [keys count]; i++) {
-                serverUrlString = [serverUrlString stringByAppendingString:[keys objectAtIndex:i]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"="];
-                serverUrlString = [serverUrlString stringByAppendingString:[stats objectForKey:[keys objectAtIndex:i]]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"&"];
-            }
-            serverUrlString = [serverUrlString stringByAppendingString:@"auth_token="];
-        } else {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?auth_token="];
-        }
-        return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-    } else {
-        return nil;
-    }
-}
-
-+ (NSString *)addPlayerDefenseStat:(Athlete *)player Stats:(NSDictionary *)stats Token:(NSString *)authtoken {
-    FootballStats *rbstats = [player findGameStatEntries:[currentSettings.game id]];
-    if ([[rbstats football_stat] length] > 0) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-        serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[rbstats football_stat]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_defenses/adddefense.json"];
-        NSArray *keys = [stats allKeys];
-        if ([keys count] > 0) {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?"];
-            for (int i = 0; i < [keys count]; i++) {
-                serverUrlString = [serverUrlString stringByAppendingString:[keys objectAtIndex:i]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"="];
-                serverUrlString = [serverUrlString stringByAppendingString:[stats objectForKey:[keys objectAtIndex:i]]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"&"];
-            }
-            serverUrlString = [serverUrlString stringByAppendingString:@"auth_token="];
-        } else {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?auth_token="];
-        }
-        return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-    } else {
-        return nil;
-    }
-}
-
-+ (NSString *)addPlayerPlaceKickerStat:(Athlete *)player Stats:(NSDictionary *)stats Token:(NSString *)authtoken {
-    FootballStats *rbstats = [player findGameStatEntries:[currentSettings.game id]];
-    if ([[rbstats football_stat] length] > 0) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-        serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[rbstats football_stat]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_kickers/placekicker.json"];
-        NSArray *keys = [stats allKeys];
-        if ([keys count] > 0) {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?"];
-            for (int i = 0; i < [keys count]; i++) {
-                serverUrlString = [serverUrlString stringByAppendingString:[keys objectAtIndex:i]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"="];
-                serverUrlString = [serverUrlString stringByAppendingString:[stats objectForKey:[keys objectAtIndex:i]]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"&"];
-            }
-            serverUrlString = [serverUrlString stringByAppendingString:@"auth_token="];
-        } else {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?auth_token="];
-        }
-        return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-    } else {
-        return nil;
-    }
-}
-
-+ (NSString *)addPlayerPunterStat:(Athlete *)player Stats:(NSDictionary *)stats Token:(NSString *)authtoken {
-    FootballStats *rbstats = [player findGameStatEntries:[currentSettings.game id]];
-    if ([[rbstats football_stat] length] > 0) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-        serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[rbstats football_stat]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_kickers/punter.json"];
-        NSArray *keys = [stats allKeys];
-        if ([keys count] > 0) {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?"];
-            for (int i = 0; i < [keys count]; i++) {
-                serverUrlString = [serverUrlString stringByAppendingString:[keys objectAtIndex:i]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"="];
-                serverUrlString = [serverUrlString stringByAppendingString:[stats objectForKey:[keys objectAtIndex:i]]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"&"];
-            }
-            serverUrlString = [serverUrlString stringByAppendingString:@"auth_token="];
-        } else {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?auth_token="];
-        }
-        return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-    } else {
-        return nil;
-    }
-}
-
-+ (NSString *)addPlayerKickerStat:(Athlete *)player Stats:(NSDictionary *)stats Token:(NSString *)authtoken {
-    FootballStats *rbstats = [player findGameStatEntries:[currentSettings.game id]];
-    if ([[rbstats football_stat] length] > 0) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-        serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[rbstats football_stat]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_kickers/kickoff.json"];
-        NSArray *keys = [stats allKeys];
-        if ([keys count] > 0) {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?"];
-            for (int i = 0; i < [keys count]; i++) {
-                serverUrlString = [serverUrlString stringByAppendingString:[keys objectAtIndex:i]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"="];
-                serverUrlString = [serverUrlString stringByAppendingString:[stats objectForKey:[keys objectAtIndex:i]]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"&"];
-            }
-            serverUrlString = [serverUrlString stringByAppendingString:@"auth_token="];
-        } else {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?auth_token="];
-        }
-        return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-    } else {
-        return nil;
-    }
-}
-
-+ (NSString *)addPlayerReturnerStat:(Athlete *)player Stats:(NSDictionary *)stats Stattype:(NSString *)stattype Token:(NSString *)authtoken {
-    FootballStats *rbstats = [player findGameStatEntries:[currentSettings.game id]];
-    if ([[rbstats football_stat] length] > 0) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-        serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-        serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats/"];
-        serverUrlString = [serverUrlString stringByAppendingString:[rbstats football_stat]];
-        if ([stattype isEqualToString:@"koreturn"])
-            serverUrlString = [serverUrlString stringByAppendingString:@"/football_returners/koreturn.json"];
-        else
-            serverUrlString = [serverUrlString stringByAppendingString:@"/football_returners/puntreturn.json"];
-        NSArray *keys = [stats allKeys];
-        if ([keys count] > 0) {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?"];
-            for (int i = 0; i < [keys count]; i++) {
-                serverUrlString = [serverUrlString stringByAppendingString:[keys objectAtIndex:i]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"="];
-                serverUrlString = [serverUrlString stringByAppendingString:[stats objectForKey:[keys objectAtIndex:i]]];
-                serverUrlString = [serverUrlString stringByAppendingString:@"&"];
-            }
-            serverUrlString = [serverUrlString stringByAppendingString:@"auth_token="];
-        } else {
-            serverUrlString = [serverUrlString stringByAppendingString:@"?auth_token="];
-        }
-        return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-    } else {
-        return nil;
-    }
-}
-
-+ (NSString *)createPlayerStat:(Athlete *)player Token:(NSString *)authtoken {
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
-    serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/athletes/"];
-    serverUrlString = [serverUrlString stringByAppendingString:[player athleteid]];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/football_stats.json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
-}
-*/
 + (NSString *)getCoachList:(NSString *)teamid Token:(NSString *)authtoken {
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
@@ -867,7 +496,7 @@
     serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
     serverUrlString = [serverUrlString stringByAppendingString:@"/photos.json?team_id="];
     serverUrlString = [serverUrlString stringByAppendingString:team];
-    serverUrlString = [serverUrlString stringByAppendingString:@"&athlete[id]="];
+    serverUrlString = [serverUrlString stringByAppendingString:@"&athlete_id="];
     serverUrlString = [serverUrlString stringByAppendingString:athlete];
     serverUrlString = [serverUrlString stringByAppendingFormat:@"&auth_token="];
     return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
@@ -881,7 +510,7 @@
     serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
     serverUrlString = [serverUrlString stringByAppendingString:@"/photos.json?team_id="];
     serverUrlString = [serverUrlString stringByAppendingString:team];
-    serverUrlString = [serverUrlString stringByAppendingString:@"&game[id]="];
+    serverUrlString = [serverUrlString stringByAppendingString:@"&gameschedule_id="];
     serverUrlString = [serverUrlString stringByAppendingString:game];
     serverUrlString = [serverUrlString stringByAppendingFormat:@"&auth_token="];
     return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
@@ -894,9 +523,9 @@
     serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
     serverUrlString = [serverUrlString stringByAppendingString:@"/photos.json?team_id="];
     serverUrlString = [serverUrlString stringByAppendingString:team];
-    serverUrlString = [serverUrlString stringByAppendingString:@"&game[id]="];
+    serverUrlString = [serverUrlString stringByAppendingString:@"&gameschedule_id="];
     serverUrlString = [serverUrlString stringByAppendingString:game];
-    serverUrlString = [serverUrlString stringByAppendingString:@"&athlete[id]="];
+    serverUrlString = [serverUrlString stringByAppendingString:@"&athlete_id="];
     serverUrlString = [serverUrlString stringByAppendingString:athlete];
     serverUrlString = [serverUrlString stringByAppendingFormat:@"&auth_token="];
     return serverUrlString = [serverUrlString stringByAppendingString:authtoken];    
@@ -978,7 +607,7 @@
     serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
     serverUrlString = [serverUrlString stringByAppendingString:@"/videoclips.json?team_id="];
     serverUrlString = [serverUrlString stringByAppendingString:team];
-    serverUrlString = [serverUrlString stringByAppendingString:@"&athlete[id]="];
+    serverUrlString = [serverUrlString stringByAppendingString:@"&athlete_id="];
     serverUrlString = [serverUrlString stringByAppendingString:athlete];
     serverUrlString = [serverUrlString stringByAppendingFormat:@"&auth_token="];
     return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
@@ -992,7 +621,7 @@
     serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
     serverUrlString = [serverUrlString stringByAppendingString:@"/videoclips.json?team_id="];
     serverUrlString = [serverUrlString stringByAppendingString:team];
-    serverUrlString = [serverUrlString stringByAppendingString:@"&game[id]="];
+    serverUrlString = [serverUrlString stringByAppendingString:@"&game_id="];
     serverUrlString = [serverUrlString stringByAppendingString:game];
     serverUrlString = [serverUrlString stringByAppendingFormat:@"&auth_token="];
     return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
@@ -1005,9 +634,9 @@
     serverUrlString = [serverUrlString stringByAppendingString:currentSettings.sport.id];
     serverUrlString = [serverUrlString stringByAppendingString:@"/videoclips.json?team_id="];
     serverUrlString = [serverUrlString stringByAppendingString:team];
-    serverUrlString = [serverUrlString stringByAppendingString:@"&game[id]="];
+    serverUrlString = [serverUrlString stringByAppendingString:@"&game_id="];
     serverUrlString = [serverUrlString stringByAppendingString:game];
-    serverUrlString = [serverUrlString stringByAppendingString:@"&athlete[id]="];
+    serverUrlString = [serverUrlString stringByAppendingString:@"&athlete_id="];
     serverUrlString = [serverUrlString stringByAppendingString:athlete];
     serverUrlString = [serverUrlString stringByAppendingFormat:@"&auth_token="];
     return serverUrlString = [serverUrlString stringByAppendingString:authtoken];

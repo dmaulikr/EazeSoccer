@@ -80,7 +80,7 @@
     _playerSelectContainer.hidden = YES;
     _gamelogContainer.hidden = YES;
     
-    qbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballQB];
+//    qbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballQB];
     rbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballRB];
     wrs = [[NSMutableArray alloc] initWithArray:currentSettings.footballWR];
     defenselist = [[NSMutableArray alloc] initWithArray:currentSettings.footballDEF];
@@ -94,10 +94,10 @@
     for (int cnt = 0; cnt < currentSettings.roster.count; cnt++) {
         Athlete *player = [currentSettings.roster objectAtIndex:cnt];
         
-        if (![qbs containsObject:player]) {
-            if ([player isQB:game.id])
-                [qbs addObject:player];
-        }
+//        if (![qbs containsObject:player]) {
+//            if ([player isQB:game.id])
+//                [qbs addObject:player];
+//        }
         
         if (![rbs containsObject:player]) {
             if ([player isRB:game.id])
@@ -202,14 +202,17 @@
     game.period = [NSNumber numberWithInt:[_quarterTextField.text intValue]];
     
     if (offense) {
-        for (int i = 0; i < qbs.count; i++) {
-            FootballPassingStat *passstat = [[qbs objectAtIndex:i] findFootballPassingStat:game.id];
-            if (![passstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[passstat httperror]
-                                                    delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            Athlete *aplayer = [currentSettings.roster objectAtIndex:i];
+            if ([aplayer isQB:(game.id)]) {
+                FootballPassingStat *passstat = [aplayer findFootballPassingStat:game.id];
+                if (![passstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[passstat httperror]
+                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                    return;
+                }
             }
         }
         
@@ -320,6 +323,12 @@
     // Return the number of rows in the section.
     if (offense) {
         if (section == 0) {
+            qbs = [[NSMutableArray alloc] init];
+            for (int i = 0; i < currentSettings.roster.count; i++) {
+                if ([[currentSettings.roster objectAtIndex:i] isQB:game.id]) {
+                    [qbs addObject:[currentSettings.roster objectAtIndex:i]];
+                }
+            }
             return qbs.count + 2;
         } else if (section == 1)
             return rbs.count + 2;
@@ -771,7 +780,7 @@
             cell.namelabel.text = player.numberLogname;
             
             if ([stat.assists intValue] > 0)
-                cell.label1.text = [NSString stringWithFormat:@"%01f", ([stat.tackles floatValue] + ([stat.assists floatValue]/2))];
+                cell.label1.text = [NSString stringWithFormat:@"%.01f", ([stat.tackles floatValue] + ([stat.assists floatValue]/2))];
             else
                 cell.label1.text = [stat.tackles stringValue];
             
@@ -816,7 +825,7 @@
             }
             
             if (assists > 0)
-                cell.label1.text = [NSString stringWithFormat:@"%01f", ((float)tackles + ((float)assists/2))];
+                cell.label1.text = [NSString stringWithFormat:@"%.01f", ((float)tackles + ((float)assists/2))];
             else
                 cell.label1.text = [NSString stringWithFormat:@"%d", tackles];
             

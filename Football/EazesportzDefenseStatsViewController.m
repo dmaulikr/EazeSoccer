@@ -181,14 +181,14 @@
         return;
     }
     
-    if ((touchdown) || (safety))
-        [stat saveStats];
-    
     stat.int_yards = [NSNumber numberWithInt:[_returnyardsTextField.text intValue] + [stat.int_yards intValue]];
     
     if ([_returnyardsTextField.text intValue] > [stat.int_long intValue])
         stat.int_long = [NSNumber numberWithInt:[_returnyardsTextField.text intValue]];
-        
+
+    if ((touchdown) || (safety))
+        [stat saveStats];
+    
     [player updateFootballDefenseGameStats:stat];
     
     if ((_minutesTextField.text.length > 0) && (_quarterTextField.text.length > 0)) {
@@ -246,8 +246,9 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    if (textField == _returnyardsTextField)
+    if (textField == _returnyardsTextField) {
         _retYardsLabel.text = _returnyardsTextField.text;
+    }
     
     lastTextField = textField;
 }

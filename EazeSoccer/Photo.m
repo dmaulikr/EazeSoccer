@@ -8,7 +8,10 @@
 
 #import "Photo.h"
 
-@implementation Photo
+@implementation Photo {
+    NSString *imagesize;
+    UIImage *photoimage;
+}
 
 @synthesize large_url;
 @synthesize medium_url;
@@ -63,6 +66,53 @@
     } else {
         return nil;
     }
+}
+
+- (UIImage *)getImage:(NSString *)size {
+    UIImage *image;
+    
+    if ([size isEqualToString:@"thumb"]) {
+        
+        if (self.thumbnail_url.length == 0) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        } else if (((photoimage.CIImage == nil) && (photoimage.CGImage == nil)) || (![imagesize isEqualToString:@"thumb"])) {
+            NSURL * imageURL = [NSURL URLWithString:self.thumbnail_url];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            image = [UIImage imageWithData:imageData];
+            photoimage = image;
+            imagesize = size;
+        } else
+            image = photoimage;
+        
+    } else if ([size isEqualToString:@"medium"]) {
+        
+        if (self.medium_url.length == 0) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        } else if (((photoimage.CIImage == nil) && (photoimage.CGImage == nil)) || (![imagesize isEqualToString:@"medium"])) {
+            NSURL * imageURL = [NSURL URLWithString:self.medium_url];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            image = [UIImage imageWithData:imageData];
+            photoimage = image;
+            imagesize = size;
+        } else
+            image = photoimage;
+        
+    } else if ([size isEqualToString:@"medium"]) {
+    
+        if (self.large_url.length == 0) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        } else if (((photoimage.CIImage == nil) && (photoimage.CGImage == nil)) || (![imagesize isEqualToString:@"medium"])) {
+            NSURL * imageURL = [NSURL URLWithString:self.large_url];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            image = [UIImage imageWithData:imageData];
+            photoimage = image;
+            imagesize = size;
+        } else
+            image = photoimage;
+        
+    }
+
+    return image;
 }
 
 @end

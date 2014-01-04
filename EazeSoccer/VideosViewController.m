@@ -59,7 +59,7 @@
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
     _activityIndicator.hidesWhenStopped = YES;
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, self.teamButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, self.featuredButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }

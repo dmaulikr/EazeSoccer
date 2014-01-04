@@ -42,5 +42,6 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeTeamButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *featuredButton;
 
 @end

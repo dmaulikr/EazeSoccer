@@ -118,7 +118,7 @@
                                          [tackles stringValue], @"tackles", [fumbles_recovered stringValue], @"fumbles_recovered",
                                          [int_long stringValue], @"int_long", [int_yards stringValue], @"int_yards",
                                          [interceptions stringValue], @"interceptions", [pass_defended stringValue], @"pass_defended",
-                                         [sacks stringValue], @"sacks", [td stringValue], @"td", [assists stringValue], @"assists",
+                                         [sacks stringValue], @"sacks", [td stringValue], @"int_td", [assists stringValue], @"assists",
                                          [safety stringValue], @"safety", [sackassist stringValue], @"sackassist", nil];
         
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
