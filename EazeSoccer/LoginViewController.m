@@ -13,6 +13,7 @@
 #import "KeychainWrapper.h"
 #import "sportzteamsRegisterLoginViewController.h"
 #import "ProgramInfoViewController.h"
+#import "EazesportzRetrieveSport.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -25,6 +26,9 @@
     NSDictionary *token;
     NSMutableData *theData;
     int responseStatusCode;
+    
+    NSMutableURLRequest *originalRequest;
+    EazesportzRetrieveSport *getSport;
 }
 
 @synthesize email;
@@ -47,6 +51,7 @@
     _passwordLabel.layer.cornerRadius = 4;
     email.keyboardType = UIKeyboardTypeEmailAddress;
 //    self.title = [NSString stringWithFormat:@"Login"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSportData:) name:@"SportChangedNotification" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -114,7 +119,7 @@
     
     NSError *jsonSerializationError = nil;
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:userDict, @"user", nil];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -126,7 +131,18 @@
     [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:jsonData];
+    originalRequest = request;
     [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
+    if (redirectResponse) {
+        NSMutableURLRequest *newrequest = [originalRequest mutableCopy];
+        [newrequest setURL:[request URL]];
+        return  newrequest;
+    } else {
+        return request;
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -148,14 +164,10 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
-- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
-    return request;
-}
-
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    token = [NSJSONSerialization JSONObjectWithData:theData options:nil error:nil];
+    token = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
     if (responseStatusCode == 200) {
         NSUInteger passHash = [password hash];
@@ -231,8 +243,10 @@
                     }
                     
                     if (currentSettings.sport.id.length > 0) {
-                        [currentSettings retrieveSport];
-                        
+                        getSport = [[EazesportzRetrieveSport alloc] init];
+                        [getSport retrieveSport:currentSettings.user.authtoken];
+//                        [currentSettings retrieveSport];
+/*
                         if ((![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]])
                         && ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login" message:@"Sport does not match login"
@@ -249,7 +263,7 @@
                             [alert show];
                         } else  {
                             [self performSegueWithIdentifier:@"AlreadyLoggedInSegue" sender:self];
-                        }
+                        } */
                     } else if (([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) &&
                                ([currentSettings.user.admin intValue] > 0)) {
                         [self performSegueWithIdentifier:@"CreateSportSegue" sender:self];
@@ -295,6 +309,28 @@
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
         }
+    }
+}
+
+- (void)gotSportData:(NSNotification *)notification {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    
+    if ((![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]])
+        && ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login" message:@"Sport does not match login"
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    } else if ((![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]) &&
+               ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) &&
+               (currentSettings.user.admin)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login"
+                                                        message:@"Admin user cannot be used to view other sports"
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    } else  {
+        [self performSegueWithIdentifier:@"AlreadyLoggedInSegue" sender:self];
     }
 }
 

@@ -48,7 +48,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [currentSettings retrieveCoaches];
     if (currentSettings.coaches.count == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Coaches"
                                                         message:@"Program administrator has not entered any coaches"

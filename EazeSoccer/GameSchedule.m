@@ -9,9 +9,15 @@
 #import "GameSchedule.h"
 #import "EazesportzAppDelegate.h"
 #import "Gamelogs.h"
+#import "EazesportzRetrieveGames.h"
 
 @implementation GameSchedule {
     UIImage *opponentImage;
+    
+    int responseStatusCode;
+    NSMutableData *theData;
+    
+    NSURLRequest *originalRequest;
 }
 
 @synthesize id;
@@ -179,7 +185,8 @@
     [gamelogs addObject:gamelog];
 }
 
-- (BOOL)saveGameschedule {
+- (void)saveGameschedule {
+    httperror = @"";
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
@@ -269,8 +276,8 @@
     [request setHTTPBody:jsonData];
     
     //Capturing server response
-    NSURLResponse* response;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    /*    NSURLResponse* response;
+   NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
     NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
     NSLog(@"%@", serverData);
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
@@ -288,6 +295,62 @@
         httperror = [serverData objectForKey:@"error"];
         return NO;
     }
+ */
+    originalRequest = request;
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    
+    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+    [errorView show];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    NSError *jsonSerializationError = nil;
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
+    
+    if (responseStatusCode == 200) {
+        [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
+        if (self.id.length == 0)
+            self.id = [[serverData objectForKey:@"schedule"] objectForKey:@"_id"];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameSavedNotification" object:nil];
+    } else {
+        httperror = [serverData objectForKey:@"error"];
+    }
+}
+
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
+    if (redirectResponse) {
+        NSMutableURLRequest *newrequest = [originalRequest mutableCopy];
+        [newrequest setURL:[request URL]];
+        return  newrequest;
+    } else {
+        NSMutableURLRequest *newRequest = [originalRequest mutableCopy];
+        
+//        [newRequest setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", @"http://powerful-everglades-2345.herokuapp.com",
+//                                                 @"/sports/", currentSettings.sport.id, @"/teams/",
+//                                                 currentSettings.team.teamid, @"/gameschedules/", self.id, @".json?auth_token=", currentSettings.user.authtoken]]];
+        return request;
+    }
+    
 }
 
 - (id)initDeleteGame {

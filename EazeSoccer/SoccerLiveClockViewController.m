@@ -51,7 +51,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gameSaved:) name:@"GameSavedNotification" object:nil];
+
     _clockLabel.text = game.currentgametime;
     _homeImageView.image = [currentSettings.team getImage:@"tiny"];
     
@@ -84,8 +86,12 @@
     game.socceroppsog = [NSNumber numberWithInt:[_visitorShotsTextField.text intValue]];
     game.period = [NSNumber numberWithInt:[_periodTextView.text intValue]];
     game.currentgametime = [NSString stringWithFormat:@"%@%@%@", _minutesTextField.text, @":", _secondsTextField.text];
-    
-    if ([game saveGameschedule]) {
+   
+    [game saveGameschedule];
+}
+
+- (void)gameSaved:(NSNotification *)notification {
+    if (game.httperror.length == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Clock update saved!"
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];

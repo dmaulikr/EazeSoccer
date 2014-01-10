@@ -10,6 +10,7 @@
 #import "EazesportzAppDelegate.h"
 #import "BasketballStatTableCell.h"
 #import "EazeBasketballPlayerStatsViewController.h"
+#import "EazesportzRetrievePlayers.h"
 
 @interface EazeBasketballStatsViewController ()
 
@@ -30,6 +31,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRosterData:) name:@"RosterChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -39,6 +41,12 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+}
+
+- (void)gotApplicationData:(NSNotification *)notification {
+    self.navigationItem.hidesBackButton = NO;
+    self.tabBarController.tabBar.hidden = NO;
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -317,8 +325,10 @@
 }
 
 - (IBAction)refreshBurronClicked:(id)sender {
-    [currentSettings retrievePlayers];
-    
+    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+}
+
+- (void)gotRosterData:(NSNotificationCenter *)notification {
     if (self.athlete)
         self.athlete = [currentSettings findAthlete:self.athlete.athleteid];
     else

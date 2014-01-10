@@ -12,6 +12,7 @@
 #import "EazesportzAppDelegate.h"
 #import "sportzCurrentSettings.h"
 #import "EditCoachViewController.h"
+#import "EazesportzRetrieveCoaches.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -37,6 +38,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotCoaches:) name:@"CoachListChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -47,7 +49,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [currentSettings retrieveCoaches];
+    [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                        Token:currentSettings.user.authtoken];
+}
+
+- (void)gotCoaches:(NSNotificationCenter *)notification {
     [_coachTableView reloadData];
 }
 

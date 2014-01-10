@@ -10,6 +10,9 @@
 #import "sportzConstants.h"
 #import "sportzServerInit.h"
 #import "KeychainWrapper.h"
+#import "EazesportzRetrieveGames.h"
+#import "EazesportzRetrievePlayers.h"
+#import "EazesportzRetrieveSport.h"
 
 #import <AWSRuntime/AmazonErrorHandler.h>
 
@@ -155,9 +158,10 @@
                 }
                 
                 if (currentSettings.team.team_name.length > 0) {
-                    [currentSettings retrieveCoaches];
-                    [currentSettings retrieveGameList];
-                    [currentSettings retrievePlayers];
+                    [[[EazesportzRetrievePlayers alloc]init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                                       Token:currentSettings.user.authtoken];
+                    [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                                    Token:currentSettings.user.authtoken];
                 }
             } else {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No User Data"

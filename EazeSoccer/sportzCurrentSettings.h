@@ -71,18 +71,13 @@
 
 - (void)insertPlayerRoster:(Athlete *)player;
 
-- (void)retrieveGameList;
 - (GameSchedule *)retrieveGame:(NSString *)gameid;
 - (GameSchedule *)findGame:(NSString *)gamescheduleid;
 - (BOOL)deleteGame:(GameSchedule *)agame;
 
-- (void)retrieveCoaches;
 - (BOOL)deleteCoach:(Coach *)acoach;
 
-- (void)retrievePlayers;
 - (BOOL)deletePlayer:(Athlete *)player;
-
-- (void)retrieveAlerts;
 
 - (void)retrieveTeams;
 - (NSMutableArray *)retrieveSportTeams:(NSString *)sportid;

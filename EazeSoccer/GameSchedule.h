@@ -67,7 +67,7 @@
 
 - (id)initWithDictionary:(NSDictionary *)gameScheduleDictionary;
 
-- (BOOL)saveGameschedule;
+- (void)saveGameschedule;
 
 - (id)initDeleteGame;
 

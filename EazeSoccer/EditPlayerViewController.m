@@ -14,6 +14,7 @@
 #import "VideosViewController.h"
 #import "EazeSoccerStatsViewController.h"
 #import "EazeBasketballStatsViewController.h"
+#import "EazesportzRetrievePlayers.h"
 
 #import "EazesportzFootballPlayerStatsViewController.h"
 
@@ -236,7 +237,8 @@
         NSDictionary *items = [serverData objectForKey:@"athlete"];
         player = [[Athlete alloc] initWithDictionary:items];
         player.athleteid = [items objectForKey:@"_id"];
-        [currentSettings retrievePlayers];
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                    Token:currentSettings.user.authtoken];
         
         if (imageselected) {
             [self uploadImage:player];

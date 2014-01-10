@@ -215,32 +215,6 @@
     roster = newroster;
 }
 
-- (void)retrieveGameList {
-    if (refreshGames) {
-        NSURL *url = [NSURL URLWithString:[sportzServerInit getGameSchedule:self.team.teamid Token:self.user.authtoken]];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        NSURLResponse* response;
-        NSError *error = nil;
-        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-        NSArray *games = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-        if ([httpResponse statusCode] == 200) {
-            self.gameList = [[NSMutableArray alloc] init];
-            for (int i = 0; i < [games count]; i++ ) {
-                [gameList addObject:[[GameSchedule alloc] initWithDictionary:[games objectAtIndex:i]]];
-            }
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Games"
-                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-        }
-        
-        refreshGames = NO;
-    }
-}
-
 - (GameSchedule *)retrieveGame:(NSString *)gameid {
     GameSchedule *agame = nil;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -263,67 +237,6 @@
         [alert show];
     }
     return agame;
-}
-
-- (BOOL)deleteGame:(GameSchedule *)agame {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getGame:team.teamid Game:agame.id Token:user.authtoken]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
-    NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
-    NSError *jsonSerializationError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-    
-    if (!jsonSerializationError) {
-        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"Serialized JSON: %@", serJson);
-    } else {
-        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-    }
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPMethod:@"DELETE"];
-    [request setHTTPBody:jsonData];
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    if ([httpResponse statusCode] == 200) {
-        game = nil;
-        return YES;
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:[serverData objectForKey:@"error"]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-        return NO;
-    }
-}
-
-- (void)retrieveCoaches {
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getCoachList:self.team.teamid Token:self.user.authtoken]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    NSArray *thecoaches = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    if ([httpResponse statusCode] == 200) {
-        self.coaches = [[NSMutableArray alloc] init];
-        
-        for (int i = 0; i < thecoaches.count; i++) {
-            [coaches addObject:[[Coach alloc] initWithDictionary:[thecoaches objectAtIndex:i]]];
-        }
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Coaches"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
 }
 
 - (BOOL)deleteCoach:(Coach *)acoach {
@@ -351,45 +264,6 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
         return  NO;
-    }
-}
-
-- (void)retrievePlayers {
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getRoster:self.team.teamid Token:self.user.authtoken]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSArray *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    if ([httpResponse statusCode] == 200) {
-        roster = [[NSMutableArray alloc] init];
-        footballQB = [[NSMutableArray alloc] init];
-        footballRB = [[NSMutableArray alloc] init];
-        footballWR = [[NSMutableArray alloc] init];
-        footballRET = [[NSMutableArray alloc] init];
-        footballDEF = [[NSMutableArray alloc] init];
-        footballPK = [[NSMutableArray alloc] init];
-        footballPUNT = [[NSMutableArray alloc] init];
-        footballK = [[NSMutableArray alloc] init];
-        footballOL = [[NSMutableArray alloc] init];
-        
-        
-         for (int i = 0; i < serverData.count; i++) {
-             Athlete *player = [[Athlete alloc] initWithDictionary:[serverData objectAtIndex:i]];
-            [roster addObject:player];
-             
-            if ([sport.name isEqualToString:@"Football"]) {
-                [self populatePositionLists:player];
-            }
-        }
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Players"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
     }
 }
 
@@ -527,29 +401,6 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error retrieving Sport"
                               message:[NSString stringWithFormat:@"%d", responseStatusCode] delegate:nil cancelButtonTitle:@"Ok"
                               otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
-}
-
-- (void)retrieveAlerts {
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getAlerts:self.user.userid Token:self.user.authtoken]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
-    NSData *result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    NSArray *alertData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    int responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
-    
-    if (responseStatusCode == 200) {
-        alerts = [[NSMutableArray alloc] init];
-        for (int i = 0; i < alertData.count; i++) {
-            [alerts addObject:[[Alert alloc] initWithDirectory:[alertData objectAtIndex:i]]];
-        }
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error retrieving Alerts"
-                                                        message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }

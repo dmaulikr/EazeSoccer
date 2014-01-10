@@ -13,6 +13,8 @@
 #import "EditTeamViewController.h"
 #import "sportzConstants.h"
 #import "KeychainWrapper.h"
+#import "EazesportzRetrievePlayers.h"
+#import "EazesportzRetrieveAlerts.h"
 
 @interface TeamSelectViewController () <UIAlertViewDelegate>
 
@@ -43,6 +45,7 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, self.editSportButton, nil];
     
     self.navigationController.toolbarHidden = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotApplicationData:) name:@"RosterChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -79,6 +82,14 @@
         self.tabBarController.tabBar.hidden = YES;
         self.navigationItem.hidesBackButton = YES;
         
+        if (teamList.count == 1) {
+            currentSettings.team = [teamList objectAtIndex:0];
+            [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                              Token:currentSettings.user.authtoken];
+            [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                                Token:currentSettings.user.authtoken];
+        }
+
     } else if ((teamList.count == 0) && (sport)) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No teams"
                                                         message:[NSString stringWithFormat:@"Program admin has not entered team data yet!"]
@@ -86,6 +97,12 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+}
+
+- (void)gotApplicationData:(NSNotification *)notification {
+    self.navigationItem.hidesBackButton = NO;
+    self.tabBarController.tabBar.hidden = NO;
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -175,13 +192,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!sport) {
         currentSettings.team = [teamList objectAtIndex:indexPath.row];
-        [currentSettings retrieveCoaches];
-        [currentSettings retrievePlayers];
-        [currentSettings retrieveAlerts];
-        currentSettings.refreshGames = YES;
-        self.navigationItem.hidesBackButton = NO;
-        self.tabBarController.tabBar.hidden = NO;
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                          Token:currentSettings.user.authtoken];        
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
     }
 }
 

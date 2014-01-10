@@ -62,6 +62,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gameSaved:) name:@"GameSavedNotification" object:nil];
+
     _homeLabel.hidden = YES;
     _visitorLabel.hidden = YES;
     _homeScoreTextField.hidden = YES;
@@ -229,23 +231,26 @@
              game.opponentpic = teamSelectController.team.team_logo;
         }
         
-        if ([game saveGameschedule]) {
-            if (oppImage) {
-                [self uploadImage:game];
-            } else {
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Creating Game Data"
-                                                            message:[game httperror]
-                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-        }
+        [game saveGameschedule];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                               message:@"Game entry must include Opponent, Location, Start Date and Start Time"
                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
+- (void)gameSaved:(NSNotification *)notification {
+    if (game.httperror.length == 0) {
+        if (oppImage) {
+            [self uploadImage:game];
+        } else {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:game.httperror
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }

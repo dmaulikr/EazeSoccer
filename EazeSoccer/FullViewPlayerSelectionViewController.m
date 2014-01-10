@@ -13,6 +13,7 @@
 #import "RosterTableCell.h"
 #import "EditPlayerViewController.h"
 #import "FindPlayerViewController.h"
+#import "EazesportzRetrievePlayers.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -53,8 +54,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.findPlayerContainer.hidden = YES;
-    [currentSettings retrievePlayers];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRosterData:) name:@"RosterChangedNotification" object:nil];
+    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
     self.rosterdata = currentSettings.roster;
+}
+
+- (void)gotRosterData:(NSNotificationCenter *)notification {
     [self.playerTableView reloadData];
 }
 

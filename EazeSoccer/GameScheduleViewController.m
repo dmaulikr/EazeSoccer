@@ -12,6 +12,7 @@
 #import "sportzServerInit.h"
 #import "GameScheduleTableViewCell.h"
 #import "EditGameViewController.h"
+#import "EazesportzRetrieveGames.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -20,7 +21,10 @@
 @end
 
 @implementation GameScheduleViewController {
+    NSMutableArray *games;
     NSIndexPath *deleteIndexPath;
+    
+    EazesportzRetrieveGames *retrieveGames;
 }
 
 @synthesize thegame;
@@ -49,6 +53,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    retrieveGames = [[EazesportzRetrieveGames alloc] init];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -59,10 +64,11 @@
     } else if (currentSettings.team == nil) {
         [self performSegueWithIdentifier:@"ChangeTeamSegue" sender:self];
     } else {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableData:) name:@"GameListChangedNotification" object:nil];
         _teamLabel.text = currentSettings.team.team_name;
-        
-        [currentSettings retrieveGameList];
-        [_gamesTableView reloadData];
+        [retrieveGames retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+//        [currentSettings retrieveGameList];
+//        [_gamesTableView reloadData];
         
         if (currentSettings.selectedTab != 0) {
             self.tabBarController.selectedIndex = currentSettings.selectedTab;
@@ -71,6 +77,15 @@
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    // do not forget to unsubscribe the observer, or you may experience crashes towards a deallocated observer
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)reloadTableData:(NSNotification *)notification {
+    // you grab your data our of the notifications userinfo
+    [_gamesTableView reloadData];
+}
 
 #pragma mark - Table view data source
 

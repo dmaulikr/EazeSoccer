@@ -8,6 +8,7 @@
 
 #import "Gamelogs.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzRetrievePlayers.h"
 
 @implementation Gamelogs
 
@@ -105,7 +106,8 @@
     NSDictionary *gamelogdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        [currentSettings retrievePlayers];
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
         return nil;
     } else {
         httperror = [gamelogdata objectForKey:@"error"];
