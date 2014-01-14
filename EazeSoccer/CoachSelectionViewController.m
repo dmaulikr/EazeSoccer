@@ -53,8 +53,21 @@
                                                         Token:currentSettings.user.authtoken];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    // do not forget to unsubscribe the observer, or you may experience crashes towards a deallocated observer
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)gotCoaches:(NSNotificationCenter *)notification {
-    [_coachTableView reloadData];
+    if (currentSettings.coaches.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Coaches"
+                                                        message:@"Program administrator has not entered any coaches"
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    } else {
+        [_coachTableView reloadData];
+    }
 }
 
 #pragma mark - Table view data source

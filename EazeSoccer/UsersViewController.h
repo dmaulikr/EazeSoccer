@@ -20,4 +20,6 @@
 @property (weak, nonatomic) IBOutlet UIView *userSearchContainer;
 
 - (IBAction)selectSearchUserTable:(UIStoryboardSegue *)segue;
+- (IBAction)segmentButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentButton;
 @end

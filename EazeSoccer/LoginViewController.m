@@ -14,6 +14,7 @@
 #import "sportzteamsRegisterLoginViewController.h"
 #import "ProgramInfoViewController.h"
 #import "EazesportzRetrieveSport.h"
+#import "EazesportzLogin.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -28,7 +29,6 @@
     int responseStatusCode;
     
     NSMutableURLRequest *originalRequest;
-    EazesportzRetrieveSport *getSport;
 }
 
 @synthesize email;
@@ -50,14 +50,13 @@
     _emailLabel.layer.cornerRadius = 4;
     _passwordLabel.layer.cornerRadius = 4;
     email.keyboardType = UIKeyboardTypeEmailAddress;
-//    self.title = [NSString stringWithFormat:@"Login"];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSportData:) name:@"SportChangedNotification" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     self.tabBarController.tabBar.hidden = YES;
     self.navigationItem.hidesBackButton = YES;
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -75,6 +74,11 @@
         [email setText:@""];
         [password setText:@""];
     }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    // do not forget to unsubscribe the observer, or you may experience crashes towards a deallocated observer
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -108,208 +112,42 @@
     return YES;
 }
 
-- (void) login:(NSString *)myemail Password:(NSString *)mypassword {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *sport = [mainBundle objectForInfoDictionaryKey:@"sportzteams"];
-    sportzServerInit *serverInit = [sportzServerInit alloc];
-    NSURL *url = [NSURL URLWithString:[serverInit getLoginRequest]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    NSDictionary *userDict = [[NSDictionary alloc] initWithObjectsAndKeys:myemail, @"email",mypassword, @"password", sport, @"sport", nil];
-    
-    NSError *jsonSerializationError = nil;
-    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:userDict, @"user", nil];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-    
-    if (!jsonSerializationError) {
-        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+- (void)loginResult:(NSNotification *)notification {
+    NSDictionary *result = [notification userInfo];
+    if (![[result valueForKey:@"Result"] isEqualToString:@"Success"]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[result valueForKey:@"Result"]
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
     } else {
-        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-    }
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:jsonData];
-    originalRequest = request;
-    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
-}
-
-- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
-    if (redirectResponse) {
-        NSMutableURLRequest *newrequest = [originalRequest mutableCopy];
-        [newrequest setURL:[request URL]];
-        return  newrequest;
-    } else {
-        return request;
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    responseStatusCode = [httpResponse statusCode];
-    theData = [[NSMutableData alloc]init];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
-    
-    [theData appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download could not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    token = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
-    
-    if (responseStatusCode == 200) {
-        NSUInteger passHash = [password hash];
-        if ([password.text length] > 0) {
-            if ([KeychainWrapper createKeychainValue:[password text] forIdentifier:PIN_SAVED]) {
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PIN_SAVED];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                NSLog(@"** password saved successfully to Keychain!!");
-            }
+        NSBundle *mainBundle = [NSBundle mainBundle];
+        
+        //               if ([currentSettings.user.admin intValue] > 0) {
+        
+        if (![currentSettings initS3Bucket]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Storage Access Issue. Please restart app!"
+                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
         }
-        NSDictionary *userdata = [token objectForKey:@"user"];
-        NSLog(@"%@", userdata);
-        if([userdata count] > 0) {
-            currentSettings.user.email = [userdata objectForKey:@"email"];
-            if ([KeychainWrapper createKeychainValue:currentSettings.user.email forIdentifier:GOMOBIEMAIL]) {
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GOMOBIEMAIL];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                NSLog(@"** email saved successfully to Keychain!!");           
-            }
-            
-            currentSettings.user.authtoken = [token objectForKey:@"authentication_token"];
-            NSURL *url = [NSURL URLWithString:[sportzServerInit getUser:[userdata objectForKey:@"_id"] Token:currentSettings.user.authtoken]];
-            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-            NSURLResponse* response;
-            NSError *error = nil;
-            NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-            responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
-            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-            userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-            
-            if (responseStatusCode == 200) {
-                currentSettings.user.email = [userdata objectForKey:@"email"];
-                currentSettings.user.admin = [NSNumber numberWithInteger:[[userdata objectForKey:@"admin"] integerValue]];
-                currentSettings.user.userid = [userdata objectForKey:@"id"];
-                currentSettings.user.username = [userdata objectForKey:@"name"];
-                currentSettings.user.avatarprocessing = [[userdata objectForKey:@"avatarprocessing"] boolValue];
-                
-                if ((NSNull *)[userdata objectForKey:@"avatarthumburl"] != [NSNull null])
-                    currentSettings.user.userthumb = [userdata objectForKey:@"avatarthumburl"];
-                else
-                    currentSettings.user.userthumb = @"";
-                
-                if ((NSNull *)[userdata objectForKey:@"avatartinyurl"] != [NSNull null])
-                    currentSettings.user.tiny = [userdata objectForKey:@"avatartinyurl"];
-                else
-                    currentSettings.user.tiny = @"";
-                
-                currentSettings.user.isactive = [NSNumber numberWithInteger:[[userdata objectForKey:@"is_active"] integerValue]];
-                currentSettings.user.bio_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"bio_alert"] integerValue]];
-                currentSettings.user.blog_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"blog_alert"] integerValue]];
-                currentSettings.user.media_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"media_alert"] integerValue]];
-                currentSettings.user.stat_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"stat_alert"] integerValue]];
-                currentSettings.user.score_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"score_alert"] integerValue]];
-                currentSettings.user.teammanagerid = [userdata objectForKey:@"teamid"];
-                currentSettings.user.awssecretkey = [userdata objectForKey:@"awskey"];
-                currentSettings.user.awskeyid = [userdata objectForKey:@"awskeyid"];
-                currentSettings.user.tier = [userdata objectForKey:@"tier"];
-                
-                if ((NSNull *)[userdata objectForKey:@"default_site"] != [NSNull null]) 
-                    currentSettings.sport.id = [userdata objectForKey:@"default_site"];
-                else
-                    currentSettings.sport.id = @"";
-                
-                NSBundle *mainBundle = [NSBundle mainBundle];
-                
- //               if ([currentSettings.user.admin intValue] > 0) {
-                    
-                    if (![currentSettings initS3Bucket]) {
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Storage Access Issue. Please restart app!"
-                                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                        [alert show];
-                    }
-                    
-                    if (currentSettings.sport.id.length > 0) {
-                        getSport = [[EazesportzRetrieveSport alloc] init];
-                        [getSport retrieveSport:currentSettings.user.authtoken];
-//                        [currentSettings retrieveSport];
-/*
-                        if ((![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]])
-                        && ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login" message:@"Sport does not match login"
-                                                 delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                            [alert show];
-                        } else if ((![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]) &&
-                                   ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) &&
-                                   (currentSettings.user.admin)) {
-                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login"
-                                                 message:@"Admin user cannot be used to view other sports"
-                                                 delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                            [alert show];
-                        } else  {
-                            [self performSegueWithIdentifier:@"AlreadyLoggedInSegue" sender:self];
-                        } */
-                    } else if (([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) &&
-                               ([currentSettings.user.admin intValue] > 0)) {
-                        [self performSegueWithIdentifier:@"CreateSportSegue" sender:self];
-                    } else {
-                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must be an administrator to use this application"
-                                                                  delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                        
-                        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                        [alert show];
-                    }
-//                } else {
-//                }
-            } else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving User"
-                                                                message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                               delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-            }
-
+        
+        if (currentSettings.sport.id.length > 0) {
+            [[[EazesportzRetrieveSport alloc] init] retrieveSport:currentSettings.user.authtoken];
+        } else if (([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) &&
+                   ([currentSettings.user.admin intValue] > 0)) {
+            [self performSegueWithIdentifier:@"CreateSportSegue" sender:self];
         } else {
-            [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
-            [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
-            currentSettings.user.email = @"";
-            currentSettings.user.authtoken = @"";
-            currentSettings.user.username = @"";
-            currentSettings.user.userid = @"";
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert"
-                                                            message:@"Please activate your account using the email sent when you registered"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must be an administrator to use this application"
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
-    } else  {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login" message:[token objectForKey:@"message"]
-                                                  delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-        
-        if (responseStatusCode == 401) {
-            [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
-            [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
-        }
     }
+}
+
+- (void) login:(NSString *)myemail Password:(NSString *)mypassword {
+    [[[EazesportzLogin alloc] init] Login:myemail Password:mypassword];
 }
 
 - (void)gotSportData:(NSNotification *)notification {

@@ -18,6 +18,7 @@
     NSMutableData *theData;
     
     NSURLRequest *originalRequest;
+    BOOL deletegame;
 }
 
 @synthesize id;
@@ -275,27 +276,6 @@
     
     [request setHTTPBody:jsonData];
     
-    //Capturing server response
-    /*    NSURLResponse* response;
-   NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-    NSLog(@"%@", serverData);
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
-    if ([httpResponse statusCode] == 200) {
-        
-        currentSettings.refreshGames = YES;
-        
-        if (self.id.length == 0)
-            self.id = [[serverData objectForKey:@"schedule"] objectForKey:@"_id"];
-        
-        return YES;
-    } else {
-        httperror = [serverData objectForKey:@"error"];
-        return NO;
-    }
- */
     originalRequest = request;
     [[NSURLConnection alloc] initWithRequest:request  delegate:self];
 }
@@ -326,12 +306,20 @@
     NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
     
     if (responseStatusCode == 200) {
+        
         [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid
                                                             Token:currentSettings.user.authtoken];
-        if (self.id.length == 0)
-            self.id = [[serverData objectForKey:@"schedule"] objectForKey:@"_id"];
+        if (deletegame) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"GameDeletedNotification" object:nil
+                                                              userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
+            [self initDelete];
+        } else {
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameSavedNotification" object:nil];
+            if (self.id.length == 0)
+                self.id = [[serverData objectForKey:@"schedule"] objectForKey:@"_id"];
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"GameSavedNotification" object:nil];
+        }
     } else {
         httperror = [serverData objectForKey:@"error"];
     }
@@ -353,7 +341,7 @@
     
 }
 
-- (id)initDeleteGame {
+- (void)deleteGame {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
@@ -361,8 +349,8 @@
                                         @".json?auth_token=", currentSettings.user.authtoken]];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
+//    NSURLResponse* response;
+//    NSError *error = nil;
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
     NSError *jsonSerializationError = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
@@ -378,19 +366,15 @@
     [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPMethod:@"DELETE"];
     [request setHTTPBody:jsonData];
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    
-    if ([httpResponse statusCode] == 200) {
-        self = nil;
-        return self;
-        currentSettings.refreshGames = YES;
-    } else {
-        httperror = [serverData objectForKey:@"error"];
-        return  self;
-    }
+
+    deletegame = YES;
+    originalRequest = request;
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (id)initDelete {
+    self = nil;
+    return self;
 }
 
 - (UIImage *)opponentImage {

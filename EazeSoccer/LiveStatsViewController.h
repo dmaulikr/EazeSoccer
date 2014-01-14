@@ -8,17 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+#import "GameSchedule.h"
+
 @interface LiveStatsViewController : UIViewController
 
-- (IBAction)gameButtonClicked:(id)sender;
+@property(nonatomic, strong) GameSchedule *game;
+
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *clockButton;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *gameButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 
 @property (weak, nonatomic) IBOutlet UIView *soccerContainer;
-@property (weak, nonatomic) IBOutlet UIView *gameContainer;
-
-- (IBAction)selectGameLiveStats:(UIStoryboardSegue *)segue;
-- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeteamButtonClicked:(id)sender;

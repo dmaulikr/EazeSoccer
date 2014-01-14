@@ -13,5 +13,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addCoachButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeteamButtonClicked:(id)sender;
+- (IBAction)segmentButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentButton;
 
 @end

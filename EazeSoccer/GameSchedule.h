@@ -69,7 +69,7 @@
 
 - (void)saveGameschedule;
 
-- (id)initDeleteGame;
+- (void)deleteGame;
 
 - (UIImage *)opponentImage;
 

@@ -73,11 +73,8 @@
 
 - (GameSchedule *)retrieveGame:(NSString *)gameid;
 - (GameSchedule *)findGame:(NSString *)gamescheduleid;
-- (BOOL)deleteGame:(GameSchedule *)agame;
 
 - (BOOL)deleteCoach:(Coach *)acoach;
-
-- (BOOL)deletePlayer:(Athlete *)player;
 
 - (void)retrieveTeams;
 - (NSMutableArray *)retrieveSportTeams:(NSString *)sportid;

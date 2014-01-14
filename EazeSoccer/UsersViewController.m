@@ -56,6 +56,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     _userSearchContainer.hidden = YES;
+    _segmentButton.selectedSegmentIndex = 1;
 }
 
 - (IBAction)selectSearchUserTable:(UIStoryboardSegue *)segue {
@@ -93,6 +94,15 @@
             [alert show];
         }
         
+    }
+}
+
+- (IBAction)segmentButtonClicked:(id)sender {
+    
+    if (_segmentButton.selectedSegmentIndex == 0) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    } else if (_segmentButton.selectedSegmentIndex == 2) {
+        [self performSegueWithIdentifier:@"ContactsSegue" sender:self];
     }
 }
 

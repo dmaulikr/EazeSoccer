@@ -8,9 +8,15 @@
 
 #import "Athlete.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzRetrievePlayers.h"
+#import "sportzServerInit.h"
 
 @implementation Athlete {
     NSString *imagesize;
+    
+    int responseStatusCode;
+    NSMutableData *theData;
+    BOOL deletePlayer;
 }
 
 @synthesize number;
@@ -205,13 +211,50 @@
     }
 }
 
-- (id)initDeleteAthlete {
+- (void)saveAthlete {
+    NSURL *aurl;
+    
+    if (self.athleteid != nil)
+        aurl = [NSURL URLWithString:[sportzServerInit getAthlete:[self athleteid] Token:currentSettings.user.authtoken]];
+    else
+        aurl = [NSURL URLWithString:[sportzServerInit newAthlete:currentSettings.user.authtoken]];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:180];
+    NSError *jsonSerializationError = nil;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+    NSMutableDictionary *athDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[number stringValue], @"number", lastname,
+                                    @"lastname", middlename, @"middlename", firstname, @"firstname", height, @"height", [weight stringValue],
+                                    @"weight", season, @"season", year, @"year", position, @"position", currentSettings.team.teamid, @"team_id",
+                                    bio, @"bio", nil];
+    
+    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    if (jsonSerializationError) {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    
+    if (self.athleteid != nil)
+        [request setHTTPMethod:@"PUT"];
+    else
+        [request setHTTPMethod:@"POST"];
+    
+    [request setHTTPBody:jsonData];
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (void)deleteAthlete {
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
                                        @"/sports/", currentSettings.sport.id, @"/athletes/", athleteid, @".json?auth_token=",
                                        currentSettings.user.authtoken]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    NSURLResponse* response;
     NSError *error = nil;
     NSDictionary *jsonDict = [[NSDictionary alloc] init];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
@@ -219,16 +262,64 @@
     [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPMethod:@"DELETE"];
     [request setHTTPBody:jsonData];
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    int responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    deletePlayer = YES;
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
     
+}
+
+- (id)initDelete {
+    self = nil;
+    return self;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    
+    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+    [errorView show];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     if (responseStatusCode == 200) {
-        return nil;
+        if (deletePlayer) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"AthleteDeletedNotification" object:nil
+                                                              userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
+            [self initDelete];
+        } else {
+            NSDictionary *items = [serverData objectForKey:@"athlete"];
+            self.athleteid = [items objectForKey:@"_id"];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"AthleteSavedNotification" object:nil
+                                                              userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
+        }
+        
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
     } else {
-        httperror = [athdata objectForKey:@"error"];
-        return self;
+        if (deletePlayer)
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"AthleteDeletedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error", @"Result", nil]];
+        else
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"AthleteSavedNotification" object:nil
+                                                              userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error", @"Result", nil]];
+        
+        httperror = [serverData objectForKey:@"error"];
     }
 }
 

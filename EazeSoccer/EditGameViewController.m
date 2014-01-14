@@ -63,6 +63,7 @@
     [super viewWillAppear:animated];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gameSaved:) name:@"GameSavedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gameDeleted:) name:@"GameDeletedNotification" object:nil];
 
     _homeLabel.hidden = YES;
     _visitorLabel.hidden = YES;
@@ -132,6 +133,11 @@
         _opponentImageButton.enabled = YES;
         [_leagueSwitch setOn:NO];
     }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    // do not forget to unsubscribe the observer, or you may experience crashes towards a deallocated observer
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)sender {
@@ -342,10 +348,12 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if (![game initDeleteGame]) {
-            [self.navigationController popViewControllerAnimated:YES];
-        }
+        [game deleteGame];
     }
+}
+
+- (void)gameDeleted:(NSNotification *)notification {
+        [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (IBAction)searchEazesportzButtonClicked:(id)sender {

@@ -8,6 +8,8 @@
 
 #import "FullGameScheduleViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "EditGameViewController.h"
+#import "LiveStatsViewController.h"
 
 @interface FullGameScheduleViewController () <UIAlertViewDelegate>
 
@@ -30,7 +32,11 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, self.teamButton, nil];
+    
+    if (currentSettings.teams.count == 1)
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, self.standingsButton, nil];
+    else
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, self.standingsButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -55,14 +61,26 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([currentSettings.sport isPackageEnabled]) {
+        [self performSegueWithIdentifier:@"GameStatsSegue" sender:self];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Stats!"
+                                                       delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if (![[currentSettings.gameList objectAtIndex:deleteIndexPath.row] initDeleteGame]) {
-            [currentSettings.gameList removeObjectAtIndex:deleteIndexPath.row];
-            [self.gamesTableView reloadData];
-        }
+        [[currentSettings.gameList objectAtIndex:deleteIndexPath.row] deleteGame];
+    } else if ([title isEqualToString:@"Info"]) {
+        [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];
+    } else if ([title isEqualToString:@"Dismiss"]) {
+        self.tabBarController.selectedIndex = 0;
     }
 }
 
@@ -71,4 +89,15 @@
     [self viewDidAppear:YES];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSIndexPath *indexPath = [self.gamesTableView indexPathForSelectedRow];
+    
+    if ([segue.identifier isEqualToString:@"NewGameSegue"]) {
+        EditGameViewController *destController = segue.destinationViewController;
+        destController.game = nil;
+    } else if ([segue.identifier isEqualToString:@"GameStatsSegue"]) {
+        LiveStatsViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    }
+}
 @end

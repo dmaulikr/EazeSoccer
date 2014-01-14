@@ -46,5 +46,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeTeamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *featuredButton;
+- (IBAction)videoButtonClicked:(id)sender;
 
 @end

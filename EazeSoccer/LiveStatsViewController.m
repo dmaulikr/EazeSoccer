@@ -9,21 +9,22 @@
 #import "LiveStatsViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "SoccerPlayerStatsViewController.h"
-#import "GameScheduleViewController.h"
 #import "sportzServerInit.h"
 #import "BasketballStatsViewController.h"
 #import "EazesportzFootballStatsViewController.h"
+#import "EditGameViewController.h"
 
 @interface LiveStatsViewController ()
 
 @end
 
 @implementation LiveStatsViewController {
-    GameScheduleViewController *gameController;
     SoccerPlayerStatsViewController *soccerStatsController;
     BasketballStatsViewController *basketballStatsController;
     EazesportzFootballStatsViewController *footballStatsController;
 }
+
+@synthesize game;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,7 +39,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.gameButton, self.teamButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.editButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -51,45 +52,31 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.title = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", game.opponent];
     
-    _gameContainer.hidden = YES;
-}
-
-- (IBAction)selectGameLiveStats:(UIStoryboardSegue *)segue {
-    [self gameSelected:segue];
-}
-
-- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
-    if (gameController.thegame) {
-        if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
-            soccerStatsController.game = gameController.thegame;
-            [soccerStatsController viewWillAppear:YES];
-        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
-            basketballStatsController.game = gameController.thegame;
-            [basketballStatsController viewWillAppear:YES];
-        } else if ([currentSettings.sport.name isEqualToString:@"Football"]) {
-            footballStatsController.game = gameController.thegame;
-            [footballStatsController viewWillAppear:YES];
-        }
+    if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+        soccerStatsController.game = game;
+        [soccerStatsController viewWillAppear:YES];
+    } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+        basketballStatsController.game = game;
+        [basketballStatsController viewWillAppear:YES];
+    } else if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        footballStatsController.game = game;
+        [footballStatsController viewWillAppear:YES];
     }
-    self.title = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", gameController.thegame.opponent];
-    _gameContainer.hidden = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"GameSelectSegue"]) {
-        gameController = segue.destinationViewController;
-    } else if ([segue.identifier isEqualToString:@"SoccerPlayerStatsSegue"]) {
+    if ([segue.identifier isEqualToString:@"SoccerPlayerStatsSegue"]) {
         soccerStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"BasketballPlayerStatsSegue"]) {
         basketballStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"FootballPlayerStatsSegue"]) {
         footballStatsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
+        EditGameViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
-}
-
-- (IBAction)gameButtonClicked:(id)sender {
-    _gameContainer.hidden = NO;
 }
 
 - (IBAction)changeteamButtonClicked:(id)sender {

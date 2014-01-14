@@ -11,8 +11,6 @@
 #import "sportzCurrentSettings.h"
 #import "sportzServerInit.h"
 #import "GameScheduleTableViewCell.h"
-#import "EditGameViewController.h"
-#import "EazesportzRetrieveGames.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -23,8 +21,6 @@
 @implementation GameScheduleViewController {
     NSMutableArray *games;
     NSIndexPath *deleteIndexPath;
-    
-    EazesportzRetrieveGames *retrieveGames;
 }
 
 @synthesize thegame;
@@ -43,6 +39,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableData:) name:@"GameListChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -53,7 +50,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    retrieveGames = [[EazesportzRetrieveGames alloc] init];
+    [_gamesTableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -64,22 +61,13 @@
     } else if (currentSettings.team == nil) {
         [self performSegueWithIdentifier:@"ChangeTeamSegue" sender:self];
     } else {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableData:) name:@"GameListChangedNotification" object:nil];
         _teamLabel.text = currentSettings.team.team_name;
-        [retrieveGames retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-//        [currentSettings retrieveGameList];
-//        [_gamesTableView reloadData];
         
         if (currentSettings.selectedTab != 0) {
             self.tabBarController.selectedIndex = currentSettings.selectedTab;
             currentSettings.selectedTab = 0;
         }
     }
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    // do not forget to unsubscribe the observer, or you may experience crashes towards a deallocated observer
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)reloadTableData:(NSNotification *)notification {
@@ -159,15 +147,10 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"got here");
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     return @"Games";
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -182,13 +165,8 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [_gamesTableView indexPathForSelectedRow];
-    if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
-        EditGameViewController *destviewController = segue.destinationViewController;
-        destviewController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
-    } else if ([segue.identifier isEqualToString:@"NewGameSegue"]) {
-        EditGameViewController *destController = segue.destinationViewController;
-        destController.game = nil;
-    } else if (indexPath.length > 0) {
+    
+    if (indexPath.length > 0) {
         thegame = [currentSettings.gameList objectAtIndex:indexPath.row];
     }
 }
@@ -197,10 +175,6 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if (![[currentSettings.gameList objectAtIndex:deleteIndexPath.row] initDeleteGame]) {
-            [currentSettings.gameList removeObjectAtIndex:deleteIndexPath.row];
-            [_gamesTableView reloadData];
-        }
     }
 }
 

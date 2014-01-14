@@ -43,6 +43,7 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.refreshButton, self.addButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRosterData:) name:@"RosterChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,13 +55,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.findPlayerContainer.hidden = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRosterData:) name:@"RosterChangedNotification" object:nil];
-    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                            Token:currentSettings.user.authtoken];
+    
     self.rosterdata = currentSettings.roster;
 }
 
 - (void)gotRosterData:(NSNotificationCenter *)notification {
+    self.rosterdata = currentSettings.roster;
     [self.playerTableView reloadData];
 }
 
@@ -107,9 +107,7 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if (![[self.rosterdata objectAtIndex:deleteIndexPath.row] initDeleteAthlete]) {
-            [self viewWillAppear:YES];
-        }
+        [[self.rosterdata objectAtIndex:deleteIndexPath.row] deleteAthlete];
     }
 }
 

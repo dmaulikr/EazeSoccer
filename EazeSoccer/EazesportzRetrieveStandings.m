@@ -1,16 +1,16 @@
 //
-//  EazesportzRetrieveGames.m
+//  EazesportzRetrieveStandings.m
 //  EazeSportz
 //
-//  Created by Gil on 1/9/14.
+//  Created by Gil on 1/10/14.
 //  Copyright (c) 2014 Gil. All rights reserved.
 //
 
-#import "EazesportzRetrieveGames.h"
-#import "EazesportzAppDelegate.h"
+#import "EazesportzRetrieveStandings.h"
 #import "sportzServerInit.h"
+#import "EazesportzAppDelegate.h"
 
-@implementation EazesportzRetrieveGames {
+@implementation EazesportzRetrieveStandings {
     int responseStatusCode;
     NSMutableArray *serverData;
     NSMutableData *theData;
@@ -18,10 +18,12 @@
     NSURLRequest *originalRequest;
 }
 
-- (void)retrieveGames:(NSString *)sportid Team:(NSString *)teamid Token:(NSString *)authtoken {
+@synthesize standings;
+
+- (void)retrieveStandings:(NSString *)sportid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getGameSchedule:teamid Token:authtoken]];
-   originalRequest = [NSURLRequest requestWithURL:url];
+    NSURL *url = [NSURL URLWithString:[sportzServerInit getStandings:currentSettings.user.authtoken]];
+    originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }
 
@@ -46,21 +48,18 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     if (responseStatusCode == 200) {
-        currentSettings.gameList = [[NSMutableArray alloc] init];
-        
-        for (int i = 0; i < [serverData count]; i++ ) {
-            [currentSettings.gameList addObject:[[GameSchedule alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+        standings = [[NSMutableArray alloc] init];
+        for (int i = 0; i < serverData.count; i++) {
+            [standings addObject:[[Standings alloc] initWithDirectory:[serverData objectAtIndex:i]]];
         }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameListChangedNotification" object:nil];
+         [[NSNotificationCenter defaultCenter] postNotificationName:@"StandingsListChangedNotification" object:nil
+                                                            userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Games" message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"StandingsListChangedNotification" object:nil
+                                            userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error Retrieving Standings", @"Result" , nil]];
     }
 }
 
@@ -72,7 +71,6 @@
     } else {
         return request;
     }
-    
 }
 
 @end

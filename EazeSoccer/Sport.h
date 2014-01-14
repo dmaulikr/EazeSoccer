@@ -29,6 +29,9 @@
 @property(nonatomic, assign) BOOL approved;
 
 @property(nonatomic, strong) NSString *package;
+@property(nonatomic, assign) int silverMedia;
+@property(nonatomic, assign) int goldMedia;
+@property(nonatomic, assign) int platinumMedia;
 
 @property(nonatomic, strong) NSNumber *teamcount;
 
@@ -43,5 +46,8 @@
 - (UIImage *)getImage:(NSString *)size;
 
 - (id)initWithDictionary:(NSDictionary *)sportDictionary;
+
+- (BOOL)isPackageEnabled;
+- (BOOL)isGoldPackage;
 
 @end

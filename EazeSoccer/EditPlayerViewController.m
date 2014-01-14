@@ -75,6 +75,11 @@
     self.navigationController.toolbarHidden = YES;
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    // do not forget to unsubscribe the observer, or you may experience crashes towards a deallocated observer
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -83,7 +88,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletePlayer:) name:@"AthleteDeletedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savedPlayer:) name:@"AthleteSavedNotification" object:nil];
+
     heighttext = @"";
     _positionPicker.hidden = YES;
     _heightPicker.hidden = YES;
@@ -156,8 +164,6 @@
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
-    NSURL *aurl;
-    
     if (_numberTextField.text.length == 0)
         [self displayDataEntryAlert:@"Athlete must have a jersey number!"];
     else if (_lastnameTextField.text.length == 0)
@@ -169,92 +175,27 @@
     else if (_gradeageclassTextField.text.length == 0)
         [self displayDataEntryAlert:@"Grade/Class cannot be blank"];
     else {
-        if (player != nil)
-            aurl = [NSURL URLWithString:[sportzServerInit getAthlete:[player athleteid] Token:currentSettings.user.authtoken]];
-        else
-            aurl = [NSURL URLWithString:[sportzServerInit newAthlete:currentSettings.user.authtoken]];
+        NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
         
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:180];
-        NSError *jsonSerializationError = nil;
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-        [_activityIndicator startAnimating];
+        if (!player)
+            player = [[Athlete alloc] init];
         
-        NSMutableDictionary *athDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[_numberTextField text], @"number",
-                                        [_lastnameTextField text], @"lastname", [_middlenameTextField text], @"middlename",
-                                        [_firstnameTextField text], @"firstname", [_heightTextField text], @"height",
-                                        [_weightTextField text], @"weight", [_seasonTextField text], @"season",
-                                        [_gradeageclassTextField text], @"year",
-                                        _positionTextField.text, @"position", currentSettings.team.teamid, @"team_id",
-                                         [_bioTextView text], @"bio", nil];
-        
-        NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-        
-        if (jsonSerializationError) {
-            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-        }
-        
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-        
-        if (player != nil)
-            [request setHTTPMethod:@"PUT"];
-        else
-            [request setHTTPMethod:@"POST"];
-        
-        [request setHTTPBody:jsonData];
-        
-        //Capturing server response
-        [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+        player.number = [f numberFromString:_numberTextField.text];
+        player.lastname = _lastnameTextField.text;
+        player.middlename = _middlenameTextField.text;
+        player.firstname = _firstnameTextField.text;
+        player.height = _heightTextField.text;
+        player.weight = [f numberFromString:_weightTextField.text];
+        player.season = _seasonTextField.text;
+        player.year = _gradeageclassTextField.text;
+        player.position = _positionTextField.text;
+        player.bio = _bioTextView.text;
+        [player saveAthlete];
     }
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    responseStatusCode = [httpResponse statusCode];
-    theData = [[NSMutableData alloc]init];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
-    
-    [theData appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [_activityIndicator stopAnimating];
-    
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
-    if (responseStatusCode == 200) {
-        NSDictionary *items = [serverData objectForKey:@"athlete"];
-        player = [[Athlete alloc] initWithDictionary:items];
-        player.athleteid = [items objectForKey:@"_id"];
-        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                    Token:currentSettings.user.authtoken];
-        
-        if (imageselected) {
-            [self uploadImage:player];
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Ahtlete Update Successful!"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-        }
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Athlete"
-                                                        message:[serverData objectForKey:@"error"]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
+- (void)savedPlayer:(NSNotification *)notification {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 //Method to define how many columns/dials to show
@@ -474,18 +415,22 @@
     }
 }
 
+- (void)deletePlayer:(NSNotification *)notification {
+    if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[player httperror]
+                                                       delegate:nil cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if (![player initDeleteAthlete]) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[player httperror]
-                                                           delegate:nil cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-        }
+        [player deleteAthlete];
     } else if ([title isEqualToString:@"Offense"]) {
         positionkeys = [currentSettings.sport.footballOffensePositions allKeys];
         positionvalues = [[NSMutableArray alloc] init];

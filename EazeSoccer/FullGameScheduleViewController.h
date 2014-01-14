@@ -14,4 +14,5 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)teamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addGameButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *standingsButton;
 @end

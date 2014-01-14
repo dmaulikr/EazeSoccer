@@ -12,7 +12,8 @@
 
 @property(nonatomic, strong) NSString *sponsorid;
 @property(nonatomic, strong) NSString *name;
-@property(nonatomic, strong) NSString *address;
+@property(nonatomic, strong) NSNumber *addrnum;
+@property(nonatomic, strong) NSString *street;
 @property(nonatomic, strong) NSString *city;
 @property(nonatomic, strong) NSString *state;
 @property(nonatomic, strong) NSString *zip;
@@ -24,8 +25,17 @@
 @property(nonatomic, strong) NSString *thumb;
 @property(nonatomic, strong) NSString *medium;
 @property(nonatomic, strong) NSString *large;
-@property(nonatomic, strong) NSNumber *priority;
+@property(nonatomic, strong) NSString *sponsorlevel;
 @property(nonatomic, strong) NSNumber *teamonly;
 @property(nonatomic, strong) NSString *teamid;
+
+@property(nonatomic, strong) NSString *httperror;
+
+- (id)initWithDirectory:(NSDictionary *)sponsorDictionary;
+- (id)initDelete;
+
+- (void)deleteSponsor;
+
+- (void)saveSponsor;
 
 @end

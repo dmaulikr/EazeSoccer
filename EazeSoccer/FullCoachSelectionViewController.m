@@ -48,15 +48,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (currentSettings.coaches.count == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Coaches"
-                                                        message:@"Program administrator has not entered any coaches"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } else {
-        [self.coachTableView reloadData];
-    }
+    
+    _segmentButton.selectedSegmentIndex = 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -133,6 +126,15 @@
                             tabBarController.selectedIndex = 0;
                         }
                     }];
+}
+
+- (IBAction)segmentButtonClicked:(id)sender {
+    
+    if (_segmentButton.selectedSegmentIndex == 1) {
+        [self performSegueWithIdentifier:@"ManageUsersSegue" sender:self];
+    } else if (_segmentButton.selectedSegmentIndex == 2) {
+        [self performSegueWithIdentifier:@"ContactsSegue" sender:self];
+    }
 }
 
 @end

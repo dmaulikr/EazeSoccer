@@ -1,16 +1,16 @@
 //
-//  EazesportzRetrieveGames.m
+//  EazesportzRetrieveSponsors.m
 //  EazeSportz
 //
-//  Created by Gil on 1/9/14.
+//  Created by Gil on 1/10/14.
 //  Copyright (c) 2014 Gil. All rights reserved.
 //
 
-#import "EazesportzRetrieveGames.h"
+#import "EazesportzRetrieveSponsors.h"
 #import "EazesportzAppDelegate.h"
 #import "sportzServerInit.h"
 
-@implementation EazesportzRetrieveGames {
+@implementation EazesportzRetrieveSponsors {
     int responseStatusCode;
     NSMutableArray *serverData;
     NSMutableData *theData;
@@ -18,10 +18,10 @@
     NSURLRequest *originalRequest;
 }
 
-- (void)retrieveGames:(NSString *)sportid Team:(NSString *)teamid Token:(NSString *)authtoken {
+- (void)retrieveSponsors:(NSString *)sportid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getGameSchedule:teamid Token:authtoken]];
-   originalRequest = [NSURLRequest requestWithURL:url];
+    NSURL *url = [NSURL URLWithString:[sportzServerInit getSponsors:currentSettings.user.authtoken]];
+    originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }
 
@@ -46,18 +46,20 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        currentSettings.gameList = [[NSMutableArray alloc] init];
+        currentSettings.sponsors = [[NSMutableArray alloc] init];
         
-        for (int i = 0; i < [serverData count]; i++ ) {
-            [currentSettings.gameList addObject:[[GameSchedule alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+        for (int i = 0; i < [serverData count]; i++) {
+            [currentSettings.sponsors addObject:[[Sponsor alloc] initWithDirectory:[serverData objectAtIndex:i]]];
         }
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameListChangedNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorListChangedNotification" object:nil];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Games" message:[NSString stringWithFormat:@"%d", responseStatusCode]
+        //        NSDictionary *errordict = [[NSDictionary alloc] initWithObjects:serverData forKeys:@"error"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Sponsors" message:[NSString stringWithFormat:@"%d", responseStatusCode]
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -72,7 +74,7 @@
     } else {
         return request;
     }
-    
 }
+
 
 @end

@@ -56,6 +56,7 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, self.featuredButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
+    activityIndicator.hidesWhenStopped = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -70,16 +71,21 @@
     _playerContainer.hidden = YES;
     _gameContainer.hidden = YES;
     _userSelectContainer.hidden = YES;
-    activityIndicator.hidesWhenStopped = YES;
     
-//    if ((player) || (gamelog) || (game) || (user))
-    if ((player) || (game) || (user))
-        [self getPhotos];
-    else if (photos)
-        [self teamButtonClicked:self];
-    
-    if (photos) {
-        [_collectionView reloadData];
+    if ([currentSettings.sport isPackageEnabled]) {
+        if ((player) || (game) || (user))
+            [self getPhotos];
+        else if (photos)
+            [self teamButtonClicked:self];
+        
+        if (photos) {
+            [_collectionView reloadData];
+        }
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Stats!"
+                                                       delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
     }
 }
 
@@ -380,6 +386,10 @@
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [activityIndicator startAnimating];
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }  else if ([title isEqualToString:@"Info"]) {
+        [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];
+    } else if ([title isEqualToString:@"Dismiss"]) {
+        self.tabBarController.selectedIndex = 0;
     }
 }
 
@@ -409,4 +419,6 @@
                     }];
 }
 
+- (IBAction)videoButtonClicked:(id)sender {
+}
 @end

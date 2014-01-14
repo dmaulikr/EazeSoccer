@@ -13,6 +13,7 @@
 #import "StandingsTableViewCell.h"
 #import "Standings.h"
 #import "EditStandingViewController.h"
+#import "EazesportzRetrieveStandings.h"
 
 @interface StandingsTableViewController ()
 
@@ -20,6 +21,8 @@
 
 @implementation StandingsTableViewController {
     NSMutableArray *leaguelist;
+    
+    EazesportzRetrieveStandings *getStandings;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -40,6 +43,20 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotStandings:) name:@"StandingsListChangedNotification" object:nil];
+}
+
+- (void)gotStandings:(NSNotification *)notification {
+    if (![[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                message:[[notification userInfo] valueForKey:@"Result"]
+                                                delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    } else {
+        leaguelist = getStandings.standings;
+        [_standingTableView reloadData];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,28 +68,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getStandings:currentSettings.user.authtoken]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLResponse* response;
-    NSError *error = nil;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    NSArray *standingData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-    
-    if ([httpResponse statusCode] == 200) {
-        leaguelist = [[NSMutableArray alloc] init];
-        for (int i = 0; i < standingData.count; i++) {            
-            [leaguelist addObject:[[Standings alloc] initWithDirectory:[standingData objectAtIndex:i]]];
-        }
-        [self.tableView reloadData];
-   } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Standings"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
+    getStandings = [[EazesportzRetrieveStandings alloc] init];
+    [getStandings retrieveStandings:currentSettings.sport.id Token:currentSettings.user.authtoken];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    // do not forget to unsubscribe the observer, or you may experience crashes towards a deallocated observer
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Table view data source

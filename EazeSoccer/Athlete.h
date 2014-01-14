@@ -69,8 +69,9 @@
 
 - (NSString *)numberLogname;
 
+- (void)saveAthlete;
 - (id)initWithDictionary:(NSDictionary *)athleteDictionary;
-- (id)initDeleteAthlete;
+- (void)deleteAthlete;
 
 - (FootballPassingStat *)findFootballPassingStat:(NSString *)gameid;
 - (void)updateFootballPassingGameStats:(FootballPassingStat *)passingstat;

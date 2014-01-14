@@ -138,15 +138,6 @@
     
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
-                                                    message:@"Make sure to press SAVE to post stats to cloud. \n Swipe cell to enter stats by total"
-                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
-}
-
 - (IBAction)saveButtonClicked:(id)sender {
     if (game) {
         for (int cnt = 0; cnt < currentSettings.roster.count; cnt++) {

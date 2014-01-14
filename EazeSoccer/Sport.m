@@ -31,6 +31,9 @@
 @synthesize approved;
 
 @synthesize package;
+@synthesize silverMedia;
+@synthesize goldMedia;
+@synthesize platinumMedia;
 
 @synthesize teamcount;
 
@@ -75,6 +78,9 @@
         beta = [[sportDictionary objectForKey:@"beta"] boolValue];
         approved = [[sportDictionary objectForKey:@"approved"] boolValue];
         package = [sportDictionary objectForKey:@"package"];
+        silverMedia = [[sportDictionary objectForKey:@"silverMedia"] integerValue];
+        goldMedia = [[sportDictionary objectForKey:@"goldMedia"] integerValue];
+        platinumMedia = [[sportDictionary objectForKey:@"platinumMedia"] integerValue];
         teamcount = [sportDictionary objectForKey:@"teamcount"];
         
         if ([name isEqualToString:@"Soccer"]) {
@@ -134,6 +140,21 @@
     }
     
     return image;
+}
+
+- (BOOL)isPackageEnabled {
+    if (([self.package isEqualToString:@"Silver"]) || ([self.package isEqualToString:@"Gold"]) || ([self.package isEqualToString:@"Platinum"])) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (BOOL)isGoldPackage {
+    if ([package isEqualToString:@"Gold"])
+        return YES;
+    else
+        return NO;
 }
 
 @end

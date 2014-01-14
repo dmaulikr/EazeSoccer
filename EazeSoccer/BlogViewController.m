@@ -89,7 +89,15 @@
     _gameScheduleContainer.hidden = YES;
     _userContainer.hidden = YES;
     refresh = NO;
-    [self getBlogs:nil];
+    
+    if ([currentSettings.sport isPackageEnabled])
+        [self getBlogs:nil];
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Stats!"
+                                                       delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 #pragma mark - Table view data source
@@ -454,6 +462,10 @@
         coach = nil;
         user = nil;
         [self getBlogs:nil];
+    } else if ([title isEqualToString:@"Info"]) {
+        [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];
+    } else if ([title isEqualToString:@"Dismiss"]) {
+        self.tabBarController.selectedIndex = 0;
     }
 }
 
