@@ -78,15 +78,21 @@
         else if (photos)
             [self teamButtonClicked:self];
         
-        if (photos) {
-            [_collectionView reloadData];
-        }
+//        if (photos) {
+//            [_collectionView reloadData];
+//        }
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Stats!"
-                                                       delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [self displayUpgradeAlert];
     }
+    [_collectionView reloadData];
+}
+
+- (void)displayUpgradeAlert {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
+                                    message:[NSString stringWithFormat:@"%@%@", @"Photo support not available for ", currentSettings.team.team_name]
+                                    delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (IBAction)userButtonClicked:(id)sender {
@@ -338,16 +344,39 @@
     NSURL *url;
     
     if (player) {
-        url = [NSURL URLWithString:[sportzServerInit getAthletePhotos:player.athleteid Team:currentSettings.team.teamid
-                                                                       Token:currentSettings.user.authtoken]];
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
+                                        currentSettings.team.teamid, @"&athlete_id=", player.athleteid, @"&auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                                                                      @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
+                                                                                      currentSettings.team.teamid, @"&athlete_id=", player.athleteid]];
     } else if (game) {
-        url = [NSURL URLWithString:[sportzServerInit getGamePhotos:game.id Team:currentSettings.team.teamid
-                                                             Token:currentSettings.user.authtoken]];
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
+                                        currentSettings.team.teamid, @"&gameschedule_id=", game.id, @"&auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
+                                        currentSettings.team.teamid, @"&gameschedule_id=", game.id]];
+        
 //    } else if (gamelog) {
 //        url = [NSURL URLWithString:[BasketballServerInit getGameLogPhotos:gamelog.gamelogid Team:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
     } else if (user) {
-        url = [NSURL URLWithString:[sportzServerInit getUserPhotos:user.userid Team:currentSettings.team.teamid
-                                                                    Token:currentSettings.user.authtoken]];
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
+                                        currentSettings.team.teamid, @"&user_id=", currentSettings.user.userid,
+                                        @"&auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
+                                        currentSettings.team.teamid, @"&user_id=", currentSettings.user.userid]];
+        
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -421,4 +450,5 @@
 
 - (IBAction)videoButtonClicked:(id)sender {
 }
+
 @end

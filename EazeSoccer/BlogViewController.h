@@ -54,4 +54,6 @@
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 - (IBAction)coachSelected:(UIStoryboardSegue *)segue;
 
+- (void)displayUpgradeAlert;
+
 @end

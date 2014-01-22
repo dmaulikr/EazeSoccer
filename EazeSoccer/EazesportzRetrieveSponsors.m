@@ -20,7 +20,14 @@
 
 - (void)retrieveSponsors:(NSString *)sportid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getSponsors:currentSettings.user.authtoken]];
+    NSURL *url;
+    
+    if (authtoken)
+        url = [NSURL URLWithString:[sportzServerInit getSponsors:currentSettings.user.authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports/",
+                                    sportid, @"/sponsors.json"]];
+    
     originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }

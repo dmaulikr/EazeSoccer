@@ -39,7 +39,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.editButton, self.teamButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.editButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -62,7 +62,7 @@
         [basketballStatsController viewWillAppear:YES];
     } else if ([currentSettings.sport.name isEqualToString:@"Football"]) {
         footballStatsController.game = game;
-        [footballStatsController viewWillAppear:YES];
+//        [footballStatsController viewWillAppear:YES];
     }
 }
 
@@ -73,36 +73,11 @@
         basketballStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"FootballPlayerStatsSegue"]) {
         footballStatsController = segue.destinationViewController;
+        footballStatsController.game = game;
     } else if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
         EditGameViewController *destController = segue.destinationViewController;
         destController.game = game;
     }
-}
-
-- (IBAction)changeteamButtonClicked:(id)sender {
-    currentSettings.team = nil;
-    UITabBarController *tabBarController = self.tabBarController;
-    
-    for (UIViewController *viewController in tabBarController.viewControllers)
-    {
-        if ([viewController isKindOfClass:[UINavigationController class]])
-            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
-    }
-    
-    UIView * fromView = tabBarController.selectedViewController.view;
-    UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
-    currentSettings.selectedTab = tabBarController.selectedIndex;
-    
-    // Transition using a page curl.
-    [UIView transitionFromView:fromView
-                        toView:toView
-                      duration:0.5
-                       options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
-                    completion:^(BOOL finished) {
-                        if (finished) {
-                            tabBarController.selectedIndex = 0;
-                        }
-                    }];
 }
 
 - (IBAction)saveButtonClicked:(id)sender {

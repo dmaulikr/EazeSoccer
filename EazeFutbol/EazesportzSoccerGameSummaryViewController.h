@@ -32,5 +32,8 @@
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
+- (IBAction)teamstatsButtonClicked:(id)sender;
+- (IBAction)playerstatsButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UITableView *statTableView;
 
 @end

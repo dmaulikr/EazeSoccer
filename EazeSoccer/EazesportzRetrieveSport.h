@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Sport.h"
+
 @interface EazesportzRetrieveSport : NSObject
 
-- (void)retrieveSport:(NSString *)authtoken;
+- (void)retrieveSport:(NSString *)sport Token:(NSString *)authtoken;
 
 @end

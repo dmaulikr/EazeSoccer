@@ -65,6 +65,14 @@
     [_scrollView addGestureRecognizer:singleTap];
 }
 
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
     CGPoint touchPoint = [gesture locationInView:_scrollView];
     [self.view endEditing:YES];

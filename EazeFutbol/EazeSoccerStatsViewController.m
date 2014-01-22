@@ -10,6 +10,7 @@
 #import "SoccerPlayerStatsTableCell.h"
 #import "EazesportzAppDelegate.h"
 #import "EazeSoccerPlayerStatsViewController.h"
+#import "EazesportzRetrievePlayers.h"
 
 @interface EazeSoccerStatsViewController ()
 
@@ -202,7 +203,7 @@
 }
 
 - (IBAction)refreshBurronClicked:(id)sender {
-    [currentSettings retrievePlayers];
+    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     
     if (self.athlete)
         self.athlete = [currentSettings findAthlete:self.athlete.athleteid];

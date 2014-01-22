@@ -100,7 +100,17 @@
         // 6
         [self centerScrollViewContents];
     } else {
-        NSURL *url = [NSURL URLWithString:[sportzServerInit getPhoto:photoid Token:currentSettings.user.authtoken]];
+        NSURL *url;
+        
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl" ],
+                                        @"/sports/", currentSettings.sport.id, @"/photos/", photoid, @".json?auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl" ],
+                                        @"/sports/", currentSettings.sport.id, @"/photos/", photoid, @".json"]];
+        
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [[NSURLConnection alloc] initWithRequest:request delegate:self];        
     }

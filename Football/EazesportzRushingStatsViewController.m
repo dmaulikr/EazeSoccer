@@ -316,6 +316,12 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+    } else if ([title isEqualToString:@"Add First Down"]) {
+        stat.firstdowns = [NSNumber numberWithInt:[stat.firstdowns intValue] + 1];
+        _fdLabel.text = [stat.firstdowns stringValue];
+    } else if (([title isEqualToString:@"Delete First Down"]) && ([stat.firstdowns intValue] > 0)) {
+        stat.firstdowns = [NSNumber numberWithInt:[stat.firstdowns intValue] - 1];
+        _fdLabel.text = [stat.firstdowns stringValue];
     }
 
 }
@@ -385,4 +391,12 @@
         destController.game = game;
     }
 }
+
+- (IBAction)firstdownButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"First Down"  message:@"Update First Down Stats" delegate:self
+                                          cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add First Down", @"Delete First Down", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
+}
+
 @end

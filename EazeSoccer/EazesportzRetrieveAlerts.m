@@ -20,7 +20,13 @@
 
 - (void)retrieveAlerts:(NSString *)sportid Team:(NSString *)teamid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getAlerts:currentSettings.user.userid Token:currentSettings.user.authtoken]];
+    NSURL *url;
+    
+//    if (authtoken)
+        url = [NSURL URLWithString:[sportzServerInit getAlerts:currentSettings.user.userid Token:currentSettings.user.authtoken]];
+//    else
+//        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+//                                    @"/sports", sportid, @"/alerts/"]]
     originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }

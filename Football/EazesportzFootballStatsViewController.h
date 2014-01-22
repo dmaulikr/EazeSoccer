@@ -50,5 +50,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *homeTimeOutsTextField;
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
 
 @end

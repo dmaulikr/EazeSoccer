@@ -14,6 +14,8 @@
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "PlayerInfoViewController.h"
 #import "EazeBasketballGameSummaryViewController.h"
+#import "EazesportzSoccerGameSummaryViewController.h"
+#import "EazeFootballGameSummaryViewController.h"
 
 @interface sportzteamsPhotoDescriptionViewController ()
 
@@ -41,13 +43,21 @@
     _gameButton.layer.cornerRadius = 4;
     photoNameLabel.layer.cornerRadius = 4;
     _playerTableView.layer.cornerRadius = 4;
-    self.view.backgroundColor = [UIColor clearColor];
+//    self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -132,6 +142,22 @@
     } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
         EazeBasketballGameSummaryViewController *destController = segue .destinationViewController;
         destController.game = [currentSettings findGame:photo.schedule];
+    } else if ([segue.identifier isEqualToString:@"FootballGameInfoSegue"]) {
+        EazeFootballGameSummaryViewController *destController = segue .destinationViewController;
+        destController.game = [currentSettings findGame:photo.schedule];
+    } else if ([segue.identifier isEqualToString:@"SoccerGameInfoSegue"]) {
+        EazesportzSoccerGameSummaryViewController *destController = segue .destinationViewController;
+        destController.game = [currentSettings findGame:photo.schedule];
+    }
+}
+
+- (IBAction)gameButtonClicked:(id)sender {
+    if ([currentSettings.sport.name isEqualToString:@"FootballGameInfoSegue"])
+        [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
+    else if ([currentSettings.sport.name isEqualToString:@"BasketballGameInfoSegue"])
+        [self performSegueWithIdentifier:@"BaseketballGameInfoSegue" sender:self];
+    else if ([currentSettings.sport.name isEqualToString:@"SoccerGameInfoSegue"]) {
+        [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
     }
 }
 

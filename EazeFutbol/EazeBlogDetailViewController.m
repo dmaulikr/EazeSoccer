@@ -15,6 +15,7 @@
 #import "PlayerInfoViewController.h"
 #import "CoachesInfoViewController.h"
 #import "EazeBasketballGameSummaryViewController.h"
+#import "EazeFootballGameSummaryViewController.h"
 
 @interface EazeBlogDetailViewController () <UIAlertViewDelegate>
 
@@ -62,6 +63,14 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -225,6 +234,9 @@
     } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
         EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:blog.gameschedule];
+    } else if ([segue.identifier isEqualToString:@"FootballGameInfoSegue"]) {
+        EazeFootballGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings findGame:blog.gameschedule];
     }
 }
 
@@ -250,4 +262,12 @@
     _bannerView.hidden = YES;
 }
 
+- (IBAction)gameButtonClicked:(id)sender {
+    if ([currentSettings.sport.name isEqualToString:@"Football"])
+        [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
+    else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
+        [self performSegueWithIdentifier:@"BasketballGameInfoSegue" sender:self];
+    else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
+        [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
+}
 @end

@@ -429,11 +429,6 @@
                                 <segue destination="ALY-bY-Mgh" kind="push" identifier="EditGameSegue" id="24t-Kf-3mg"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem title="Team" id="7mi-Gy-zx8">
-                            <connections>
-                                <action selector="changeteamButtonClicked:" destination="ppw-6z-8b8" id="qHy-GO-S8i"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem systemItem="save" id="0v1-wy-Ghc">
                             <connections>
                                 <action selector="saveButtonClicked:" destination="ppw-6z-8b8" id="vCz-5e-vz8"/>
@@ -446,7 +441,6 @@
                         <outlet property="editButton" destination="rUL-vf-PeZ" id="BYR-Uf-fLS"/>
                         <outlet property="saveButton" destination="0v1-wy-Ghc" id="KLB-4x-qkq"/>
                         <outlet property="soccerContainer" destination="PF8-Bi-hiu" id="cSy-bR-CKz"/>
-                        <outlet property="teamButton" destination="7mi-Gy-zx8" id="Q0J-uw-vef"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9vk-2v-EB5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -706,7 +700,7 @@
             </objects>
             <point key="canvasLocation" x="5272" y="5692"/>
         </scene>
-        <!--Change Team View Controller - Admin Tools and Settings-->
+        <!--Change Team View Controller - Tools and Settings-->
         <scene sceneID="Fpf-uk-Ipn">
             <objects>
                 <viewController id="ZpM-0Z-rAR" customClass="ChangeTeamViewController" sceneMemberID="viewController">
@@ -835,7 +829,7 @@
                             <constraint firstItem="64t-CD-bBs" firstAttribute="leading" secondItem="ocG-pc-URV" secondAttribute="leading" id="w3U-2V-DtM"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Admin Tools and Settings" id="Ck1-l9-2OG"/>
+                    <navigationItem key="navigationItem" title="Tools and Settings" id="Ck1-l9-2OG"/>
                     <connections>
                         <outlet property="usernameLabel" destination="wgE-Ts-4Mp" id="zAY-01-PSI"/>
                     </connections>
@@ -1751,11 +1745,11 @@
             </objects>
             <point key="canvasLocation" x="6466" y="5228"/>
         </scene>
-        <!--Navigation Controller - Photo's-->
+        <!--Navigation Controller - Photo's/Video's-->
         <scene sceneID="2oV-1q-27Y">
             <objects>
                 <navigationController definesPresentationContext="YES" id="ble-ep-7ye" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Photo's" image="photo.png" id="6aF-bO-UVk"/>
+                    <tabBarItem key="tabBarItem" title="Photo's/Video's" image="photo.png" id="6aF-bO-UVk"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="0r3-Qp-bZN">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -6525,11 +6519,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <viewControllerLayoutGuide type="bottom" id="wxQ-ee-8J4"/>
                     </layoutGuides>
                     <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="7Zc-dg-wIq">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="500"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="120" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="S7Y-Oa-gTJ">
-                                <rect key="frame" x="0.0" y="44" width="600" height="500"/>
+                                <rect key="frame" x="0.0" y="44" width="600" height="600"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                 <prototypes>
@@ -7466,7 +7460,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                         <color key="textColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zvc-x0-kyX">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zvc-x0-kyX">
                                         <rect key="frame" x="698" y="56" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -7660,7 +7654,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                             <constraint firstAttribute="width" constant="25" id="zFe-pN-PZF"/>
                                         </constraints>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="arrow-big-02.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hom-cU-tt7">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow-big-02.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hom-cU-tt7">
                                         <rect key="frame" x="530" y="68" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -9003,22 +8997,22 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="wVY-mh-pPK"/>
-        <segue reference="hqE-ot-H79"/>
-        <segue reference="81g-MU-Anf"/>
-        <segue reference="QD5-gP-s44"/>
+        <segue reference="ILn-zM-xEZ"/>
         <segue reference="G9T-Gr-RIu"/>
         <segue reference="ntE-l4-HuY"/>
-        <segue reference="qtk-5V-Cgc"/>
-        <segue reference="TFx-Ma-l1Y"/>
-        <segue reference="iLs-pW-8b8"/>
-        <segue reference="ILn-zM-xEZ"/>
-        <segue reference="Qmf-3w-vwO"/>
-        <segue reference="T6m-Lt-I5L"/>
+        <segue reference="QD5-gP-s44"/>
         <segue reference="Vp0-eL-RS1"/>
-        <segue reference="saI-ey-JF4"/>
         <segue reference="HfE-hh-7iT"/>
-        <segue reference="w77-SF-Zfz"/>
+        <segue reference="saI-ey-JF4"/>
         <segue reference="a3k-w6-Yni"/>
+        <segue reference="wVY-mh-pPK"/>
+        <segue reference="UPL-be-jS7"/>
+        <segue reference="nig-bU-gCj"/>
+        <segue reference="kBj-6i-bzW"/>
+        <segue reference="UKw-9h-ghw"/>
+        <segue reference="alF-b8-tdb"/>
+        <segue reference="91j-3w-14j"/>
+        <segue reference="24t-Kf-3mg"/>
+        <segue reference="T6m-Lt-I5L"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -18,5 +18,8 @@
 - (IBAction)submitButtonClicked:(id)sender;
 
 - (IBAction)selectStateFindSite:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIPickerView *sportPicker;
+@property (weak, nonatomic) IBOutlet UITextField *sportTextField;
+@property (weak, nonatomic) IBOutlet UIView *siteselectView;
 
 @end

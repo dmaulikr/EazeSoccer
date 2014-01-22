@@ -132,7 +132,7 @@
         }
         
         if (currentSettings.sport.id.length > 0) {
-            [[[EazesportzRetrieveSport alloc] init] retrieveSport:currentSettings.user.authtoken];
+            [[[EazesportzRetrieveSport alloc] init] retrieveSport:currentSettings.sport.id Token:currentSettings.user.authtoken];
         } else if (([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) &&
                    ([currentSettings.user.admin intValue] > 0)) {
             [self performSegueWithIdentifier:@"CreateSportSegue" sender:self];

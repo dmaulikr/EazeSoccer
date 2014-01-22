@@ -238,8 +238,14 @@
     NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
     serverUrlString = [serverUrlString stringByAppendingString:@"/sports/"];
     serverUrlString = [serverUrlString stringByAppendingString:sport];
-    serverUrlString = [serverUrlString stringByAppendingString:@"/teams.json?auth_token="];
-    return serverUrlString = [serverUrlString stringByAppendingString:authtoken];
+    
+    if (currentSettings.user.authtoken.length > 0) {
+        serverUrlString = [serverUrlString stringByAppendingString:@"/teams.json?auth_token="];
+        [serverUrlString stringByAppendingString:authtoken];
+    } else {
+        serverUrlString = [serverUrlString stringByAppendingString:@"/teams.json"];
+    }
+    return serverUrlString;
 }
 
 + (NSString *)addTeam:(NSString *)authtoken {

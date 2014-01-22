@@ -41,6 +41,14 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [self.rosterTableView indexPathForSelectedRow];
     if ([segue.identifier isEqualToString:@"PlayerInfoSegue"]) {

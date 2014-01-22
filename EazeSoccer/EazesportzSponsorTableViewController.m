@@ -47,7 +47,7 @@
     if ([currentSettings.sport isPackageEnabled])
         [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
     else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Stats!"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Sponsor Support!"
                                                     delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];

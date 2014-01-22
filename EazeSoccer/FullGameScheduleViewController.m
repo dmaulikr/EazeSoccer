@@ -10,6 +10,7 @@
 #import "EazesportzAppDelegate.h"
 #import "EditGameViewController.h"
 #import "LiveStatsViewController.h"
+#import "EazesportzFootballStatsViewController.h"
 
 @interface FullGameScheduleViewController () <UIAlertViewDelegate>
 
@@ -63,10 +64,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([currentSettings.sport isPackageEnabled]) {
-        [self performSegueWithIdentifier:@"GameStatsSegue" sender:self];
+        NSBundle *mainBundle = [NSBundle mainBundle];
+
+        if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Football"])
+            [self performSegueWithIdentifier:@"FootballStatsSegue" sender:self];
+        else
+            [self performSegueWithIdentifier:@"GameStatsSegue" sender:self];
+        
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Stats!"
-                                                       delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
+                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -97,6 +104,9 @@
         destController.game = nil;
     } else if ([segue.identifier isEqualToString:@"GameStatsSegue"]) {
         LiveStatsViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"FootballStatsSegue"]) {
+        EazesportzFootballStatsViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
     }
 }

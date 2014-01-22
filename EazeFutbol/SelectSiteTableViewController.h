@@ -14,6 +14,8 @@
 @property(nonatomic, strong) NSString *zipcode;
 @property(nonatomic, strong) NSString *city;
 @property(nonatomic, strong) NSString *sitename;
+@property(nonatomic, strong) NSString *sportname;
+
 @property (strong, nonatomic) IBOutlet UITableView *siteTableView;
 
 @end

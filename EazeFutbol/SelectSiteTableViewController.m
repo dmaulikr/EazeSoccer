@@ -10,6 +10,7 @@
 #import "EazesportzAppDelegate.h"
 #import "sportzServerInit.h"
 #import "sportzteamsRegisterLoginViewController.h"
+#import "EazesportzRetrieveSport.h"
 
 @interface SelectSiteTableViewController () <UIAlertViewDelegate>
 
@@ -25,6 +26,7 @@
 @synthesize sitename;
 @synthesize city;
 @synthesize zipcode;
+@synthesize sportname;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -52,13 +54,21 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if ((state.length > 0) || (zipcode.length > 0) || (city.length > 0) || (sitename.length > 0)) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        NSURL *url = [NSURL URLWithString:[sportzServerInit getSiteList:state Zip:zipcode City:city SiteName:sitename
-                                                              Sportname:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSport:) name:@"SportChangedNotification" object:nil];
+
+    if ((state.length > 0) || (zipcode.length > 0) || (city.length > 0) || (sitename.length > 0) || (sportname.length > 0)) {
+        NSURL *url = [NSURL URLWithString:[sportzServerInit getSiteList:state Zip:zipcode City:city SiteName:sitename Sportname:sportname]];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         NSURLResponse* response;
         NSError *error = nil;
@@ -81,6 +91,12 @@
         }
     }
     [_siteTableView reloadData];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Table view data source
@@ -108,9 +124,12 @@
     }
     
     Sport *asport = [siteList objectAtIndex:indexPath.row];
+    cell.textLabel.font = [UIFont fontWithName: @"Arial" size: 14.0 ];
     cell.textLabel.text = asport.sitename;
+
     cell.imageView.image = [asport getImage:@"tiny"];
-    cell.detailTextLabel.text = asport.mascot;
+    cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:10.0];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@%@%@", asport.mascot, @"   ", asport.city, @" ", asport.state];;
     
     return cell;
 }
@@ -119,31 +138,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     sport = [siteList objectAtIndex:indexPath.row];
-    if (currentSettings.user.email.length > 0) {
-        NSURL *url = [NSURL URLWithString:[sportzServerInit changeDefaultSite:[sport id] Token:currentSettings.user.authtoken]];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        NSURLResponse* response;
-        NSError *error = nil;
-        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
-        NSDictionary *newsite = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-        NSDictionary *sportdata = [newsite objectForKey:@"site"];
-        currentSettings.sport.id = [sportdata objectForKey:@"_id"];
-        [currentSettings retrieveSport];
-        currentSettings.team = nil;;
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!"
-                                                        message:@"Change Site Successful"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } else {
-        [self performSegueWithIdentifier:@"RegisterSiteLoginSegue" sender:self];
-    }
+    [[[EazesportzRetrieveSport alloc] init] retrieveSport:sport.id Token:currentSettings.user.authtoken];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Sites";
+    return @"Eazesportz Sites";
 }
 
 
@@ -157,22 +156,62 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+
+    if ([title isEqualToString:@"Continue"]) {
+//        NSString *dataFile = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"];
+//        NSString *docPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/currentsite.txt"];
+        
+//        [dataFile writeToFile:docPath atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+        
+    }
+}
+
+- (void)gotSport:(NSNotification *)notification {
+    currentSettings.sitechanged = YES;
+/*    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome!"
+                                                    message:[NSString stringWithFormat:@"%@%@", @"Welcome to ", currentSettings.sport.sitename]
+                                                   delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:nil, nil];
+    
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
+ */
+    NSArray *paths = NSSearchPathForDirectoriesInDomains
+    (NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    //make a file name to write the data to using the documents directory:
+    NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt",
+                          documentsDirectory];
+    //create content - four lines of text
+    NSString *content = currentSettings.sport.id;
+    //save content to the documents directory
+    [content writeToFile:fileName
+              atomically:NO
+                encoding:NSStringEncodingConversionAllowLossy
+                   error:nil];
+    
+    //        [self.navigationController popToRootViewControllerAnimated:YES];
     
     UITabBarController *tabBarController = self.tabBarController;
     UIView * fromView = tabBarController.selectedViewController.view;
     UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
     
-    if ([title isEqualToString:@"Ok"]) {
-        // Transition using a page curl.
-        [UIView transitionFromView:fromView toView:toView duration:0.5
-                           options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
-                        completion:^(BOOL finished) {
-                            if (finished) {
-                                tabBarController.selectedIndex = 0;
-                            }
-                        }];
-        
+    for (UIViewController *viewController in tabBarController.viewControllers) {
+        if ([viewController isKindOfClass:[UINavigationController class]])
+            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
     }
+    
+    [self.navigationController popToRootViewControllerAnimated:NO];
+    
+    /* Transition using a page curl.
+    [UIView transitionFromView:fromView toView:toView duration:0.5
+                       options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                    completion:^(BOOL finished) {
+                        if (finished) {
+                            tabBarController.selectedIndex = 0;
+                        }
+                    }]; 
+     */
 }
 
 @end

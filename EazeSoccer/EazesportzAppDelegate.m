@@ -47,6 +47,8 @@
     [self.window.rootViewController.view sendSubviewToBack: myGraphic];
     currentSettings = [[sportzCurrentSettings alloc] init];
     [AmazonErrorHandler shouldNotThrowExceptions];
+    currentSettings.sitechanged = YES;
+    
     return YES;
 }
 							
@@ -65,10 +67,12 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
+    if (([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) || (currentSettings.user.authtoken)) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
 
-    [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
-                                  Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
+        [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
+                                      Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -95,6 +99,17 @@
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-     
+/*
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
+    NSUInteger orientations = UIInterfaceOrientationMaskAllButUpsideDown;
+    
+    if(self.window.rootViewController){
+        UIViewController *presentedViewController = [[(UINavigationController *)self.window.rootViewController viewControllers] lastObject];
+        orientations = [presentedViewController supportedInterfaceOrientations];
+    }
+    
+    return orientations;
+}
+ */
 
 @end

@@ -20,7 +20,13 @@
 
 - (void)retrieveGames:(NSString *)sportid Team:(NSString *)teamid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getGameSchedule:teamid Token:authtoken]];
+    NSURL *url;
+    
+    if (authtoken)
+        url = [NSURL URLWithString:[sportzServerInit getGameSchedule:teamid Token:authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", sportid, @"/teams/", teamid, @"/gameschedules.json"]];
    originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }

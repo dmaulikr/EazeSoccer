@@ -66,6 +66,9 @@
     _quarterTextField.keyboardType = UIKeyboardTypeNumberPad;
     _homeTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
     _visitorTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.editButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,9 +79,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    _playerSelectContainer.hidden = YES;
-    _gamelogContainer.hidden = YES;
     
 //    qbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballQB];
     rbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballRB];
@@ -175,6 +175,8 @@
         _finalButton.hidden = YES;
     }
 
+    _playerSelectContainer.hidden = YES;
+    _gamelogContainer.hidden = YES;
 }
 
 - (IBAction)offenseButtonClicked:(id)sender {

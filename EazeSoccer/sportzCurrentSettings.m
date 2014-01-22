@@ -44,6 +44,8 @@
 @synthesize footballPUNT;
 @synthesize footballRET;
 
+@synthesize sitechanged;
+
 - (id)init {
     if (self = [super init]) {
         user = [User alloc];
@@ -218,8 +220,14 @@
 - (GameSchedule *)retrieveGame:(NSString *)gameid {
     GameSchedule *agame = nil;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getGame:[self.team teamid] Game:gameid
-                                                          Token:self.user.authtoken]];
+    NSURL *url;
+    
+    if (self.user.authtoken)
+         url = [NSURL URLWithString:[sportzServerInit getGame:[self.team teamid] Game:gameid Token:self.user.authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", self.sport.id, @"/teams/", self.team.teamid, @"/gameschedules/", gameid]];
+            
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSURLResponse* response;
     NSError *error = nil;

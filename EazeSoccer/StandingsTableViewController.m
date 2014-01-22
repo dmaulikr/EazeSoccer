@@ -98,6 +98,7 @@
     
     // Configure the cell...
     Standings *standing = [leaguelist objectAtIndex:indexPath.row];
+    cell.teamNameLabel.numberOfLines = 0;
     cell.teamNameLabel.text = [NSString stringWithFormat:@"%@%@%@", standing.teamname, @" ", standing.mascot];
     
     if (standing.gameschedule_id.length > 0) {

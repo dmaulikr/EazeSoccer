@@ -93,11 +93,16 @@
     if ([currentSettings.sport isPackageEnabled])
         [self getBlogs:nil];
     else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Stats!"
-                                                       delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [self displayUpgradeAlert];
     }
+}
+
+- (void)displayUpgradeAlert {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
+                         message:[NSString stringWithFormat:@"%@%@", @"Blog support not available for ", currentSettings.team.team_name]
+                                                   delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 #pragma mark - Table view data source
@@ -402,24 +407,40 @@
 }
 
 - (void)getBlogs:(NSString *)fromdate {
-    NSURL *url;
-    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
+    NSString *urlstring;
+    
     if (player) {
-        url = [NSURL URLWithString:[sportzServerInit getAthleteBlogs:player.athleteid updatedAt:fromdate
-                                                                      Token:currentSettings.user.authtoken]];
+        urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
+                    [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                    @"/sports/", currentSettings.sport.id, @"/blogs.json?team_id=", currentSettings.team.teamid, @"&athlete_id=",
+                    player.athleteid, @"&updated_at", fromdate];
+        
+        
     } else if (game) {
-        url = [NSURL URLWithString:[sportzServerInit getGameBlogs:game.id updatedAt:fromdate Token:currentSettings.user.authtoken]];
+        urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                     @"/sports/", currentSettings.sport.id, @"/blogs.json?team_id=", currentSettings.team.teamid, @"&gameschedule_id=",
+                     game.id, @"&updated_at", fromdate];
     } else if (coach) {
-        url = [NSURL URLWithString:[sportzServerInit getCoachBlogs:coach.coachid updatedAt:fromdate Token:currentSettings.user.authtoken]];
+        urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                     @"/sports/", currentSettings.sport.id, @"/blogs.json?team_id=", currentSettings.team.teamid, @"&coach_id=",
+                     game.id, @"&updated_at", fromdate];
     } else if (user) {
-        url = [NSURL URLWithString:[sportzServerInit getUserBlogs:user.userid updatedAt:fromdate Token:currentSettings.user.authtoken]];
+        urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                     @"/sports/", currentSettings.sport.id, @"/blogs.json?team_id=", currentSettings.team.teamid, @"&user_id=",
+                     coach.coachid, @"&updated_at", fromdate];
 //    } else if (gamelog) {
 //        url = [NSURL URLWithString:[sportzServerInit getBigPlayBlogs:gamelog.gamelogid updatedAt:fromdate Token:currentSettings.user.authtoken]];
     } else if (team) {
-        url = [NSURL URLWithString:[sportzServerInit getBlogs:currentSettings.team.teamid updatedAt:fromdate Token:currentSettings.user.authtoken]];
+        urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                     @"/sports/", currentSettings.sport.id, @"/blogs.json?team_id=", currentSettings.team.teamid, @"&updated_at", fromdate];
     }
+    
+    if (currentSettings.user.authtoken)
+        urlstring = [urlstring stringByAppendingFormat:@"%@%@", @"&auth_token=", currentSettings.user.authtoken];
+    
+    NSURL *url = [NSURL URLWithString:urlstring];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];

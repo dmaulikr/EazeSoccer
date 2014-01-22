@@ -50,21 +50,39 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (playerSelectController) {
-        if (playerSelectController.player)
-            self.player = playerSelectController.player;
-    } else if (gameSelectController) {
-        if (gameSelectController.thegame)
-            self.game = gameSelectController.thegame;
-    } else if (usersSelectController) {
-        if (usersSelectController.user)
-            self.user = usersSelectController.user;
-    } else if (coachSelectController) {
-        if (coachSelectController.coach)
-            self.coach = coachSelectController.coach;
+    if (currentSettings.sport.id.length == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please select a site before continuing"
+                                                       delegate:self cancelButtonTitle:@"Select Site" otherButtonTitles:nil, nil];
+        
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+        return;
+    } else {
+        if (playerSelectController) {
+            if (playerSelectController.player)
+                self.player = playerSelectController.player;
+        } else if (gameSelectController) {
+            if (gameSelectController.thegame)
+                self.game = gameSelectController.thegame;
+        } else if (usersSelectController) {
+            if (usersSelectController.user)
+                self.user = usersSelectController.user;
+        } else if (coachSelectController) {
+            if (coachSelectController.coach)
+                self.coach = coachSelectController.coach;
+        }
+        
+        [super viewWillAppear:animated];
     }
-    
-    [super viewWillAppear:animated];
+}
+
+- (void)displayUpgradeAlert {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
+                                                    message:[NSString stringWithFormat:@"%@%@%@", @"Blog not available for ",
+                                                    currentSettings.team.team_name, @". Contact your administrator with questions."]
+                                                    delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -117,7 +135,12 @@
         self.coach = nil;
         self.user = nil;
         [self getBlogs:nil];
+    } else if ([title isEqualToString:@"Dismiss"]) {
+        self.tabBarController.selectedIndex = 0;
+    } else if ([title isEqualToString:@"Select Site"]) {
+        self.tabBarController.selectedIndex = 0;
     }
+
 }
 
 - (IBAction)searchButtonClicked:(id)sender {

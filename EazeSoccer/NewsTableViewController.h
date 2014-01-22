@@ -15,4 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeTeamButtonClicked:(id)sender;
 
+- (void)getNews:(NSString *)updatedat;
+
 @end

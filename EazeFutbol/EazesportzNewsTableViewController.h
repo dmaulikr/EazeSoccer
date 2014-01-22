@@ -10,4 +10,6 @@
 
 @interface EazesportzNewsTableViewController : NewsTableViewController
 
+@property (weak, nonatomic) IBOutlet UIPickerView *teamPicker;
+
 @end

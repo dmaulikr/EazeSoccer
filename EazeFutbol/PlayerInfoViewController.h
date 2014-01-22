@@ -31,5 +31,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *photoButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *videoButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
+- (IBAction)statButtonClicked:(id)sender;
 
 @end

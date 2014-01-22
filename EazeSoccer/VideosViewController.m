@@ -215,10 +215,10 @@
  }*/
 
 #pragma mark - UICollectionViewDelegate
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    // TODO: Select Item
-    //    [self performSegueWithIdentifier:@"RosterInfoSegue" sender:self];
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -351,17 +351,38 @@
     NSURL *url;
     
     if (player) {
-        url = [NSURL URLWithString:[sportzServerInit getAthleteVideos:player.athleteid Team:currentSettings.team.teamid
-                                                                Token:currentSettings.user.authtoken]];
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                   @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid, @"&athlete_id=",
+                   player.athleteid, @"&auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid, @"&athlete_id=",
+                                        player.athleteid]];
     } else if (game) {
-        url = [NSURL URLWithString:[sportzServerInit getGameVideos:game.id Team:currentSettings.team.teamid
-                                                             Token:currentSettings.user.authtoken]];
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
+                                        @"&gameschedule_id=", game.id, @"&auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
+                                        @"&gameschedule_id=", game.id]];
+        
 //    } else if (gamelog) {
 //        url = [NSURL URLWithString:[sportzServerInit getGameLogVideos:gamelog.gamelogid Team:currentSettings.team.teamid
 //                                                                Token:currentSettings.user.authtoken]];
     } else if (user) {
-        url = [NSURL URLWithString:[sportzServerInit getUserVideos:user.userid Team:currentSettings.team.teamid
-                                                             Token:currentSettings.user.authtoken]];
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
+                                        @"&user_id=", currentSettings.user.userid, @"&auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
+                                        @"&user_id=", currentSettings.user.userid]];
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:url];

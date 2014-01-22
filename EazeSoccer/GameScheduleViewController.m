@@ -56,16 +56,18 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if ([currentSettings.user.email length] == 0) {
-        [self performSegueWithIdentifier:@"LoginSegue" sender:self];
-    } else if (currentSettings.team == nil) {
-        [self performSegueWithIdentifier:@"ChangeTeamSegue" sender:self];
-    } else {
-        _teamLabel.text = currentSettings.team.team_name;
-        
-        if (currentSettings.selectedTab != 0) {
-            self.tabBarController.selectedIndex = currentSettings.selectedTab;
-            currentSettings.selectedTab = 0;
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+        if ([currentSettings.user.email length] == 0) {
+            [self performSegueWithIdentifier:@"LoginSegue" sender:self];
+        } else if (currentSettings.team == nil) {
+            [self performSegueWithIdentifier:@"ChangeTeamSegue" sender:self];
+        } else {
+            _teamLabel.text = currentSettings.team.team_name;
+            
+            if (currentSettings.selectedTab != 0) {
+                self.tabBarController.selectedIndex = currentSettings.selectedTab;
+                currentSettings.selectedTab = 0;
+            }
         }
     }
 }

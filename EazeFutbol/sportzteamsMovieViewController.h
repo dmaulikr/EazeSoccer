@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <iAd/iAd.h>
 #import "Video.h"
 
 @interface sportzteamsMovieViewController : UIViewController
@@ -21,5 +22,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *gameButton;
 @property (weak, nonatomic) IBOutlet UILabel *gameButtonLabel;
 @property (weak, nonatomic) IBOutlet UITableView *playerTagTableView;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 
 @end

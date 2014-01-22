@@ -28,5 +28,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *coachNameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *coachButton;
 @property (weak, nonatomic) IBOutlet UITextView *commentTextView;
+- (IBAction)gameButtonClicked:(id)sender;
 
 @end

@@ -48,4 +48,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *featuredButton;
 - (IBAction)videoButtonClicked:(id)sender;
 
+- (void)displayUpgradeAlert;
+
 @end

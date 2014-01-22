@@ -18,10 +18,10 @@
     NSURLRequest *originalRequest;
 }
 
-
-- (void)retrieveSport:(NSString *)authtoken {
+- (void)retrieveSport:(NSString *)sport Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getSport:authtoken]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                       @"/sports/", sport, @".json?auth_token=", currentSettings.user.authtoken]];
     originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }
@@ -52,13 +52,11 @@
     
     if (responseStatusCode == 200) {
         currentSettings.sport = [[Sport alloc] initWithDictionary:sportdata];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"SportChangedNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SportChangedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error retrieving Sport"
-                             message:[NSString stringWithFormat:@"%d", responseStatusCode] delegate:nil cancelButtonTitle:@"Ok"
-                             otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SportChangedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Failure", @"Result", nil]];
     }
 }
 

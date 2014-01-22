@@ -14,4 +14,8 @@
 - (IBAction)logoutButtonClicked:(id)sender;
 - (IBAction)changeTeamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
+@property (weak, nonatomic) IBOutlet UIView *settingsView;
+- (IBAction)profileButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *logoutButton;
+- (IBAction)siteButtonClicked:(id)sender;
 @end

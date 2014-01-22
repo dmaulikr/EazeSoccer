@@ -51,6 +51,8 @@
 @property(nonatomic, strong) NSMutableArray *footballPUNT;
 @property(nonatomic, strong) NSMutableArray *footballRET;
 
+@property(nonatomic, assign) BOOL sitechanged;
+
 - (UIImage *)getBannerImage;
 
 - (Athlete *)findAthlete:(NSString *)athleteid;

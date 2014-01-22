@@ -31,5 +31,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *periodLabel;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
+@property (weak, nonatomic) IBOutlet UITableView *statTableView;
+- (IBAction)teamstatsButtonClicked:(id)sender;
+- (IBAction)playerstatsButtonClicked:(id)sender;
 
 @end

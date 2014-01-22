@@ -247,7 +247,14 @@
 
 - (void)getNews:(NSString *)fromdate {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit newsfeed:fromdate Token:currentSettings.user.authtoken]];
+    NSURL *url;
+    
+    if (currentSettings.user.authtoken)
+        url = [NSURL URLWithString:[sportzServerInit newsfeed:fromdate Token:currentSettings.user.authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", currentSettings.sport.id, @"/newsfeeds.json"]];
+        
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }

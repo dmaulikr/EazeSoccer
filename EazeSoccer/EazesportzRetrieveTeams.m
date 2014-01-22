@@ -22,7 +22,14 @@
 
 - (void)retrieveTeams:(NSString *)sportid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getTeams:sportid Token:currentSettings.user.authtoken]];
+    NSURL *url;
+    
+    if (currentSettings.user.authtoken)
+        url = [NSURL URLWithString:[sportzServerInit getTeams:sportid Token:currentSettings.user.authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", currentSettings.sport.id, @"/teams.json"]];
+    
     originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }

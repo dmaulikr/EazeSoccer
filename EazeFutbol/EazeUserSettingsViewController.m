@@ -58,6 +58,13 @@
     _activityIndicator.hidesWhenStopped = YES;
 }
 
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
 
 - (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
     CGPoint touchPoint = [gesture locationInView:_scrollView];

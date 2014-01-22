@@ -44,5 +44,6 @@
 @property (strong, nonatomic) IBOutlet UIView *colonLabel;
 @property (weak, nonatomic) IBOutlet UITextField *secondsTextField;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+- (IBAction)firstdownButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *totalsButton;
 @end

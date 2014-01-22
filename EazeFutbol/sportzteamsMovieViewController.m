@@ -43,6 +43,14 @@
     self.view.backgroundColor = [UIColor clearColor];
 }
 
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -68,7 +76,16 @@
             _playerTagTableView.hidden = YES;
         }
     } else {
-        NSURL *url = [NSURL URLWithString:[sportzServerInit getVideo:videoid Token:currentSettings.user.authtoken]];
+        NSURL *url;
+        
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/videoclips/", videoid, @".json?auth_token=",
+                                        currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/videoclips/", videoid, @".json"]];
+        
         NSLog(@"%@", url);
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
@@ -106,7 +123,7 @@
     }
     
     Athlete *aplayer = [currentSettings findAthlete:[videoclip.players objectAtIndex:indexPath.row]];
-    cell.textLabel.font = [UIFont fontWithName:@"ArialMT" size:10];
+    cell.textLabel.font = [UIFont fontWithName:@"ArialMT" size:12];
     cell.textLabel.text = aplayer.logname;
     
     return cell;
@@ -115,6 +132,10 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return @"Player Tags";
 }
 
 - (IBAction)playButtonClicked:(id)sender {
@@ -195,4 +216,20 @@
         destController.game = [currentSettings findGame:videoclip.schedule];
     }
 }
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+    _bannerView.hidden = NO;
+}
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {
+    return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner {
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
+    _bannerView.hidden = YES;
+}
+
 @end

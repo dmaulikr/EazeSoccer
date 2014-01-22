@@ -8,6 +8,7 @@
 
 #import "EazesportzGameLogViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzRetrievePlayers.h"
 
 @interface EazesportzGameLogViewController () <UIAlertViewDelegate>
 
@@ -33,6 +34,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.title = @"Select Play";
 }
 
 - (void)didReceiveMemoryWarning
@@ -68,6 +70,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
+    cell.textLabel.numberOfLines = 0;
+    cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:14.0];
     Gamelogs *log = [game.gamelogs objectAtIndex:indexPath.row];
     cell.textLabel.text = log.logentrytext;
     
@@ -79,10 +83,16 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        return  NO;
+    else
+        return YES;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -114,7 +124,8 @@
         if (![alog initDeleteGameLog]) {
             [game.gamelogs removeObjectAtIndex:deleteIndexPath.row];
             [_gamelogTableView reloadData];
-            [currentSettings retrievePlayers];          // Need to optimize and only retrieve stats
+            [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                                Token:currentSettings.user.authtoken];          // Need to optimize and only retrieve stats
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[alog httperror]
                                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
