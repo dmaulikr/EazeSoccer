@@ -74,20 +74,28 @@
 - (void)deleteAthlete;
 
 - (FootballPassingStat *)findFootballPassingStat:(NSString *)gameid;
+- (FootballPassingStat *)findFootballPassingStatById:(NSString *)stat_id;
 - (void)updateFootballPassingGameStats:(FootballPassingStat *)passingstat;
 - (FootballRushingStat *)findFootballRushingStat:(NSString *)gameid;
+- (FootballRushingStat *)findFootballRushingStatById:(NSString *)stat_id;
 - (void)updateFootballRushingGameStats:(FootballRushingStat *)rushingstat;
 - (FootballReceivingStat *)findFootballReceivingStat:(NSString *)gameid;
+- (FootballReceivingStat *)findFootballReceivingStatById:(NSString *)stat_id;
 - (void)updateFootballReceivingGameStats:(FootballReceivingStat *)receivingstat;
 - (FootballDefenseStats *)findFootballDefenseStat:(NSString *)gameid;
+- (FootballDefenseStats *)findFootballDefenseStatById:(NSString *)stat_id;
 - (void)updateFootballDefenseGameStats:(FootballDefenseStats *)defensestat;
 - (FootballKickerStats *)findFootballKickerStat:(NSString *)gameid;
+- (FootballKickerStats *)findFootballKickerStatById:(NSString *)stat_id;
 - (void)updateFootballKickerGameStats:(FootballKickerStats *)kickerstat;
 - (FootballPlaceKickerStats *)findFootballPlaceKickerStat:(NSString *)gameid;
+- (FootballPlaceKickerStats *)findFootballPlaceKickerStatById:(NSString *)stat_id;
 - (void)updateFootballPlaceKickerGameStats:(FootballPlaceKickerStats *)placekickerstat;
 - (FootballPunterStats *)findFootballPunterStat:(NSString *)gameid;
+- (FootballPunterStats *)findFootballPunterStatById:(NSString *)stat_id;
 - (void)updateFootballPunterGameStats:(FootballPunterStats *)punterstat;
 - (FootballReturnerStats *)findFootballReturnerStat:(NSString *)gameid;
+- (FootballReturnerStats *)findFootballReturnerStatById:(NSString *)stat_id;
 - (void)updateFootballReturnerGameStats:(FootballReturnerStats *)returnerstat;
 
 - (BOOL)saveFootballGameStats:(NSString *)gameid;
@@ -102,7 +110,7 @@
 - (BOOL)isPunter:(NSString *)gameid;
 - (BOOL)isReturner:(NSString *)gameid;
 
-- (NSString *)getBasketballStatGameId:(BasketballStats *)basketball_stat_id;
+- (NSString *)getBasketballStatGameId:(NSString *)basketball_stat_id;
 - (BasketballStats *)findBasketballGameStatEntries:(NSString *)gameid;
 - (void)updateBasketballGameStats:(BasketballStats *)bballstats;
 - (BOOL)saveBasketballGameStats:(NSString *)gameid;

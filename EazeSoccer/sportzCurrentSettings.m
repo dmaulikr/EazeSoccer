@@ -44,6 +44,7 @@
 @synthesize footballPUNT;
 @synthesize footballRET;
 
+@synthesize rootwindow;
 @synthesize sitechanged;
 
 - (id)init {

@@ -7,6 +7,7 @@
 //
 
 #import "BlogViewController.h"
+#import "Athlete.h"
 
 @interface EazeBlogViewController : BlogViewController
 

@@ -57,9 +57,9 @@
                 Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
                 cell.playerName.text = player.numberLogname;
                 stats = [player findSoccerGameStats:self.game.id];
-                cell.imageView.image = [player getImage:@"tiny"];
+//                cell.imageView.image = [player getImage:@"tiny"];
             } else {
-                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
+//                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
                 cell.playerName.text = @"Totals";
                 stats = [[Soccer alloc] init];
                 
@@ -79,9 +79,9 @@
                 GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
                 cell.playerName.text = agame.opponent;
                 stats = [self.athlete findSoccerGameStats:agame.id];
-                cell.imageView.image = [agame opponentImage];
+//                cell.imageView.image = [agame opponentImage];
             } else {
-                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
+//                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
                 cell.playerName.text = @"Totals";
                 stats = [[Soccer alloc] init];
                 
@@ -116,9 +116,9 @@
                 Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
                 cell.playerName.text = player.numberLogname;
                 stats = [player findSoccerGameStats:self.game.id];
-                cell.imageView.image = [player getImage:@"tiny"];
+//                cell.imageView.image = [player getImage:@"tiny"];
             } else {
-                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
+//                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
                 cell.playerName.text = @"Totals";
                 stats = [[Soccer alloc] init];
                 
@@ -136,9 +136,9 @@
                 GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
                 cell.playerName.text = agame.opponent;
                 stats = [self.athlete findSoccerGameStats:agame.id];
-                cell.imageView.image = [agame opponentImage];
+//                cell.imageView.image = [agame opponentImage];
             } else {
-                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
+//                cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
                 cell.playerName.text = @"Totals";
                 stats = [[Soccer alloc] init];
                 
@@ -162,11 +162,11 @@
         cell.titleLabel2.text = @"GA";
         cell.label2.text = [stats.goalsagainst stringValue];
         cell.titleLabel3.text = @"Minutes";
-        cell.label3.text = [stats.minutesplayed stringValue];
+        cell.label3.text = @"";
         cell.titleLabel4.text = @"";
         cell.label4.text = @"";
         cell.titleLabel5.text = @"";
-        cell.label5.text = @"";
+        cell.label5.text = [stats.minutesplayed stringValue];
         cell.titleLabel6.text = @"";
         cell.label6.text = @"";
     }
@@ -184,16 +184,16 @@
             if (self.game)
                     return @"Player       G     Sht     Ast    Stl    C/K      Pts";
             else
-                    return @"Game        G     Sht     Ast    Stl    C/K      Pts";
+                    return @"Game              G    Sht   Ast    Stl    C/K  Pts";
         }
     } else {
         if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
             return @"Goalie";
         } else {
             if (self.game)
-                return @"Goalie     Save   GA         Minutes";
+                return @"Goalie       Save   GA         Minutes";
             else
-                return @"Game       Save   GA         Minutes";
+                return @"Game           Save  GA               Minutes";
         }
     }
 }

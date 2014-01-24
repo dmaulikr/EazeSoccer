@@ -301,7 +301,8 @@
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
         UIImage *image = info[UIImagePickerControllerOriginalImage];
         
-        _userImage.image = image;
+        _userImage.image = [currentSettings normalizedImage:image scaledToSize:125];
+        
         if (newmedia)
             UIImageWriteToSavedPhotosAlbum(image,
                                            self,

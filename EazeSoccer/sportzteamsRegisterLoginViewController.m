@@ -9,6 +9,8 @@
 #import "sportzteamsRegisterLoginViewController.h"
 #import "sportzServerInit.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 @interface sportzteamsRegisterLoginViewController () <UIAlertViewDelegate>
 
 @end
@@ -37,21 +39,23 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
+    _siteLabel.numberOfLines = 0;
     [_siteLabel setText:sport.sitename];
-
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
-    [_scrollView addGestureRecognizer:singleTap];
-}
-
-- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
-    CGPoint touchPoint = [gesture locationInView:_scrollView];
-    [self.view endEditing:YES];
+    _registerView.layer.cornerRadius = 6;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

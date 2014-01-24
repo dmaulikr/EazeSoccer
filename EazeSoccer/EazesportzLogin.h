@@ -11,5 +11,6 @@
 @interface EazesportzLogin : NSObject
 
 - (void)Login:(NSString *)email Password:(NSString *)password;
+- (void)Login:(NSString *)email Password:(NSString *)password Site:(NSString *)site;
 
 @end

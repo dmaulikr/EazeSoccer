@@ -15,4 +15,6 @@
 @property(nonatomic, strong) Athlete *player;
 
 @property (weak, nonatomic) IBOutlet UITableView *playerStatsTableView;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *statSelector;
+- (IBAction)statSelectorButtonClicked:(id)sender;
 @end

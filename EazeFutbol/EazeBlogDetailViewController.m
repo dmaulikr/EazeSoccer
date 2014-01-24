@@ -121,6 +121,13 @@
         _gameButton.enabled = NO;
         _gameNameLabel.hidden = YES;
     }
+    
+    if (currentSettings.user.userid.length == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"You must login to create a blog entry."
+                                                       delegate:self cancelButtonTitle:@"Back" otherButtonTitles:@"Login", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 - (void)textViewShouldBeginEditing:(UITextView *)textView {
@@ -242,7 +249,12 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    if([title isEqualToString:@"Ok"]) {
+    
+    if ([title isEqualToString:@"Ok"]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if ([title isEqualToString:@"Login"]) {
+        [self performSegueWithIdentifier:@"LoginSegue" sender:self];
+    } else if ([title isEqualToString:@"Back"]) {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

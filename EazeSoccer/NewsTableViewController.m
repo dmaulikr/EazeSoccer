@@ -61,6 +61,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)stopRefresh {
+    [refreshControl endRefreshing];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     //    if ([[[NSDate alloc] init] timeIntervalSinceDate:currentSettings.lastAlertUpdate] > [currentSettings.sport.newsfeed_interval integerValue]) {
@@ -218,6 +222,7 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+        [self performSelector:@selector(stopRefresh) withObject:nil afterDelay:2.5];
         [self.tableView reloadData];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Newsfeed"

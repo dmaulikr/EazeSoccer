@@ -35,5 +35,6 @@
 - (IBAction)teamstatsButtonClicked:(id)sender;
 - (IBAction)playerstatsButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *statTableView;
+@property (weak, nonatomic) IBOutlet UIButton *playerStatsButton;
 
 @end

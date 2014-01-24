@@ -41,19 +41,36 @@
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:userDict, @"user", nil];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
     
-    if (!jsonSerializationError) {
-        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    } else {
-        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-    }
-    
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:jsonData];
     originalRequest = request;
     [[NSURLConnection alloc] initWithRequest:request  delegate:self];
 }
+
+- (void)Login:(NSString *)loginemail Password:(NSString *)loginpassword Site:(NSString *)site {
+    password = loginpassword;
+    email = loginemail;
+    userinfo = NO;
+    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    sportzServerInit *serverInit = [sportzServerInit alloc];
+    NSURL *url = [NSURL URLWithString:[serverInit getLoginRequest]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSDictionary *userDict = [[NSDictionary alloc] initWithObjectsAndKeys:email, @"email",password, @"password", site, @"site", nil];
+    
+    NSError *jsonSerializationError = nil;
+    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:userDict, @"user", nil];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:jsonData];
+    originalRequest = request;
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     
@@ -151,10 +168,6 @@
         currentSettings.user.awskeyid = [userdata objectForKey:@"awskeyid"];
         currentSettings.user.tier = [userdata objectForKey:@"tier"];
         
-        if ((NSNull *)[userdata objectForKey:@"default_site"] != [NSNull null])
-            currentSettings.sport.id = [userdata objectForKey:@"default_site"];
-        else
-            currentSettings.sport.id = @"";
         [[NSNotificationCenter defaultCenter] postNotificationName:@"LoginNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {

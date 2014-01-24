@@ -75,6 +75,10 @@
     self.navigationController.toolbarHidden = YES;
 }
 
+- (void)stopRefresh {
+    [refreshControl endRefreshing];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -282,6 +286,7 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+        [self performSelector:@selector(stopRefresh) withObject:nil afterDelay:2.5];
         [_blogTableView reloadData];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Blog Feed"

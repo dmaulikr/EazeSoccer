@@ -13,11 +13,14 @@
 #import "sportzCurrentSettings.h"
 #import "sportzServerInit.h"
 #import "Alert.h"
-//#import "sportzteamsBlogViewController.h"
-#import "EazeSoccerPlayerStatsViewController.h"
-//#import "sportzteamsPhotoInfoViewController.h"
-//#import "sportzteamsMovieViewController.h"
+#import "EazeBlogViewController.h"
+#import "EazesportzSoccerGameSummaryViewController.h"
+#import "EazeFootballGameStatsViewController.h"
+#import "EazeBasketballGameSummaryViewController.h"
+#import "sportzteamsPhotoInfoViewController.h"
+#import "sportzteamsMovieViewController.h"
 //#import "sportzteamsAlertsJSON.h"
+#import "EazesportzRetrieveAlerts.h"
 
 @interface EazeAlertViewController () <UIAlertViewDelegate>
 @end
@@ -61,12 +64,19 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (player != nil) {
-        _playerImage.image = [player getImage:@"thumb"];
-    }
-    [_playerNameLabel setText:player.full_name];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotAlerts:) name:@"AlertListChangedNotification" object:nil];
+    [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                      Token:currentSettings.user.authtoken];
+}
+
+- (void)gotAlerts:(NSNotification *)notification {
     alerts = [currentSettings findAlerts:player.athleteid];
     [_alertTableView reloadData];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    // do not forget to unsubscribe the observer, or you may experience crashes towards a deallocated observer
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,20 +87,44 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [_alertTableView indexPathForSelectedRow];
-    if ([segue.identifier isEqualToString:@"AlertBlogSegue"]) {
-//        sportzteamsBlogViewController *destViewController = segue.destinationViewController;
-//        destViewController.blogPlayer = player;
-    } else if ([segue.identifier isEqualToString:@"AthleteAlertStatsSegue"]) {
-        EazeSoccerPlayerStatsViewController *destViewController = segue.destinationViewController;
+    if ([segue.identifier isEqualToString:@"BlogAlertSegue"]) {
+        EazeBlogViewController *destViewController = segue.destinationViewController;
         destViewController.player = player;
-        Soccer *stats = [player findSoccerStats:[[alerts objectAtIndex:indexPath.row] stat]];
-        destViewController.game = [currentSettings findGame:stats.gameschedule_id];
-    } else if ([segue.identifier isEqualToString:@"AlertPhotoSegue"]) {
-//        sportzteamsPhotoInfoViewController *destViewController = segue.destinationViewController;
-//        destViewController.photoid = [[alerts objectAtIndex:indexPath.row] photo];
+    } else if ([segue.identifier isEqualToString:@"SoccerAlertsStatsSegue"]) {
+        EazesportzSoccerGameSummaryViewController *destViewController = segue.destinationViewController;
+        destViewController.game = [currentSettings findGame:[[player findSoccerStats:[[alerts objectAtIndex:indexPath.row] soccer_id]] gameschedule_id]];
+    } else if ([segue.identifier isEqualToString:@"PhotoAlertSegue"]) {
+        sportzteamsPhotoInfoViewController *destViewController = segue.destinationViewController;
+        destViewController.photoid = [[alerts objectAtIndex:indexPath.row] photo];
     } else if ([segue.identifier isEqualToString:@"VideoclipAlertSegue"]) {
-//        sportzteamsMovieViewController *destViewController = segue.destinationViewController;
-//        destViewController.videoid = [[alerts objectAtIndex:indexPath.row] videoclip];
+        sportzteamsMovieViewController *destViewController = segue.destinationViewController;
+        destViewController.videoid = [[alerts objectAtIndex:indexPath.row] videoclip];
+    } else if ([segue.identifier isEqualToString:@"FootballAlertsStatsSegue"]) {
+        EazeFootballGameStatsViewController *destController = segue.destinationViewController;
+        
+        Alert *alert = [alerts objectAtIndex:indexPath.row];
+        
+        if (alert.football_passing_id.length > 0)
+            destController.game = [currentSettings findGame:[[player findFootballPassingStatById:[alert football_passing_id]] gameschedule_id]];
+        else if (alert.football_rushing_id.length > 0)
+            destController.game = [currentSettings findGame:[[player findFootballRushingStatById:[alert football_rushing_id]] gameschedule_id]];
+        else if (alert.football_receiving_id.length > 0)
+            destController.game = [currentSettings findGame:[[player findFootballReceivingStatById:[alert football_receiving_id]] gameschedule_id]];
+        else if (alert.football_defense_id.length > 0)
+            destController.game = [currentSettings findGame:[[player findFootballDefenseStatById:[alert football_defense_id]] gameschedule_id]];
+        else if (alert.football_kicker_id.length > 0)
+            destController.game = [currentSettings findGame:[[player findFootballKickerStatById:[alert football_kicker_id]] gameschedule_id]];
+        else if (alert.football_place_kicker_id.length > 0)
+            destController.game = [currentSettings findGame:[[player findFootballPlaceKickerStatById:[alert football_place_kicker_id]] gameschedule_id]];
+        else if (alert.football_punter_id.length > 0)
+            destController.game = [currentSettings findGame:[[player findFootballPunterStatById:[alert football_punter_id]] gameschedule_id]];
+        else if (alert.football_returner_id.length > 0)
+            destController.game = [currentSettings findGame:[[player findFootballReturnerStat:[alert football_returner_id]] gameschedule_id]];
+        
+    } else if ([segue.identifier isEqualToString:@"BasketballAlertsStatsSegue"]) {
+        EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game =
+           [currentSettings findGame:[player getBasketballStatGameId:[[alerts objectAtIndex:indexPath.row] basketball_stat_id]]];
     }
 }
 
@@ -247,7 +281,10 @@
         [cell.imageView setImage:[UIImage imageNamed:@"camera-photo-button.png"]];
     } else if ([[alert videoclip] length] > 0) {
         [cell.imageView setImage:[UIImage imageNamed:@"play-button.png"]];
-    } else if ([[alert stat] length] > 0) {
+    } else if ((alert.basketball_stat_id.length > 0) || (alert.soccer_id.length > 0) || (alert.football_defense_id.length > 0) ||
+               (alert.football_kicker_id.length > 0) || (alert.football_passing_id.length > 0) || (alert.football_place_kicker_id.length > 0) ||
+               (alert.football_punter_id.length > 0) || (alert.football_receiving_id.length > 0) || (alert.football_returner_id.length > 0) ||
+               (alert.football_rushing_id.length > 0)) {
         [cell.imageView setImage:[UIImage imageNamed:@"statistics-button.png"]];
     } else if ([[alert athlete] length] > 0) {
         [cell.imageView setImage:[UIImage imageNamed:@"biobutton.png"]];
@@ -260,8 +297,19 @@
     // TODO: Select Item
     if ([[[alerts objectAtIndex:indexPath.row] blog] length] > 0) {
         [self performSegueWithIdentifier: @"AlertBlogSegue" sender: self];
-    } else if ([[[alerts objectAtIndex:indexPath.row] stat] length] > 0) {
-        [self performSegueWithIdentifier: @"AthleteAlertStatsSegue" sender: self];
+    } else if ([[[alerts objectAtIndex:indexPath.row] basketball_stat_id] length] > 0) {
+        [self performSegueWithIdentifier: @"BasketballAlertsStatsSegue" sender: self];
+    } else if ([[[alerts objectAtIndex:indexPath.row] soccer_id] length] > 0) {
+        [self performSegueWithIdentifier: @"SoccerAlertsStatsSegue" sender: self];
+    } else if (([[[alerts objectAtIndex:indexPath.row] football_passing_id] length] > 0) ||
+               ([[[alerts objectAtIndex:indexPath.row] football_rushing_id] length] > 0) ||
+               ([[[alerts objectAtIndex:indexPath.row] football_receiving_id] length] > 0) ||
+               ([[[alerts objectAtIndex:indexPath.row] football_defense_id] length] > 0) ||
+               ([[[alerts objectAtIndex:indexPath.row] football_kicker_id] length] > 0) ||
+               ([[[alerts objectAtIndex:indexPath.row] football_place_kicker_id] length] > 0) ||
+               ([[[alerts objectAtIndex:indexPath.row] football_punter_id] length] > 0) ||
+               ([[[alerts objectAtIndex:indexPath.row] football_returner_id] length] > 0)) {
+        [self performSegueWithIdentifier: @"FootballAlertsStatsSegue" sender: self];
     } else if ([[[alerts objectAtIndex:indexPath.row] photo] length] > 0) {
         [self performSegueWithIdentifier: @"AlertPhotoSegue" sender: self];
     } else if ([[[alerts objectAtIndex:indexPath.row] videoclip] length] > 0) {

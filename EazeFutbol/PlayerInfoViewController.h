@@ -25,8 +25,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *alertButton;
 @property (weak, nonatomic) IBOutlet UISwitch *followSwitch;
 - (IBAction)followPlayerSwitch:(id)sender;
-- (IBAction)playerStatsButtonClicked:(id)sender;
-- (IBAction)alertButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextView *bioTextView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *photoButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *videoButton;

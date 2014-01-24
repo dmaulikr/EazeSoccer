@@ -51,6 +51,7 @@
 @property(nonatomic, strong) NSMutableArray *footballPUNT;
 @property(nonatomic, strong) NSMutableArray *footballRET;
 
+@property(nonatomic, strong) UIWindow *rootwindow;
 @property(nonatomic, assign) BOOL sitechanged;
 
 - (UIImage *)getBannerImage;
@@ -77,9 +78,6 @@
 - (GameSchedule *)findGame:(NSString *)gamescheduleid;
 
 - (BOOL)deleteCoach:(Coach *)acoach;
-
-- (void)retrieveTeams;
-- (NSMutableArray *)retrieveSportTeams:(NSString *)sportid;
 
 - (void)retrieveSport;
 

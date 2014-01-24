@@ -76,6 +76,10 @@
     }
 }
 
+- (void)startRefresh {
+    [self getBlogs:nil];
+}
+
 - (void)displayUpgradeAlert {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
                                                     message:[NSString stringWithFormat:@"%@%@%@", @"Blog not available for ",
@@ -140,7 +144,6 @@
     } else if ([title isEqualToString:@"Select Site"]) {
         self.tabBarController.selectedIndex = 0;
     }
-
 }
 
 - (IBAction)searchButtonClicked:(id)sender {

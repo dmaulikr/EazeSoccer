@@ -12,6 +12,7 @@
 #import "EazesportzRetrievePlayers.h"
 #import "EazesportzFootballStatTotalsTableCell.h"
 #import "EazesportzStatTableHeaderCell.h"
+#import "EazeBballPlayerStatsViewController.h"
 
 @interface EazeBasketballGameSummaryViewController ()
 
@@ -110,6 +111,13 @@
     if ([segue.identifier isEqualToString:@"GameStatsSegue"]) {
         EazeBasketballStatsViewController *destController = segue.destinationViewController;
         destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
+        NSIndexPath *indexPath = [_statTableView indexPathForSelectedRow];
+        
+        if (indexPath.row < currentSettings.roster.count) {
+            EazeBballPlayerStatsViewController *destController = segue.destinationViewController;
+            destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+        }
     }
 }
 
@@ -249,6 +257,11 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([visiblestats isEqualToString:@"Player"]) {
+        if (indexPath.row < currentSettings.roster.count) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        }
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -294,7 +307,16 @@
 }
 
 - (IBAction)playerstatsButtonClicked:(id)sender {
-    visiblestats = @"Player";
-    [_statTableView reloadData];
+    if ([currentSettings.sport isPackageEnabled]) {
+        visiblestats = @"Player";
+        [_statTableView reloadData];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
+                                                        message:[NSString stringWithFormat:@"%@%@%@", @"Player stats support not available for ", currentSettings.team.team_name,
+                                                                 @". Contact your administrator with questions."] delegate:self cancelButtonTitle:@"Dismiss"
+                                              otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 @end

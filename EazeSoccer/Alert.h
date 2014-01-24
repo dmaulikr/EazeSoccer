@@ -20,7 +20,19 @@
 @property(nonatomic, strong) NSString *blog;
 @property(nonatomic, strong) NSString *sport;
 @property(nonatomic, strong) NSString *stat;
+
 @property(nonatomic, strong) NSString *stattype;
+@property(nonatomic, strong) NSString *football_passing_id;
+@property(nonatomic, strong) NSString *football_rushing_id;
+@property(nonatomic, strong) NSString *football_receiving_id;
+@property(nonatomic, strong) NSString *football_defense_id;
+@property(nonatomic, strong) NSString *football_place_kicker_id;
+@property(nonatomic, strong) NSString *football_punter_id;
+@property(nonatomic, strong) NSString *football_returner_id;
+@property(nonatomic, strong) NSString *football_kicker_id;
+
+@property(nonatomic, strong) NSString *basketball_stat_id;
+@property(nonatomic, strong) NSString *soccer_id;
 
 @property(nonatomic, strong) NSString *httperror;
 

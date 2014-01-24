@@ -182,15 +182,26 @@
     //make a file name to write the data to using the documents directory:
     NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt",
                           documentsDirectory];
+    NSString *sportFile = [NSString stringWithFormat:@"%@/currentsport.txt",
+                          documentsDirectory];
     //create content - four lines of text
     NSString *content = currentSettings.sport.id;
     //save content to the documents directory
-    [content writeToFile:fileName
-              atomically:NO
-                encoding:NSStringEncodingConversionAllowLossy
-                   error:nil];
+    [content writeToFile:fileName atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+    [currentSettings.sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
     
-    //        [self.navigationController popToRootViewControllerAnimated:YES];
+    UIImageView *myGraphic;
+    
+    if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg-640x1136.png"]];
+    } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor-640x1136.png"]];
+    } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer-640x1136"]];
+    }
+    
+    [currentSettings.rootwindow.rootViewController.view addSubview: myGraphic];
+    [currentSettings.rootwindow.rootViewController.view sendSubviewToBack: myGraphic];
     
     UITabBarController *tabBarController = self.tabBarController;
     UIView * fromView = tabBarController.selectedViewController.view;

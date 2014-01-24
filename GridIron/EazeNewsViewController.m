@@ -20,6 +20,8 @@
 #import "EazeNewsFeedInfoViewController.h"
 #import "sportzServerInit.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 @interface EazeNewsViewController ()
 
 @end
@@ -50,6 +52,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor clearColor];
+    
     refreshControl = UIRefreshControl.alloc.init;
     [refreshControl addTarget:self action:@selector(startRefresh) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
@@ -65,17 +69,17 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     //    [super viewWillAppear:animated];
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains
-    (NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    //make a file name to write the data to using the documents directory:
-    NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt",
-                          documentsDirectory];
-    NSString *content = [[NSString alloc] initWithContentsOfFile:fileName usedEncoding:nil error:nil];
-    
-    if ((content) && (currentSettings.sitechanged)) {
+
+    if (currentSettings.sitechanged) {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains
+        (NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        //make a file name to write the data to using the documents directory:
+        NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt",
+                              documentsDirectory];
+        NSString *content = [[NSString alloc] initWithContentsOfFile:fileName usedEncoding:nil error:nil];
+        
         newsfeed = [[NSMutableArray alloc] init];
         [_tableView reloadData];
         
@@ -83,20 +87,28 @@
         [[[EazesportzRetrieveSport alloc] init] retrieveSport:content Token:currentSettings.user.authtoken];
     } else if (currentSettings.sport.id.length == 0) {
         [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
+    } else if ([currentSettings.sport isPackageEnabled]) {
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, self.teamButton, nil];
     }
     
     _teamPicker.hidden = YES;
-    _teamLabel.hidden = YES;
     _teamButton.enabled = NO;
     
     if (currentSettings.teams.count > 0)
         _teamButton.enabled = YES;
+    else if (currentSettings.teams.count == 1) {
+        _teamButton.enabled = NO;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)startRefresh {
+    [self getNews:nil];
 }
 
 - (void)gotSportData:(NSNotification *)notification {
@@ -121,8 +133,7 @@
         [_teamPicker reloadAllComponents];
     } else {
         currentSettings.team = [getTeams.teams objectAtIndex:0];
-        _teamLabel.text = currentSettings.team.teamid;
-        [self teamSelected];        
+        [self teamSelected];
    }
 }
 
@@ -231,8 +242,6 @@
 }
 
 - (void)teamSelected {
-    _teamLabel.text = currentSettings.team.team_name;
-    _teamLabel.hidden = NO;
     _teamButton.enabled = YES;
     _teamPicker.hidden = YES;
     
@@ -243,11 +252,15 @@
     [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
-    //    [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+    
+    if (currentSettings.user.userid.length > 0) {
+        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
+    }
     newsfeed = [[NSMutableArray alloc] init];
     
     if ([currentSettings.sport isPackageEnabled]) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, nil];
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, self.teamButton, nil];
     }
     
 }
@@ -257,8 +270,9 @@
     NSURL *url;
     
     if (currentSettings.user.authtoken)
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                    @"/sports/", currentSettings.sport.id, @"/newsfeeds.json?auth_token=", currentSettings.user.authtoken]];
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", currentSettings.sport.id, @"/newsfeeds.json?team_id=", currentSettings.team.teamid,
+                                    @"&auth_token=", currentSettings.user.authtoken]];
     else
         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
                                     @"/sports/", currentSettings.sport.id, @"/newsfeeds.json?team_id=", currentSettings.team.teamid]];
@@ -299,6 +313,7 @@
             [newsfeed addObject:[[Newsfeed alloc] initWithDirectory:[serverData objectAtIndex:i]]];
         }
         
+        [self performSelector:@selector(stopRefresh) withObject:nil afterDelay:2.5];
         [self.tableView reloadData];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Newsfeed"
@@ -308,6 +323,10 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+}
+
+- (void)stopRefresh {
+    [refreshControl endRefreshing];
 }
 
 - (IBAction)teamButtonClicked:(id)sender {

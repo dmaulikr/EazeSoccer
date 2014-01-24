@@ -17,8 +17,14 @@
 #import "EazePhotosViewController.h"
 #import "EazesVideosViewController.h"
 #import "EazeBasketballStatsViewController.h"
+#import "EazeBballPlayerStatsViewController.h"
+#import "EazeFootballPlayerStatsViewController.h"
+#import "EazeSoccerPlayerStatsViewController.h"
 
-@interface PlayerInfoViewController () {
+@interface PlayerInfoViewController () <UIAlertViewDelegate>
+@end
+
+@implementation PlayerInfoViewController{
     NSArray *serverData;
     NSMutableData *theData;
     int responseStatusCode;
@@ -27,9 +33,6 @@
     BOOL unfollow;
 }
 
-@end
-
-@implementation PlayerInfoViewController
 
 @synthesize player;
 
@@ -117,10 +120,36 @@
         EazesVideosViewController *destController = segue.destinationViewController;
         destController.player = player;
     } else if ([segue.identifier isEqualToString:@"BasketballPlayerStatsSegue"]) {
-        EazeBasketballStatsViewController *destController = segue.destinationViewController;
-        destController.athlete = player;
+        if ([currentSettings.sport isPackageEnabled]) {
+            EazeBballPlayerStatsViewController *destController = segue.destinationViewController;
+            destController.player = player;
+        } else {
+            [self displayUpgradeAlert];
+        }
+    } else if ([segue.identifier isEqualToString:@"FootballPlayerStatsSegue"]) {
+        if ([currentSettings.sport isPackageEnabled]) {
+            EazeFootballPlayerStatsViewController *destController = segue.destinationViewController;
+            destController.player = player;
+        } else {
+            [self displayUpgradeAlert];
+        }
+    } else if ([segue.identifier isEqualToString:@"SoccerPlayerStatsSegue"]) {
+        if ([currentSettings.sport isPackageEnabled]) {
+            EazeSoccerPlayerStatsViewController *destController = segue.destinationViewController;
+            destController.player = player;
+        } else {
+            [self displayUpgradeAlert];
+        }
     }
+}
 
+- (void)displayUpgradeAlert {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
+                                                    message:[NSString stringWithFormat:@"%@%@%@", @"Stats not available for ",
+                                                             player.logname, @". Contact your administrator with questions."]
+                                                   delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (void)didReceiveMemoryWarning
@@ -149,18 +178,24 @@
 }
 
 - (IBAction)followPlayerSwitch:(id)sender {
-    if ([_followSwitch isOn]) {
-        follow = YES;
-        NSURL *url = [NSURL URLWithString:[sportzServerInit followAthlete:[player athleteid] Token:currentSettings.user.authtoken]];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if (currentSettings.user.userid.length > 0) {
+        if ([_followSwitch isOn]) {
+            follow = YES;
+            NSURL *url = [NSURL URLWithString:[sportzServerInit followAthlete:[player athleteid] Token:currentSettings.user.authtoken]];
+            NSURLRequest *request = [NSURLRequest requestWithURL:url];
+            [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        } else {
+            unfollow = YES;
+            NSURL *url = [NSURL URLWithString:[sportzServerInit unfollowAthlete:[player athleteid] Token:currentSettings.user.authtoken]];
+            NSURLRequest *request = [NSURLRequest requestWithURL:url];
+            [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        }
     } else {
-        unfollow = YES;
-        NSURL *url = [NSURL URLWithString:[sportzServerInit unfollowAthlete:[player athleteid] Token:currentSettings.user.authtoken]];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"You must login to follow players."
+                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Login", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
     }
-    
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -217,31 +252,26 @@
     }
 }
 
-- (IBAction)playerStatsButtonClicked:(id)sender {
-    if (currentSettings.user.isBasic) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade for Stats" message:@"Click settings to upgrade for player stats!"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } else {
-        [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
-    }
-        
-}
-
-- (IBAction)alertButtonClicked:(id)sender {
-    if (currentSettings.user.isBasic) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade for Alerts" message:@"Click settings to upgrade for player alerts!"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-    
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } else {
-        [self performSegueWithIdentifier:@"AlertListSegue" sender:self];
-    }
-}
-
 - (IBAction)statButtonClicked:(id)sender {
+    if ([currentSettings.sport isPackageEnabled]) {
+        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            [self performSegueWithIdentifier:@"FootballPlayerStatsSegue" sender:self];
+        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+            [self performSegueWithIdentifier:@"BasketballPlayerStatsSegue" sender:self];
+        } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+            [self performSegueWithIdentifier:@"SoccerPlayerStatsSegue" sender:self];
+        }
+    } else {
+        [self displayUpgradeAlert];
+    }
 }
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Login"]) {
+        [self performSegueWithIdentifier:@"LoginSegue" sender:self];
+    }
+}
+
 @end

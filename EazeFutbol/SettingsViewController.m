@@ -62,12 +62,19 @@
         [alert show];
     } else {
         [super viewWillAppear:animated];
-        _teamNameLabel.text = currentSettings.team.team_name;
         
-        if (currentSettings.user.userid.length > 0)
-            _usernameLabel.text = currentSettings.user.username;
+        if(currentSettings.team.teamid.length > 0)
+            _teamNameLabel.text = currentSettings.team.team_name;
         else
+            _teamNameLabel.text = @"Select Team";
+        
+        if (currentSettings.user.userid.length > 0) {
+            [_logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
+            _usernameLabel.text = currentSettings.user.email;
+        } else {
             [_logoutButton setTitle:@"Login" forState:UIControlStateNormal];
+            _usernameLabel.text = @"No User Logged in!";
+        }
     }
 }
 
@@ -105,11 +112,6 @@
             currentSettings.user.authtoken = @"";
             currentSettings.user.username = @"";
             currentSettings.user.userid = @"";
-            //        [self.tabBarController.navigationController popToRootViewControllerAnimated:YES];
-            //        [self performSegueWithIdentifier:@"logoutSegue" sender:self];
-            currentSettings.team.teamid = @"";
-            currentSettings.team.team_name = @"";
-            currentSettings.team.team_logo = @"";
             UITabBarController *tabBarController = self.tabBarController;
           
             for (UIViewController *viewController in tabBarController.viewControllers)
@@ -144,7 +146,9 @@
 }
 
 - (IBAction)changeTeamButtonClicked:(id)sender {
-    currentSettings.team = nil;
+//    currentSettings.team = nil;
+    currentSettings.sitechanged = YES;
+    
     UITabBarController *tabBarController = self.tabBarController;
 
     for (UIViewController *viewController in tabBarController.viewControllers) {

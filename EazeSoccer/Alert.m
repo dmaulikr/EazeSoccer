@@ -23,6 +23,18 @@
 @synthesize stat;
 @synthesize stattype;
 
+@synthesize football_defense_id;
+@synthesize football_passing_id;
+@synthesize football_place_kicker_id;
+@synthesize football_punter_id;
+@synthesize football_receiving_id;
+@synthesize football_returner_id;
+@synthesize football_rushing_id;
+@synthesize football_kicker_id;
+
+@synthesize basketball_stat_id;
+@synthesize soccer_id;
+
 @synthesize httperror;
 
 - (id)initWithDirectory:(NSDictionary *)alertDirectory {
@@ -36,15 +48,20 @@
         user = [alertDirectory objectForKey:@"user"];
         blog = [alertDirectory objectForKey:@"blog"];
         videoclip = [alertDirectory objectForKey:@"videoclip"];
+        stattype = [alertDirectory objectForKey:@"stat_football"];
         
-        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
-            stat = [alertDirectory objectForKey:@"football_stat"];
-            stattype = [alertDirectory objectForKey:@"stat_football"];
-        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
-            stat = [alertDirectory objectForKey:@"basketball_stat"];
-        } else if ([currentSettings.sport.name isEqualToString:@"Soccer"] ) {
-            stat = [alertDirectory objectForKey:@"soccer"];
-        }
+        football_rushing_id = [alertDirectory objectForKey:@"football_rushing"];
+        football_receiving_id = [alertDirectory objectForKey:@"football_receiving"];
+        football_punter_id = [alertDirectory objectForKey:@"football_punter"];
+        football_passing_id = [alertDirectory objectForKey:@"football_passing"];
+        football_defense_id = [alertDirectory objectForKey:@"football_defense"];
+        football_place_kicker_id = [alertDirectory objectForKey:@"football_place_kicker"];
+        football_returner_id = [alertDirectory objectForKey:@"football_returner"];
+        football_kicker_id = [alertDirectory objectForKey:@"football_kicker"];
+        
+        basketball_stat_id = [alertDirectory objectForKey:@"basketball_stat"];
+        soccer_id = [alertDirectory objectForKey:@"soccer"];
+        
         return self;
     } else {
         return nil;

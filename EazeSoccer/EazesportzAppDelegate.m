@@ -26,28 +26,29 @@
     UIImageView *myGraphic;
     NSBundle *mainBundle = [NSBundle mainBundle];
     
-    if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"]) {
-        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
-            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer-background.png"]];
-        else
+    if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+        if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"]) {
             myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer.jpg"]];
-    } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Basketball"]) {
-        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
-            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor-iPhone-Background.png"]];
-        else
+        } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Basketball"]) {
             myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor.png"]];
-    } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Football"]) {
-        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
-            ;
-        else
+        } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Football"]) {
             myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg.png"]];
+        }
+    } else if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg-640x1136.png"]];
+    } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor-640x1136.png"]];
+    } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer-640x1136"]];
     }
+    
     
     [self.window.rootViewController.view addSubview: myGraphic];
     [self.window.rootViewController.view sendSubviewToBack: myGraphic];
     currentSettings = [[sportzCurrentSettings alloc] init];
     [AmazonErrorHandler shouldNotThrowExceptions];
     currentSettings.sitechanged = YES;
+    currentSettings.rootwindow = self.window;
     
     return YES;
 }

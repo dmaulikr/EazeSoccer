@@ -83,63 +83,71 @@
     
     _entryTextView.text = @"";
     
-    if (playerController) {
-        if (playerController.player) {
-            player = playerController.player;
-            _playerButton.enabled = YES;
-            _playerTextField.text = player.logname;
-            [_playerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    if (currentSettings.user.userid.length == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"You must login to create a blog entry."
+                                                       delegate:self cancelButtonTitle:@"Back" otherButtonTitles:@"Login", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    } else {
+    
+        if (playerController) {
+            if (playerController.player) {
+                player = playerController.player;
+                _playerButton.enabled = YES;
+                _playerTextField.text = player.logname;
+                [_playerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            } else {
+                _playerButton.enabled = NO;
+                _playerTextField.text = @"";
+                [_playerButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+            }
         } else {
             _playerButton.enabled = NO;
             _playerTextField.text = @"";
             [_playerButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
-    } else {
-        _playerButton.enabled = NO;
-        _playerTextField.text = @"";
-        [_playerButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    }
-    
-    if (gameController) {
-        if (gameController.thegame) {
-            game = gameController.thegame;
-            _gameTextField.text = [NSString stringWithFormat:@"%@%@", @"vs ", game.opponent];
-            _gameButton.enabled = YES;
-            [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        
+        if (gameController) {
+            if (gameController.thegame) {
+                game = gameController.thegame;
+                _gameTextField.text = [NSString stringWithFormat:@"%@%@", @"vs ", game.opponent];
+                _gameButton.enabled = YES;
+                [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            } else {
+                _gameTextField.text = @"";
+                _gameButton.enabled = NO;
+                [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+            }
         } else {
             _gameTextField.text = @"";
             _gameButton.enabled = NO;
             [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
-    } else {
-        _gameTextField.text = @"";
-        _gameButton.enabled = NO;
-        [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    }
-    
-    if (coachController) {
-        if (coachController.coach) {
-            coach = coachController.coach;
-            _coachTextField.text = coach.fullname;
-            _coachButton.enabled = YES;
-            [_coachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        
+        if (coachController) {
+            if (coachController.coach) {
+                coach = coachController.coach;
+                _coachTextField.text = coach.fullname;
+                _coachButton.enabled = YES;
+                [_coachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            } else {
+                _coachTextField.text = @"";
+                _coachButton.enabled = NO;
+                [_coachButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+            }
         } else {
             _coachTextField.text = @"";
             _coachButton.enabled = NO;
             [_coachButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
-    } else {
-        _coachTextField.text = @"";
-        _coachButton.enabled = NO;
-        [_coachButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        
+        newblog = [[Blog alloc] init];
+        newblog.teamid = currentSettings.team.teamid;
+        newblog.user = currentSettings.user.userid;
+        newblog.avatar = currentSettings.user.userUrl;
+        
+        selectplay = NO;
     }
-    
-    newblog = [[Blog alloc] init];
-    newblog.teamid = currentSettings.team.teamid;
-    newblog.user = currentSettings.user.userid;
-    newblog.avatar = currentSettings.user.userUrl;
-    
-    selectplay = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -329,10 +337,14 @@
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    if([title isEqualToString:@"Ok"]) {
+    
+    if ([title isEqualToString:@"Ok"]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if ([title isEqualToString:@"Login"]) {
+        [self performSegueWithIdentifier:@"LoginSegue" sender:self];
+    } else if ([title isEqualToString:@"Back"]) {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

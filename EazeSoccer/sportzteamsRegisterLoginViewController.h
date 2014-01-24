@@ -20,8 +20,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *passwordText;
 @property (weak, nonatomic) IBOutlet UITextField *confirmText;
 - (IBAction)createLoginButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 - (IBAction)learnmoreButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *registerView;
 
 
 @end

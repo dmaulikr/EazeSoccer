@@ -92,6 +92,14 @@
     if ([segue.identifier isEqualToString:@"GameStatsSegue"]) {
         EazeSoccerStatsViewController *destController = segue.destinationViewController;
         destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
+        NSIndexPath *indexPath = [_statTableView indexPathForSelectedRow];
+        EazeSoccerStatsViewController *destController = segue.destinationViewController;
+        
+        if (indexPath.section == 0)
+            destController.athlete = [currentSettings.roster objectAtIndex:indexPath.row];
+        else
+            destController.athlete = [goalies objectAtIndex:indexPath.row];
     }
 }
 
@@ -101,8 +109,17 @@
 }
 
 - (IBAction)playerstatsButtonClicked:(id)sender {
-    visiblestats = @"Player";
-    [_statTableView reloadData];
+    if ([currentSettings.sport isPackageEnabled]) {
+        visiblestats = @"Player";
+        [_statTableView reloadData];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
+                            message:[NSString stringWithFormat:@"%@%@%@", @"Player stats support not available for ", currentSettings.team.team_name,
+                                                                 @". Contact your administrator with questions."] delegate:self cancelButtonTitle:@"Dismiss"
+                                              otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 #pragma mark - Table view data source
@@ -254,6 +271,13 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([visiblestats isEqualToString:@"Player"]) {
+        if (indexPath.row < currentSettings.roster.count) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        } else if (indexPath.row < goalies.count) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        }
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
