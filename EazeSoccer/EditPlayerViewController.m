@@ -195,7 +195,10 @@
 }
 
 - (void)savedPlayer:(NSNotification *)notification {
-    [self.navigationController popViewControllerAnimated:YES];
+    if (imageselected)
+        [self uploadImage:player];
+    else
+        [self.navigationController popViewControllerAnimated:YES];
 }
 
 //Method to define how many columns/dials to show
@@ -458,6 +461,8 @@
         
         [self.positionPicker reloadAllComponents];
         self.positionPicker.hidden = NO;
+    } else if ([title isEqualToString:@"Info"]) {
+        [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];
     }
 
 }
@@ -511,7 +516,9 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
-    if (responseStatusCode == 200) {    
+    if (responseStatusCode == 200) {
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Ahtlete Update Successful!"
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
@@ -565,12 +572,6 @@
     }
 }
 
-- (IBAction)statsButtonClicked:(id)sender {
-    _soccerStatsContainer.hidden = NO;
-    _doneButton.enabled = YES;
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.statsButton, self.doneButton, nil];
-}
-
 - (IBAction)doneButtonClicked:(id)sender {
     _soccerStatsContainer.hidden = YES;
     _doneButton.enabled = NO;
@@ -579,6 +580,23 @@
 
 - (IBAction)saveButtonClicked:(id)sender {
 //    [statsController saveButtonClicked:self];
+}
+
+- (IBAction)statButtonClicked:(id)sender {
+    if ([currentSettings.sport isPackageEnabled]) {
+        if ([currentSettings.sport.name isEqualToString:@"Soccer"])
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
+            [self performSegueWithIdentifier:@"BasketballStatsPlayerSegue" sender:self];
+        else if ([currentSettings.sport.name isEqualToString:@"Football"])
+            [self performSegueWithIdentifier:@"FootballPlayerStatsSegue" sender:self];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
+                                                        message:[NSString stringWithFormat:@"%@%@", @"Stat support not available for ", player.logname]
+                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"Info", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 @end

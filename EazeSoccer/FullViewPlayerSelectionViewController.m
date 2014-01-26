@@ -55,8 +55,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.findPlayerContainer.hidden = YES;
-    
-    self.rosterdata = currentSettings.roster;
 }
 
 - (void)gotRosterData:(NSNotificationCenter *)notification {
@@ -112,7 +110,7 @@
 }
 
 - (IBAction)refreshButtonClicked:(id)sender {
-    [self viewWillAppear:YES];
+    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
 }
 
 - (IBAction)searchPlayerButtonClicked:(id)sender {

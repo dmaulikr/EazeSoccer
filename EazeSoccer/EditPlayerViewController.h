@@ -15,7 +15,6 @@
 @property(nonatomic,strong) Athlete *player;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
-- (IBAction)statsButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UITextField *lastnameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *firstnameTextField;
@@ -47,5 +46,6 @@
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
 - (IBAction)saveButtonClicked:(id)sender;
+- (IBAction)statButtonClicked:(id)sender;
 
 @end

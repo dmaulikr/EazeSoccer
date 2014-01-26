@@ -226,8 +226,8 @@
     if (self.user.authtoken)
          url = [NSURL URLWithString:[sportzServerInit getGame:[self.team teamid] Game:gameid Token:self.user.authtoken]];
     else
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                    @"/sports/", self.sport.id, @"/teams/", self.team.teamid, @"/gameschedules/", gameid]];
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", self.sport.id, @"/teams/", self.team.teamid, @"/gameschedules/", gameid, @".json"]];
             
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSURLResponse* response;

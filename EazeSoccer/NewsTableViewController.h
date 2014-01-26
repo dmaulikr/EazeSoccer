@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeTeamButtonClicked:(id)sender;
 
-- (void)getNews:(NSString *)updatedat;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
+- (IBAction)searchButtonClicked:(id)sender;
 
 @end

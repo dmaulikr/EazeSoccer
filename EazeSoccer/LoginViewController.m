@@ -120,10 +120,6 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     } else {
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        
-        //               if ([currentSettings.user.admin intValue] > 0) {
-        
         if (![currentSettings initS3Bucket]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Storage Access Issue. Please restart app!"
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -131,10 +127,9 @@
             [alert show];
         }
         
-        if (currentSettings.sport.id.length > 0) {
-            [[[EazesportzRetrieveSport alloc] init] retrieveSport:currentSettings.sport.id Token:currentSettings.user.authtoken];
-        } else if (([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) &&
-                   ([currentSettings.user.admin intValue] > 0)) {
+        if ((currentSettings.user.default_site.length > 0) && (currentSettings.user.admin)) {
+            [[[EazesportzRetrieveSport alloc] init] retrieveSport:currentSettings.user.default_site Token:currentSettings.user.authtoken];
+        } else if (currentSettings.user.admin) {
             [self performSegueWithIdentifier:@"CreateSportSegue" sender:self];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must be an administrator to use this application"

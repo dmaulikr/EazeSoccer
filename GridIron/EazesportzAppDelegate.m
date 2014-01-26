@@ -15,6 +15,9 @@
 #import "EazesportzRetrieveSport.h"
 #import "EazesportzLogin.h"
 #import "EazesportzRetrieveSport.h"
+#import "EazesportzRetrieveAlerts.h"
+#import "EazesportzRetrieveCoaches.h"
+#import "EazesportzRetrieveSponsors.h"
 
 #import <AWSRuntime/AmazonErrorHandler.h>
 
@@ -84,6 +87,13 @@
         [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
                                      Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
     }
+    
+    if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid)) {
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -114,7 +124,7 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
-
+        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

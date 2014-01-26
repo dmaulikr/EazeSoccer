@@ -128,7 +128,7 @@
     cell.textLabel.text = asport.sitename;
 
     cell.imageView.image = [asport getImage:@"tiny"];
-    cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:10.0];
+    cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:12.0];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@%@%@", asport.mascot, @"   ", asport.city, @" ", asport.state];;
     
     return cell;

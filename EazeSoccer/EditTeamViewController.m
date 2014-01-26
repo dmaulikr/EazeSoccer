@@ -10,6 +10,7 @@
 #import "EazesportzAppDelegate.h"
 #import "sportzCurrentSettings.h"
 #import "sportzServerInit.h"
+#import "EazesportzRetrieveTeams.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -168,8 +169,9 @@
         
         if (imageselected)
             [self uploadImage:team];
-        else
+        else {
             [self.navigationController popViewControllerAnimated:YES];
+        }
         
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Team" message:team.httpError
@@ -272,6 +274,8 @@
     NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
+        [[[EazesportzRetrieveTeams alloc] init] retrieveTeams:currentSettings.sport.id Token:currentSettings.user.authtoken];
+        
         [self.navigationController popViewControllerAnimated:YES];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]

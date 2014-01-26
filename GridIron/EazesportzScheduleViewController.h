@@ -8,6 +8,9 @@
 
 #import "GameScheduleViewController.h"
 
+#import <iAd/iAd.h>
+
 @interface EazesportzScheduleViewController : GameScheduleViewController
 
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @end

@@ -82,4 +82,6 @@
 
 - (int)homeBasketballFouls;
 
+- (NSString *)vsOpponent;
+
 @end

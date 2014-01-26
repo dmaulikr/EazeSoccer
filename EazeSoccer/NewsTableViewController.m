@@ -50,7 +50,7 @@
     refreshControl = UIRefreshControl.alloc.init;
     [refreshControl addTarget:self action:@selector(startRefresh) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:refreshControl];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.teamButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -68,7 +68,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     //    if ([[[NSDate alloc] init] timeIntervalSinceDate:currentSettings.lastAlertUpdate] > [currentSettings.sport.newsfeed_interval integerValue]) {
-    [self getNews:nil];
+    [self getNews:nil AllNews:YES];
     //    }
 }
 
@@ -126,13 +126,13 @@
     } else if (feeditem.coach.length > 0) {
         cell.imageView.image = [[currentSettings findCoach:feeditem.coach] getImage:@"thumb"];
     } else if (feeditem.team.length > 0) {
-        cell.imageView.image = [currentSettings.team getImage:@"thumb"];
+        cell.imageView.image = [[currentSettings findTeam:feeditem.team] getImage:@"thumb"];
     }
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"News Feed";
+    return [NSString stringWithFormat:@"%@%@", currentSettings.sport.sitename, @" News"];
 }
 
 // Override to support conditional editing of the table view.
@@ -246,20 +246,31 @@
 
 - (void)startRefresh {
     Newsfeed *lastnews = [newsfeed lastObject];
-    [self getNews:lastnews.updated_at];
+    [self getNews:lastnews.updated_at AllNews:YES];
     [refreshControl endRefreshing];
 }
 
-- (void)getNews:(NSString *)fromdate {
+- (void)getNews:(NSString *)updated_at AllNews:(BOOL)allnews {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSURL *url;
     
-    if (currentSettings.user.authtoken)
-        url = [NSURL URLWithString:[sportzServerInit newsfeed:fromdate Token:currentSettings.user.authtoken]];
-    else
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                    @"/sports/", currentSettings.sport.id, @"/newsfeeds.json"]];
-        
+    if (allnews) {
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                   @"/sports/", currentSettings.sport.id, @"/newsfeeds.json?auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/newsfeeds.json"]];
+    } else {
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/newsfeeds.json?auth_token=", currentSettings.user.authtoken,
+                                        @"&team_id=", currentSettings.team.teamid]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/newsfeeds.json?&team_id=", currentSettings.team.teamid]];
+    }
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
@@ -278,6 +289,10 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+    } else if ([title isEqualToString:@"All"]) {
+        [self getNews:nil AllNews:YES];
+    } else if ([title isEqualToString:currentSettings.team.team_name]) {
+        [self getNews:nil AllNews:NO];
     }
 }
 
@@ -305,6 +320,14 @@
                             tabBarController.selectedIndex = 0;
                         }
                     }];
+}
+
+- (IBAction)searchButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Sort News"
+                                        message:[NSString stringWithFormat:@"%@%@", @"Get all news for program or news for ", currentSettings.team.team_name ]
+                                        delegate:self cancelButtonTitle:@"All" otherButtonTitles:currentSettings.team.team_name, nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 @end

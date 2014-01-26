@@ -9,12 +9,15 @@
 #import "EazeFootballGameSummaryViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "EazeFootballGameStatsViewController.h"
+#import "EazesportzGetGame.h"
 
 @interface EazeFootballGameSummaryViewController () <UIAlertViewDelegate>
 
 @end
 
-@implementation EazeFootballGameSummaryViewController
+@implementation EazeFootballGameSummaryViewController {
+    EazesportzGetGame *getGame;
+}
 
 @synthesize game;
 
@@ -31,6 +34,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, nil];
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -78,6 +83,12 @@
                          [game.opponentq1 intValue]];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     return @"Score Log";
 }
@@ -110,26 +121,36 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"FootballGameStatsSegue"]) {
-        if ([currentSettings.sport isPackageEnabled]) {
-            EazeFootballGameStatsViewController *destController = segue.destinationViewController;
-            destController.game = game;
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
-                                 message:[NSString stringWithFormat:@"%@%@%@", @"Photo support not available for ", currentSettings.team.team_name,
-                                 @". Contact your administrator with questions."] delegate:self cancelButtonTitle:@"Dismiss"
-                                 otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-        }
+        EazeFootballGameStatsViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+//    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
-    if ([title isEqualToString:@"Dismiss"]) {
-        self.tabBarController.selectedIndex = 0;
-    }
 }
 
+- (IBAction)refreshButtonClicked:(id)sender {
+    getGame = [[EazesportzGetGame alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGame:) name:@"GameDataNotification" object:nil];
+    [getGame getGame:currentSettings.sport.id Team:currentSettings.team.teamid Game:game.id Token:currentSettings.user.authtoken];
+}
+
+- (void)gotGame:(NSNotification *)notification {
+    game = getGame.game;
+    [self viewWillAppear:YES];
+}
+
+- (IBAction)statsButtonClicked:(id)sender {
+    if ([currentSettings.sport isPackageEnabled]) {
+        [self performSegueWithIdentifier:@"FootballGameStatsSegue" sender:self];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                        message:[NSString stringWithFormat:@"%@%@", @"No stats for ", currentSettings.team.team_name]
+                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
 @end

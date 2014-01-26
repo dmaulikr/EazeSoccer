@@ -22,7 +22,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface EazeNewsViewController ()
+@interface EazeNewsViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -88,7 +88,19 @@
     } else if (currentSettings.sport.id.length == 0) {
         [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
     } else if ([currentSettings.sport isPackageEnabled]) {
-            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, self.teamButton, nil];
+        if (currentSettings.teams.count == 1) {
+            if ([currentSettings.sport isPackageEnabled])
+                self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, nil];
+            else
+                self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.contactsButton, nil];
+            
+            self.title = @"News";
+        } else {
+            if ([currentSettings.sport isPackageEnabled])
+                self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, self.teamButton, nil];
+            else
+                self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.contactsButton, self.teamButton, nil];
+        }
     }
     
     _teamPicker.hidden = YES;
@@ -118,10 +130,17 @@
         getTeams = [[EazesportzRetrieveTeams alloc] init];
         [getTeams retrieveTeams:currentSettings.sport.id Token:currentSettings.user.authtoken];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failure retrieving sport data!"
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Not Found"]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not Found" message:@"Site not found. Maybe the admin deleted it?"
+                                                           delegate:self cancelButtonTitle:@"Find Site" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failure retrieving sport data!"
+                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     }
 }
 
@@ -133,6 +152,7 @@
         [_teamPicker reloadAllComponents];
     } else {
         currentSettings.team = [getTeams.teams objectAtIndex:0];
+        currentSettings.teams =getTeams.teams;
         [self teamSelected];
    }
 }
@@ -259,13 +279,22 @@
     }
     newsfeed = [[NSMutableArray alloc] init];
     
-    if ([currentSettings.sport isPackageEnabled]) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, self.teamButton, nil];
+    if (currentSettings.teams.count == 1) {
+        if ([currentSettings.sport isPackageEnabled])
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, nil];
+        else
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.contactsButton, nil];
+        
+        self.title = @"News";
+    } else {
+        if ([currentSettings.sport isPackageEnabled])
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.cameraButton, self.contactsButton, self.teamButton, nil];
+        else
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.contactsButton, self.teamButton, nil];
     }
-    
 }
 
-- (void)getNews:(NSString *)fromdate {
+- (void)getNews:(BOOL)allnews {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSURL *url;
     
@@ -339,6 +368,29 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+    _bannerView.hidden = NO;
+}
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {
+    return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner {
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
+    _bannerView.hidden = YES;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Find Site"]) {
+        [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
+    }
 }
 
 @end

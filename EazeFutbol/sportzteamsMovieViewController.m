@@ -13,6 +13,8 @@
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "PlayerInfoViewController.h"
 #import "EazeBasketballGameSummaryViewController.h"
+#import "EazeFootballGameSummaryViewController.h"
+#import "EazesportzSoccerGameSummaryViewController.h"
 
 @interface sportzteamsMovieViewController ()
 
@@ -62,20 +64,16 @@
         
         if (videoclip.schedule.length > 0) {
             _gameButton.enabled = YES;
-            [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            _gameButtonLabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", [[currentSettings findGame:videoclip.schedule] opponent_mascot]];
+            [_gameButton setTitle:[[currentSettings findGame:videoclip.schedule] vsOpponent] forState:UIControlStateNormal];
+            _gameButtonLabel.text = [[currentSettings findGame:videoclip.schedule] vsOpponent];
         } else {
-            [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+            _gameButton .hidden = YES;
             _gameButtonLabel.hidden = YES;
             _gameButton.enabled = NO;
         }
         
-        if (videoclip.players.count > 0) {
-            [_playerTagTableView reloadData];
-        } else {
-            _playerTagTableView.hidden = YES;
-        }
-    } else {
+        [_playerTagTableView reloadData];
+     } else {
         NSURL *url;
         
         if (currentSettings.user.authtoken)
@@ -135,7 +133,10 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Player Tags";
+    if (videoclip.players.count > 0)
+        return @"Tagged Players";
+    else
+        return @"No players tagged for this video";
 }
 
 - (IBAction)playButtonClicked:(id)sender {
@@ -213,6 +214,12 @@
         destController.player = [currentSettings findAthlete:[videoclip.players objectAtIndex:[[_playerTagTableView indexPathForSelectedRow] row]]];
     } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
         EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings findGame:videoclip.schedule];
+    } else if ([segue.identifier isEqualToString:@"FootballGameInfoSegue"]) {
+        EazeFootballGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings findGame:videoclip.schedule];
+    }  else if ([segue.identifier isEqualToString:@"SoccerGameInfoSegue"]) {
+        EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:videoclip.schedule];
     }
 }

@@ -81,9 +81,8 @@
 }
 
 - (void)displayUpgradeAlert {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
-                                                    message:[NSString stringWithFormat:@"%@%@%@", @"Blog not available for ",
-                                                    currentSettings.team.team_name, @". Contact your administrator with questions."]
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                    message:[NSString stringWithFormat:@"%@%@", @"No blogs for ", currentSettings.team.team_name]
                                                     delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];

@@ -104,7 +104,7 @@
 - (void)displayUpgradeAlert {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
                          message:[NSString stringWithFormat:@"%@%@", @"Blog support not available for ", currentSettings.team.team_name]
-                                                   delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
+                                                   delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"Info", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }

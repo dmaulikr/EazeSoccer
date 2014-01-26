@@ -1,28 +1,36 @@
 //
-//  EazesportzRetrieveSport.m
+//  EazesportzGetGame.m
 //  EazeSportz
 //
-//  Created by Gil on 1/9/14.
+//  Created by Gil on 1/24/14.
 //  Copyright (c) 2014 Gil. All rights reserved.
 //
 
-#import "EazesportzRetrieveSport.h"
 #import "EazesportzAppDelegate.h"
 #import "sportzServerInit.h"
+#import "EazesportzGetGame.h"
 
-@implementation EazesportzRetrieveSport {
+@implementation EazesportzGetGame {
     int responseStatusCode;
-    NSMutableArray *serverData;
+    NSDictionary *serverData;
     NSMutableData *theData;
     
     NSURLRequest *originalRequest;
 }
 
-- (void)retrieveSport:(NSString *)sport Token:(NSString *)authtoken {
+@synthesize game;
+
+- (void)getGame:(NSString *)sportid Team:(NSString *)teamid Game:(NSString *)gameid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                       @"/sports/", sport, @".json?auth_token=", currentSettings.user.authtoken]];
-    originalRequest = [NSURLRequest requestWithURL:url];
+    NSString *urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", sportid, @"/teams/", teamid, @"/gameschedules/", gameid, @".json"];
+    
+    if (authtoken)
+        urlstring = [urlstring stringByAppendingFormat:@"%@%@", @"?auth_token=", currentSettings.user.authtoken];
+    
+    NSURL *url = [NSURL URLWithString:urlstring];
+    
+     originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }
 
@@ -47,19 +55,16 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
-    NSDictionary *sportdata = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        currentSettings.sport = [[Sport alloc] initWithDictionary:sportdata];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"SportChangedNotification" object:nil
+        game = [[GameSchedule alloc] initWithDictionary:serverData];
+    
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameDataNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
-    } else if (responseStatusCode == 404) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"SportChangedNotification" object:nil
-                                                userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Not Found", @"Result", nil]];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"SportChangedNotification" object:nil
-                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Failure", @"Result", nil]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameDataNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error retrieving game data!", @"Result", nil]];
     }
 }
 

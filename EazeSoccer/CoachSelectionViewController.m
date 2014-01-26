@@ -38,7 +38,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotCoaches:) name:@"CoachListChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,8 +48,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                        Token:currentSettings.user.authtoken];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotCoaches:) name:@"CoachListChangedNotification" object:nil];
+//    [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid
+//                                                        Token:currentSettings.user.authtoken];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

@@ -104,7 +104,7 @@
         } else if (newsitem.coach.length > 0) {
             image = [[currentSettings findCoach:newsitem.coach] getImage:@"thumb"];
         } else if (newsitem.team.length > 0) {
-            image = [currentSettings.team getImage:@"thumb"];
+            image = [[currentSettings findTeam:newsitem.team ] getImage:@"thumb"];
         }
         
     } else {
@@ -192,7 +192,7 @@
     _playerSelectionContainer.hidden = YES;
 }
 
-- (IBAction)newsfeedCoachSelected:(UIStoryboardSegue *)segue {
+- (IBAction)coachSelected:(UIStoryboardSegue *)segue {
     if (coachController.coach) {
         _coachTextField.text = coachController.coach.fullname;
         newsitem.coach = coachController.coach.coachid;
@@ -239,8 +239,6 @@
         newsitem.game = nil;
         _gameTextField.text = @"";
         [gameController viewWillAppear:YES];
-    } else if (newNewsFeed) {
-        textField.text = @"";
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iAd/iAd.h>
 
 #import "Athlete.h"
 
@@ -23,5 +24,6 @@
 - (IBAction)clearButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *clearButton;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 
 @end

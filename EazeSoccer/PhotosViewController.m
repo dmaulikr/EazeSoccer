@@ -90,7 +90,7 @@
 - (void)displayUpgradeAlert {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
                                     message:[NSString stringWithFormat:@"%@%@", @"Photo support not available for ", currentSettings.team.team_name]
-                                    delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
+                                    delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"Info", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }
@@ -415,7 +415,7 @@
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [activityIndicator startAnimating];
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    }  else if ([title isEqualToString:@"Info"]) {
+    } else if ([title isEqualToString:@"Info"]) {
         [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];
     } else if ([title isEqualToString:@"Dismiss"]) {
         self.tabBarController.selectedIndex = 0;

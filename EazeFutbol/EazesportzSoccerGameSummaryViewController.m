@@ -113,10 +113,9 @@
         visiblestats = @"Player";
         [_statTableView reloadData];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
-                            message:[NSString stringWithFormat:@"%@%@%@", @"Player stats support not available for ", currentSettings.team.team_name,
-                                                                 @". Contact your administrator with questions."] delegate:self cancelButtonTitle:@"Dismiss"
-                                              otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                            message:[NSString stringWithFormat:@"%@%@", @"No stats available for ", currentSettings.team.team_name]
+                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }

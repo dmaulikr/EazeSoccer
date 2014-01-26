@@ -11,6 +11,7 @@
 #import "Coach.h"
 #import "EazesportzAppDelegate.h"
 #import "sportzCurrentSettings.h"
+#import "EazesportzRetrieveCoaches.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -35,7 +36,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addCoachButton, self.teamButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addCoachButton, self.refreshButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -48,8 +49,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    _segmentButton.selectedSegmentIndex = 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -128,13 +127,8 @@
                     }];
 }
 
-- (IBAction)segmentButtonClicked:(id)sender {
-    
-    if (_segmentButton.selectedSegmentIndex == 1) {
-        [self performSegueWithIdentifier:@"ManageUsersSegue" sender:self];
-    } else if (_segmentButton.selectedSegmentIndex == 2) {
-        [self performSegueWithIdentifier:@"ContactsSegue" sender:self];
-    }
+- (IBAction)refreshButtonClicked:(id)sender {
+    [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
 }
 
 @end

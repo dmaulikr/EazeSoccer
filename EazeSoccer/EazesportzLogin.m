@@ -141,32 +141,7 @@
     } else if ((responseStatusCode == 200) && (userinfo)) {
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         NSDictionary *userdata = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
-        currentSettings.user.email = [userdata objectForKey:@"email"];
-        currentSettings.user.admin = [NSNumber numberWithInteger:[[userdata objectForKey:@"admin"] integerValue]];
-        currentSettings.user.userid = [userdata objectForKey:@"id"];
-        currentSettings.user.username = [userdata objectForKey:@"name"];
-        currentSettings.user.avatarprocessing = [[userdata objectForKey:@"avatarprocessing"] boolValue];
-        
-        if ((NSNull *)[userdata objectForKey:@"avatarthumburl"] != [NSNull null])
-            currentSettings.user.userthumb = [userdata objectForKey:@"avatarthumburl"];
-        else
-            currentSettings.user.userthumb = @"";
-        
-        if ((NSNull *)[userdata objectForKey:@"avatartinyurl"] != [NSNull null])
-            currentSettings.user.tiny = [userdata objectForKey:@"avatartinyurl"];
-        else
-            currentSettings.user.tiny = @"";
-        
-        currentSettings.user.isactive = [NSNumber numberWithInteger:[[userdata objectForKey:@"is_active"] integerValue]];
-        currentSettings.user.bio_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"bio_alert"] integerValue]];
-        currentSettings.user.blog_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"blog_alert"] integerValue]];
-        currentSettings.user.media_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"media_alert"] integerValue]];
-        currentSettings.user.stat_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"stat_alert"] integerValue]];
-        currentSettings.user.score_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"score_alert"] integerValue]];
-        currentSettings.user.teammanagerid = [userdata objectForKey:@"teamid"];
-        currentSettings.user.awssecretkey = [userdata objectForKey:@"awskey"];
-        currentSettings.user.awskeyid = [userdata objectForKey:@"awskeyid"];
-        currentSettings.user.tier = [userdata objectForKey:@"tier"];
+        currentSettings.user = [[User alloc] initWithDictionary:userdata];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"LoginNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];

@@ -40,5 +40,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *vq4Label;
 @property (weak, nonatomic) IBOutlet UILabel *vtotalLabel;
 @property (weak, nonatomic) IBOutlet UITableView *gamelogTableView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
+- (IBAction)refreshButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
+- (IBAction)statsButtonClicked:(id)sender;
 
 @end

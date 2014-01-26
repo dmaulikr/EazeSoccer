@@ -78,6 +78,57 @@
 
 @synthesize httperror;
 
+- (id)init {
+    if (self = [super init]) {
+        startdate = @"";
+        starttime = @"";
+        location = @"";
+        homeaway = @"";
+        event = @"";
+        opponent = @"";
+        leaguegame = YES;
+        opponent_name = @"";
+        opponent_mascot = @"";
+        opponentImage = nil;
+        eazesportzOpponent = NO;
+        gameisfinal = NO;
+        lastplay = @"";
+        homescore = [NSNumber numberWithInt:0];
+        opponentscore = [NSNumber numberWithInt:0];
+        game_name = @"";
+        homeq1 = [NSNumber numberWithInt:0];
+        homeq2 = [NSNumber numberWithInt:0];
+        homeq3 = [NSNumber numberWithInt:0];
+        homeq4 = [NSNumber numberWithInt:0];
+        opponentq1 = [NSNumber numberWithInt:0];
+        opponentq2 = [NSNumber numberWithInt:0];
+        opponentq3 = [NSNumber numberWithInt:0];
+        opponentq4 = [NSNumber numberWithInt:0];
+        penalty = [NSNumber numberWithInt:0];
+        firstdowns = [NSNumber numberWithInt:0];
+        penaltyyards = [NSNumber numberWithInt:0];
+        possession = @"";
+        ballon = [NSNumber numberWithInt:0];
+        own = [NSNumber numberWithInt:0];
+        currentgametime = @"00:00";
+        our = @"";
+        down = [NSNumber numberWithInt:0];
+        currentqtr = @"";
+        togo = [NSNumber numberWithInt:0];
+        homefouls = [NSNumber numberWithInt:0];
+        visitorfouls = [NSNumber numberWithInt:0];
+        homebonus = NO;
+        visitorbonus = NO;
+        period = [NSNumber numberWithInt:1];
+        socceroppck = [NSNumber numberWithInt:0];
+        socceroppsaves = [NSNumber numberWithInt:0];
+        socceroppsog = [NSNumber numberWithInt:0];
+
+        return self;
+    } else
+        return nil;
+}
+
 - (id)initWithDictionary:(NSDictionary *)gameScheduleDictionary {
     if ((self = [super init]) && (gameScheduleDictionary.count > 0)) {
         //    gamelogs = [[NSMutableArray alloc] init];
@@ -214,8 +265,12 @@
                                      [[NSNumber numberWithBool:gameisfinal] stringValue], @"gameisfinal", nil];
     
     NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
+    
     [gamedict setValue:timearray[0] forKey:@"livegametime(4i)"];
+    [gamedict setValue:timearray[0] forKey:@"gameminutes"];
     [gamedict setValue:timearray[1] forKey:@"livegametime(5i)"];
+    [gamedict setValue:timearray[1] forKey:@"gameseconds"];
+    
     [gamedict setValue:[period stringValue] forKey:@"currentperiod"];
     [gamedict setValue:currentgametime forKey:@"current_game_time"];
 
@@ -434,6 +489,10 @@
     }
     
     return fouls;
+}
+
+- (NSString *)vsOpponent {
+    return [NSString stringWithFormat:@"%@%@", @"vs. ", opponent_mascot];
 }
 
 @end

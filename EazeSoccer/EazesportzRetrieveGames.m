@@ -56,6 +56,7 @@
     
     if (responseStatusCode == 200) {
         currentSettings.gameList = [[NSMutableArray alloc] init];
+        NSLog(@"%@", serverData);
         
         for (int i = 0; i < [serverData count]; i++ ) {
             [currentSettings.gameList addObject:[[GameSchedule alloc] initWithDictionary:[serverData objectAtIndex:i]]];

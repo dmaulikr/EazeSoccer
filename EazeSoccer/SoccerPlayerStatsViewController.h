@@ -50,5 +50,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *visitorCKTextField;
 @property (weak, nonatomic) IBOutlet UILabel *visitorSavesLabel;
 @property (weak, nonatomic) IBOutlet UITextField *visitorSavesTextField;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 
 @end

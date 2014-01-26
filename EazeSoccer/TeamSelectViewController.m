@@ -18,6 +18,7 @@
 #import "EazesportzRetrieveTeams.h"
 #import "EazesportzRetrieveSponsors.h"
 #import "EazesportzRetrieveGames.h"
+#import "EazesportzRetrieveCoaches.h"
 
 @interface TeamSelectViewController () <UIAlertViewDelegate>
 
@@ -50,7 +51,7 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, self.editSportButton, nil];
     
     self.navigationController.toolbarHidden = YES;
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotApplicationData:) name:@"RosterChangedNotification" object:nil];
+    getteams = [[EazesportzRetrieveTeams alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,7 +64,6 @@
     [super viewWillAppear:animated];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotTeamData:) name:@"TeamListChangedNotification" object:nil];
-    getteams = [[EazesportzRetrieveTeams alloc] init];
     
     if (sport) {
         [getteams retrieveTeams:sport.id Token:currentSettings.user.authtoken];
@@ -87,12 +87,6 @@
         self.tabBarController.tabBar.hidden = YES;
         self.navigationItem.hidesBackButton = YES;
         
-    } else if ((teamList.count == 0) && (sport)) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No teams"
-                                                        message:[NSString stringWithFormat:@"Program admin has not entered team data yet!"]
-                                                       delegate:self cancelButtonTitle:@"Logout" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
     }
 }
 
@@ -103,7 +97,7 @@
 
 - (void)gotTeamData:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
-        teamList = getteams.teams;
+        currentSettings.teams = teamList = getteams.teams;
         [_teamTableView reloadData];
         
         if (!sport) {
@@ -128,7 +122,7 @@
                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
                 [alert setAlertViewStyle:UIAlertViewStyleDefault];
                 [alert show];
-            }
+            } 
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[[notification userInfo] valueForKey:@"Result"]
@@ -231,6 +225,8 @@
                                                             Token:currentSettings.user.authtoken];
         [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid
                                                         Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
     }
     
     self.tabBarController.tabBar.hidden = NO;

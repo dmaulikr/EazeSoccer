@@ -146,29 +146,36 @@
 }
 
 - (IBAction)changeTeamButtonClicked:(id)sender {
-//    currentSettings.team = nil;
-    currentSettings.sitechanged = YES;
-    
-    UITabBarController *tabBarController = self.tabBarController;
+    if (currentSettings.teams.count > 1) {
+        currentSettings.sitechanged = YES;
+        
+        UITabBarController *tabBarController = self.tabBarController;
 
-    for (UIViewController *viewController in tabBarController.viewControllers) {
-        if ([viewController isKindOfClass:[UINavigationController class]])
-            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
-    }
-
-    UIView * fromView = tabBarController.selectedViewController.view;
-    UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
-     
-    // Transition using a page curl.
-    [UIView transitionFromView:fromView
-    toView:toView
-    duration:0.5
-    options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
-    completion:^(BOOL finished) {
-        if (finished) {
-            tabBarController.selectedIndex = 0;
+        for (UIViewController *viewController in tabBarController.viewControllers) {
+            if ([viewController isKindOfClass:[UINavigationController class]])
+                [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
         }
-    }];
+
+        UIView * fromView = tabBarController.selectedViewController.view;
+        UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+         
+        // Transition using a page curl.
+        [UIView transitionFromView:fromView
+        toView:toView
+        duration:0.5
+        options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+        completion:^(BOOL finished) {
+            if (finished) {
+                tabBarController.selectedIndex = 0;
+            }
+        }];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                        message:[NSString stringWithFormat:@"%@%@", @"There is only one team. No other team has ben entered for ",
+                                                                 currentSettings.sport.sitename] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 - (IBAction)profileButtonClicked:(id)sender {
@@ -194,6 +201,13 @@
 
 - (IBAction)siteButtonClicked:(id)sender {
     currentSettings.sport.id = @"";
+    UITabBarController *tabBarController = self.tabBarController;
+    
+    for (UIViewController *viewController in tabBarController.viewControllers) {
+        if ([viewController isKindOfClass:[UINavigationController class]])
+            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+    }
+    
     self.tabBarController.selectedIndex = 0;
 }
 

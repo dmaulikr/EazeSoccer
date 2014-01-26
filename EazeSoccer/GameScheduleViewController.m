@@ -11,6 +11,7 @@
 #import "sportzCurrentSettings.h"
 #import "sportzServerInit.h"
 #import "GameScheduleTableViewCell.h"
+#import "EazesportzRetrieveGames.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -50,6 +51,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [_gamesTableView reloadData];
 }
 

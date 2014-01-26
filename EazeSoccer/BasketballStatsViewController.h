@@ -60,5 +60,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *homeScoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *visitorScoreLabel;
 @property (weak, nonatomic) IBOutlet UIView *nonscoreStatsContainer;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 
 @end

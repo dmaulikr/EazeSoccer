@@ -13,6 +13,7 @@
 #import "LiveBasketballStatsViewController.h"
 #import "BasketballTotalStatsViewController.h"
 #import "EazesportzBasketballNonScoreStatsViewController.h"
+#import "EditGameViewController.h"
 
 @interface BasketballStatsViewController ()
 
@@ -42,6 +43,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     _bannerImage.image = [currentSettings getBannerImage];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.editButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -444,6 +448,9 @@
         totalStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"NonscoreStatsSegue"]) {
         nonscoreStatsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
+        EditGameViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 

@@ -141,7 +141,6 @@
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)sender {
-    sender.text = @"";
     if ((sender == _gameDateTextField) || (sender == _gameTimeTextField)) {
         _datePicker.hidden = NO;
         _datePicker.enabled = YES;

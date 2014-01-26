@@ -11,6 +11,7 @@
 #import "SoccerPlayerStatsTableCell.h"
 #import "LiveSoccerStatsViewController.h"
 #import "UpdateSoccerTotalsViewController.h"
+#import "EditGameViewController.h"
 
 @interface SoccerPlayerStatsViewController ()
 
@@ -46,6 +47,9 @@
     _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
     _visitorScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.editButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -351,6 +355,9 @@
         liveStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"SoccerStatTotalsSegue"]) {
         totalStatsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
+        EditGameViewController *destController = segue.destinationViewController;
+        destController.game = game;
     } else {
         NSIndexPath *indexPath = [_soccerPlayerStatsTableView indexPathForSelectedRow];
         

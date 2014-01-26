@@ -19,6 +19,7 @@
 #import "EazesportzPunterStatsViewController.h"
 #import "EazesportzReturnerStatsViewController.h"
 #import "EazesportzFootballReceivingTotalsViewController.h"
+#import "EditGameViewController.h"
 
 
 @interface EazesportzFootballStatsViewController () <UIAlertViewDelegate>
@@ -1054,6 +1055,9 @@
         playerController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"GamelogSelectSegue"]) {
         gamelogController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"EditGameSgeue"]) {
+        EditGameViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 

@@ -8,10 +8,13 @@
 
 #import "SoccerPlayerStatsViewController.h"
 
+#import <iAd/iAd.h>
+
 @interface EazeSoccerStatsViewController : SoccerPlayerStatsViewController
 
 @property (weak, nonatomic) IBOutlet UITableView *soccerPlayerStatsTableView;
 - (IBAction)refreshBurronClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *goalieStatsTableView;
 
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @end

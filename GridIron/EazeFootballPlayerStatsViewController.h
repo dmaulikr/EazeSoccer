@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iAd/iAd.h>
 
 #import "Athlete.h"
 
@@ -21,7 +22,6 @@
 - (IBAction)kickerButtonClicked:(id)sender;
 - (IBAction)returnerButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *playerStatTableView;
-- (IBAction)questionButtonClicked:(id)sender;
-- (IBAction)infoButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 
 @end

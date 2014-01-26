@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iAd/iAd.h>
 
 #import "Athlete.h"
 
@@ -17,4 +18,5 @@
 @property (weak, nonatomic) IBOutlet UITableView *playerStatsTableView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *statSelector;
 - (IBAction)statSelectorButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @end

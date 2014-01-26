@@ -11,6 +11,10 @@
 #import "EditGameViewController.h"
 #import "LiveStatsViewController.h"
 #import "EazesportzFootballStatsViewController.h"
+#import "EazesportzRetrieveGames.h"
+#import "EazeSoccerPlayerStatsViewController.h"
+#import "BasketballStatsViewController.h"
+
 
 @interface FullGameScheduleViewController () <UIAlertViewDelegate>
 
@@ -37,9 +41,13 @@
     if (currentSettings.teams.count == 1)
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, self.standingsButton, nil];
     else
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, self.standingsButton, self.teamButton, nil];
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, self.refreshButton, self.standingsButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
+}
+
+- (void)viewWAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -68,12 +76,15 @@
 
         if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Football"])
             [self performSegueWithIdentifier:@"FootballStatsSegue" sender:self];
-        else
-            [self performSegueWithIdentifier:@"GameStatsSegue" sender:self];
+        else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
+            [self performSegueWithIdentifier:@"SoccerGameStatsSegue" sender:self];
+        else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
+            [self performSegueWithIdentifier:@"BasketballGameStatsSegue" sender:self];
         
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Stats!"
-                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
+                                            message:[NSString stringWithFormat:@"%@%@", @"Stat support not available for ", currentSettings.team.team_name]
+                                            delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"Info", @"Edit Game", nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -88,6 +99,10 @@
         [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];
     } else if ([title isEqualToString:@"Dismiss"]) {
         self.tabBarController.selectedIndex = 0;
+    } else if ([title isEqualToString:@"Info"]) {
+        [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];
+    } else if ([title isEqualToString:@"Edit Game"]) {
+        [self performSegueWithIdentifier:@"EditGameSegue" sender:self];
     }
 }
 
@@ -102,12 +117,25 @@
     if ([segue.identifier isEqualToString:@"NewGameSegue"]) {
         EditGameViewController *destController = segue.destinationViewController;
         destController.game = nil;
-    } else if ([segue.identifier isEqualToString:@"GameStatsSegue"]) {
-        LiveStatsViewController *destController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"SoccerGameStatsSegue"]) {
+        EazeSoccerPlayerStatsViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
     } else if ([segue.identifier isEqualToString:@"FootballStatsSegue"]) {
         EazesportzFootballStatsViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
+        EditGameViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"BasketballGameStatsSegue"]) {
+        BasketballStatsViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
     }
 }
+- (IBAction)refreshButtonClicked:(id)sender {
+    
+    if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid.length > 0))
+        [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                        Token:currentSettings.user.authtoken];
+}
+
 @end

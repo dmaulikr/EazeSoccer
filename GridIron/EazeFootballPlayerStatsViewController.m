@@ -838,9 +838,19 @@
     [_playerStatTableView reloadData];
 }
 
-- (IBAction)questionButtonClicked:(id)sender {
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+    _bannerView.hidden = NO;
 }
 
-- (IBAction)infoButtonClicked:(id)sender {
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {
+    return YES;
 }
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner {
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
+    _bannerView.hidden = YES;
+}
+
 @end

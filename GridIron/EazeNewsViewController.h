@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iAd/iAd.h>
 
 @interface EazeNewsViewController : UIViewController
 
@@ -18,4 +19,5 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *contactsButton;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @end

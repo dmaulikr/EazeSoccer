@@ -8,7 +8,10 @@
 
 #import "PlayerSelectionViewController.h"
 
+#import <iAd/iAd.h>
+
 @interface EazeRosterViewController : PlayerSelectionViewController
 @property (weak, nonatomic) IBOutlet UITableView *rosterTableView;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 
 @end

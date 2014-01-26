@@ -33,7 +33,7 @@
 
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 
-- (IBAction)newsfeedCoachSelected:(UIStoryboardSegue *)segue;
+- (IBAction)coachSelected:(UIStoryboardSegue *)segue;
 
 - (IBAction)newsfeedGameSelected:(UIStoryboardSegue *)segue;
 

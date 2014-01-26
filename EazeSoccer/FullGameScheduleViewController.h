@@ -15,4 +15,6 @@
 - (IBAction)teamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addGameButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *standingsButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
+- (IBAction)refreshButtonClicked:(id)sender;
 @end

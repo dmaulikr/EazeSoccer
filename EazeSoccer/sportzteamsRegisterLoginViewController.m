@@ -42,6 +42,7 @@
     _siteLabel.numberOfLines = 0;
     [_siteLabel setText:sport.sitename];
     _registerView.layer.cornerRadius = 6;
+    _emailText.keyboardType = UIKeyboardTypeEmailAddress;
 }
 
 - (void)didReceiveMemoryWarning
