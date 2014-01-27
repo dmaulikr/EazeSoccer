@@ -76,7 +76,7 @@
     _twopointconvTextField.text = [stat.twopointconv stringValue];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"Updating Receiving Stats using totals will break automatic live scoring. \n Update totals with care. You should use this only if you are NOT entering stats during the game. \n Reciving totals are also automatically added when QB stats are entered if you use live stat updates." delegate:self
+                          message:@"Updating Receiving Stats using totals will break automatic live scoring. \n Update totals with care. You should use this only if you are NOT entering stats during the game. \n Reciving totals are also automatically added when QB stats are entered if you use live stat updates." delegate:self
                                           cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
@@ -94,14 +94,14 @@
     
     [player updateFootballReceivingGameStats:stat];
     
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
     if (originalstat != nil)
         [player updateFootballReceivingGameStats:originalstat];
     
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{

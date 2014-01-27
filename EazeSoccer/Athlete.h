@@ -98,6 +98,15 @@
 - (FootballReturnerStats *)findFootballReturnerStatById:(NSString *)stat_id;
 - (void)updateFootballReturnerGameStats:(FootballReturnerStats *)returnerstat;
 
+- (FootballPassingStat *)getFBPassingStat:(NSString *)gameid;
+- (FootballRushingStat *)getFBRushingStat:(NSString *)gameid;
+- (FootballReceivingStat *)getFBReceiverStat:(NSString *)gameid;
+- (FootballDefenseStats *)getFBDefenseStat:(NSString *)gameid;
+- (FootballPlaceKickerStats *)getFBPlaceKickerStat:(NSString *)gameid;
+- (FootballKickerStats *)getFBKickerStat:(NSString *)gameid;
+- (FootballPunterStats *)getFBPunterStat:(NSString *)gameid;
+- (FootballReturnerStats *)getFBReturnerStat:(NSString *)gameid;
+
 - (BOOL)saveFootballGameStats:(NSString *)gameid;
 
 - (BOOL)isQB:(NSString *)gameid;

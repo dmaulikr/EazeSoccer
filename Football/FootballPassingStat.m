@@ -108,6 +108,11 @@
                                          gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
         }
         
+        if ([yards intValue] > 0)
+            comp_percentage = [NSNumber numberWithFloat:[yards floatValue]/[completions floatValue]];
+        else
+            comp_percentage = [NSNumber numberWithFloat:0.0];
+        
         NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
                                          [attempts stringValue], @"attempts", [completions stringValue], @"completions",
                                          [comp_percentage stringValue], @"comp_percentage", [interceptions stringValue], @"interceptions",
@@ -122,7 +127,12 @@
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         
         if (football_passing_id.length > 0) {
-            [request setHTTPMethod:@"PUT"];
+            if (([attempts intValue] == 0) && ([completions intValue] == 0) && ([comp_percentage floatValue] == 0.0) && ([interceptions intValue] == 0) &&
+                ([sacks intValue] == 0) && ([td intValue] == 0) && ([yards intValue] == 0) && ([yards_lost intValue] == 0) &&
+                ([firstdowns intValue] == 0) && ([twopointconv intValue] == 0))
+                [request setHTTPMethod:@"DELETE"];
+            else
+                [request setHTTPMethod:@"PUT"];
         } else {
             [request setHTTPMethod:@"POST"];
         }

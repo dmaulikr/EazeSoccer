@@ -115,7 +115,7 @@
 
 - (void)gotAllData:(NSNotification *)notification {
     if ((currentSettings.roster.count > 0) && (currentSettings.gameList.count > 0))
-        [self getNews:nil];
+        [self getNews:nil AllNews:NO];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

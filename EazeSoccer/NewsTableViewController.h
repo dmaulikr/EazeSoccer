@@ -18,4 +18,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 - (IBAction)searchButtonClicked:(id)sender;
 
+- (void)getNews:(NSString *)updated_at AllNews:(BOOL)allnews;
+
 @end

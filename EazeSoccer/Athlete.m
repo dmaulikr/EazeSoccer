@@ -590,6 +590,19 @@
     return  thestat;
 }
 
+- (FootballPassingStat *)getFBPassingStat:(NSString *)gameid {
+    FootballPassingStat *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_passing_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_passing_stats objectAtIndex:cnt] gameschedule_id]]) {
+            thestat = [football_passing_stats objectAtIndex:cnt];
+            break;
+        }
+    }
+    
+    return  thestat;
+}
+
 - (FootballPassingStat *)findFootballPassingStatById:(NSString *)stat_id {
     FootballPassingStat *thestat = nil;
     
@@ -628,6 +641,17 @@
         thestat = [[FootballRushingStat alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+    }
+    
+    return  thestat;
+}
+
+- (FootballRushingStat *)getFBRushingStat:(NSString *)gameid {
+    FootballRushingStat *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_rushing_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_rushing_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_rushing_stats objectAtIndex:cnt];
     }
     
     return  thestat;
@@ -676,6 +700,16 @@
     return  thestat;
 }
 
+- (FootballReceivingStat *)getFBReceiverStat:(NSString *)gameid {
+    FootballReceivingStat *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_receiving_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_receiving_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_receiving_stats objectAtIndex:cnt];
+    }
+    return  thestat;
+}
+
 - (FootballReceivingStat *)findFootballReceivingStatById:(NSString *)stat_id {
     FootballReceivingStat *thestat = nil;
     
@@ -719,6 +753,17 @@
     return  thestat;
 }
 
+- (FootballDefenseStats *)getFBDefenseStat:(NSString *)gameid {
+    FootballDefenseStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_defense_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_defense_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_defense_stats objectAtIndex:cnt];
+    }
+    
+    return  thestat;
+}
+
 - (FootballDefenseStats *)findFootballDefenseStatById:(NSString *)stat_id {
     FootballDefenseStats *thestat = nil;
     
@@ -757,6 +802,17 @@
         thestat = [[FootballKickerStats alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+    }
+    
+    return  thestat;
+}
+
+- (FootballKickerStats *)getFBKickerStat:(NSString *)gameid {
+    FootballKickerStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_kicker_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_kicker_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_kicker_stats objectAtIndex:cnt];
     }
     
     return  thestat;
@@ -807,6 +863,17 @@
     return  thestat;
 }
 
+- (FootballPlaceKickerStats *)getFBPlaceKickerStat:(NSString *)gameid {
+    FootballPlaceKickerStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_place_kicker_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_place_kicker_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_place_kicker_stats objectAtIndex:cnt];
+    }
+    
+    return  thestat;
+}
+
 - (FootballPlaceKickerStats *)findFootballPlaceKickerStatById:(NSString *)stat_id {
     FootballPlaceKickerStats *thestat = nil;
     
@@ -850,6 +917,17 @@
     return  thestat;
 }
 
+- (FootballPunterStats *)getFBPunterStat:(NSString *)gameid {
+    FootballPunterStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_punter_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_punter_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_punter_stats objectAtIndex:cnt];
+    }
+    
+    return  thestat;
+}
+
 - (FootballPunterStats *)findFootballPunterStatById:(NSString *)stat_id {
     FootballPunterStats *thestat = nil;
     
@@ -888,6 +966,17 @@
         thestat = [[FootballReturnerStats alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+    }
+    
+    return  thestat;
+}
+
+- (FootballReturnerStats *)getFBReturnerStat:(NSString *)gameid {
+    FootballReturnerStats *thestat = nil;
+    
+    for (int cnt = 0; cnt < football_returner_stats.count; cnt++) {
+        if ([gameid isEqualToString:[[football_returner_stats objectAtIndex:cnt] gameschedule_id]])
+            thestat = [football_returner_stats objectAtIndex:cnt];
     }
     
     return  thestat;
@@ -1161,6 +1250,5 @@
         
     return YES;
 }
-
 
 @end

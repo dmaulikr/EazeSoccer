@@ -95,14 +95,14 @@
     
     [player updateFootballReturnerGameStats:stat];
     
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
     if (originalstat != nil)
         [player updateFootballReturnerGameStats:originalstat];
     
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{

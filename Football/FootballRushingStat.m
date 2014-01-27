@@ -105,6 +105,11 @@
                                          gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
         }
         
+        if ([yards intValue] > 0)
+            average = [NSNumber numberWithFloat:[yards floatValue]/[attempts floatValue]];
+        else
+            average = [NSNumber numberWithFloat:0.0];
+        
         NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
                                          [attempts stringValue], @"attempts", [average stringValue], @"average",
                                          [fumbles stringValue], @"fumbles", [fumbles_lost stringValue], @"fumbles_lost",
@@ -118,7 +123,12 @@
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         
         if (football_rushing_id.length > 0) {
-            [request setHTTPMethod:@"PUT"];
+            if (([attempts intValue] == 0) && ([yards intValue] == 0) && ([average floatValue] == 0.0) && ([longest intValue] == 0) &&
+                ([fumbles intValue] == 0) && ([fumbles_lost intValue] == 0) && ([firstdowns intValue] == 0) && ([twopointconv intValue] == 0) &&
+                ([td intValue] == 0))
+                [request setHTTPMethod:@"DELETE"];
+            else
+                [request setHTTPMethod:@"PUT"];
         } else {
             [request setHTTPMethod:@"POST"];
         }

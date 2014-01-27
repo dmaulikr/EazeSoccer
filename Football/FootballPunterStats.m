@@ -95,7 +95,10 @@
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         
         if (football_punter_id.length > 0) {
-            [request setHTTPMethod:@"PUT"];
+            if (([punts intValue] == 0) && ([punts_blocked intValue] == 0) && ([punts_long intValue] == 0) && ([punts_yards intValue] == 0))
+                [request setHTTPMethod:@"DELETE"];
+            else
+                [request setHTTPMethod:@"PUT"];
         } else {
             [request setHTTPMethod:@"POST"];
         }

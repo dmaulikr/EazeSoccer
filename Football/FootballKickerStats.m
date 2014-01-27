@@ -91,7 +91,10 @@
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         
         if (football_kicker_id.length > 0) {
-            [request setHTTPMethod:@"PUT"];
+            if (([koattempts intValue] == 0) && ([koreturned intValue] == 0) && ([kotouchbacks intValue] == 0))
+                [request setHTTPMethod:@"DELETE"];
+            else
+                [request setHTTPMethod:@"PUT"];
         } else {
             [request setHTTPMethod:@"POST"];
         }

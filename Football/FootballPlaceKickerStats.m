@@ -106,7 +106,8 @@
         NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
                                          [fgattempts stringValue], @"fgattempts", [fgblocked stringValue], @"fgblocked",
                                          [fglong stringValue], @"fglong", [fgmade stringValue], @"fgmade", [xpmissed stringValue], @"xpmissed",
-                                         [xpmade stringValue], @"xpmade", [xpattempts stringValue], @"xpattempts", [xpblocked stringValue], @"xpblocked", nil];
+                                         [xpmade stringValue], @"xpmade", [xpattempts stringValue], @"xpattempts",
+                                         [xpblocked stringValue], @"xpblocked", nil];
         
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
         NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"football_place_kicker", nil];
@@ -115,7 +116,11 @@
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         
         if (football_place_kicker_id.length > 0) {
-            [request setHTTPMethod:@"PUT"];
+            if (([fgattempts intValue] == 0) && ([fgblocked intValue] == 0) && ([fglong intValue] == 0) && ([fgmade intValue] == 0) &&
+                ([xpmissed intValue] == 0) && ([xpmade intValue] == 0) && ([xpattempts intValue] == 0) && ([xpblocked intValue] == 0))
+                [request setHTTPMethod:@"DELETE"];
+            else
+                [request setHTTPMethod:@"PUT"];
         } else {
             [request setHTTPMethod:@"POST"];
         }

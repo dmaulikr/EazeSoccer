@@ -118,7 +118,12 @@
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         
         if (football_returner_id.length > 0) {
-            [request setHTTPMethod:@"PUT"];
+            if (([punt_return intValue] == 0) && ([punt_returnlong intValue] == 0) && ([punt_returntd intValue] == 0) &&
+                ([punt_returnyards intValue] == 0) && ([kolong intValue] == 0) && ([koreturn intValue] == 0) && ([kotd intValue] == 0) &&
+                ([koyards intValue] == 0))
+                [request setHTTPMethod:@"DELETE"];
+            else
+                [request setHTTPMethod:@"PUT"];
         } else {
             [request setHTTPMethod:@"POST"];
         }

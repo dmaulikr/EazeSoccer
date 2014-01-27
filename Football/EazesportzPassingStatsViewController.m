@@ -111,7 +111,7 @@
     _playerNameLabel.text = player.logname;
     _attemptsLabel.text = [stat.attempts stringValue];
     _completionLabel.text = [stat.completions stringValue];
-    _compercentageLabel.text = [stat.comp_percentage stringValue];
+    _compercentageLabel.text = [NSString stringWithFormat:@"%.02f", [stat.comp_percentage floatValue]];
     _yardsLabel.text = [stat.yards stringValue];
     _tdlabel.text = [stat.td stringValue];
     _interceptionLabel.text = [stat.interceptions stringValue];
@@ -424,6 +424,12 @@
     if (textField == _receiverTextField) {
         [textField resignFirstResponder];
         _playerContainer.hidden = NO;
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if (textField == _completionYardsTextField) {
+        _yardsLabel.text = [NSString stringWithFormat:@"%d", [stat.yards intValue ] + [_completionYardsTextField.text intValue]];
     }
 }
 

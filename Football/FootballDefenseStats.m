@@ -128,7 +128,12 @@
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         
         if (football_defense_id.length > 0) {
-            [request setHTTPMethod:@"PUT"];
+            if (([tackles intValue] == 0) && ([fumbles_recovered intValue] == 0) && ([int_long intValue] == 0) && ([int_yards intValue] == 0) &&
+                ([interceptions intValue] == 0) && ([pass_defended intValue] == 0) && ([sacks intValue] == 0) && ([td intValue] == 0) &&
+                ([assists intValue] == 0) && ([safety intValue] == 0) && ([sackassist intValue] == 0))
+                [request setHTTPMethod:@"DELETE"];
+            else
+                [request setHTTPMethod:@"PUT"];
         } else {
             [request setHTTPMethod:@"POST"];
         }

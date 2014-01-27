@@ -35,6 +35,8 @@
     
     PlayerSelectionViewController *playerController;
     EazesportzGameLogViewController *gamelogController;
+
+    NSMutableArray *footballRB, *footballQB, *footballWR, *footballOL, *footballDEF, *footballPK, *footballK, *footballPUNT, *footballRET;
 }
 
 @synthesize athlete;
@@ -70,6 +72,16 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.editButton, nil];
     
     self.navigationController.toolbarHidden = YES;
+    
+    footballWR = [[NSMutableArray alloc] init];
+    footballQB = [[NSMutableArray alloc] init];
+    footballRB = [[NSMutableArray alloc] init];
+    footballOL = [[NSMutableArray alloc] init];
+    footballDEF = [[NSMutableArray alloc] init];
+    footballK = [[NSMutableArray alloc] init];
+    footballPK = [[NSMutableArray alloc] init];
+    footballPUNT = [[NSMutableArray alloc] init];
+    footballRET = [[NSMutableArray alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -81,7 +93,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-//    qbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballQB];
+    qbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballQB];
     rbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballRB];
     wrs = [[NSMutableArray alloc] initWithArray:currentSettings.footballWR];
     defenselist = [[NSMutableArray alloc] initWithArray:currentSettings.footballDEF];
@@ -95,43 +107,59 @@
     for (int cnt = 0; cnt < currentSettings.roster.count; cnt++) {
         Athlete *player = [currentSettings.roster objectAtIndex:cnt];
         
-//        if (![qbs containsObject:player]) {
-//            if ([player isQB:game.id])
-//                [qbs addObject:player];
-//        }
+        if (![qbs containsObject:player]) {
+            if ([player isQB:nil])
+                [qbs addObject:player];
+            else if ([player isQB:game.id])
+                [qbs addObject:player];
+        }
         
         if (![rbs containsObject:player]) {
-            if ([player isRB:game.id])
+            if ([player isRB:nil])
+                [rbs addObject:player];
+            else if ([player isRB:game.id])
                 [rbs addObject:player];
         }
         
         if (![wrs containsObject:player]) {
-            if ([player isWR:game.id])
+            if ([player isWR:nil])
+                [wrs addObject:player];
+            else if ([player isWR:game.id])
                 [wrs addObject:player];
         }
         
         if (![defenselist containsObject:player]) {
-            if ([player isDEF:game.id])
+            if ([player isDEF:nil])
+                [defenselist addObject:player];
+            else if ([player isDEF:game.id])
                 [defenselist addObject:player];
         }
         
         if (![pks containsObject:player]) {
-            if ([player isPK:game.id])
+            if ([player isPK:nil])
+                [pks addObject:player];
+            else if ([player isPK:game.id])
                 [pks addObject:player];
         }
         
         if (![punterlist containsObject:player]) {
-            if ([player isPunter:game.id])
+            if ([player isPunter:nil])
+                [punterlist addObject:player];
+            else if ([player isPunter:game.id])
                 [punterlist addObject:player];
         }
         
         if (![returnerlist containsObject:player]) {
-            if ([player isReturner:game.id])
+            if ([player isReturner:nil])
+                [returnerlist addObject:player];
+            else if ([player isReturner:game.id])
                 [returnerlist addObject:player];
         }
         
         if (![kickerlist containsObject:player]) {
-            if ([player isKicker:game.id])
+            if ([player isKicker:nil])
+                [kickerlist addObject:player];
+            else if ([player isKicker:game.id])
                 [kickerlist addObject:player];
         }
     }
@@ -206,12 +234,87 @@
     
     if (offense) {
         for (int i = 0; i < currentSettings.roster.count; i++) {
-            Athlete *aplayer = [currentSettings.roster objectAtIndex:i];
-            if ([aplayer isQB:(game.id)]) {
-                FootballPassingStat *passstat = [aplayer findFootballPassingStat:game.id];
-                if (![passstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[passstat httperror]
-                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            FootballPassingStat *passstat = [[currentSettings.roster objectAtIndex:i] getFBPassingStat:game.id];
+            if (![passstat saveStats]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[passstat httperror]
+                                                    delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
+                return;
+            }
+        }
+        
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            FootballRushingStat *rushstat = [[currentSettings.roster objectAtIndex:i] getFBRushingStat:game.id];
+            if (rushstat) {
+                if (![rushstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[rushstat httperror]
+                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                    return;
+                }
+            }
+        }
+
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            FootballReceivingStat *recstat = [[currentSettings.roster objectAtIndex:i] getFBReceiverStat:game.id];
+            if (recstat) {
+                if (![recstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[recstat httperror]
+                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                    return;
+                }
+            }
+        }
+    } else if (defense) {
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            FootballDefenseStats *defstat = [[currentSettings.roster objectAtIndex:i] getFBDefenseStat:game.id];
+            if (defstat) {
+                if (![defstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[defstat httperror]
+                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                    return;
+                }
+            }
+        }
+    } else {
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            FootballPlaceKickerStats *pkstat = [[currentSettings.roster objectAtIndex:i] getFBPlaceKickerStat:game.id];
+            if (pkstat) {
+                if (![pkstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[pkstat httperror]
+                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                    return;
+                }
+            }
+        }
+
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            FootballPunterStats *puntstat = [[currentSettings.roster objectAtIndex:i] getFBPunterStat:game.id];
+            if (puntstat) {
+                if (![puntstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[puntstat httperror]
+                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                    return;
+                }
+            }
+        }
+
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            FootballKickerStats *kickstat = [[currentSettings.roster objectAtIndex:i] getFBKickerStat:game.id];
+            if (kickstat) {
+                if (![kickstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[kickstat httperror]
+                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                     [alert setAlertViewStyle:UIAlertViewStyleDefault];
                     [alert show];
                     return;
@@ -219,80 +322,16 @@
             }
         }
         
-        for (int i = 0; i < rbs.count; i++) {
-            FootballRushingStat *rushstat = [[rbs objectAtIndex:i] findFootballRushingStat:game.id];
-            if (![rushstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[rushstat httperror]
-                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
-            }
-        }
-
-        for (int i = 0; i < wrs.count; i++) {
-            FootballReceivingStat *recstat = [[wrs objectAtIndex:i] findFootballReceivingStat:game.id];
-            if (![recstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[recstat httperror]
-                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
-            }
-        }
-    } else if (defense) {
-        for (int i = 0; i < defenselist.count; i++) {
-            FootballDefenseStats *defstat = [[defenselist objectAtIndex:i] findFootballDefenseStat:game.id];
-            if (![defstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[defstat httperror]
-                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
-            }
-        }
-    } else {
-        for (int i = 0; i < pks.count; i++) {
-            FootballPlaceKickerStats *pkstat = [[pks objectAtIndex:i] findFootballPlaceKickerStat:game.id];
-            if (![pkstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[pkstat httperror]
-                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
-            }
-        }
-
-        for (int i = 0; i < punterlist.count; i++) {
-            FootballPunterStats *puntstat = [[punterlist objectAtIndex:i] findFootballPunterStat:game.id];
-            if (![puntstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[puntstat httperror]
-                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
-            }
-        }
-
-        for (int i = 0; i < kickerlist.count; i++) {
-            FootballKickerStats *kickstat = [[kickerlist objectAtIndex:i] findFootballKickerStat:game.id];
-            if (![kickstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[kickstat httperror]
-                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
-            }
-        }
-        
-        for (int i = 0; i < returnerlist.count; i++) {
-            FootballReturnerStats *retstat = [[returnerlist objectAtIndex:i] findFootballReturnerStat:game.id];
-            if (![retstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[retstat httperror]
-                                                               delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            FootballReturnerStats *retstat = [[currentSettings.roster objectAtIndex:i] getFBReturnerStat:game.id];
+            if (retstat) {
+                if (![retstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[retstat httperror]
+                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                    return;
+                }
             }
         }
     }
@@ -326,13 +365,7 @@
     // Return the number of rows in the section.
     if (offense) {
         if (section == 0) {
-            qbs = [[NSMutableArray alloc] init];
-            for (int i = 0; i < currentSettings.roster.count; i++) {
-                if ([[currentSettings.roster objectAtIndex:i] isQB:game.id]) {
-                    [qbs addObject:[currentSettings.roster objectAtIndex:i]];
-                }
-            }
-            return qbs.count + 2;
+             return qbs.count + 2;
         } else if (section == 1)
             return rbs.count + 2;
         else
@@ -1065,27 +1098,83 @@
     if (playerController.player) {
         if (offense) {
             if (qb) {
-                [self performSegueWithIdentifier:@"PassingStatSegue" sender:self];
+                if (![qbs containsObject:playerController.player]) {
+                    [qbs addObject:playerController.player];
+                } else {
+                    [self displayPlayerAlreadyInListAlert:playerController.player];
+                }
+                qb = NO;
             } else if (rb) {
-                [self performSegueWithIdentifier:@"RushingStatSegue" sender:self];
+                if (![rbs containsObject:playerController.player]) {
+                    [rbs addObject:playerController.player];
+                    [_statsTableView reloadData];
+                } else {
+                    [self displayPlayerAlreadyInListAlert:playerController.player];
+                }
+                rb = NO;
             } else if (wr) {
-                [self performSegueWithIdentifier:@"TotalsReceivingSegue" sender:self];
+                if (![wrs containsObject:playerController.player]) {
+                    [wrs addObject:playerController.player];
+                    [_statsTableView reloadData];
+                } else {
+                    [self displayPlayerAlreadyInListAlert:playerController.player];
+                }
+                wr = NO;
             }
         } else if (defense) {
-            [self performSegueWithIdentifier:@"DefenseStatSegue" sender:self];
+            if (![defenselist containsObject:playerController.player]) {
+                [defenselist addObject:playerController.player];
+                [_statsTableView reloadData];
+            } else {
+                [self displayPlayerAlreadyInListAlert:playerController.player];
+            }
+            defense = NO;
         } else {
             if (pk) {
-                [self performSegueWithIdentifier:@"PlaceKickerStatSegue" sender:self];
-            } else if (kicker)
-                [self performSegueWithIdentifier:@"KickerStatSegue" sender:self];
-            else if (punter)
-                [self performSegueWithIdentifier:@"PunterStatSegue" sender:self];
-            else
-                [self performSegueWithIdentifier:@"ReturnerStatSegue" sender:self];
+                if (![pks containsObject:playerController.player]) {
+                    [pks addObject:playerController.player];
+                    [_statsTableView reloadData];
+                } else {
+                    [self displayPlayerAlreadyInListAlert:playerController.player];
+                }
+                pk = NO;
+            } else if (kicker) {
+                if (![kickerlist containsObject:playerController.player]) {
+                    [kickerlist addObject:playerController.player];
+                    [_statsTableView reloadData];
+                } else {
+                    [self displayPlayerAlreadyInListAlert:playerController.player];
+                }
+                kicker = NO;
+            } else if (punter) {
+                if (![punterlist containsObject:playerController.player]) {
+                    [punterlist addObject:playerController.player];
+                    [_statsTableView reloadData];
+                } else {
+                    [self displayPlayerAlreadyInListAlert:playerController.player];
+                }
+                punter = NO;
+            } else if (returner) {
+                if (![returnerlist containsObject:playerController.player]) {
+                    [returnerlist addObject:playerController.player];
+                    [_statsTableView reloadData];
+                } else {
+                    [self displayPlayerAlreadyInListAlert:playerController.player];
+                }
+                returner = NO;
+            }
         }
     }
     
     _playerSelectContainer.hidden = YES;
+    [_statsTableView reloadData];
+}
+
+- (void)displayPlayerAlreadyInListAlert:(Athlete *)player {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Player already in list!"
+                                                   delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 - (IBAction)scoreLogButtonClicked:(id)sender {
@@ -1291,4 +1380,34 @@
         game.gameisfinal = NO;
     }
 }
+
+- (void)populatePositionLists:(Athlete *)player {
+    if ([player isQB:nil])
+        [footballQB addObject:player];
+    
+    if ([player isRB:nil])
+        [footballRB addObject:player];
+    
+    if ([player isWR:nil])
+        [footballWR addObject:player];
+    
+    if ([player isOL:nil])
+        [footballOL addObject:player];
+    
+    if ([player isDEF:nil])
+        [footballDEF addObject:player];
+    
+    if ([player isPK:nil])
+        [footballPK addObject:player];
+    
+    if ([player isKicker:nil])
+        [footballK addObject:player];
+    
+    if ([player isPunter:nil])
+        [footballPUNT addObject:player];
+    
+    if ([player isReturner:nil])
+        [footballRET addObject:player];
+}
+
 @end
