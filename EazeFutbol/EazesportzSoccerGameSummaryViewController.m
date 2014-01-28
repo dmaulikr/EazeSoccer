@@ -13,6 +13,7 @@
 #import "EazesportzFootballStatsTableViewCell.h"
 #import "EazesportzFootballStatTotalsTableCell.h"
 #import "EazesportzStatTableHeaderCell.h"
+#import "EazesportzRetrieveAlerts.h"
 
 @interface EazesportzSoccerGameSummaryViewController ()
 
@@ -40,9 +41,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, nil];
-    
-    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -85,6 +83,12 @@
 - (IBAction)refreshButtonClicked:(id)sender {
     [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     game = [currentSettings retrieveGame:game.id];
+    
+    if (currentSettings.user.userid.length > 0) {
+        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                          Token:currentSettings.user.authtoken];
+    }
+    
     [self viewWillAppear:YES];
 }
 

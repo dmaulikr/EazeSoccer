@@ -13,6 +13,7 @@
 #import "EazesportzFootballStatTotalsTableCell.h"
 #import "EazesportzStatTableHeaderCell.h"
 #import "EazeBballPlayerStatsViewController.h"
+#import "EazesportzRetrieveAlerts.h"
 
 @interface EazeBasketballGameSummaryViewController ()
 
@@ -101,6 +102,11 @@
     
     [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
                                                         Token:currentSettings.user.authtoken];
+    
+    if (currentSettings.user.userid.length > 0) {
+        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                          Token:currentSettings.user.authtoken];
+    }
 }
 
 - (void)gotRoster:(NSNotification *)notification {
@@ -318,4 +324,5 @@
         [alert show];
     }
 }
+
 @end

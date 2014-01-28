@@ -124,7 +124,8 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
-        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                          Token:currentSettings.user.authtoken];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

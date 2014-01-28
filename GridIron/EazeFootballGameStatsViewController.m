@@ -19,6 +19,7 @@
 #import "EazesportzRetrieveFootballReturnerGameStats.h"
 #import "EazesportzStatTableHeaderCell.h"
 #import "EazeFootballPlayerStatsViewController.h"
+#import "EazesportzRetrieveAlerts.h"
 
 @interface EazeFootballGameStatsViewController ()
 
@@ -756,6 +757,12 @@
 
 - (IBAction)refreshButtonClicked:(id)sender {
     [currentSettings retrieveGame:game.id];
+    
+    if (currentSettings.user.userid.length > 0) {
+        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                          Token:currentSettings.user.authtoken];
+    }
+    
     [self viewWillAppear:YES];
 }
 

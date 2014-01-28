@@ -61,11 +61,8 @@
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"AlertListChangedNotification" object:nil];
     } else {
-        //        NSDictionary *errordict = [[NSDictionary alloc] initWithObjects:serverData forKeys:@"error"];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Alerts" message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"AlertListChangedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error Retrieving Alerts", @"Result" , nil]];
     }
 }
 
