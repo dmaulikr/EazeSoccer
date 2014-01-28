@@ -53,6 +53,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.title = player.name;
     visiblestats = @"Scoring";
     _statSelector.selectedSegmentIndex = 0;
         
@@ -98,18 +99,18 @@
         } else {
              cell.nameLabel.text = @"Totals";
             
-            int fgm = 0, fga = 0, threefgm = 0, threefga = 0, ftm = 0, fta = 0, points = 0;
+            int points = 0;
             
             for (int i = 0; i < currentSettings.gameList.count; i++) {
                 BasketballStats *astat = [player findBasketballGameStatEntries:[[currentSettings.gameList objectAtIndex:i] id]];
-                fgm += [astat.twomade intValue];
-                fga += [astat.twoattempt intValue];
+                stat.twomade = [NSNumber numberWithInt:[stat.twomade intValue] + [astat.twomade intValue]];
+                stat.twoattempt = [NSNumber numberWithInt:[stat.twoattempt intValue] + [astat.twoattempt intValue]];
                 
-                threefga += [astat.threeattempt intValue];
-                threefgm += [astat.threemade intValue];
+                stat.threeattempt = [NSNumber numberWithInt:[stat.threeattempt intValue] + [astat.threeattempt intValue]];
+                stat.threemade = [NSNumber numberWithInt:[stat.threemade intValue] + [astat.threemade intValue]];
                 
-                ftm += [astat.ftmade intValue];
-                fta += [astat.ftattempt intValue];
+                stat.ftmade = [NSNumber numberWithInt:[stat.ftmade intValue] + [astat.ftmade intValue]];
+                stat.ftattempt = [NSNumber numberWithInt:[stat.ftattempt intValue] + [astat.ftattempt intValue]];
                 
                 points += ([astat.threemade intValue] * 3) + ([astat.twomade intValue] * 2) + [astat.ftmade intValue];
             }
@@ -182,6 +183,8 @@
     if ([visiblestats isEqualToString:@"Scoring"]) {
         static NSString *CellIdentifier = @"ScoringHeaderTableCell";
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        UILabel *label = (UILabel *)[headerView viewWithTag:9];
+        label.text = @"Game";
      } else {
         static NSString *CellIdentifier = @"StatTableHeaderCell";
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];

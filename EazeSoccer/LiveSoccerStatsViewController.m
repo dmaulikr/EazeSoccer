@@ -58,7 +58,7 @@
 
 - (IBAction)goalButtonClicked:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Goal" message:@"" delegate:self cancelButtonTitle:@"Cancel"
-                                          otherButtonTitles:@"Goal Made", @"Goal Missed", nil];
+                                          otherButtonTitles:@"Goal Made", @"Remove Goal", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }
@@ -111,7 +111,7 @@
         playerStats.shotstaken = [NSNumber numberWithInt:[playerStats.shotstaken intValue] + 1];
         _shotsLabel.text = [playerStats.shotstaken stringValue];
         [self updatePoints];
-    } else if (([title isEqualToString:@"Goal Missed"]) && ([playerStats.goals intValue] > 0)) {
+    } else if (([title isEqualToString:@"Remove Goal"]) && ([playerStats.goals intValue] > 0)) {
         playerStats.goals = [NSNumber numberWithInt:[playerStats.goals intValue] - 1 ];
         _goalLabel.text = [playerStats.goals stringValue];
         playerStats.shotstaken = [NSNumber numberWithInt:[playerStats.shotstaken intValue] - 1];
