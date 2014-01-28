@@ -37,6 +37,8 @@
     EazesportzGameLogViewController *gamelogController;
 
     NSMutableArray *footballRB, *footballQB, *footballWR, *footballOL, *footballDEF, *footballPK, *footballK, *footballPUNT, *footballRET;
+    
+    BOOL minuspenalty;
 }
 
 @synthesize athlete;
@@ -69,6 +71,7 @@
     _quarterTextField.keyboardType = UIKeyboardTypeNumberPad;
     _homeTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
     _visitorTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _penaltyYardsTextField.keyboardType = UIKeyboardTypeNumberPad;
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, self.editButton, nil];
     
     self.navigationController.toolbarHidden = YES;
@@ -177,6 +180,8 @@
         _visitorLabel.text = game.opponent;
         _visitorScoreLabel.text = [game.opponentscore stringValue];
         _visitorScoreTextField.text = [game.opponentscore stringValue];
+        _penaltyYardsLabel.text = [NSString stringWithFormat:@"%d%@%d", [game.penalty intValue], @"/", [game.penaltyyards intValue]];
+        _penaltyYardsTextField.hidden = YES;
         
         _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
         
@@ -235,12 +240,14 @@
     if (offense) {
         for (int i = 0; i < currentSettings.roster.count; i++) {
             FootballPassingStat *passstat = [[currentSettings.roster objectAtIndex:i] getFBPassingStat:game.id];
-            if (![passstat saveStats]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[passstat httperror]
-                                                    delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-                return;
+            if (passstat) {
+                if (![passstat saveStats]) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[passstat httperror]
+                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                    return;
+                }
             }
         }
         
@@ -1197,7 +1204,7 @@
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if ((textField == _minutesTextField) || (textField == _secondsTextField) || (textField == _visitorScoreTextField) ||
         (textField == _homeTimeOutsTextField) || (textField == _visitorTimeOutsTextField) || (textField == _quarterTextField) ||
-        (textField == _downTextField) || (textField == _togoTextField) || (textField == _ballonTextField)) {
+        (textField == _downTextField) || (textField == _togoTextField) || (textField == _ballonTextField) || (textField == _penaltyYardsTextField)) {
         NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
         NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
         BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
@@ -1212,7 +1219,7 @@
             } else if ((textField == _quarterTextField) || (textField == _downTextField) || (textField == _visitorTimeOutsTextField) ||
                        (textField == _homeTimeOutsTextField)) {
                 return (newLength > 1) ? NO : YES;
-            } else if (textField == _visitorScoreTextField) {
+            } else if ((textField == _visitorScoreTextField) || (textField == _penaltyYardsTextField)) {
                 return (newLength > 3 ? NO : YES);
             } else
                 return NO;
@@ -1241,6 +1248,16 @@
     } else if (textField == _secondsTextField) {
         NSArray *clockentries = [_gameClockLabel.text componentsSeparatedByString:@":"];
         _gameClockLabel.text = [NSString stringWithFormat:@"%@%@%@", clockentries[0], @":", _secondsTextField.text];
+    } else if (textField == _penaltyYardsTextField) {
+        if (minuspenalty) {
+            minuspenalty = NO;
+            game.penaltyyards = [NSNumber numberWithInt:[game.penaltyyards intValue] - [_penaltyYardsTextField.text intValue]];
+        } else {
+            game.penaltyyards = [NSNumber numberWithInt:[game.penaltyyards intValue] + [_penaltyYardsTextField.text intValue]];
+        }
+
+        _penaltyYardsLabel.text = [NSString stringWithFormat:@"%d%@%d", [game.penalty intValue], @"/", [game.penaltyyards intValue]];
+        _penaltyYardsTextField.hidden = YES;
     }
 }
 
@@ -1355,6 +1372,13 @@
     } else if ([title isEqualToString:@"Q4"]) {
         quarter = @"Q4";
         [self scoreType];
+    } else if ([title isEqualToString:@"Add Penalty"]) {
+        _penaltyYardsTextField.hidden = NO;
+        game.penalty = [NSNumber numberWithInt:[game.penalty intValue] + 1];
+    } else if (([title isEqualToString:@"Delete Penalty"]) && ([game.penalty intValue] > 0)) {
+        _penaltyYardsTextField.hidden = NO;
+        game.penalty = [NSNumber numberWithInt:[game.penalty intValue] - 1];
+        minuspenalty = YES;
     }
 }
 
@@ -1408,6 +1432,13 @@
     
     if ([player isReturner:nil])
         [footballRET addObject:player];
+}
+
+- (IBAction)penaltyButtonClicked:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Penalties"  message:@"Home team penalties"
+                                                   delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add Penalty", @"Delete Penalty", nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 @end

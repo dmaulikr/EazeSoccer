@@ -52,5 +52,8 @@
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
+@property (weak, nonatomic) IBOutlet UITextField *penaltyYardsTextField;
+@property (weak, nonatomic) IBOutlet UILabel *penaltyYardsLabel;
+- (IBAction)penaltyButtonClicked:(id)sender;
 
 @end

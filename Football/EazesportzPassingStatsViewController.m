@@ -198,7 +198,7 @@
     if (_sackyardslostTextField.text.length > 0)
         stat.yards_lost = [NSNumber numberWithInt:[stat.yards_lost intValue] + [_sackyardslostTextField.text intValue]];
     
-    stat.comp_percentage = [NSNumber numberWithFloat:([stat.completions floatValue] / [stat.attempts floatValue])];
+    stat.comp_percentage = [NSNumber numberWithFloat:([stat.attempts floatValue] / [stat.completions floatValue])];
     
     if ((touchdown) || (twopoint))
         [stat saveStats];

@@ -81,6 +81,8 @@
     _htotalLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
     _vtotalLabel.text = [NSString stringWithFormat:@"%d", [game.opponentq4 intValue] + [game.opponentq3 intValue] + [game.opponentq2 intValue] +
                          [game.opponentq1 intValue]];
+    
+    [_gamelogTableView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

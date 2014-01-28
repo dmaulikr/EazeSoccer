@@ -331,7 +331,7 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     if (textField == _rushyardsTextField)
-        _yardsLabel.text = _rushyardsTextField.text;
+        _yardsLabel.text = [NSString stringWithFormat:@"%d", [stat.yards intValue] + [_rushyardsTextField.text intValue]];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{

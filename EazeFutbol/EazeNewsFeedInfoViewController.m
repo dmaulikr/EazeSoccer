@@ -65,7 +65,7 @@
     
     if (newsitem.coach.length > 0) {
         _coachButton.enabled = YES;
-        [_athleteButton setTitle:[[currentSettings findCoach:newsitem.coach] fullname] forState:UIControlStateNormal];
+        [_coachButton setTitle:[[currentSettings findCoach:newsitem.coach] fullname] forState:UIControlStateNormal];
     } else {
         _coachButton.enabled = NO;
         _coachButton.hidden = YES;

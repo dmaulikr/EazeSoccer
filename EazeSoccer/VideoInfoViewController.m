@@ -685,7 +685,7 @@
     NSMutableDictionary *photoDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _videoNameTextField.text, @"filename",
                                        _videoNameTextField.text, @"displayname", videopath, @"filepath", @"image/mp4", @"filetype",
                                        [NSString stringWithFormat:@"%d", videosize], @"filesize", _videoDescriptionTextView.text, @"description",
-                                       currentSettings.team.teamid, @"teamid", currentSettings.user.userid, @"user_id", nil];
+                                       currentSettings.team.teamid, @"team_id", currentSettings.user.userid, @"user_id", nil];
     
     if (gameController.thegame) {
         [photoDict setObject:gameController.thegame.id forKey:@"gameschedule_id"];

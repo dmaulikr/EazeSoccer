@@ -755,6 +755,7 @@
  }
 
 - (IBAction)refreshButtonClicked:(id)sender {
+    [currentSettings retrieveGame:game.id];
     [self viewWillAppear:YES];
 }
 

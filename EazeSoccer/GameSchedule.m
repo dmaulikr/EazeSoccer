@@ -301,6 +301,8 @@
         [gamedict setValue:[homeq4 stringValue] forKey:@"homeq4"];
         [gamedict setValue:[opponenttimeouts stringValue] forKey:@"opponenttimeouts"];
         [gamedict setValue:[hometimeouts stringValue] forKey:@"hometimeouts"];
+        [gamedict setValue:[penaltyyards stringValue] forKey:@"penaltyyards"];
+        [gamedict setValue:[penalty stringValue] forKey:@"penalty"];
         
         for (int i = 0; i < gamelogs.count; i++)
              [[gamelogs objectAtIndex:i] saveGamelog];
