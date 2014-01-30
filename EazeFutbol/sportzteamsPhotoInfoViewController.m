@@ -25,6 +25,7 @@
     NSDictionary *serverData;
     NSMutableData *theData;
     int responseStatusCode;
+    UIView *subview;
 }
 
 @synthesize photo;
@@ -68,6 +69,9 @@
     [super viewWillAppear:animated];
     
     if (photoid == nil) {
+        if (subview)
+            [subview removeFromSuperview];
+        
         self.title = photo.displayname;
         NSURL * imageURL = [NSURL URLWithString:photo.large_url];
         NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
@@ -83,6 +87,7 @@
         self.animage = [[UIImageView alloc] initWithImage:image];
         self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=image.size};
         [self.scrollView addSubview:self.animage];
+        subview = self.animage;
         
         // 2
         self.scrollView.contentSize = image.size;

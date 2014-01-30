@@ -25,6 +25,7 @@
     EazesportzRetrieveFeaturedPhotos *getPhotos;
     
     int currentphoto;
+    UIView *subview;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -40,6 +41,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor clearColor];
+    
     UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewDoubleTapped:)];
     doubleTapRecognizer.numberOfTapsRequired = 2;
     doubleTapRecognizer.numberOfTouchesRequired = 1;
@@ -148,6 +151,9 @@
 }
 
 - (void)displayPhoto:(Photo *)photo {
+    if (subview)
+        [subview removeFromSuperview];
+    
     NSURL * imageURL = [NSURL URLWithString:[photo large_url]];
     NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
     UIImage * image = [UIImage imageWithData:imageData];
@@ -155,6 +161,7 @@
     self.animage = [[UIImageView alloc] initWithImage:image];
     self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=image.size};
     [self.scrollView addSubview:self.animage];
+    subview = self.animage;
     
     // 2
     self.scrollView.contentSize = image.size;
@@ -184,7 +191,6 @@
 - (void)nextFeaturedPhoto {
     if (currentphoto < getPhotos.featuredphotos.count - 1) {
         currentphoto++;
-        self.animage.image = nil;
         [self displayPhoto:[getPhotos.featuredphotos objectAtIndex:currentphoto]];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
@@ -198,7 +204,6 @@
 - (void)backFeaturedPhoto {
     if (currentphoto > 0) {
         currentphoto--;
-        self.animage.image = nil;
         [self displayPhoto:[getPhotos.featuredphotos objectAtIndex:currentphoto]];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
