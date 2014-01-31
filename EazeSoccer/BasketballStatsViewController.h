@@ -62,5 +62,7 @@
 @property (weak, nonatomic) IBOutlet UIView *nonscoreStatsContainer;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
+@property (weak, nonatomic) IBOutlet UILabel *finalLabel;
+- (IBAction)finalButtonClicked:(id)sender;
 
 @end

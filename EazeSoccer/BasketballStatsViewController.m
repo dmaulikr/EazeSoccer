@@ -60,6 +60,7 @@
     _basketballLiveStatsContainer.hidden = YES;
     _basketballTotalStatsContainer.hidden = YES;
     _nonscoreStatsContainer.hidden = YES;
+    _finalLabel.hidden = YES;
     
     if (game)
         _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", game.opponent_name];
@@ -134,6 +135,10 @@
                 [self fourthPeriodButtonClicked:self];
                 break;
         }
+        
+        if (game.gameisfinal)
+            _finalLabel.hidden = NO;
+        
     } else {
         _gameclockLabel.text = @"00:00";
         _visitorImage.hidden = YES;
@@ -590,6 +595,16 @@
     [nonscoreStatsController.player updateBasketballGameStats:nonscoreStatsController.stats];    
     [_basketballTableView reloadData];
     [self viewWillAppear:YES];
+}
+
+- (IBAction)finalButtonClicked:(id)sender {
+    if (game.gameisfinal) {
+        _finalLabel.hidden = YES;
+        game.gameisfinal = NO;
+    } else {
+        _finalLabel.hidden = NO;
+        game.gameisfinal = YES;
+    }
 }
 
 @end

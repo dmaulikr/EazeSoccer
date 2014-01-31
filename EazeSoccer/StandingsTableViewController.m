@@ -43,7 +43,6 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotStandings:) name:@"StandingsListChangedNotification" object:nil];
 }
 
 - (void)gotStandings:(NSNotification *)notification {
@@ -67,7 +66,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotStandings:) name:@"StandingsListChangedNotification" object:nil];
     getStandings = [[EazesportzRetrieveStandings alloc] init];
     [getStandings retrieveStandings:currentSettings.sport.id Token:currentSettings.user.authtoken];
 }

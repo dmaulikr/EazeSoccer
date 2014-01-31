@@ -262,7 +262,7 @@
                                      [time objectAtIndex:0], @"starttime(4i)", [time objectAtIndex:1], @"starttime(5i)",
                                      homeaway, @"homeaway", [homescore stringValue], @"homescore",
                                      [opponentscore stringValue], @"opponentscore", [[NSNumber numberWithBool:leaguegame] stringValue], @"league",
-                                     [[NSNumber numberWithBool:gameisfinal] stringValue], @"gameisfinal", nil];
+                                     [[NSNumber numberWithBool:gameisfinal] stringValue], @"final", nil];
     
     NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
     
