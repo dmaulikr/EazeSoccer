@@ -20,6 +20,7 @@
 @property(nonatomic, strong) NSString *zip;
 @property(nonatomic, strong) NSString *state;
 @property(nonatomic, strong) NSString *city;
+@property(nonatomic, strong) NSString *country;
 @property(nonatomic, strong) NSString *name;
 @property(nonatomic, strong) NSString *sport_logo_thumb;
 @property(nonatomic, strong) NSString *sport_logo_tiny;

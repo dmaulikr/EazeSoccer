@@ -34,7 +34,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     NSBundle *bundle = [NSBundle mainBundle];
-    NSString *plistPath =[bundle pathForResource:@"USStateAbbreviations" ofType:@"plist"];
+    NSString *plistPath = [bundle pathForResource:@"USStateAbbreviations" ofType:@"plist"];
     stateDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
     NSArray * keys = [stateDictionary allKeys];
     stateList = [keys sortedArrayUsingSelector:@selector(compare:)];

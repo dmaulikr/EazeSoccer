@@ -208,7 +208,7 @@
         if (teamid.length == 0) {
             teamid = [items objectForKey:@"_id"];
         }
-        [[[EazesportzRetrieveTeams alloc] init] retrieveTeams:currentSettings.sport.id Token:currentSettings.team.teamid];
+        [[[EazesportzRetrieveTeams alloc] init] retrieveTeams:currentSettings.sport.id Token:currentSettings.user.authtoken];
         return YES;
     } else {
         httpError = [serverData objectForKey:@"error"];

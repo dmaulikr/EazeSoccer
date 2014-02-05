@@ -152,11 +152,11 @@
 }
 
 - (IBAction)gameButtonClicked:(id)sender {
-    if ([currentSettings.sport.name isEqualToString:@"FootballGameInfoSegue"])
+    if ([currentSettings.sport.name isEqualToString:@"Football"])
         [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
-    else if ([currentSettings.sport.name isEqualToString:@"BasketballGameInfoSegue"])
+    else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
         [self performSegueWithIdentifier:@"BaseketballGameInfoSegue" sender:self];
-    else if ([currentSettings.sport.name isEqualToString:@"SoccerGameInfoSegue"]) {
+    else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
         [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
     }
 }

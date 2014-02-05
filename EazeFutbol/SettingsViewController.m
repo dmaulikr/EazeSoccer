@@ -109,7 +109,7 @@
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
             currentSettings.user.email = @"";
-            currentSettings.user.authtoken = @"";
+            currentSettings.user.authtoken = nil;
             currentSettings.user.username = @"";
             currentSettings.user.userid = @"";
             UITabBarController *tabBarController = self.tabBarController;

@@ -21,5 +21,8 @@
 @property (weak, nonatomic) IBOutlet UIPickerView *sportPicker;
 @property (weak, nonatomic) IBOutlet UITextField *sportTextField;
 @property (weak, nonatomic) IBOutlet UIView *siteselectView;
+@property (weak, nonatomic) IBOutlet UITextField *countryTextField;
+@property (weak, nonatomic) IBOutlet UIPickerView *countryPicker;
+@property (weak, nonatomic) IBOutlet UIPickerView *statePicker;
 
 @end

@@ -49,7 +49,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        user = [User alloc];
+        user = [[User alloc] init];
         sport = [Sport alloc];
         team = [Team alloc];
         footballWR = [[NSMutableArray alloc] init];

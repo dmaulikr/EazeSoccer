@@ -39,6 +39,17 @@
         return NO;
 }
 
+- (id)init {
+    if (self = [super init]) {
+        email = nil;
+        authtoken = nil;
+        userid = nil;
+        username = nil;
+        return  self;
+    } else
+        return nil;
+}
+
 - (id)initWithDictionary:(NSDictionary *)userDictionary {
     if ((self = [super init]) && (userDictionary.count > 0)) {
         email = [userDictionary objectForKey:@"email"];

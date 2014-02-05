@@ -304,7 +304,15 @@
     player = nil;
     game = nil;
     user = nil;
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getTeamVideos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
+    
+    NSURL *url;
+    
+    if (currentSettings.user.authtoken)
+        url = [NSURL URLWithString:[sportzServerInit getTeamVideos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid]];
+    
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [_activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];

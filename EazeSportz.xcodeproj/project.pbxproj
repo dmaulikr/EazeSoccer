@@ -161,6 +161,8 @@
 		B46544FB182D930900E1C08A /* LiveBasketballStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46544FA182D930900E1C08A /* LiveBasketballStatsViewController.m */; };
 		B46A3C0D18352446004B35BA /* EazesVideosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46A3C0C18352446004B35BA /* EazesVideosViewController.m */; };
 		B46A3C10183561C2004B35BA /* EazeBlogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46A3C0F183561C2004B35BA /* EazeBlogViewController.m */; };
+		B46BFF1F18A2EC680086CCD5 /* Countries.plist in Resources */ = {isa = PBXBuildFile; fileRef = B46BFF1E18A2EC680086CCD5 /* Countries.plist */; };
+		B46BFF2018A2EC880086CCD5 /* Countries.plist in Resources */ = {isa = PBXBuildFile; fileRef = B46BFF1E18A2EC680086CCD5 /* Countries.plist */; };
 		B46D7B791887609F00A9728C /* EazesportzFeaturedPhotosViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B45B653D1875C36200AAE1A2 /* EazesportzFeaturedPhotosViewController.h */; };
 		B46D7B7A1887609F00A9728C /* EazesportzFeaturedPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B45B653E1875C36200AAE1A2 /* EazesportzFeaturedPhotosViewController.m */; };
 		B46D7B7B1887609F00A9728C /* EazesportzFeaturedVideosViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B45B65421877CC9100AAE1A2 /* EazesportzFeaturedVideosViewController.h */; };
@@ -1736,6 +1738,7 @@
 		B46A3C0C18352446004B35BA /* EazesVideosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesVideosViewController.m; sourceTree = "<group>"; };
 		B46A3C0E183561C2004B35BA /* EazeBlogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazeBlogViewController.h; sourceTree = "<group>"; };
 		B46A3C0F183561C2004B35BA /* EazeBlogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazeBlogViewController.m; sourceTree = "<group>"; };
+		B46BFF1E18A2EC680086CCD5 /* Countries.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Countries.plist; sourceTree = "<group>"; };
 		B46D7B971887683E00A9728C /* EazesportzCustomNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzCustomNavigationController.h; sourceTree = "<group>"; };
 		B46D7B981887683E00A9728C /* EazesportzCustomNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzCustomNavigationController.m; sourceTree = "<group>"; };
 		B46D7BA318877E8000A9728C /* EazeFeaturedPhotosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazeFeaturedPhotosViewController.h; sourceTree = "<group>"; };
@@ -2328,6 +2331,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B46BFF1D18A2911A0086CCD5 /* Site */ = {
+			isa = PBXGroup;
+			children = (
+				B4B449B71836058A00121667 /* FindSiteViewController.h */,
+				B4B449B81836058A00121667 /* FindSiteViewController.m */,
+				B4B449BD183606CC00121667 /* SelectSiteTableViewController.h */,
+				B4B449BE183606CC00121667 /* SelectSiteTableViewController.m */,
+				B4B449BA1836064900121667 /* SelectStateViewController.h */,
+				B4B449BB1836064900121667 /* SelectStateViewController.m */,
+			);
+			name = Site;
+			sourceTree = "<group>";
+		};
 		B482E237185B5D6900CEFF0A /* GridIron */ = {
 			isa = PBXGroup;
 			children = (
@@ -2642,16 +2658,10 @@
 				B41432491835FA6B0081ED15 /* EazeUserSettingsViewController.m */,
 				B46A3C0B18352446004B35BA /* EazesVideosViewController.h */,
 				B46A3C0C18352446004B35BA /* EazesVideosViewController.m */,
-				B4B449B71836058A00121667 /* FindSiteViewController.h */,
-				B4B449B81836058A00121667 /* FindSiteViewController.m */,
 				B48AA3511835A0020055D41B /* NewBlogViewController.h */,
 				B48AA3521835A0020055D41B /* NewBlogViewController.m */,
 				B4A87AF81832F4AA00E492D0 /* PlayerInfoViewController.h */,
 				B4A87AF91832F4AA00E492D0 /* PlayerInfoViewController.m */,
-				B4B449BD183606CC00121667 /* SelectSiteTableViewController.h */,
-				B4B449BE183606CC00121667 /* SelectSiteTableViewController.m */,
-				B4B449BA1836064900121667 /* SelectStateViewController.h */,
-				B4B449BB1836064900121667 /* SelectStateViewController.m */,
 				B414324B1835FB800081ED15 /* SettingsViewController.h */,
 				B414324C1835FB800081ED15 /* SettingsViewController.m */,
 				B4FBD2481833DDAF004EE52B /* sportzteamsMovieViewController.h */,
@@ -2660,6 +2670,7 @@
 				B4FBD2431833DCF7004EE52B /* sportzteamsPhotoDescriptionViewController.m */,
 				B4FBD23F1833DCC4004EE52B /* sportzteamsPhotoInfoViewController.h */,
 				B4FBD2401833DCC4004EE52B /* sportzteamsPhotoInfoViewController.m */,
+				B46BFF1D18A2911A0086CCD5 /* Site */,
 			);
 			path = EazeFutbol;
 			sourceTree = "<group>";
@@ -3062,6 +3073,7 @@
 		B4F9883718208AC70093EF7E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B46BFF1E18A2EC680086CCD5 /* Countries.plist */,
 				B4AA0BBF182154E100E39B32 /* USStateAbbreviations.plist */,
 				B4F9883818208AC70093EF7E /* EazeSportz-Info.plist */,
 				B4F9883918208AC70093EF7E /* InfoPlist.strings */,
@@ -3384,6 +3396,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B46BFF2018A2EC880086CCD5 /* Countries.plist in Resources */,
 				B42F43EC18941C420070F3BB /* arrow-big-01.png in Resources */,
 				B42F43ED18941C420070F3BB /* arrow-big-02.png in Resources */,
 				B42F43EE18941C420070F3BB /* Small-triangle-red-left.png in Resources */,
@@ -3648,6 +3661,7 @@
 				B4F988B31820BDE00093EF7E /* photo_not_available.png in Resources */,
 				B4F9883B18208AC70093EF7E /* InfoPlist.strings in Resources */,
 				B415933718277B0F0010BAAA /* whistle.png in Resources */,
+				B46BFF1F18A2EC680086CCD5 /* Countries.plist in Resources */,
 				B41593251826E9960010BAAA /* playbutton_cripped.png in Resources */,
 				B4F9884418208AC70093EF7E /* Main.storyboard in Resources */,
 				B4F988B21820BDE00093EF7E /* phone-book.png in Resources */,

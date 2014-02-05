@@ -8,7 +8,6 @@
 
 #import "SelectSiteTableViewController.h"
 #import "EazesportzAppDelegate.h"
-#import "sportzServerInit.h"
 #import "sportzteamsRegisterLoginViewController.h"
 #import "EazesportzRetrieveSport.h"
 
@@ -25,6 +24,7 @@
 @synthesize state;
 @synthesize sitename;
 @synthesize city;
+@synthesize country;
 @synthesize zipcode;
 @synthesize sportname;
 
@@ -67,8 +67,10 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSport:) name:@"SportChangedNotification" object:nil];
 
-    if ((state.length > 0) || (zipcode.length > 0) || (city.length > 0) || (sitename.length > 0) || (sportname.length > 0)) {
-        NSURL *url = [NSURL URLWithString:[sportzServerInit getSiteList:state Zip:zipcode City:city SiteName:sitename Sportname:sportname]];
+    if (((state.length > 0) || (zipcode.length > 0) || (city.length > 0) || (sitename.length > 0) || (country.length > 0)) && (sportname.length > 0)) {
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@%@",
+                                           [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports.json?sport=",
+                                           sportname, @"&zip=", zipcode, @"&city=", city, @"&state=", state, @"&sitename=", sitename, @"&country=", country]];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         NSURLResponse* response;
         NSError *error = nil;
@@ -76,19 +78,31 @@
         if ([(NSHTTPURLResponse*)response statusCode] == 200) {
             NSArray *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
             siteList = [[NSMutableArray alloc] init];
-            for (int i = 0; i < [serverData count]; i++) {
-                Sport *asport = [[Sport alloc] initWithDictionary:[serverData objectAtIndex:i]];
-                 
-                if ((asport.approved) && ([asport.teamcount intValue] > 0))
-                    [siteList addObject:asport];
+            
+            if (serverData.count > 0) {
+                for (int i = 0; i < [serverData count]; i++) {
+                    Sport *asport = [[Sport alloc] initWithDictionary:[serverData objectAtIndex:i]];
+                     
+                    if ((asport.approved) && ([asport.teamcount intValue] > 0))
+                        [siteList addObject:asport];
+                }
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice!" message:@"No Sites match search cirteria!" delegate:nil
+                                                      cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
             }
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Retrieving Site List" delegate:nil
                                                   cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"You must select a sport name and at least one other search criteria!"
+                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
     }
     [_siteTableView reloadData];
 }
@@ -129,7 +143,9 @@
 
     cell.imageView.image = [asport getImage:@"tiny"];
     cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:12.0];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@%@%@", asport.mascot, @"   ", asport.city, @" ", asport.state];;
+    cell.detailTextLabel.numberOfLines = 0;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", asport.mascot, @"   ", asport.city, @" ",
+                                 asport.state, @" ", asport.zip, @" ", asport.country];;
     
     return cell;
 }

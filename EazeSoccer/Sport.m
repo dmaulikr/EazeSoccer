@@ -19,6 +19,7 @@
 @synthesize zip;
 @synthesize state;
 @synthesize city;
+@synthesize country;
 @synthesize banner;
 @synthesize season;
 @synthesize name;
@@ -70,6 +71,7 @@
         zip = [sportDictionary objectForKey:@"zip"];
         state = [sportDictionary objectForKey:@"state"];
         city = [sportDictionary objectForKey:@"city"];
+        country = [sportDictionary objectForKey:@"country"];
         sport_logo_thumb = [sportDictionary objectForKey:@"sport_logo_thumb"];
         sport_logo_tiny = [sportDictionary objectForKey:@"sport_logo_tiny"];
         banner = [sportDictionary objectForKey:@"banner_url"];

@@ -86,9 +86,7 @@
         
         [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
                                      Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
-    }
-    
-    if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid)) {
+    } else if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid)) {
         [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
         [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
         [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
@@ -124,7 +122,11 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
-        if (currentSettings.sport.id.length > 0) {
+        if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid.length > 0)) {
+            [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+            [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+            [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+            [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
             [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
                                                               Token:currentSettings.user.authtoken];
         }
