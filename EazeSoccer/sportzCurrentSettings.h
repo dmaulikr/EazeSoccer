@@ -53,6 +53,7 @@
 
 @property(nonatomic, strong) UIWindow *rootwindow;
 @property(nonatomic, assign) BOOL sitechanged;
+@property(nonatomic, assign) BOOL changesite;
 
 - (UIImage *)getBannerImage;
 

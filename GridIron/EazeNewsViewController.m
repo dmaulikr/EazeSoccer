@@ -85,7 +85,8 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSportData:) name:@"SportChangedNotification" object:nil];
         [[[EazesportzRetrieveSport alloc] init] retrieveSport:content Token:currentSettings.user.authtoken];
-    } else if (currentSettings.sport.id.length == 0) {
+    } else if (currentSettings.changesite) {
+        currentSettings.changesite = NO;
         [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
     } else if ([currentSettings.sport isPackageEnabled]) {
         if (currentSettings.teams.count == 1) {

@@ -46,6 +46,7 @@
 
 @synthesize rootwindow;
 @synthesize sitechanged;
+@synthesize changesite;
 
 - (id)init {
     if (self = [super init]) {

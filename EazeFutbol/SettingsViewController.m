@@ -200,7 +200,7 @@
 }
 
 - (IBAction)siteButtonClicked:(id)sender {
-    currentSettings.sport.id = @"";
+    currentSettings.changesite = YES;
     UITabBarController *tabBarController = self.tabBarController;
     
     for (UIViewController *viewController in tabBarController.viewControllers) {

@@ -68,9 +68,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSport:) name:@"SportChangedNotification" object:nil];
 
     if (((state.length > 0) || (zipcode.length > 0) || (city.length > 0) || (sitename.length > 0) || (country.length > 0)) && (sportname.length > 0)) {
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@%@",
+        NSString *astring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@%@%@",
                                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports.json?sport=",
-                                           sportname, @"&zip=", zipcode, @"&city=", city, @"&state=", state, @"&sitename=", sitename, @"&country=", country]];
+                                           sportname, @"&zip=", zipcode, @"&city=", city, @"&state=", state, @"&sitename=", sitename, @"&country=", country];
+        NSString* webStringURL = [astring stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURL *url = [NSURL URLWithString:webStringURL];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         NSURLResponse* response;
         NSError *error = nil;
@@ -153,6 +155,7 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    currentSettings.sport.id = @"";
     sport = [siteList objectAtIndex:indexPath.row];
     [[[EazesportzRetrieveSport alloc] init] retrieveSport:sport.id Token:currentSettings.user.authtoken];
 }

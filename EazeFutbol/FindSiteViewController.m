@@ -53,6 +53,7 @@
 //    _stateTextField.inputView = selectStateController.inputView;
     _sportTextField.inputView = _sportPicker.inputView;
     _siteselectView.layer.cornerRadius = 6;
+    stateabreviation = @"";
     
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Countries" ofType:@"plist"];
     NSArray *temparray = [[NSArray alloc] initWithContentsOfFile:plistPath];
@@ -97,8 +98,7 @@
     _countryPicker.hidden = YES;
     _statePicker.hidden = YES;
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                                                           @"/home.json"]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/home.json"]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSURLResponse* response;
     NSError *error = nil;
@@ -169,7 +169,7 @@
     } else if ([segue.identifier isEqualToString:@"SelectSiteSegue"]) {
         SelectSiteTableViewController *selectSiteController = segue.destinationViewController;
 //        selectSiteController.state = selectStateController.stateabreviation;
-        selectSiteController.state = _stateTextField.text;
+        selectSiteController.state = stateabreviation;
         selectSiteController.zipcode = _zipcodeTextfield.text;
         selectSiteController.city = _cityTextField.text;
         selectSiteController.country = country;
@@ -215,10 +215,11 @@
     } else if (pickerView == _countryPicker) {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
         _countryTextField.text = [subDict objectForKey:@"name"];
-        country = [subDict objectForKey:@"code"];
+        country = [subDict objectForKey:@"name"];
         _countryPicker.hidden = YES;
     } else {
-        _stateTextField.text = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
+        _stateTextField.text = [stateList objectAtIndex:row];
+        stateabreviation = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
         _statePicker.hidden = YES;
     }
 }
