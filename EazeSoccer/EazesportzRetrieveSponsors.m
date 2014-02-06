@@ -45,10 +45,12 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
+/*
     UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
     [errorView show];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+ */
+    NSLog(@"%@%d", @"Error retrieving sponsors", error.code);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
