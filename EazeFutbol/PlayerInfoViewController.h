@@ -30,5 +30,11 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *videoButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
 - (IBAction)statButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *yearTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *positionTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *heightTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *weightTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *followPlayerLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bioLabel;
 
 @end

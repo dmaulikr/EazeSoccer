@@ -40,9 +40,13 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    _gameButton.layer.cornerRadius = 4;
-    photoNameLabel.layer.cornerRadius = 4;
-    _playerTableView.layer.cornerRadius = 4;
+    _gameButton.layer.cornerRadius = 6;
+    photoNameLabel.layer.cornerRadius = 6;
+    _playerTableView.layer.cornerRadius = 6;
+    _descriptionLabel.layer.cornerRadius = 6;
+    _photoTitleLabel.layer.cornerRadius = 6;
+    _gameTagLabel.layer.cornerRadius = 6;
+    _playersTagLabel.layer.cornerRadius = 6;
 //    self.view.backgroundColor = [UIColor clearColor];
 }
 

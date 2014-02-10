@@ -58,6 +58,20 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 //    self.view.backgroundColor = [UIColor clearColor];
+    nameLabel.layer.cornerRadius = 6;
+    yearLabel.layer.cornerRadius = 6;
+    positionLabel.layer.cornerRadius = 6;
+    heightLabel.layer.cornerRadius = 6;
+    weightLabel.layer.cornerRadius = 6;
+    positionLabel.layer.cornerRadius = 6;
+    _yearTitleLabel.layer.cornerRadius = 6;
+    _heightTitleLabel.layer.cornerRadius = 6;
+    _followPlayerLabel.layer.cornerRadius = 6;
+    _bioLabel.layer.cornerRadius = 6;
+    _positionTitleLabel.layer.cornerRadius = 6;
+    _weightTitleLabel.layer.cornerRadius = 6;
+    _bioTextView.layer.cornerRadius = 6;
+    
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.photoButton, self.videoButton, self.alertButton, self.statsButton, nil];
     
     self.navigationController.toolbarHidden = YES;

@@ -43,6 +43,8 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
+    _gameButton.layer.cornerRadius = 6;
+    _playerTagTableView.layer.cornerRadius = 6;
 }
 
 -(BOOL)shouldAutorotate {

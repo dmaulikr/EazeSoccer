@@ -95,31 +95,34 @@
     if ([blog.athlete length] > 0) {
         _playerButton.enabled = YES;
         [_playerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        _playerNameLabel.text = [[currentSettings findAthlete:blog.athlete] logname];
+        [_playerButton setTitle:[[currentSettings findAthlete:blog.athlete] logname] forState:UIControlStateNormal];
     } else {
         _playerButton.enabled = NO;
         [_playerButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-        _playerNameLabel.hidden = YES;
+        [_playerButton setTitle:@"None" forState:UIControlStateNormal];
+        _playerButton.hidden = YES;
     }
     
     if ([blog.coach length] > 0) {
         _coachButton.enabled = YES;
         [_coachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        _coachNameLabel.text = [[currentSettings findCoach:blog.coach] fullname];
+        [_coachButton setTitle:[[currentSettings findCoach:blog.coach] fullname] forState:UIControlStateNormal];
     } else {
         [_coachButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-        _coachNameLabel.hidden = YES;
+        [_coachButton setTitle:@"None" forState:UIControlStateNormal];
         _coachButton.enabled = NO;
+        _coachButton.hidden = YES;
     }
     
     if ([blog.gameschedule length] > 0) {
         _gameButton.enabled = YES;
         [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        _gameNameLabel.text = [NSString stringWithFormat:@"%@%@", @"vs ", [[currentSettings findGame:blog.gameschedule] opponent]];
+        [_gameButton setTitle:[[currentSettings findGame:blog.gameschedule] opponent] forState:UIControlStateNormal];
     } else {
         [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [_gameButton setTitle:[[currentSettings findGame:blog.gameschedule] opponent] forState:UIControlStateNormal];
         _gameButton.enabled = NO;
-        _gameNameLabel.hidden = YES;
+        _gameButton.hidden = YES;
     }
     
     if (currentSettings.user.userid.length == 0) {

@@ -18,5 +18,9 @@
 @property (weak, nonatomic) IBOutlet UITableView *playerTableView;
 @property (weak, nonatomic) IBOutlet UIButton *gameButton;
 - (IBAction)gameButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *playersTagLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameTagLabel;
+@property (weak, nonatomic) IBOutlet UILabel *photoTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
 @end

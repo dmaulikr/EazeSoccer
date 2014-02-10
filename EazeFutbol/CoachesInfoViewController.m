@@ -37,12 +37,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    self.years.layer.cornerRadius = 4;
+    self.years.layer.cornerRadius = 6;
     bioTextVeiw.editable = NO;
-    bioTextVeiw.layer.cornerRadius = 4;
-    self.staffPosition.layer.cornerRadius = 4;
+    bioTextVeiw.layer.cornerRadius = 6;
+    self.staffPosition.layer.cornerRadius = 6;
     staffPosition.numberOfLines = 2;
-
+    _yearsonstaffLabel.layer.cornerRadius = 6;
+    _bioLabel.layer.cornerRadius = 6;
 }
 
 -(BOOL)shouldAutorotate {

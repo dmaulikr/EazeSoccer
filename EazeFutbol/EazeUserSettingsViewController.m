@@ -43,14 +43,14 @@
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
     
-    _bioLabel.layer.cornerRadius = 4;
-    _blogLabel.layer.cornerRadius = 4;
-    _statsLabel.layer.cornerRadius = 4;
-    _scoreLabel.layer.cornerRadius = 4;
-    _mediaLabel.layer.cornerRadius = 4;
-    _alertLabel.layer.cornerRadius = 4;
-    _camerarollButton.layer.cornerRadius = 4;
-    _camerabutton.layer.cornerRadius = 4;
+    _bioLabel.layer.cornerRadius = 6;
+    _blogLabel.layer.cornerRadius = 6;
+    _statsLabel.layer.cornerRadius = 6;
+    _scoreLabel.layer.cornerRadius = 6;
+    _mediaLabel.layer.cornerRadius = 6;
+    _alertLabel.layer.cornerRadius = 6;
+    _camerarollButton.layer.cornerRadius = 6;
+    _camerabutton.layer.cornerRadius = 6;
 
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
     [_scrollView addGestureRecognizer:singleTap];
