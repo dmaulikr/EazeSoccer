@@ -40,8 +40,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    _newsTextView.layer.cornerRadius = 4;
-    _titleLabel.layer.cornerRadius = 4;
+    _newsTextView.layer.cornerRadius = 6;
+    _titleLabel.layer.cornerRadius = 6;
+    _coachButton.layer.cornerRadius = 6;
+    _athleteButton.layer.cornerRadius = 6;
+    _gameButton.layer.cornerRadius = 6;
     _newsTextView.editable = NO;
     
 }
