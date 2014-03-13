@@ -36,7 +36,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+//    self.view.backgroundColor = [UIColor clearColor];
     self.years.layer.cornerRadius = 6;
     bioTextVeiw.editable = NO;
     bioTextVeiw.layer.cornerRadius = 6;

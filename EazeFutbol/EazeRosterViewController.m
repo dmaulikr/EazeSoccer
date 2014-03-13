@@ -30,7 +30,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.coachesButton, self.searchButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -71,7 +71,8 @@
     cell.playernameLabel.text = aplayer.name;
     cell.playerNumberLabel.text = [aplayer.number stringValue];
     cell.playerPositionLabel.text = aplayer.position;
-    cell.rosterImage.image = [aplayer getImage:@"tiny"];
+    
+    cell.rosterImage.image = aplayer.tinyimage;
     
     if ([currentSettings hasAlerts:aplayer.athleteid] == NO)
         cell.alertImage.image = nil;

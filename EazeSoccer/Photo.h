@@ -23,8 +23,15 @@
 @property(nonatomic, strong) NSString *large_url;
 @property(nonatomic, strong) NSString *gamelog;
 
+@property(nonatomic, strong) NSString *sport_id;
+@property(nonatomic, strong) NSString *team_id;
+
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) NSMutableArray *athletes;
+
+@property(nonatomic, strong) UIImage *mediumimage;
+@property(nonatomic, strong) UIImage *thumbimage;
+@property(nonatomic, strong) UIImage *largeimage;
 
 - (id)initWithDirectory:(NSDictionary *)items;
 

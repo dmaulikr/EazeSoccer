@@ -173,7 +173,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Contacts";
+    return currentSettings.sport.sitename;
 }
 
 @end

@@ -45,12 +45,8 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
- /*
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-  */
-    NSLog(@"%@%d", @"Error retrieving players", error.code);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"RosterChangedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error ", @"Result", nil]];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -62,13 +58,11 @@
         for (int i = 0; i < [serverData count]; i++ ) {
             [currentSettings.roster addObject:[[Athlete alloc] initWithDictionary:[serverData objectAtIndex:i]]];
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RosterChangedNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RosterChangedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        //        NSDictionary *errordict = [[NSDictionary alloc] initWithObjects:serverData forKeys:@"error"];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Players" message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RosterChangedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error retrieving Roster data", @"Result", nil]];
     }
 }
 

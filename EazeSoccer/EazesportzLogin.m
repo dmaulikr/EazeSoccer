@@ -85,8 +85,8 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error Logging in - No network connection" delegate:nil
+                                              cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
     [errorView show];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
@@ -157,6 +157,84 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"LoginNotification" object:nil
                                                 userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error Retrieving User", @"Result" , nil]];
         }
+    }
+}
+
+- (User *)LoginSynchronous:(NSString *)loginemail Password:(NSString *)loginpassword {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *sport = [mainBundle objectForInfoDictionaryKey:@"sportzteams"];
+    sportzServerInit *serverInit = [sportzServerInit alloc];
+    NSURL *url = [NSURL URLWithString:[serverInit getLoginRequest]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSDictionary *userDict = [[NSDictionary alloc] initWithObjectsAndKeys:loginemail, @"email",loginpassword, @"password", sport, @"sport", nil];
+    
+    NSError *jsonSerializationError = nil;
+    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:userDict, @"user", nil];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:jsonData];
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *logindata = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", logindata);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    
+    if ([httpResponse statusCode] == 200) {
+        if ([password length] > 0) {
+            if ([KeychainWrapper createKeychainValue:password forIdentifier:PIN_SAVED]) {
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PIN_SAVED];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                NSLog(@"** password saved successfully to Keychain!!");
+            }
+        }
+        
+        NSDictionary *userdata = [logindata objectForKey:@"user"];
+        NSLog(@"%@", userdata);
+        
+        if([userdata count] > 0) {
+            currentSettings.user.email = [userdata objectForKey:@"email"];
+            
+            if ([KeychainWrapper createKeychainValue:currentSettings.user.email forIdentifier:GOMOBIEMAIL]) {
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GOMOBIEMAIL];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                NSLog(@"** email saved successfully to Keychain!!");
+            }
+            
+            currentSettings.user.authtoken = [logindata objectForKey:@"authentication_token"];
+            url = [NSURL URLWithString:[sportzServerInit getUser:[userdata objectForKey:@"_id"] Token:currentSettings.user.authtoken]];
+            request = [NSMutableURLRequest requestWithURL:url];
+            result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&jsonSerializationError];
+            long statusCode = [(NSHTTPURLResponse*)response statusCode];
+            userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+            
+            if (statusCode == 200) {
+                NSDictionary *userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+                currentSettings.user = [[User alloc] initWithDictionary:userdata];
+                return currentSettings.user;
+            } else {
+                UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to login. Are we connected to a network?"
+                                                                   delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+                [errorView show];
+                return nil;;
+            }
+        } else {
+            [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
+            [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
+            currentSettings.user.email = @"";
+            currentSettings.user.authtoken = @"";
+            currentSettings.user.username = @"";
+            currentSettings.user.userid = @"";
+            UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please activate your account using the email sent when you registered"
+                                                               delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+            [errorView show];
+            return nil;
+        }
+    } else {
+        return nil;;
     }
 }
 

@@ -134,7 +134,7 @@
             image = sportimage;
     } else if ([size isEqualToString:@"thumb"]) {        
         if (([sport_logo_thumb isEqualToString:@"/sport_logos/thumb/missing.png"]) || (sport_logo_thumb.length == 0)) {
-            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+            image = [UIImage imageNamed:@"photo_not_available.png"];
         } else if (((sportimage.CIImage == nil) && (sportimage.CGImage == nil)) || (![logosize isEqualToString:@"thumb"])) {
             NSURL * imageURL = [NSURL URLWithString:sport_logo_thumb];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];

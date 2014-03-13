@@ -13,5 +13,6 @@
 @property(nonatomic, strong) NSMutableArray *teams;
 
 - (void)retrieveTeams:(NSString *)sportid Token:(NSString *)authtoken;
+- (NSMutableArray *)retrieveTeamsSynchronous:(NSString *)sportid Token:(NSString *)authtoken;
 
 @end

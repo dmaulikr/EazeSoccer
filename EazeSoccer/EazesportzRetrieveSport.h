@@ -13,5 +13,6 @@
 @interface EazesportzRetrieveSport : NSObject
 
 - (void)retrieveSport:(NSString *)sport Token:(NSString *)authtoken;
+- (Sport *)retrieveSportSynchronous:(NSString *)sport Token:(NSString *)authtoken ;
 
 @end

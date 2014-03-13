@@ -47,6 +47,9 @@
 @property(nonatomic, assign) BOOL gameisfinal;
 @property(nonatomic, strong) NSNumber *togo;
 
+@property(nonatomic, strong) NSDate *gamedatetime;
+@property(nonatomic, strong) UIImage *vsimage;
+
 @property(nonatomic, strong) NSNumber *homescore;
 @property(nonatomic, strong) NSNumber *opponentscore;
 @property(nonatomic, strong) NSNumber *hometimeouts;

@@ -76,6 +76,8 @@
             _usernameLabel.text = @"No User Logged in!";
         }
     }
+    
+    _contactLabel.text = currentSettings.sport.sitename;
 }
 
 - (IBAction)logoutButtonClicked:(id)sender {

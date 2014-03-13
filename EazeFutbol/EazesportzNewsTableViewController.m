@@ -80,8 +80,6 @@
     }
     
     _teamPicker.hidden = YES;
-    
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

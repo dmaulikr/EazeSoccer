@@ -63,6 +63,7 @@
     
     [self.scrollView addGestureRecognizer:swipeLeft];
     [self.scrollView addGestureRecognizer:swipeRight];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.photosButton, self.videoButton, nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,10 +75,17 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFeaturedPhotos:) name:@"FeaturedPhotosChangedNotification" object:nil];
-    getPhotos = [[EazesportzRetrieveFeaturedPhotos alloc] init];
-    [getPhotos retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
     currentphoto = 0;
+    
+    if (currentSettings.featuredPhotos.count > 0)
+        [self displayPhoto:[currentSettings.featuredPhotos objectAtIndex:0]];
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                        message:[NSString stringWithFormat:@"%@%@", @"No photos featured for ", currentSettings.team.team_name]
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 - (void)gotFeaturedPhotos:(NSNotification *)notification {
@@ -154,17 +162,19 @@
     if (subview)
         [subview removeFromSuperview];
     
-    NSURL * imageURL = [NSURL URLWithString:[photo large_url]];
-    NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-    UIImage * image = [UIImage imageWithData:imageData];
+    for (;;) {
+        if (photo.largeimage)
+            sleep(1);
+            break;
+    }
     
-    self.animage = [[UIImageView alloc] initWithImage:image];
-    self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=image.size};
+    self.animage = [[UIImageView alloc] initWithImage:photo.largeimage];
+    self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=photo.largeimage.size};
     [self.scrollView addSubview:self.animage];
     subview = self.animage;
     
     // 2
-    self.scrollView.contentSize = image.size;
+    self.scrollView.contentSize = photo.largeimage.size;
     // 4
     CGRect scrollViewFrame = self.scrollView.frame;
     CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
@@ -189,9 +199,9 @@
 }
 
 - (void)nextFeaturedPhoto {
-    if (currentphoto < getPhotos.featuredphotos.count - 1) {
+    if (currentphoto < currentSettings.featuredPhotos.count - 1) {
         currentphoto++;
-        [self displayPhoto:[getPhotos.featuredphotos objectAtIndex:currentphoto]];
+        [self displayPhoto:[currentSettings.featuredPhotos objectAtIndex:currentphoto]];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                         message:[NSString stringWithFormat:@"%@%@", @"No more photos to display for ", currentSettings.team.team_name]
@@ -204,7 +214,7 @@
 - (void)backFeaturedPhoto {
     if (currentphoto > 0) {
         currentphoto--;
-        [self displayPhoto:[getPhotos.featuredphotos objectAtIndex:currentphoto]];
+        [self displayPhoto:[currentSettings.featuredPhotos objectAtIndex:currentphoto]];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                                         message:[NSString stringWithFormat:@"%@%@", @"No more photos to display for ", currentSettings.team.team_name]

@@ -15,6 +15,7 @@
 #import "CoachesInfoViewController.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "EazeBasketballGameSummaryViewController.h"
+#import "EazeFootballGameSummaryViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -39,7 +40,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+//    self.view.backgroundColor = [UIColor clearColor];
     _newsTextView.layer.cornerRadius = 6;
     _titleLabel.layer.cornerRadius = 6;
     _coachButton.layer.cornerRadius = 6;
@@ -86,13 +87,13 @@
     // Add image
     
     if (newsitem.athlete.length > 0) {
-        _imageView.image = [[currentSettings findAthlete:newsitem.athlete] getImage:@"thumb"];
+        _imageView.image = [currentSettings normalizedImage:[[currentSettings findAthlete:newsitem.athlete] getImage:@"thumb"] scaledToSize:125];
     } else if (newsitem.coach.length > 0) {
-        _imageView.image = [[currentSettings findCoach:newsitem.coach] getImage:@"thumb"];
+        _imageView.image = [currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"thumb"] scaledToSize:125];
     } else if (newsitem.team.length > 0) {
-        _imageView.image = [[currentSettings findTeam:newsitem.team] getImage:@"thumb"];
+        _imageView.image = [currentSettings normalizedImage:[[currentSettings findTeam:newsitem.team] getImage:@"thumb"] scaledToSize:125];
     } else {
-        _imageView.image = [currentSettings.sport getImage:@"thumb"];
+        _imageView.image = [currentSettings normalizedImage:[currentSettings.sport getImage:@"thumb"] scaledToSize:125];
     }
     
     [_newsTextView setText:newsitem.news];
@@ -117,6 +118,9 @@
         destController.game = [currentSettings findGame:newsitem.game];
     } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
         EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = [currentSettings findGame:newsitem.game];
+    } else if ([segue.identifier isEqualToString:@"FootballGameInfoSegue"]) {
+        EazeFootballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:newsitem.game];
     }
 }
@@ -146,6 +150,16 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+- (IBAction)gameButtonClicked:(id)sender {
+    if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
+    } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+        [self performSegueWithIdentifier:@"BasketballGameInfoSegue" sender:self];
+    } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+        [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
+    }
 }
 
 @end

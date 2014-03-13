@@ -24,5 +24,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *countryTextField;
 @property (weak, nonatomic) IBOutlet UIPickerView *countryPicker;
 @property (weak, nonatomic) IBOutlet UIPickerView *statePicker;
+@property (weak, nonatomic) IBOutlet UIButton *submitButton;
 
 @end

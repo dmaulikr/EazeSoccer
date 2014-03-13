@@ -18,4 +18,6 @@
 - (IBAction)profileButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *logoutButton;
 - (IBAction)siteButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *contactButtonClicked;
+@property (weak, nonatomic) IBOutlet UILabel *contactLabel;
 @end

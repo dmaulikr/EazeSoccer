@@ -13,8 +13,9 @@
 #import "SelectSiteTableViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
+#import <CoreLocation/CoreLocation.h>
 
-@interface FindSiteViewController ()
+@interface FindSiteViewController () <CLLocationManagerDelegate>
 
 @end
 
@@ -33,6 +34,8 @@
     Sport *sport;
     
     SelectStateViewController *selectStateController;
+    CLLocationManager *locationManager;
+    CLLocation *currentLocation;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -64,6 +67,37 @@
     stateDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
     NSArray * keys = [stateDictionary allKeys];
     stateList = [keys sortedArrayUsingSelector:@selector(compare:)];
+    
+    // set up location manager
+    locationManager = [[CLLocationManager alloc] init];
+    [locationManager setDelegate:self];
+    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+    [locationManager startUpdatingLocation];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    CLLocation * userLocation = [locations lastObject];
+    NSLog(@"Detected Location : %f, %f", userLocation.coordinate.latitude, userLocation.coordinate.longitude);
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
+    
+    [geocoder reverseGeocodeLocation:userLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+        if (error){
+            NSLog(@"Geocode failed with error: %@", error);
+            return;
+        }
+        CLPlacemark *placemark = [placemarks objectAtIndex:0];
+        NSLog(@"placemark.ISOcountryCode %@",placemark.ISOcountryCode);
+        NSLog(@"placemark.country %@", placemark.country);
+        NSLog(@"placemark.city %@", placemark.subLocality);
+        NSLog(@"placemark.zipcode %@", placemark.postalCode);
+        NSLog(@"placemark.administrativeArea %@", placemark.administrativeArea);
+        _countryTextField.text = placemark.country;
+//        _cityTextField.text = placemark.locality;
+        _stateTextField.text = placemark.administrativeArea;
+        _zipcodeTextfield.text = placemark.postalCode;
+    }];
+    
+    [locationManager stopUpdatingLocation];
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,6 +121,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if ((currentSettings.changesite) && (currentSettings.sport.id.length == 0)) {
+        self.navigationItem.hidesBackButton = YES;
+        self.tabBarController.tabBar.hidden = YES;
+    }
+    
     _stateTextField.text = @"";
     _zipcodeTextfield.text = @"";
     _sitenameTextField.text = @"";
@@ -122,13 +162,29 @@
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (self.isMovingFromParentViewController || self.isBeingDismissed) {
+        if ((!_submitButton.isHighlighted) && (currentSettings.changesite))
+            currentSettings.changesite = NO;
+            
+    }
+}
+
 - (IBAction)submitButtonClicked:(id)sender {
     if (((_zipcodeTextfield.text.length > 0) || (_cityTextField.text.length > 0) || (_sitenameTextField.text.length > 0) ||
         (_stateTextField.text.length > 0) || (_countryTextField.text.length > 0)) && (_sportTextField.text.length > 0)) {
         [self performSegueWithIdentifier:@"SelectSiteSegue" sender:self];
      } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Please enter valid search criteria! At least Sport is required."
-                                                       delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!"
+                                        message:@"Please enter valid search criteria! At least Country and Sport is required."
+                                        delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
         
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -169,10 +225,10 @@
     } else if ([segue.identifier isEqualToString:@"SelectSiteSegue"]) {
         SelectSiteTableViewController *selectSiteController = segue.destinationViewController;
 //        selectSiteController.state = selectStateController.stateabreviation;
-        selectSiteController.state = stateabreviation;
+        selectSiteController.state = _stateTextField.text;
         selectSiteController.zipcode = _zipcodeTextfield.text;
         selectSiteController.city = _cityTextField.text;
-        selectSiteController.country = country;
+        selectSiteController.country = _countryTextField.text;
         selectSiteController.sitename = _sitenameTextField.text;
         selectSiteController.sportname = _sportTextField.text;
     } else if ([segue.identifier isEqualToString:@"RegisterSiteLoginSegue"]) {
@@ -218,8 +274,8 @@
         country = [subDict objectForKey:@"name"];
         _countryPicker.hidden = YES;
     } else {
-        _stateTextField.text = [stateList objectAtIndex:row];
-        stateabreviation = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
+        _stateTextField.text = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
+//        stateabreviation = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
         _statePicker.hidden = YES;
     }
 }

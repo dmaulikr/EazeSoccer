@@ -7,7 +7,6 @@
 //
 
 #import "EazeFeaturedVideosViewController.h"
-#import "EazesportzRetrieveFeaturedVideosController.h"
 #import "EazesportzAppDelegate.h"
 #import "Video.h"
 #import "VideoCell.h"
@@ -18,8 +17,6 @@
 @end
 
 @implementation EazeFeaturedVideosViewController {
-    EazesportzRetrieveFeaturedVideosController *getVideos;
-    
     int currentvideo;
 }
 
@@ -48,16 +45,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotFeaturedVideos:) name:@"FeaturedVideosChangedNotification" object:nil];
-    getVideos = [[EazesportzRetrieveFeaturedVideosController alloc] init];
-    [getVideos retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
     currentvideo = 0;
-}
-
-- (void)gotFeaturedVideos:(NSNotification *)notification {
-    if (getVideos.featuredvideos.count > 0) {
+    
+    if (currentSettings.featuredVideos.count > 0)
         [_videoCollectionView reloadData];
-    } else {
+    else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                                         message:[NSString stringWithFormat:@"%@%@", @"No videos featured for ", currentSettings.team.team_name]
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -69,7 +61,7 @@
 #pragma mark - UICollectionView Datasource
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
-    return [getVideos.featuredvideos count];
+    return [currentSettings.featuredVideos count];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView {
@@ -80,11 +72,19 @@
     VideoCell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"VideoCell" forIndexPath:indexPath];
     cell.layer.cornerRadius = 6;
     cell.backgroundColor = [UIColor whiteColor];
-    Video *video = [getVideos.featuredvideos objectAtIndex:indexPath.row];
-    NSURL * imageURL = [NSURL URLWithString:video.poster_url];
-    NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-    UIImage * image = [UIImage imageWithData:imageData];
-    [cell.videoImage setImage:image];
+    Video *video = [currentSettings.featuredVideos objectAtIndex:indexPath.row];
+
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    //this will start the image loading in bg
+    dispatch_async(concurrentQueue, ^{
+        NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:video.poster_url]];
+        
+        //this will set the image when loading is finished
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [cell.videoImage setImage:[UIImage imageWithData:image]];
+        });
+    });
+    
     [cell.videoName setText:video.displayName];
     [cell.videoDuration setText:[NSString stringWithFormat:@"%d", video.duration.intValue]];
     
@@ -112,7 +112,7 @@
     if ([segue.identifier isEqualToString:@"VideoPlaySegue"]) {
         NSIndexPath *indexPath = [[_videoCollectionView indexPathsForSelectedItems] objectAtIndex:0];
         sportzteamsMovieViewController *destController = segue.destinationViewController;
-        destController.videoclip = [getVideos.featuredvideos objectAtIndex:indexPath.row];
+        destController.videoclip = [currentSettings.featuredVideos objectAtIndex:indexPath.row];
     }
 }
 

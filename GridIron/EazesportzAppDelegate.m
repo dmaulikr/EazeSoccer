@@ -18,15 +18,21 @@
 #import "EazesportzRetrieveAlerts.h"
 #import "EazesportzRetrieveCoaches.h"
 #import "EazesportzRetrieveSponsors.h"
+#import "EazesportzRetrieveTeams.h"
+#import "EazesportzRetrieveFeaturedPhotos.h"
+#import "EazesportzRetrieveFeaturedVideosController.h"
 
 #import <AWSRuntime/AmazonErrorHandler.h>
 
-@implementation EazesportzAppDelegate
+@implementation EazesportzAppDelegate {
+    EazesportzRetrieveTeams *getTeams;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
     currentSettings = [[sportzCurrentSettings alloc] init];
+
     NSArray *paths = NSSearchPathForDirectoriesInDomains
     (NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -37,10 +43,9 @@
     
     NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"currentsport.txt"];
     NSString *content = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+    UIImageView *myGraphic;
     
     if (content) {
-        UIImageView *myGraphic;
-        
         if ([content isEqualToString:@"Football"]) {
             myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg-640x1136.png"]];
         } else if ([content isEqualToString:@"Basketball"]) {
@@ -48,19 +53,34 @@
         } else if ([content isEqualToString:@"Soccer"]) {
             myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"soccer-640x1136"]];
         }
-        
-        [self.window.rootViewController.view addSubview: myGraphic];
-        [self.window.rootViewController.view sendSubviewToBack: myGraphic];
+    } else {
+        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg-640x1136.png"]];
+        currentSettings.changesite = YES;
     }
     
-    currentSettings.sitechanged = YES;
+    [self.window.rootViewController.view addSubview: myGraphic];
+    [self.window.rootViewController.view sendSubviewToBack: myGraphic];
+    
     [AmazonErrorHandler shouldNotThrowExceptions];
     currentSettings.rootwindow = self.window;
     
     if ([KeychainWrapper searchKeychainCopyMatchingIdentifier:GOMOBIEMAIL] != nil) {  // Use keychain email and password
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
-        [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
-                                     Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
+//        [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
+//                                     Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
+        if ([[[EazesportzLogin alloc] init] LoginSynchronous: [KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
+                                                    Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]]) {
+            if (![currentSettings initS3Bucket]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Storage Access Issue. Please restart app!"
+                                                               delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
+            } else {
+                [self getSport];
+            }
+        }
+    } else if (content) {
+        [self getSport];
     }
     
     return YES;
@@ -87,10 +107,7 @@
         [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
                                      Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
     } else if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid)) {
-        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-        [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-        [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-        [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
+        [self getAllSportData];
     }
 }
 
@@ -106,10 +123,8 @@
 }
 
 - (void)loginResult:(NSNotification *)notification {
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSport:) name:@"SportChangedNotification" object:nil];
-    
-    //    [[[EazesportzRetrieveSport alloc] init] retrieveSport:currentSettings.user.authtoken];
     NSDictionary *result = [notification userInfo];
+    
     if (![[result valueForKey:@"Result"] isEqualToString:@"Success"]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:[result valueForKey:@"Result"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -122,28 +137,47 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
-        if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid.length > 0)) {
-            [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-            [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-            [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-            [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
-            [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                              Token:currentSettings.user.authtoken];
-        }
+        [self getAllSportData];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-/*
- - (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
- NSUInteger orientations = UIInterfaceOrientationMaskAllButUpsideDown;
- 
- if(self.window.rootViewController){
- UIViewController *presentedViewController = [[(UINavigationController *)self.window.rootViewController viewControllers] lastObject];
- orientations = [presentedViewController supportedInterfaceOrientations];
- }
- 
- return orientations;
- }
- */
+- (void)getAllSportData {
+    if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid.length > 0)) {
+        [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveFeaturedPhotos alloc] init] retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
+        [[[EazesportzRetrieveFeaturedVideosController alloc] init] retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
+        
+        if (currentSettings.user.authtoken.length > 0)
+            [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+    }
+    
+}
+
+- (void)getSport {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains
+    (NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *sitefilename = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/currentsite.txt", documentsDirectory] encoding:NSUTF8StringEncoding error:NULL];
+    
+    if (sitefilename != nil) {
+        [[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:sitefilename Token:currentSettings.user.authtoken];
+        getTeams = [[EazesportzRetrieveTeams alloc] init];
+        if ([getTeams retrieveTeamsSynchronous:currentSettings.sport.id Token:currentSettings.user.authtoken]) {
+            currentSettings.teams = getTeams.teams;
+            
+            if (currentSettings.teams.count == 1)
+                currentSettings.team = [currentSettings.teams objectAtIndex:0];
+            
+            [self getAllSportData];
+        }
+    } else {
+        currentSettings.changesite = YES;
+    }
+}
+
+
 @end

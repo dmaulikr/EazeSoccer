@@ -30,6 +30,9 @@
 @synthesize sponsors;
 @synthesize alerts;
 
+@synthesize featuredPhotos;
+@synthesize featuredVideos;
+
 @synthesize lastAlertUpdate;
 @synthesize lastGameUpdate;
 @synthesize getRoster;
@@ -53,6 +56,10 @@
         user = [[User alloc] init];
         sport = [Sport alloc];
         team = [Team alloc];
+        
+        featuredVideos = nil;
+        featuredPhotos = nil;
+        
         footballWR = [[NSMutableArray alloc] init];
         footballQB = [[NSMutableArray alloc] init];
         footballRB = [[NSMutableArray alloc] init];
@@ -455,7 +462,7 @@
     
 //    if (image.imageOrientation == UIImageOrientationUp) {
     
-    if (image.size.height < image.size.width) {
+    if (image.size.height == image.size.width) {
         switch (size) {
             case 50:
                 UIGraphicsBeginImageContext(CGSizeMake(50.0, 50.0));
@@ -465,6 +472,28 @@
             case 125:
                 UIGraphicsBeginImageContext(CGSizeMake(125.0, 125.0));
                 [image drawInRect:CGRectMake(0, 0 , 125.0, 125.0)];
+                break;
+                
+            case 512:
+                UIGraphicsBeginImageContext(CGSizeMake(512.0, 512));
+                [image drawInRect:CGRectMake(0, 0 , 512.0, 512)];
+                break;
+                
+            default:
+                UIGraphicsBeginImageContext(CGSizeMake(1024.0, 1024));
+                [image drawInRect:CGRectMake(0, 0 , 1024.0, 1024)];
+                break;
+        }
+    } else if (image.size.height < image.size.width) {
+        switch (size) {
+            case 50:
+                UIGraphicsBeginImageContext(CGSizeMake(75.0, 50.0));
+                [image drawInRect:CGRectMake(0, 0 , 75.0, 50.0)];
+                break;
+                
+            case 125:
+                UIGraphicsBeginImageContext(CGSizeMake(190.0, 125.0));
+                [image drawInRect:CGRectMake(0, 0 , 190.0, 125.0)];
                 break;
                 
             case 512:
@@ -480,13 +509,13 @@
     } else if (image.size.height > image.size.width) {
         switch (size) {
             case 50:
-                UIGraphicsBeginImageContext(CGSizeMake(50.0, 50.0));
-                [image drawInRect:CGRectMake(0, 0 , 50.0, 50.0)];
+                UIGraphicsBeginImageContext(CGSizeMake(50.0, 75.0));
+                [image drawInRect:CGRectMake(0, 0 , 50.0, 75.0)];
                 break;
                 
             case 125:
-                UIGraphicsBeginImageContext(CGSizeMake(125.0, 125.0));
-                [image drawInRect:CGRectMake(0, 0 , 125.0, 125.0)];
+                UIGraphicsBeginImageContext(CGSizeMake(125.0, 190.0));
+                [image drawInRect:CGRectMake(0, 0 , 125.0, 190.0)];
                 break;
                 
             case 512:

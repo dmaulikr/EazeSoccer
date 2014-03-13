@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import "User.h"
+
 @interface EazesportzLogin : NSObject
 
 - (void)Login:(NSString *)email Password:(NSString *)password;
 - (void)Login:(NSString *)email Password:(NSString *)password Site:(NSString *)site;
+- (User *)LoginSynchronous:(NSString *)loginemail Password:(NSString *)loginpassword;
 
 @end

@@ -39,10 +39,8 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SportChangedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network error", @"Result", nil]];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -60,6 +58,31 @@
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SportChangedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Failure", @"Result", nil]];
+    }
+}
+
+- (Sport *)retrieveSportSynchronous:(NSString *)sport Token:(NSString *)authtoken {
+    NSURL *url;
+    
+    if (authtoken)
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                       @"/sports/", sport, @".json?auth_token=", currentSettings.user.authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", sport, @".json"]];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *jsonSerializationError;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&jsonSerializationError];
+    long statusCode = [(NSHTTPURLResponse*)response statusCode];
+    NSDictionary *sportdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if (statusCode == 200) {
+        currentSettings.sport = [[Sport alloc] initWithDictionary:sportdata];
+        return currentSettings.sport;
+    } else {
+        return nil;
     }
 }
 

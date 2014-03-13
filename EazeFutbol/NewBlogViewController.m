@@ -54,9 +54,11 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+//    self.view.backgroundColor = [UIColor clearColor];
     _entryTextView.layer.cornerRadius = 4;
     _titleTextEtnry.layer.cornerRadius = 4;
+    _entryTextView.layer.borderWidth = 1.0f;
+    _entryTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     _playerTextField.inputView = playerController.inputView;
     _gameTextField.inputView = gameController.inputView;
     _coachTextField.inputView = coachController.inputView;

@@ -27,8 +27,18 @@
 @synthesize game;
 @synthesize gamelog;
 
+@synthesize thumbimage;
+@synthesize mediumimage;
+@synthesize largeimage;
+
+@synthesize sport_id;
+@synthesize team_id;
+
 - (id)init {
     if (self = [super init]) {
+        thumbimage = nil;
+        mediumimage = nil;
+        largeimage = nil;
         players = [[NSMutableArray alloc] init];
         athletes = [[NSMutableArray alloc] init];
         return self;
@@ -48,11 +58,13 @@
         else
             self.medium_url = @"";
         
-        if ((NSNull *)[items objectForKey:@"thumbnail_url"] != [NSNull null])
+        if ((NSNull *)[items objectForKey:@"thumbnail_url"] != [NSNull null]) {
             self.thumbnail_url = [items objectForKey:@"thumbnail_url"];
-        else
+            [self getImage:@"thumb"];
+        } else
             self.thumbnail_url = @"";
         
+        [self loadImages];
         self.description = [items objectForKey:@"description"];
         self.displayname = [items objectForKey:@"displayname"];
         self.teamid = [items objectForKey:@"teamid"];
@@ -61,6 +73,9 @@
         self.owner = [items objectForKey:@"user"];
         self.players = [items objectForKey:@"players"];
         self.gamelog = [items objectForKey:@"gamelog"];
+        
+        self.sport_id = [items objectForKey:@"sport_id"];
+        self.team_id = [items objectForKey:@"team_id"];
     
         return  self;
     } else {
@@ -113,6 +128,66 @@
     }
 
     return image;
+}
+
+- (void)loadImages {
+    if (thumbnail_url.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:thumbnail_url]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                thumbimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (medium_url.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:medium_url]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                mediumimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (large_url.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:large_url]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                largeimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        largeimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+}
+
+- (BOOL)saveImagesToDocuments:(UIImage *)image Size:(NSString *)imageSize {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    //make a file name to write the data to using the documents directory:
+    NSString *photofile = [documentsDirectory stringByAppendingPathComponent:sport_id];
+    photofile = [photofile stringByAppendingPathComponent:team_id];
+    photofile = [photofile stringByAppendingPathComponent:photoid];
+    NSData *data = UIImageJPEGRepresentation(image, 0.7);
+    [data writeToFile:photofile atomically:YES];
+    return YES;
 }
 
 @end

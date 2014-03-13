@@ -41,7 +41,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     if (currentSettings.sport.id.length == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please select a site before continuing"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please select a sport before continuing"
                                                        delegate:self cancelButtonTitle:@"Select Site" otherButtonTitles:nil, nil];
         
         [alert setAlertViewStyle:UIAlertViewStyleDefault];

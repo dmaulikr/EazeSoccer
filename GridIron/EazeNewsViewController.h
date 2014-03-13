@@ -11,13 +11,10 @@
 
 @interface EazeNewsViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UIPickerView *teamPicker;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraButton;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-- (IBAction)teamButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *contactsButton;
+@property (nonatomic, strong) NSMutableArray *news;
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @end

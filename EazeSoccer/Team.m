@@ -73,6 +73,8 @@
         else
             tiny_logo = @"";
         
+        [self getImage:@"tiny"];
+        
         if ([currentSettings.sport.name isEqualToString:@"Football"]) {
             fb_pass_players = [teamDictionary objectForKey:@"fb_pass_players"];
             fb_rush_players = [teamDictionary objectForKey:@"fb_rush_players"];

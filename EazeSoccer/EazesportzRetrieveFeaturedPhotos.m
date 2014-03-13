@@ -52,10 +52,8 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FeaturedPhotosChangedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result" , nil]];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -67,6 +65,8 @@
         for (int i = 0; i < serverData.count; i++) {
             [featuredphotos addObject:[[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]]];
         }
+        currentSettings.featuredPhotos = featuredphotos;
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FeaturedPhotosChangedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {

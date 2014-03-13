@@ -45,12 +45,8 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-/*
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
- */
-    NSLog(@"%@%d", @"Error retrieving coaches", error.code);    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"CoachListChangedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -64,11 +60,8 @@
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"CoachListChangedNotification" object:nil];
     } else {
-        //        NSDictionary *errordict = [[NSDictionary alloc] initWithObjects:serverData forKeys:@"error"];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Coaches" message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"CoachListChangedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error retrieving Coach data", @"Result", nil]];
     }
 }
 

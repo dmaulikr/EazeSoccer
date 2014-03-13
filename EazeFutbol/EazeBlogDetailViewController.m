@@ -49,6 +49,11 @@
     _coachButton.layer.cornerRadius = 4;
     _bloggerName.layer.cornerRadius = 4;
     _commentTextView.layer.cornerRadius = 4;
+    _blogEntry.layer.borderWidth = 1.0f;
+    _commentTextView.layer.borderWidth = 1.0f;
+    _blogEntry.layer.borderColor = [[UIColor blackColor] CGColor];
+    _commentTextView.layer.borderColor = [[UIColor blackColor] CGColor];
+    
     
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
     [_scrollView addGestureRecognizer:singleTap];
@@ -134,7 +139,8 @@
 }
 
 - (void)textViewShouldBeginEditing:(UITextView *)textView {
-    [textView setText:@""];
+    if (textView == _commentTextView)
+        [textView setText:@""];
 }
 
 -(void)hideKeyboard{
@@ -142,7 +148,6 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [_blogEntry setText:@""];
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
 }
@@ -204,9 +209,9 @@
     [theData appendData:data];
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {    
+    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Network Error - please make sure you're connected to either 3G or WI-FI"
+                                                       delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
     [errorView show];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }

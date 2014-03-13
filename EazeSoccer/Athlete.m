@@ -66,6 +66,10 @@
 - (id)init {
     if (self = [super init]) {
         imagesize = @"";
+        tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+
         if ([currentSettings.sport.name isEqualToString:@"Football"]) {
             football_passing_stats = [[NSMutableArray alloc] init];
             football_rushing_stats = [[NSMutableArray alloc] init];
@@ -120,7 +124,7 @@
         hasvideos = [[athleteDictionary objectForKey:@"hasvideos"] boolValue];
         hasphotos = [[athleteDictionary objectForKey:@"hasphotos"] boolValue];
         
-        [self getImage:@"tiny"];
+        [self loadImages];
         
         if ([currentSettings.sport.name isEqualToString:@"Football"]) {
             
@@ -564,11 +568,57 @@
             self.mediumimage = image;
             imagesize = size;
         } else
-            image = self.mediumimage;
-        
+            image = self.mediumimage;        
     }
     
     return image;
+}
+
+- (void)loadImages {
+    if (![tinypic isEqualToString:@"/pics/tiny/missing.png"]) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:tinypic]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                tinyimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (![thumb isEqualToString:@"/pics/thumb/missing.png"]) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:thumb]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                thumbimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (![mediumpic isEqualToString:@"/pics/medium/missing.png"]) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:mediumpic]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                mediumimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
 }
 
 - (FootballPassingStat *)findFootballPassingStat:(NSString *)gameid {

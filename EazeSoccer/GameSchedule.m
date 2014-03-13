@@ -59,6 +59,9 @@
 @synthesize down;
 @synthesize currentqtr;
 
+@synthesize gamedatetime;
+@synthesize vsimage;
+
 @synthesize togo;
 
 @synthesize hometimeouts;
@@ -80,6 +83,8 @@
 
 - (id)init {
     if (self = [super init]) {
+        vsimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+
         startdate = @"";
         starttime = @"";
         location = @"";
@@ -138,6 +143,20 @@
         opponent_name = [gameScheduleDictionary objectForKey:@"opponent_name"];
         opponent_mascot = [gameScheduleDictionary objectForKey:@"opponent_mascot"];
         opponentpic = [gameScheduleDictionary objectForKey:@"opponentpic"];
+        
+        if ((![opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) && (![opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:opponentpic]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    vsimage = [UIImage imageWithData:image];
+                });
+            });
+        }
+        
         eazesportzOpponent = [[gameScheduleDictionary objectForKey:@"eazesportzOpponent"] boolValue];
         location = [gameScheduleDictionary objectForKey:@"location"];
         starttime = [gameScheduleDictionary objectForKey:@"starttime"];
@@ -179,6 +198,10 @@
         socceroppsaves = [gameScheduleDictionary objectForKey:@"socceroppsaves"];
         socceroppck = [gameScheduleDictionary objectForKey:@"socceroppck"];
         
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss+00:00"];
+        gamedatetime = [dateFormatter dateFromString:[gameScheduleDictionary objectForKey:@"gamedatetime"]];
+
         if ([currentSettings.sport.name isEqualToString:@"Football"]) {
             NSMutableArray *logs = [gameScheduleDictionary objectForKey:@"gamelogs"];
             gamelogs = [[NSMutableArray alloc] init];
@@ -443,12 +466,13 @@
         if (([opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) || ([opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else {
-            NSURL * imageURL = [NSURL URLWithString:opponentpic];
-            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-            image = [UIImage imageWithData:imageData];
+                NSURL * imageURL = [NSURL URLWithString:opponentpic];
+                NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+                image = [UIImage imageWithData:imageData];
         }
         
         opponentImage = image;
+        
         return image;
     }
 }

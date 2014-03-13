@@ -143,7 +143,7 @@
     }
     
     [cell.wonlostLabel setText:WonLost];    
-    [cell.visitorImageView setImage:[game opponentImage]];
+    [cell.visitorImageView setImage:[game vsimage]];
     
     return cell;
 }

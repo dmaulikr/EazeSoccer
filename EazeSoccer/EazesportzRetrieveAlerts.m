@@ -44,12 +44,8 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-/*
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
- */
-    NSLog(@"%@%d", @"Error retrieving alerts", error.code);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"AlertListChangedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result" , nil]];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {

@@ -27,7 +27,7 @@
     else
         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
                                     @"/sports/", sportid, @"/teams/", teamid, @"/gameschedules.json"]];
-   originalRequest = [NSURLRequest requestWithURL:url];
+    originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }
 
@@ -44,32 +44,27 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-/*
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
- */
-    NSLog(@"%@%d", @"Error retrieving games", error.code);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"GameListChangedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Connect error", @"Result", nil]];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
+    NSLog(@"%@", serverData);
     
     if (responseStatusCode == 200) {
         currentSettings.gameList = [[NSMutableArray alloc] init];
-        NSLog(@"%@", serverData);
         
         for (int i = 0; i < [serverData count]; i++ ) {
             [currentSettings.gameList addObject:[[GameSchedule alloc] initWithDictionary:[serverData objectAtIndex:i]]];
         }
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameListChangedNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameListChangedNotification" object:nil
+                                                            userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Games" message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameListChangedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Data retrieval error", @"Result", nil]];
     }
 }
 

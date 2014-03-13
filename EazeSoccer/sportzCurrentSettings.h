@@ -37,6 +37,9 @@
 @property(nonatomic, strong) NSMutableArray *sponsors;
 @property(nonatomic, strong) NSMutableArray *alerts;
 
+@property(nonatomic, strong) NSMutableArray *featuredPhotos;
+@property(nonatomic, strong) NSMutableArray *featuredVideos;
+
 @property(nonatomic, strong) NSDate *lastAlertUpdate;
 @property(nonatomic, strong) NSDate *lastGameUpdate;
 @property(nonatomic, assign) BOOL getRoster;

@@ -41,7 +41,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+//    self.view.backgroundColor = [UIColor clearColor];
     
     _bioLabel.layer.cornerRadius = 6;
     _blogLabel.layer.cornerRadius = 6;

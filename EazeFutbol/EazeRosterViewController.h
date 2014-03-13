@@ -13,5 +13,6 @@
 @interface EazeRosterViewController : PlayerSelectionViewController
 @property (weak, nonatomic) IBOutlet UITableView *rosterTableView;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *coachesButton;
 
 @end

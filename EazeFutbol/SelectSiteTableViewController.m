@@ -10,6 +10,13 @@
 #import "EazesportzAppDelegate.h"
 #import "sportzteamsRegisterLoginViewController.h"
 #import "EazesportzRetrieveSport.h"
+#import "EazesportzRetrieveAlerts.h"
+#import "EazesportzRetrieveCoaches.h"
+#import "EazesportzRetrieveGames.h"
+#import "EazesportzRetrievePlayers.h"
+#import "EazesportzRetrieveSponsors.h"
+#import "EazesportzRetrieveSport.h"
+#import "EazesportzRetrieveTeams.h"
 
 @interface SelectSiteTableViewController () <UIAlertViewDelegate>
 
@@ -19,6 +26,7 @@
     NSMutableArray *siteList;
     
     Sport *sport;
+    EazesportzRetrieveTeams *getTeams;
 }
 
 @synthesize state;
@@ -187,6 +195,12 @@
 
 - (void)gotSport:(NSNotification *)notification {
     currentSettings.sitechanged = YES;
+    
+    if (currentSettings.changesite) {
+        currentSettings.changesite = NO;
+        self.tabBarController.tabBar.hidden = NO;
+    }
+    
 /*    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome!"
                                                     message:[NSString stringWithFormat:@"%@%@", @"Welcome to ", currentSettings.sport.sitename]
                                                    delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:nil, nil];
@@ -194,8 +208,7 @@
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
  */
-    NSArray *paths = NSSearchPathForDirectoriesInDomains
-    (NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
     //make a file name to write the data to using the documents directory:
@@ -208,6 +221,14 @@
     //save content to the documents directory
     [content writeToFile:fileName atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
     [currentSettings.sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+    
+    if ([[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:content Token:currentSettings.user.authtoken]) {
+        getTeams = [[EazesportzRetrieveTeams alloc] init];
+        if ([getTeams retrieveTeamsSynchronous:content Token:currentSettings.user.authtoken]) {
+            currentSettings.teams = getTeams.teams;
+            currentSettings.team = nil;
+        }
+    }
     
     UIImageView *myGraphic;
     

@@ -47,10 +47,8 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TeamListChangedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -67,6 +65,34 @@
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"TeamListChangedNotification" object:nil
                     userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error Retreving Teams", @"Result", nil]];
+    }
+}
+
+- (NSMutableArray *)retrieveTeamsSynchronous:(NSString *)sportid Token:(NSString *)authtoken {
+    NSURL *url;
+    
+    if (currentSettings.user.authtoken)
+        url = [NSURL URLWithString:[sportzServerInit getTeams:sportid Token:currentSettings.user.authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", sportid, @"/teams.json"]];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *jsonSerializationError;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&jsonSerializationError];
+    long statusCode = [(NSHTTPURLResponse*)response statusCode];
+    serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if (statusCode == 200) {
+        teams =[[NSMutableArray alloc] init];
+        for (int i = 0; i < [serverData count]; i++) {
+            [teams addObject:[[Team alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+        }
+        
+        return teams;
+    } else {
+        return nil;
     }
 }
 
