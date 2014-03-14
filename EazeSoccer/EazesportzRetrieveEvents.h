@@ -11,6 +11,7 @@
 #import "Sport.h"
 #import "Team.h"
 #import "User.h"
+#import "GameSchedule.h"
 
 @interface EazesportzRetrieveEvents : NSObject
 
@@ -18,6 +19,9 @@
 
 @property (nonatomic, strong) NSDate *startdate;
 @property (nonatomic, strong) NSDate *enddate;
+@property (nonatomic, strong) NSString *searchName;
+@property (nonatomic, strong) GameSchedule *game;
+
 @property(nonatomic, strong, readonly) NSMutableArray *eventlist;
 @property (nonatomic, strong, readonly) NSMutableArray *videoEventList;
 

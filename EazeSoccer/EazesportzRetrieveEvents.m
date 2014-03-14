@@ -20,6 +20,9 @@
 
 @synthesize startdate;
 @synthesize enddate;
+@synthesize searchName;
+@synthesize game;
+
 @synthesize eventlist;
 @synthesize videoEventList;
 
@@ -40,6 +43,10 @@
         [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"];
         stringurl = [stringurl stringByAppendingFormat:@"&startdate=%@&enddate=%@", [dateFormatter stringFromDate:startdate],
                      [dateFormatter stringFromDate:enddate]];
+    } else if (searchName.length > 0) {
+        stringurl = [stringurl stringByAppendingFormat:@"&name=%@", searchName];
+    } else if (game) {
+        stringurl = [stringurl stringByAppendingFormat:@"&gameschedule_id=%@", game.id];
     }
     
     NSURL *url = [NSURL URLWithString:stringurl];

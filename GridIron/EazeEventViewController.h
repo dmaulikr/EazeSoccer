@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <iAd/iAd.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 #import "Sport.h"
 #import "Team.h"
-#import "GameSchedule.h"
 #import "User.h"
 
 @interface EazeEventViewController : UIViewController
@@ -22,10 +22,15 @@
 - (IBAction)searchButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 - (IBAction)refreshButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *dateContainer;
 
 @property (nonatomic, strong) Sport *sport;
 @property (nonatomic, strong) Team *team;
-@property (nonatomic, strong) GameSchedule *game;
 @property (nonatomic, strong) User *user;
+
+- (IBAction)datesSelected:(UIStoryboardSegue *)segue;
+- (IBAction)datesSelectCanceled:(UIStoryboardSegue *)segue;
+
+@property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
 
 @end

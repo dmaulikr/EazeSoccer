@@ -38,6 +38,8 @@
 @synthesize goldMedia;
 @synthesize platinumMedia;
 
+@synthesize streamingurl;
+
 @synthesize teamcount;
 
 @synthesize playerPositions;
@@ -88,6 +90,7 @@
         goldMedia = [[sportDictionary objectForKey:@"goldMedia"] integerValue];
         platinumMedia = [[sportDictionary objectForKey:@"platinumMedia"] integerValue];
         teamcount = [sportDictionary objectForKey:@"teamcount"];
+        streamingurl = [sportDictionary objectForKey:@"streamingurl"];
         
         if ([name isEqualToString:@"Soccer"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"soccer_positions"]];
@@ -158,6 +161,13 @@
 
 - (BOOL)isGoldPackage {
     if ([package isEqualToString:@"Gold"])
+        return YES;
+    else
+        return NO;
+}
+
+- (BOOL)isPlatinumPackage {
+    if ([package isEqualToString:@"Platinum"])
         return YES;
     else
         return NO;
