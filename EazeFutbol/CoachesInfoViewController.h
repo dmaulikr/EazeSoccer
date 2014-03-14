@@ -20,6 +20,5 @@
 @property (weak, nonatomic) IBOutlet UITextView *bioTextVeiw;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @property (weak, nonatomic) IBOutlet UILabel *yearsonstaffLabel;
-@property (weak, nonatomic) IBOutlet UILabel *bioLabel;
 
 @end

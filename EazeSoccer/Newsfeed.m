@@ -20,6 +20,8 @@
 @synthesize game;
 @synthesize external_url;
 @synthesize updated_at;
+@synthesize tinyurl;
+@synthesize thumburl;
 
 @synthesize httperror;
 
@@ -46,6 +48,8 @@
         game = [newsDict objectForKey:@"gameschedule_id"];
         external_url = [newsDict objectForKey:@"external_url"];
         updated_at = [newsDict objectForKey:@"updated_at"];
+        tinyurl = [newsDict objectForKey:@"tinyurl"];
+        thumburl = [newsDict objectForKey:@"thumburl"];
         
         return self;
     } else {
@@ -89,7 +93,7 @@
     }
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     
     if (newsid.length == 0) {
         [request setHTTPMethod:@"POST"];

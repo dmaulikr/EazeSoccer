@@ -19,6 +19,8 @@
 @property(nonatomic, strong) NSString *game;
 @property(nonatomic, strong) NSString *external_url;
 @property(nonatomic, strong) NSString *updated_at;
+@property(nonatomic, strong) NSString *tinyurl;
+@property(nonatomic, strong) NSString *thumburl;
 
 @property(nonatomic, strong) NSString *httperror;
 

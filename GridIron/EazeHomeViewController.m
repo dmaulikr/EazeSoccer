@@ -23,6 +23,8 @@
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "EazesportzRetrieveFeaturedVideosController.h"
 #import "EazesportzRetrieveFeaturedPhotos.h"
+#import "EazeFeaturedPhotosViewController.h"
+#import "EazeEventViewController.h"
 
 @interface EazeHomeViewController () <UIAlertViewDelegate>
 
@@ -162,7 +164,7 @@
             cell.homeTableCellImage.image = [UIImage imageNamed:@"Terrible-football-play.png"];
             
             if (game) {
-                cell.homeTableCellTitle.text = @"Last Game";
+                cell.homeTableCellTitle.text = [NSString stringWithFormat:@"%@ Last Game", currentSettings.team.mascot];
                 cell.homeTableCellText.text = game.game_name;
             } else {
                 cell.homeTableCellTitle.text = @"No games scheduled";
@@ -174,7 +176,7 @@
             cell.backgroundColor = [UIColor lightTextColor];
             cell.homeTableCellImage.image = [UIImage imageNamed:@"camera-photo-button.png"];
             cell.homeTableCellTitle.text = @"Photos and Highlights";
-            cell.homeTableCellText.text = @"Featured game/practice photos and highlights";
+            cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured photos and highlights for %@", currentSettings.team.mascot ];
             break;
             
         default:
@@ -192,7 +194,8 @@
         switch (indexPath.row) {
                 
             case 0:
-                [self performSegueWithIdentifier:@"RosterSegue" sender:self];
+                if (currentSettings.roster)
+                    [self performSegueWithIdentifier:@"RosterSegue" sender:self];
                 break;
                 
             case 1:
@@ -214,6 +217,7 @@
                 break;
                 
             default:
+                [self performSegueWithIdentifier:@"BroadcastEventsSegue" sender:self];
                 break;
         }
     }
@@ -232,6 +236,14 @@
     } else if ([segue.identifier isEqualToString:@"SoccerGameInfoSegue"]) {
         EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"FeaturedPhotosSegue"]) {
+        EazeFeaturedPhotosViewController *destController = segue.destinationViewController;
+        destController.photos = currentSettings.featuredPhotos;
+    } else if ([segue.identifier isEqualToString:@"BroadcastEventsSegue"]) {
+        EazeEventViewController *destController = segue.destinationViewController;
+        destController.sport = currentSettings.sport;
+        destController.team = currentSettings.team;
+        destController.user = currentSettings.user;
     }
 }
 

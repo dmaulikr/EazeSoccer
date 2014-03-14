@@ -66,6 +66,29 @@
     }
 }
 
+- (GameSchedule *)getGameSynchronous:(Sport *)sport Team:(Team *)team Game:(NSString *)gameid User:(User *)user {
+    GameSchedule *thegame = nil;
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"EazesportzUrl"],
+                                       @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", gameid, @".json?auth_token=", user.authtoken]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *error = nil;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    NSDictionary *thedata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if ([httpResponse statusCode] == 200) {
+        thegame = [[GameSchedule alloc] initWithDictionary:thedata];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving game" delegate:self cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+    
+    return thegame;
+}
+
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
     if (redirectResponse) {
         NSMutableURLRequest *newrequest = [originalRequest mutableCopy];

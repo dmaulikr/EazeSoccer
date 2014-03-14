@@ -22,7 +22,7 @@
 @synthesize bio;
 @synthesize coachid;
 @synthesize fullname;
-@synthesize largepic;
+@synthesize medium;
 @synthesize thumb;
 @synthesize tiny;
 @synthesize teamid;
@@ -31,6 +31,7 @@
 
 @synthesize thumbimage;
 @synthesize tinyimage;
+@synthesize mediumimage;
 
 @synthesize httperror;
 
@@ -55,8 +56,11 @@
         teamid = [coachDictionary objectForKey:@"team_id"];
         thumb = [coachDictionary objectForKey:@"thumb"];
         tiny = [coachDictionary objectForKey:@"tiny"];
-        largepic = [coachDictionary objectForKey:@"largepic"];
+        medium = [coachDictionary objectForKey:@"medium"];
         processing = [[coachDictionary objectForKey:@"processing"] boolValue];
+        
+        [self loadImages];
+        
         return self;
     } else {
         return nil;
@@ -115,7 +119,7 @@
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else if (self.processing) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
-        } else if (((self.thumbimage.CIImage == nil) && (self.thumbimage.CGImage == nil)) || (![imagesize isEqualToString:@"tiny"])) {
+        } else if (((self.thumbimage.CIImage == nil) && (self.thumbimage.CGImage == nil)) || (![imagesize isEqualToString:@"thumb"])) {
             NSURL * imageURL = [NSURL URLWithString:self.thumb];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             image = [UIImage imageWithData:imageData];
@@ -124,8 +128,69 @@
         } else
             image = self.thumbimage;
         
+    } else if ([size isEqualToString:@"medium"]) {
+        if ([self.thumb isEqualToString:@"/coachpics/medium/missing.png"]) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        } else if (self.processing) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
+        } else if (((self.mediumimage.CIImage == nil) && (self.mediumimage.CGImage == nil)) || (![imagesize isEqualToString:@"medium"])) {
+            NSURL * imageURL = [NSURL URLWithString:self.medium];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            image = [UIImage imageWithData:imageData];
+            self.mediumimage = image;
+            imagesize = size;
+        } else
+            image = self.mediumimage;
     }
+
     return image;
+}
+
+- (void)loadImages {
+    if (![tiny isEqualToString:@"/pics/tiny/missing.png"]) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:tiny]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                tinyimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (![thumb isEqualToString:@"/pics/thumb/missing.png"]) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:thumb]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                thumbimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (![medium isEqualToString:@"/pics/medium/missing.png"]) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:medium]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                mediumimage = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
 }
 
 @end

@@ -77,16 +77,35 @@
     
     if (newsitem.game.length > 0) {
         _gameButton.enabled = YES;
-        [_gameButton setTitle:[NSString stringWithFormat:@"%@%@", @"vs ", [[currentSettings findGame:newsitem.game] opponent]]
-                     forState:UIControlStateNormal];
+        [_gameButton setTitle:[[currentSettings findGame:newsitem.game ] vsOpponent] forState:UIControlStateNormal];
     } else {
         _gameButton.enabled = NO;
         _gameButton.hidden = YES;
     }
     
+    if (newsitem.external_url.length > 0) {
+        _readArticleButton.hidden = NO;
+        _readArticleButton.enabled = YES;
+        [_readArticleButton setTitle:newsitem.external_url forState:UIControlStateNormal];
+    } else {
+        _readArticleButton.hidden = YES;
+        _readArticleButton.enabled = NO;
+    }
+    
     // Add image
     
-    if (newsitem.athlete.length > 0) {
+    if ((newsitem.tinyurl.length > 0) || (newsitem.thumburl.length > 0)) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:newsitem.thumburl]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _imageView.image = [UIImage imageWithData:image];
+            });
+        });
+    } else if (newsitem.athlete.length > 0) {
         _imageView.image = [currentSettings normalizedImage:[[currentSettings findAthlete:newsitem.athlete] getImage:@"thumb"] scaledToSize:125];
     } else if (newsitem.coach.length > 0) {
         _imageView.image = [currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"thumb"] scaledToSize:125];
@@ -98,12 +117,6 @@
     
     [_newsTextView setText:newsitem.news];
     [_titleLabel setText:newsitem.title];
-}
-
-- (IBAction)athleteButtonClicked:(id)sender {
-}
-
-- (IBAction)coachButtonClicked:(id)sender {
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -162,4 +175,6 @@
     }
 }
 
+- (IBAction)readArticleButtonClicked:(id)sender {
+}
 @end

@@ -53,7 +53,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.title = player.name;
+    self.title = player.full_name;
     visiblestats = @"Scoring";
     _statSelector.selectedSegmentIndex = 0;
         

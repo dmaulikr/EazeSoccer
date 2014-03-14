@@ -199,10 +199,18 @@
     cell.layer.cornerRadius = 6;
     cell.backgroundColor = [UIColor whiteColor];
     Video *video = [videos objectAtIndex:indexPath.row];
-    NSURL * imageURL = [NSURL URLWithString:video.poster_url];
-    NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-    UIImage * image = [UIImage imageWithData:imageData];
-    [cell.videoImage setImage:image];
+
+    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    //this will start the image loading in bg
+    dispatch_async(concurrentQueue, ^{
+        NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:video.poster_url]];
+        
+        //this will set the image when loading is finished
+        dispatch_async(dispatch_get_main_queue(), ^{
+            cell.videoImage.image = [UIImage imageWithData:image];
+        });
+    });
+    
     [cell.videoName setText:video.displayName];
     [cell.videoDuration setText:[NSString stringWithFormat:@"%d", video.duration.intValue]];
     return cell;

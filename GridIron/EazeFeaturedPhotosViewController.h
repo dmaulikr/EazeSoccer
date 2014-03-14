@@ -15,4 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UITapGestureRecognizer *tapGesture;
+
+@property (nonatomic, strong) NSMutableArray *photos;
 @end

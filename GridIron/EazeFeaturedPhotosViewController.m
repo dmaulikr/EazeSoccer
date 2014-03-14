@@ -8,7 +8,6 @@
 
 #import "EazeFeaturedPhotosViewController.h"
 #import "EazesportzAppDelegate.h"
-#import "EazesportzRetrieveFeaturedPhotos.h"
 #import "Photo.h"
 
 @interface EazeFeaturedPhotosViewController () <UIGestureRecognizerDelegate>
@@ -22,11 +21,11 @@
 @end
 
 @implementation EazeFeaturedPhotosViewController {
-    EazesportzRetrieveFeaturedPhotos *getPhotos;
-    
     int currentphoto;
     UIView *subview;
 }
+
+@synthesize photos;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,23 +76,11 @@
     
     currentphoto = 0;
     
-    if (currentSettings.featuredPhotos.count > 0)
-        [self displayPhoto:[currentSettings.featuredPhotos objectAtIndex:0]];
+    if (photos.count > 0)
+        [self displayPhoto:[photos objectAtIndex:0]];
     else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                                         message:[NSString stringWithFormat:@"%@%@", @"No photos featured for ", currentSettings.team.team_name]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
-}
-
-- (void)gotFeaturedPhotos:(NSNotification *)notification {
-    if (getPhotos.featuredphotos.count > 0) {
-        [self displayPhoto:[getPhotos.featuredphotos objectAtIndex:0]];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
-                                                    message:[NSString stringWithFormat:@"%@%@", @"No photos featured for ", currentSettings.team.team_name]
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -162,32 +149,30 @@
     if (subview)
         [subview removeFromSuperview];
     
-    for (;;) {
-        if (photo.largeimage)
-            sleep(1);
-            break;
+    while (photo.largeimage == nil) {
+        sleep(1);
     }
     
-    self.animage = [[UIImageView alloc] initWithImage:photo.largeimage];
-    self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=photo.largeimage.size};
-    [self.scrollView addSubview:self.animage];
-    subview = self.animage;
-    
-    // 2
-    self.scrollView.contentSize = photo.largeimage.size;
-    // 4
-    CGRect scrollViewFrame = self.scrollView.frame;
-    CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
-    CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
-    CGFloat minScale = MIN(scaleWidth, scaleHeight);
-    self.scrollView.minimumZoomScale = minScale;
-    
-    // 5
-    self.scrollView.maximumZoomScale = 1.0f;
-    self.scrollView.zoomScale = minScale;
-    
-    // 6
-    [self centerScrollViewContents];
+        self.animage = [[UIImageView alloc] initWithImage:photo.largeimage];
+        self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=photo.largeimage.size};
+        [self.scrollView addSubview:self.animage];
+        subview = self.animage;
+        
+        // 2
+        self.scrollView.contentSize = photo.largeimage.size;
+        // 4
+        CGRect scrollViewFrame = self.scrollView.frame;
+        CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
+        CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
+        CGFloat minScale = MIN(scaleWidth, scaleHeight);
+        self.scrollView.minimumZoomScale = minScale;
+        
+        // 5
+        self.scrollView.maximumZoomScale = 1.0f;
+        self.scrollView.zoomScale = minScale;
+        
+        // 6
+        [self centerScrollViewContents];
 }
 
 -(BOOL)shouldAutorotate {
@@ -199,9 +184,9 @@
 }
 
 - (void)nextFeaturedPhoto {
-    if (currentphoto < currentSettings.featuredPhotos.count - 1) {
+    if (currentphoto < photos.count - 1) {
         currentphoto++;
-        [self displayPhoto:[currentSettings.featuredPhotos objectAtIndex:currentphoto]];
+        [self displayPhoto:[photos objectAtIndex:currentphoto]];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                         message:[NSString stringWithFormat:@"%@%@", @"No more photos to display for ", currentSettings.team.team_name]
@@ -214,7 +199,7 @@
 - (void)backFeaturedPhoto {
     if (currentphoto > 0) {
         currentphoto--;
-        [self displayPhoto:[currentSettings.featuredPhotos objectAtIndex:currentphoto]];
+        [self displayPhoto:[photos objectAtIndex:currentphoto]];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                                         message:[NSString stringWithFormat:@"%@%@", @"No more photos to display for ", currentSettings.team.team_name]

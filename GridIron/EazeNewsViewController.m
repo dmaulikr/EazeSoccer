@@ -99,11 +99,7 @@
     Newsfeed *feeditem = [getNews.news objectAtIndex:indexPath.row];
     static NSString *CellIdentifier;
     
-    if ((feeditem.athlete.length > 0) || (feeditem.coach.length > 0))
-         CellIdentifier = @"NewsTableCell";
-    else
-        CellIdentifier = @"NewsNopicTableCell";
-    
+    CellIdentifier = @"NewsTableCell";    
     NewsTableCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
@@ -141,10 +137,23 @@
     else
         cell.gameLabel.text = @"";
     
-    if (feeditem.athlete.length > 0) {
+    if (feeditem.tinyurl.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:feeditem.tinyurl]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cell.imageView.image = [UIImage imageWithData:image];
+            });
+        });
+    } else if (feeditem.athlete.length > 0) {
         cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findAthlete:feeditem.athlete] getImage:@"tiny"] scaledToSize:50];
     } else if (feeditem.coach.length > 0) {
         cell.imageView.image = [[currentSettings findCoach:feeditem.coach] getImage:@"tiny"];
+    } else {
+        cell.imageView.image = [currentSettings.team getImage:@"tiny"];
     }
     
     return cell;

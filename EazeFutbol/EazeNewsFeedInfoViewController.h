@@ -16,7 +16,6 @@
 @property(nonatomic, strong) Newsfeed *newsitem;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *externalurlLabel;
 @property (weak, nonatomic) IBOutlet UITextView *newsTextView;
 @property (weak, nonatomic) IBOutlet UIButton *athleteButton;
 @property (weak, nonatomic) IBOutlet UIButton *coachButton;
@@ -26,5 +25,7 @@
 
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 - (IBAction)gameButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *readArticleButton;
+- (IBAction)readArticleButtonClicked:(id)sender;
 
 @end

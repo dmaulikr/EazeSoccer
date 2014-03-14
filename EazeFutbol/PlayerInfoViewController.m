@@ -20,6 +20,7 @@
 #import "EazeBballPlayerStatsViewController.h"
 #import "EazeFootballPlayerStatsViewController.h"
 #import "EazeSoccerPlayerStatsViewController.h"
+#import "EazePlayerBioViewController.h"
 
 @interface PlayerInfoViewController () <UIAlertViewDelegate>
 @end
@@ -88,7 +89,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    playerImage.image = [player getImage:@"thumb"];
+    playerImage.image = player.mediumimage;
     [self.numberLabel setText:[player.number stringValue]];
     [self.nameLabel setText:player.full_name];
     [self.yearLabel setText:player.year];
@@ -154,6 +155,9 @@
         } else {
             [self displayUpgradeAlert];
         }
+    } else if ([segue.identifier isEqualToString:@"PlayerBioSegue"]) {
+        EazePlayerBioViewController *destController = segue.destinationViewController;
+        destController.player = player;
     }
 }
 

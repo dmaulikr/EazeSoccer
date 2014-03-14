@@ -21,12 +21,13 @@
 @property(nonatomic, strong) NSString *teamid;
 @property(nonatomic, strong) NSString *thumb;
 @property(nonatomic, strong) NSString *tiny;
-@property(nonatomic, strong) NSString *largepic;
+@property(nonatomic, strong) NSString *medium;
 @property(nonatomic, strong) NSString *teamname;
 @property(nonatomic, assign) BOOL processing;
 
 @property(nonatomic, strong) UIImage *thumbimage;
 @property(nonatomic, strong) UIImage *tinyimage;
+@property(nonatomic, strong) UIImage *mediumimage;
 
 @property(nonatomic, strong) NSString *httperror;
 

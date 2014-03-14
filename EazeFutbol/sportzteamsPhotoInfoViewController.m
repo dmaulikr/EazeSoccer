@@ -26,11 +26,13 @@
     NSMutableData *theData;
     int responseStatusCode;
     UIView *subview;
+    int currentphoto;
 }
 
 @synthesize photo;
-@synthesize photoImage;
 @synthesize photoid;
+@synthesize photos;
+@synthesize photoindex;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,6 +59,43 @@
     twoFingerTapRecognizer.numberOfTapsRequired = 1;
     twoFingerTapRecognizer.numberOfTouchesRequired = 2;
     [self.scrollView addGestureRecognizer:twoFingerTapRecognizer];
+    
+    UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(backPhoto)];
+    swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
+    swipeRight.numberOfTouchesRequired = 1;
+    
+    UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(nextPhoto)];
+    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+    swipeLeft.numberOfTouchesRequired = 1;
+    
+    [self.scrollView addGestureRecognizer:swipeLeft];
+    [self.scrollView addGestureRecognizer:swipeRight];
+}
+
+- (void)nextPhoto {
+    if (currentphoto < photos.count - 1) {
+        currentphoto++;
+        [self displayPhoto:[photos objectAtIndex:currentphoto]];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                        message:[NSString stringWithFormat:@"%@%@", @"No more photos to display for ", currentSettings.team.team_name]
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
+- (void)backPhoto {
+    if (currentphoto > 0) {
+        currentphoto--;
+        [self displayPhoto:[photos objectAtIndex:currentphoto]];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                        message:[NSString stringWithFormat:@"%@%@", @"No more photos to display for ", currentSettings.team.team_name]
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -68,42 +107,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    currentphoto = photoindex;
+    
     if (photoid == nil) {
         if (subview)
             [subview removeFromSuperview];
         
         self.title = photo.displayname;
-        NSURL * imageURL = [NSURL URLWithString:photo.large_url];
-        NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-        UIImage * image = [UIImage imageWithData:imageData];
-//        [photoImage setImage:image];
-//        photoImage.frame = CGRectMake(0, 0, photoImage.image.size.width, photoImage.image.size.height);
-//        _scrollView.contentSize = photoImage.image.size;
-//        _scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
-//                                       UIViewAutoresizingFlexibleHeight);
-//        photoImage.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
-//                                      UIViewAutoresizingFlexibleHeight);
-//        _scrollView.zoomScale = 4.0f;
-        self.animage = [[UIImageView alloc] initWithImage:image];
-        self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=image.size};
-        [self.scrollView addSubview:self.animage];
-        subview = self.animage;
-        
-        // 2
-        self.scrollView.contentSize = image.size;
-        // 4
-        CGRect scrollViewFrame = self.scrollView.frame;
-        CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
-        CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
-        CGFloat minScale = MIN(scaleWidth, scaleHeight);
-        self.scrollView.minimumZoomScale = minScale;
-        
-        // 5
-        self.scrollView.maximumZoomScale = 1.0f;
-        self.scrollView.zoomScale = minScale;
-        
-        // 6
-        [self centerScrollViewContents];
+        [self displayPhoto:[photos objectAtIndex:currentphoto]];
     } else {
         NSURL *url;
         
@@ -122,6 +133,37 @@
     
     self.title = photo.displayname;
 }
+
+- (void)displayPhoto:(Photo *)thephoto {
+    if (subview)
+        [subview removeFromSuperview];
+    
+    while (thephoto.largeimage == nil) {
+        sleep(1);
+    }
+    
+    self.animage = [[UIImageView alloc] initWithImage:thephoto.largeimage];
+    self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size = thephoto.largeimage.size};
+    [self.scrollView addSubview:self.animage];
+    subview = self.animage;
+    
+    // 2
+    self.scrollView.contentSize = thephoto.largeimage.size;
+    // 4
+    CGRect scrollViewFrame = self.scrollView.frame;
+    CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
+    CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
+    CGFloat minScale = MIN(scaleWidth, scaleHeight);
+    self.scrollView.minimumZoomScale = minScale;
+    
+    // 5
+    self.scrollView.maximumZoomScale = 1.0f;
+    self.scrollView.zoomScale = minScale;
+    
+    // 6
+    [self centerScrollViewContents];
+}
+
 
 #pragma Zooming
 
@@ -186,7 +228,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"PhotoDetailSegue"]) {
         sportzteamsPhotoDescriptionViewController *destViewController = segue.destinationViewController;
-        destViewController.photo = photo;
+        destViewController.photo = [photos objectAtIndex:currentphoto];
     }
 }
 
@@ -216,6 +258,7 @@
     
     if (responseStatusCode == 200) {
         Photo *aphoto = [[Photo alloc] init];
+        photos = [[NSMutableArray alloc] init];
         aphoto.large_url = [serverData objectForKey:@"large_url"];
         aphoto.medium_url = [serverData objectForKey:@"medium_url"];
         aphoto.thumbnail_url = [serverData objectForKey:@"thumbnail_url"];
@@ -228,7 +271,8 @@
         aphoto.players = [serverData objectForKey:@"players"];
         aphoto.gamelog = [serverData objectForKey:@"gamelog"];
         photoid = nil;
-        photo = aphoto;
+//        photo = aphoto;
+        [photos addObject:aphoto];
         [self viewWillAppear:YES];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Photo"

@@ -92,9 +92,9 @@
         NSLog(@"placemark.zipcode %@", placemark.postalCode);
         NSLog(@"placemark.administrativeArea %@", placemark.administrativeArea);
         _countryTextField.text = placemark.country;
-//        _cityTextField.text = placemark.locality;
+        _cityTextField.text = placemark.locality;
         _stateTextField.text = placemark.administrativeArea;
-        _zipcodeTextfield.text = placemark.postalCode;
+//        _zipcodeTextfield.text = placemark.postalCode;
     }];
     
     [locationManager stopUpdatingLocation];

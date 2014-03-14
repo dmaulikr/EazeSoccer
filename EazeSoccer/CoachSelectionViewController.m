@@ -95,7 +95,7 @@
     }
     
     Coach *acoach = [currentSettings.coaches objectAtIndex:indexPath.row];
-    cell.coachImage.image = [acoach getImage:@"tiny"];
+    cell.coachImage.image = [acoach tinyimage];
     cell.coachnameLabel.text = acoach.fullname;
     cell.responsibilityLabel.text = acoach.speciality;
     cell.yearsLabel.text = [acoach.years stringValue];

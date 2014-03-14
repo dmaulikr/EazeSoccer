@@ -43,7 +43,6 @@
     self.staffPosition.layer.cornerRadius = 6;
     staffPosition.numberOfLines = 2;
     _yearsonstaffLabel.layer.cornerRadius = 6;
-    _bioLabel.layer.cornerRadius = 6;
 }
 
 -(BOOL)shouldAutorotate {
@@ -57,11 +56,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.title = coach.fullname;
     [years setText:[coach.years stringValue]];
     [bioTextVeiw setText:coach.bio];
     self.title = coach.fullname;
     [staffPosition setText:coach.speciality];
-    coachImage.image = [coach getImage:@"thumb"];
+    coachImage.image = [coach mediumimage];
 }
 
 - (void)didReceiveMemoryWarning

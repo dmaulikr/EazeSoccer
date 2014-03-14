@@ -72,7 +72,19 @@
     cell.playerNumberLabel.text = [aplayer.number stringValue];
     cell.playerPositionLabel.text = aplayer.position;
     
-    cell.rosterImage.image = aplayer.tinyimage;
+    if (aplayer.tinyimage == nil) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:aplayer.tinypic]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cell.rosterImage.image = [UIImage imageWithData:image];
+            });
+        });
+    } else
+        cell.rosterImage.image = aplayer.tinyimage;
     
     if ([currentSettings hasAlerts:aplayer.athleteid] == NO)
         cell.alertImage.image = nil;

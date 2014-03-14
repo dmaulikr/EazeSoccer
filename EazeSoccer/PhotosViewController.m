@@ -158,13 +158,20 @@
     Photo *photo = [photos objectAtIndex:indexPath.row];
     UIImage *image;
     
-    if (photo.thumbnail_url.length > 0) {
-        NSURL *imageURL = [NSURL URLWithString:photo.thumbnail_url];
-        NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
-        image = [UIImage imageWithData:imageData];
-    } else {
-        image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
-    }
+//    if (photo.thumbimage) {
+ //       cell.photoImage.image = photo.thumbimage;
+//    } else {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:photo.thumbnail_url]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cell.photoImage.image = [UIImage imageWithData:image];
+            });
+        });
+//    }
     
     [cell.photoImage setImage:image];
     [cell.photoLabel setText:photo.displayname];

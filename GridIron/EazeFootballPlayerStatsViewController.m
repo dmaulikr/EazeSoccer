@@ -52,6 +52,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.title = player.full_name;
+    
     if ([player isQB:nil])
         visiblestats = @"Pass";
     else if ([player isRB:nil])

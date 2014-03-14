@@ -16,4 +16,6 @@
 
 - (void)getGame:(NSString *)sportid Team:(NSString *)teamid Game:(NSString *)gameid Token:(NSString *)authtoken;
 
+- (GameSchedule *)getGameSynchronous:(Sport *)sport Team:(Team *)team Game:(NSString *)gameid User:(User *)user;
+
 @end
