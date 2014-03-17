@@ -142,7 +142,8 @@
         WonLost = @"  0-0";
     }
     
-    [cell.wonlostLabel setText:WonLost];    
+    [cell.wonlostLabel setText:WonLost];
+        
     [cell.visitorImageView setImage:[game vsimage]];
     
     return cell;

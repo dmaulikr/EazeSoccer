@@ -21,8 +21,11 @@
 @property(nonatomic, strong) NSString *updated_at;
 @property(nonatomic, strong) NSString *tinyurl;
 @property(nonatomic, strong) NSString *thumburl;
+@property(nonatomic, strong) NSString *videoclip_id;
 
 @property(nonatomic, strong) NSString *httperror;
+
+@property (nonatomic, strong, readonly) UIImage *videoPoster;
 
 - (id)initWithDirectory:(NSDictionary *)newsDict;
 

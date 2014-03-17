@@ -11,6 +11,8 @@
 #import "EazeFootballGameStatsViewController.h"
 #import "EazesportzGetGame.h"
 #import "EazesportzRetrieveAlerts.h"
+#import "EazesVideosViewController.h"
+#import "EazePhotosViewController.h"
 
 @interface EazeFootballGameSummaryViewController () <UIAlertViewDelegate>
 
@@ -119,19 +121,51 @@
     cell.textLabel.font = [UIFont systemFontOfSize:10];
     cell.textLabel.text = [log logentrytext];
     
+    if ((log.hasphotos) || (log.hasvideos)) {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    } else {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    Gamelogs *log = [game.gamelogs objectAtIndex:indexPath.row];
+    
+    if ((log.hasphotos) && (log.hasvideos)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Media" message:@"Select Photos or Videos" delegate:self cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Photos", @"Videos", nil];
+        [alert show];
+    } else if (log.hasvideos) {
+        [self performSegueWithIdentifier:@"GameVideoSegue" sender:self];
+    } else if (log.hasphotos) {
+        [self performSegueWithIdentifier:@"GamePhotoSegue" sender:self];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"FootballGameStatsSegue"]) {
         EazeFootballGameStatsViewController *destController = segue.destinationViewController;
         destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"GamePhotoSegue"]) {
+        EazePhotosViewController *destController = segue.destinationViewController;
+        destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"GameVideoSegue"]) {
+        EazesVideosViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-//    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
+    if ([title isEqualToString:@"Videos"]) {
+        [self performSegueWithIdentifier:@"GameVideoSegue" sender:self];
+    } else if ([title isEqualToString:@"Photos"]) {
+        [self performSegueWithIdentifier:@"GamePhotoSegue" sender:self];
+    }
 }
 
 - (IBAction)refreshButtonClicked:(id)sender {

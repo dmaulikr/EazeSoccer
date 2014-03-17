@@ -73,27 +73,11 @@
         
         if (gamelogSelectController) {
             if (gamelogSelectController.game) {
-                NSURL *url;
-                
-                if (currentSettings.user.authtoken)
-                    url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@",
-                                                [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                                @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
-                                                @"&gameschedule_id=", gameSelectController.thegame.id, @"&gamelog_id=",
-                                                gamelogSelectController.gamelog.gamelogid, @"&auth_token=", currentSettings.user.authtoken]];
-                else
-                    url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
-                                                [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                                @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
-                                                @"&gameschedule_id=", gameSelectController.thegame.id, @"&gamelog_id=",
-                                                gamelogSelectController.gamelog.gamelogid]];
-                
-                NSURLRequest *request = [NSURLRequest requestWithURL:url];
-                [self.activityIndicator startAnimating];
-                [[NSURLConnection alloc] initWithRequest:request delegate:self];
+                self.gamelog = gamelogSelectController.gamelog;
             }
-        } else
-            [super viewWillAppear:animated];
+        }
+        
+        [super viewWillAppear:animated];
     }
 }
 
@@ -198,16 +182,7 @@
         self.player = nil;
         gamelogSelectController.game = nil;
         
-        NSURL *url;
-        
-        if (currentSettings.user.authtoken)
-            url = [NSURL URLWithString:[sportzServerInit getTeamVideos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
-        else
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                            @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid]];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [self.activityIndicator startAnimating];
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        [super retrieveVideos];
     }
 }
 

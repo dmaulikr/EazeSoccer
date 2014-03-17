@@ -24,8 +24,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIButton *imageButton;
+- (IBAction)imageButtonClicked:(id)sender;
+- (IBAction)athleteButtonClicked:(id)sender;
+- (IBAction)coachButtonClicked:(id)sender;
 - (IBAction)gameButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *readArticleButton;
-- (IBAction)readArticleButtonClicked:(id)sender;
 
 @end

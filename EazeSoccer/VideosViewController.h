@@ -11,14 +11,14 @@
 #import "Athlete.h"
 #import "GameSchedule.h"
 #import "User.h"
-//#import "Gamelogs.h"
+#import "Gamelogs.h"
 
 @interface VideosViewController : UIViewController
 
 @property(nonatomic, strong) Athlete *player;
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) User *user;
-//@property(nonatomic, strong) Gamelogs *gamelog;
+@property(nonatomic, strong) Gamelogs *gamelog;
 
 @property(nonatomic, strong) NSMutableArray *videos;
 
@@ -36,12 +36,13 @@
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 
-- (void)getVideos;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeTeamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *featuredButton;
+
+- (void)retrieveVideos;
 
 @end

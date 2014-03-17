@@ -83,8 +83,6 @@
 
 - (id)init {
     if (self = [super init]) {
-        vsimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-
         startdate = @"";
         starttime = @"";
         location = @"";
@@ -128,6 +126,7 @@
         socceroppck = [NSNumber numberWithInt:0];
         socceroppsaves = [NSNumber numberWithInt:0];
         socceroppsog = [NSNumber numberWithInt:0];
+        vsimage = nil;
 
         return self;
     } else
@@ -145,6 +144,7 @@
         opponentpic = [gameScheduleDictionary objectForKey:@"opponentpic"];
         
         if ((![opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) && (![opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
+            vsimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
             dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             //this will start the image loading in bg
             dispatch_async(concurrentQueue, ^{
@@ -155,6 +155,8 @@
                     vsimage = [UIImage imageWithData:image];
                 });
             });
+        } else {
+            vsimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         }
         
         eazesportzOpponent = [[gameScheduleDictionary objectForKey:@"eazesportzOpponent"] boolValue];

@@ -9,6 +9,8 @@
 #import "VideosViewController.h"
 
 @interface EazesVideosViewController : VideosViewController
+
+
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 - (IBAction)searchButtonClicked:(id)sender;
 

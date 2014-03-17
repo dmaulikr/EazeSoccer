@@ -39,6 +39,7 @@
 @synthesize platinumMedia;
 
 @synthesize streamingurl;
+@synthesize streamingbucket;
 
 @synthesize teamcount;
 
@@ -86,11 +87,12 @@
         beta = [[sportDictionary objectForKey:@"beta"] boolValue];
         approved = [[sportDictionary objectForKey:@"approved"] boolValue];
         package = [sportDictionary objectForKey:@"package"];
-        silverMedia = [[sportDictionary objectForKey:@"silverMedia"] integerValue];
-        goldMedia = [[sportDictionary objectForKey:@"goldMedia"] integerValue];
-        platinumMedia = [[sportDictionary objectForKey:@"platinumMedia"] integerValue];
+        silverMedia = [[sportDictionary objectForKey:@"silverMedia"] intValue];
+        goldMedia = [[sportDictionary objectForKey:@"goldMedia"] intValue];
+        platinumMedia = [[sportDictionary objectForKey:@"platinumMedia"] intValue];
         teamcount = [sportDictionary objectForKey:@"teamcount"];
         streamingurl = [sportDictionary objectForKey:@"streamingurl"];
+        streamingbucket = [sportDictionary objectForKey:@"streamingbucket"];
         
         if ([name isEqualToString:@"Soccer"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"soccer_positions"]];

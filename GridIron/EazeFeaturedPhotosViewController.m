@@ -149,30 +149,41 @@
     if (subview)
         [subview removeFromSuperview];
     
-    while (photo.largeimage == nil) {
-        sleep(1);
+    if (photo.largeimage == nil) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:photo.large_url]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.animage.image = [UIImage imageWithData:image];
+                [self viewWillAppear:YES];
+            });
+        });
+    } else {
+        self.animage = [[UIImageView alloc] initWithImage:photo.largeimage];
     }
     
-        self.animage = [[UIImageView alloc] initWithImage:photo.largeimage];
-        self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=photo.largeimage.size};
-        [self.scrollView addSubview:self.animage];
-        subview = self.animage;
-        
-        // 2
-        self.scrollView.contentSize = photo.largeimage.size;
-        // 4
-        CGRect scrollViewFrame = self.scrollView.frame;
-        CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
-        CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
-        CGFloat minScale = MIN(scaleWidth, scaleHeight);
-        self.scrollView.minimumZoomScale = minScale;
-        
-        // 5
-        self.scrollView.maximumZoomScale = 1.0f;
-        self.scrollView.zoomScale = minScale;
-        
-        // 6
-        [self centerScrollViewContents];
+    self.animage.frame = (CGRect){.origin=CGPointMake(0.0f, 0.0f), .size=photo.largeimage.size};
+    [self.scrollView addSubview:self.animage];
+    subview = self.animage;
+    
+    // 2
+    self.scrollView.contentSize = photo.largeimage.size;
+    // 4
+    CGRect scrollViewFrame = self.scrollView.frame;
+    CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
+    CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
+    CGFloat minScale = MIN(scaleWidth, scaleHeight);
+    self.scrollView.minimumZoomScale = minScale;
+    
+    // 5
+    self.scrollView.maximumZoomScale = 1.0f;
+    self.scrollView.zoomScale = minScale;
+    
+    // 6
+    [self centerScrollViewContents];
 }
 
 -(BOOL)shouldAutorotate {

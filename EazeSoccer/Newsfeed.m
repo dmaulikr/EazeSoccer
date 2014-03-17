@@ -8,6 +8,7 @@
 
 #import "Newsfeed.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzRetrieveVideos.h"
 
 @implementation Newsfeed
 
@@ -22,6 +23,9 @@
 @synthesize updated_at;
 @synthesize tinyurl;
 @synthesize thumburl;
+@synthesize videoclip_id;
+
+@synthesize videoPoster;
 
 @synthesize httperror;
 
@@ -50,6 +54,23 @@
         updated_at = [newsDict objectForKey:@"updated_at"];
         tinyurl = [newsDict objectForKey:@"tinyurl"];
         thumburl = [newsDict objectForKey:@"thumburl"];
+        videoclip_id = [newsDict objectForKey:@"videoclip_id"];
+        
+        if (videoclip_id.length > 0) {
+            Video *video = [[[EazesportzRetrieveVideos alloc] init] getVideoSynchronous:currentSettings.sport Team:currentSettings.team
+                                                                                VideoId:videoclip_id User:currentSettings.user];
+            
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:video.poster_url]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    videoPoster = [UIImage imageWithData:image];
+                });
+            });
+        }
         
         return self;
     } else {
@@ -70,6 +91,9 @@
     
     if (coach.length > 0)
         [newsDict setValue:coach forKey: @"coach_id"];
+    
+    if (videoclip_id.length > 0)
+        [newsDict setValue:videoclip_id forKey:@"videoclip_id"];
         
     NSBundle *mainBundle = [NSBundle mainBundle];
     

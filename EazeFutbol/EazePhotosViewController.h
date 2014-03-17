@@ -11,6 +11,7 @@
 @interface EazePhotosViewController : PhotosViewController
 
 - (IBAction)searchButtonClicked:(id)sender;
+
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *videoButton;
 

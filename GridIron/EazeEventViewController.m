@@ -13,6 +13,9 @@
 #import "EazeEventTableCell.h"
 #import "EazeStartEndDateViewController.h"
 #import "EazeGameSelectionViewController.h"
+#import "EazesportzAppDelegate.h"
+
+#import <AWSS3/AWSS3.h>
 
 @interface EazeEventViewController ()
 
@@ -207,19 +210,30 @@
     Event *selectedEvent = [getEvents.eventlist objectAtIndex:indexPath.row];
     
     if (([today compare:selectedEvent.startdate] == NSOrderedDescending) && ([today compare:selectedEvent.enddate] == NSOrderedAscending)) {
-        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@.m3u8", sport.streamingurl, selectedEvent.event_id, team.teamid]];
+        S3GetObjectMetadataRequest *getMetadataRequest =
+                [[S3GetObjectMetadataRequest alloc] initWithKey:[NSString stringWithFormat:@"%@/%@.m3u8", selectedEvent.event_id, team.teamid]
+                                                                        withBucket:sport.streamingbucket];
+        S3GetObjectMetadataResponse *getMetadataResponse = [currentSettings.getS3 getObjectMetadata:getMetadataRequest];
         
-        _moviePlayer =  [[MPMoviePlayerController alloc] initWithContentURL:url];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:)
-                                                     name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
-        
-        _moviePlayer.controlStyle = MPMovieControlStyleDefault;
-        _moviePlayer.shouldAutoplay = YES;
-        [self.view addSubview:_moviePlayer.view];
-        [_moviePlayer setFullscreen:YES animated:YES];
+        if (getMetadataResponse.lastModified) {
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@/%@.m3u8", sport.streamingurl, selectedEvent.event_id, team.teamid]];
+            
+            _moviePlayer =  [[MPMoviePlayerController alloc] initWithContentURL:url];
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayBackDidFinish:)
+                                                         name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
+            
+            _moviePlayer.controlStyle = MPMovieControlStyleDefault;
+            _moviePlayer.shouldAutoplay = YES;
+            [self.view addSubview:_moviePlayer.view];
+            [_moviePlayer setFullscreen:YES animated:YES];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Event has not started yet." delegate:nil
+                                                  cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+            [alert show];
+        }
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Event is not being broadcast at this time." delegate:self
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Event is not being broadcast at this time." delegate:nil
                                               cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
         [alert show];
     }

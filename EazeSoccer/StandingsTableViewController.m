@@ -103,9 +103,16 @@
     
     if (standing.gameschedule_id.length > 0) {
         if (standing.oppimageurl.length > 0) {
-            NSURL * imageURL = [NSURL URLWithString:standing.oppimageurl];
-            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-            cell.teamImage.image = [UIImage imageWithData:imageData];
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:standing.oppimageurl]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    cell.teamImage.image = [UIImage imageWithData:image];
+                });
+            });
         } else {
             cell.teamImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         }

@@ -16,6 +16,7 @@
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "EazeBasketballGameSummaryViewController.h"
 #import "EazeFootballGameSummaryViewController.h"
+#import "sportzteamsMovieViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -47,7 +48,7 @@
     _athleteButton.layer.cornerRadius = 6;
     _gameButton.layer.cornerRadius = 6;
     _newsTextView.editable = NO;
-    
+    [[_imageButton imageView] setContentMode: UIViewContentModeScaleAspectFit];
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,42 +60,19 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (newsitem.athlete.length > 0) {
-        _athleteButton.enabled = YES;
-        [_athleteButton setTitle:[[currentSettings findAthlete:newsitem.athlete] logname] forState:UIControlStateNormal];
-    } else {
-        _athleteButton.enabled = NO;
-        _athleteButton.hidden = YES;
-    }
+    _imageButton.enabled = NO;
+    _athleteButton.enabled = NO;
+    _coachButton.enabled = NO;
+    _gameButton.enabled = NO;
+    _athleteButton.hidden = YES;
+    _coachButton.hidden = YES;
+    _gameButton.hidden = YES;
     
-    if (newsitem.coach.length > 0) {
-        _coachButton.enabled = YES;
-        [_coachButton setTitle:[[currentSettings findCoach:newsitem.coach] fullname] forState:UIControlStateNormal];
-    } else {
-        _coachButton.enabled = NO;
-        _coachButton.hidden = YES;
-    }
-    
-    if (newsitem.game.length > 0) {
-        _gameButton.enabled = YES;
-        [_gameButton setTitle:[[currentSettings findGame:newsitem.game ] vsOpponent] forState:UIControlStateNormal];
-    } else {
-        _gameButton.enabled = NO;
-        _gameButton.hidden = YES;
-    }
-    
-    if (newsitem.external_url.length > 0) {
-        _readArticleButton.hidden = NO;
-        _readArticleButton.enabled = YES;
-        [_readArticleButton setTitle:newsitem.external_url forState:UIControlStateNormal];
-    } else {
-        _readArticleButton.hidden = YES;
-        _readArticleButton.enabled = NO;
-    }
-    
-    // Add image
-    
-    if ((newsitem.tinyurl.length > 0) || (newsitem.thumburl.length > 0)) {
+    if (newsitem.videoclip_id.length > 0) {
+        _imageButton.enabled = YES;
+        [_imageButton setBackgroundImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125] forState:UIControlStateNormal];
+        _imageView.image = [currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125];
+    } else if ((newsitem.tinyurl.length > 0) || (newsitem.thumburl.length > 0)) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
@@ -102,17 +80,46 @@
             
             //this will set the image when loading is finished
             dispatch_async(dispatch_get_main_queue(), ^{
+                [_imageButton setImage:[UIImage imageWithData:image] forState:UIControlStateNormal];
                 _imageView.image = [UIImage imageWithData:image];
             });
         });
     } else if (newsitem.athlete.length > 0) {
-        _imageView.image = [currentSettings normalizedImage:[[currentSettings findAthlete:newsitem.athlete] getImage:@"thumb"] scaledToSize:125];
+        _imageButton.enabled = YES;
+        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findAthlete:newsitem.athlete] getImage:@"thumb"] scaledToSize:125]
+                      forState:UIControlStateNormal];
+    } else if (newsitem.game.length > 0) {
+        _imageButton.enabled = YES;
+        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findGame:newsitem.game] vsimage] scaledToSize:50]
+                      forState:UIControlStateNormal];
     } else if (newsitem.coach.length > 0) {
-        _imageView.image = [currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"thumb"] scaledToSize:125];
+        _imageButton.enabled = YES;
+        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"thumb"] scaledToSize:125]
+                      forState:UIControlStateNormal];
     } else if (newsitem.team.length > 0) {
-        _imageView.image = [currentSettings normalizedImage:[[currentSettings findTeam:newsitem.team] getImage:@"thumb"] scaledToSize:125];
+        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[currentSettings.team getImage:@"thumb"] scaledToSize:125]
+                                forState:UIControlStateNormal];
     } else {
-        _imageView.image = [currentSettings normalizedImage:[currentSettings.sport getImage:@"thumb"] scaledToSize:125];
+        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[currentSettings.sport getImage:@"thumb"] scaledToSize:125]
+                      forState:UIControlStateNormal];
+    }
+    
+    if (newsitem.athlete.length > 0) {
+        [_athleteButton setTitle:[[currentSettings findAthlete:newsitem.athlete] logname] forState:UIControlStateNormal];
+        _athleteButton.enabled = YES;
+        _athleteButton.hidden = NO;
+    }
+    
+    if (newsitem.game.length > 0) {
+        [_gameButton setTitle:[[currentSettings findGame:newsitem.game ] vsOpponent] forState:UIControlStateNormal];
+        _gameButton.enabled = YES;
+        _gameButton.hidden = NO;
+    }
+    
+    if (newsitem.coach.length > 0) {
+        [_coachButton setTitle:[[currentSettings findCoach:newsitem.coach] fullname] forState:UIControlStateNormal];
+        _coachButton.enabled = YES;
+        _coachButton.hidden = NO;
     }
     
     [_newsTextView setText:newsitem.news];
@@ -135,6 +142,9 @@
     } else if ([segue.identifier isEqualToString:@"FootballGameInfoSegue"]) {
         EazeFootballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:newsitem.game];
+    } else if ([segue.identifier isEqualToString:@"VideoClipSegue"]) {
+        sportzteamsMovieViewController *destController = segue.destinationViewController;
+        destController.videoid = newsitem.videoclip_id;
     }
 }
 
@@ -165,6 +175,26 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
+- (IBAction)imageButtonClicked:(id)sender {
+    if (newsitem.videoclip_id.length > 0) {
+        [self performSegueWithIdentifier:@"VideoClipSegue" sender:self];
+    } else if (newsitem.athlete.length > 0) {
+        [self performSegueWithIdentifier:@"PlayerInfoSegue" sender:self];
+    } else if (newsitem.game.length > 0) {
+        [self gameButtonClicked:self];
+    } else if (newsitem.coach.length > 0) {
+        [self performSegueWithIdentifier:@"CoachInfoSegue" sender:self];
+    }
+}
+
+- (IBAction)athleteButtonClicked:(id)sender {
+    [self performSegueWithIdentifier:@"PlayerInfoSegue" sender:self];
+}
+
+- (IBAction)coachButtonClicked:(id)sender {
+    [self performSegueWithIdentifier:@"CoachInfoSegue" sender:self];
+}
+
 - (IBAction)gameButtonClicked:(id)sender {
     if ([currentSettings.sport.name isEqualToString:@"Football"]) {
         [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
@@ -175,6 +205,4 @@
     }
 }
 
-- (IBAction)readArticleButtonClicked:(id)sender {
-}
 @end

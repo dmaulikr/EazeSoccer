@@ -14,6 +14,7 @@
 #import "sportzteamsPhotoInfoViewController.h"
 #import "EazeUsersSelectViewController.h"
 #import "EazesportzGameLogViewController.h"
+#import "EazesVideosViewController.h"
 
 @interface EazePhotosViewController () <UIAlertViewDelegate>
 
@@ -152,6 +153,14 @@
     } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
         gamelogSelectController = segue.destinationViewController;
         gamelogSelectController.game = gameSelectController.thegame;
+    } else if ([segue.identifier isEqualToString:@"VideoCollectionSegue"]) {
+        EazesVideosViewController *destController = segue.destinationViewController;
+        if (playerSelectController.player)
+            destController.player = playerSelectController.player;
+        else if (gameSelectController.thegame)
+            destController.game = gameSelectController.thegame;
+        else if (usersSelectController.user)
+            destController.user = usersSelectController.user;
     }
 }
 

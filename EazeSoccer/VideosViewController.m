@@ -20,7 +20,7 @@
 #import "PlayerSelectionViewController.h"
 #import "UsersViewController.h"
 #import "VideoInfoViewController.h"
-//#import "GamePlayViewController.h"
+#import "EazesportzRetrieveVideos.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -36,12 +36,14 @@
     GameScheduleViewController *gameSelectionController;
     PlayerSelectionViewController *playerSelectionController;
     UsersViewController *userSelectionController;
+    
+    EazesportzRetrieveVideos *getVideos;
 }
 
 @synthesize player;
 @synthesize game;
 @synthesize user;
-//@synthesize gamelog;
+@synthesize gamelog;
 @synthesize videos;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -62,6 +64,7 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.searchButton, self.featuredButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
+    getVideos = [[EazesportzRetrieveVideos alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -73,67 +76,39 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotVideos:) name:@"VideosChangedNotification" object:nil];
     _gameSelectContainer.hidden = YES;
     _playerSelectContainer.hidden = YES;
     _userSelectionContainer.hidden = YES;
     
-//    if ((player) || (gamelog) || (game) || (user)) {
-    
     if ((player) || (game) || (user)) {
-        [self getVideos];
-    } else if (videos) {
-        [self teamButtonClicked:self];
+        [self retrieveVideos];
     }
     
     if (videos)
-        [_collectionView reloadData];    
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    responseStatusCode = [httpResponse statusCode];
-    theData = [[NSMutableData alloc]init];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
-    
-    [theData appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [_activityIndicator stopAnimating];
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
-    
-    if (responseStatusCode == 200) {
-        videos = [[NSMutableArray alloc] init];
-        for (int i = 0; i < [serverData count]; i++) {
-            [videos addObject:[[Video alloc] initWithDirectory:[serverData objectAtIndex:i]]];
-        }
         [_collectionView reloadData];
-        
-        if (videos.count == 0) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Videos" message:@"Try a different search"
-                                                           delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-        }
+}
+
+- (void)retrieveVideos {
+    [getVideos retrieveVideos:currentSettings.sport Team:currentSettings.team Athlete:player Game:game SearchUser:user GameLog:(Gamelogs*)gamelog
+                         User:currentSettings.user];
+}
+
+- (void)gotVideos:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        videos = getVideos.videos;
+        [_collectionView reloadData];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Videos"
-                                                        message:[NSString stringWithFormat:@"%d", responseStatusCode]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving videos" delegate:nil
+                                                  cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+        [errorView show];
     }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
@@ -143,7 +118,7 @@
         user = nil;
         videos = nil;
 //        gamelog = nil;
-        [self getVideos];
+        [self retrieveVideos];
     }
     _gameSelectContainer.hidden = YES;
 }
@@ -155,7 +130,7 @@
         user = nil;
         videos = nil;
         //        gamelog = nil;
-        [self getVideos];
+        [self retrieveVideos];
     }
     _playerSelectContainer.hidden = YES;
 }
@@ -167,23 +142,11 @@
         user = nil;
         videos = nil;
 //        gamelog = nil;
-        [self getVideos];
+        [self retrieveVideos];
     }
     _userSelectionContainer.hidden = YES;
 }
-/*
-- (IBAction)selectVideoGameLog:(UIStoryboardSegue *)segue {
-    gamelog = gameplaySelectionController.play;
-    if (gamelog) {
-        player = nil;
-        videos = nil;
-        user = nil;
-        game = nil;
-        [self getVideos];
-    }
-    _gamelogSelectContainer.hidden = YES;
-}
-*/
+
 #pragma mark - UICollectionView Datasource
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
@@ -312,18 +275,7 @@
     player = nil;
     game = nil;
     user = nil;
-    
-    NSURL *url;
-    
-    if (currentSettings.user.authtoken)
-        url = [NSURL URLWithString:[sportzServerInit getTeamVideos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
-    else
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                    @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid]];
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [_activityIndicator startAnimating];
-    [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [self retrieveVideos];
 }
 
 - (IBAction)changeTeamButtonClicked:(id)sender {
@@ -360,49 +312,6 @@
     [alert show];
 }
 
-- (void)getVideos {
-    NSURL *url;
-    
-    if (player) {
-        if (currentSettings.user.authtoken)
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
-                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                   @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid, @"&athlete_id=",
-                   player.athleteid, @"&auth_token=", currentSettings.user.authtoken]];
-        else
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid, @"&athlete_id=",
-                                        player.athleteid]];
-    } else if (game) {
-        if (currentSettings.user.authtoken)
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
-                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
-                                        @"&gameschedule_id=", game.id, @"&auth_token=", currentSettings.user.authtoken]];
-        else
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
-                                        @"&gameschedule_id=", game.id]];
-        
-//    } else if (gamelog) {
-//        url = [NSURL URLWithString:[sportzServerInit getGameLogVideos:gamelog.gamelogid Team:currentSettings.team.teamid
-//                                                                Token:currentSettings.user.authtoken]];
-    } else if (user) {
-        if (currentSettings.user.authtoken)
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
-                                        @"&user_id=", currentSettings.user.userid, @"&auth_token=", currentSettings.user.authtoken]];
-        else
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", currentSettings.sport.id, @"/videoclips.json?team_id=", currentSettings.team.teamid,
-                                        @"&user_id=", currentSettings.user.userid]];
-    }
-    
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [_activityIndicator startAnimating];
-    [[NSURLConnection alloc] initWithRequest:request delegate:self];
-}
-
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
@@ -422,10 +331,7 @@
         player = nil;
         game = nil;
         user = nil;
-        NSURL *url = [NSURL URLWithString:[sportzServerInit getTeamVideos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [_activityIndicator startAnimating];
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        [self retrieveVideos];
     }
 }
 

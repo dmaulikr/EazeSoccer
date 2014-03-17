@@ -12,6 +12,7 @@
 #import "NewsTableCell.h"
 #import "EazeNewsFeedInfoViewController.h"
 #import "EazesportzRetrieveNews.h"
+#import "EazeWebViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -133,11 +134,13 @@
     }
     
     if (feeditem.game.length > 0)
-        cell.gameLabel.text = [NSString stringWithFormat:@"%@%@", @"vs ", [[currentSettings findGame:feeditem.game] opponent]];
+        cell.gameLabel.text = [[currentSettings findGame:feeditem.game] vsOpponent];
     else
         cell.gameLabel.text = @"";
     
-    if (feeditem.tinyurl.length > 0) {
+    if (feeditem.videoclip_id.length > 0) {
+        cell.imageView.image = [currentSettings normalizedImage:feeditem.videoPoster scaledToSize:50];
+    } else if (feeditem.tinyurl.length > 0) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
@@ -146,10 +149,13 @@
             //this will set the image when loading is finished
             dispatch_async(dispatch_get_main_queue(), ^{
                 cell.imageView.image = [UIImage imageWithData:image];
+                [_tableView reloadData];
             });
         });
     } else if (feeditem.athlete.length > 0) {
         cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findAthlete:feeditem.athlete] getImage:@"tiny"] scaledToSize:50];
+    } else if (feeditem.game.length > 0) {
+        cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findGame:feeditem.game] vsimage] scaledToSize:50];
     } else if (feeditem.coach.length > 0) {
         cell.imageView.image = [[currentSettings findCoach:feeditem.coach] getImage:@"tiny"];
     } else {
@@ -159,11 +165,24 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    Newsfeed *newsitem = [getNews.news objectAtIndex:indexPath.row];
+    
+    if (newsitem.external_url.length > 0) {
+        [self performSegueWithIdentifier:@"NewsExternalUrlSegue" sender:self];
+    } else {
+        [self performSegueWithIdentifier:@"NewsInfoSegue" sender:self];
+    }
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
     if ([segue.identifier isEqualToString:@"NewsInfoSegue"]) {
         EazeNewsFeedInfoViewController *destController = segue.destinationViewController;
         destController.newsitem = [getNews.news objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"NewsExternalUrlSegue"]) {
+        EazeWebViewController *destController = segue.destinationViewController;
+        destController.external_url = [NSURL URLWithString:[[getNews.news objectAtIndex:indexPath.row] external_url]];
     }
 }
 
