@@ -134,6 +134,8 @@
     else
         [_mediaSwitch setOn:NO];
  
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

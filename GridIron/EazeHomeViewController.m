@@ -217,7 +217,15 @@
                 break;
                 
             default:
-                [self performSegueWithIdentifier:@"BroadcastEventsSegue" sender:self];
+                if (([currentSettings.sport isGoldPackage]) || ([currentSettings.sport isPlatinumPackage]))
+                    [self performSegueWithIdentifier:@"BroadcastEventsSegue" sender:self];
+                else {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                    message:[NSString stringWithFormat:@"%@ does not support live events", currentSettings.team.team_name]
+                                                    delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                }
                 break;
         }
     }

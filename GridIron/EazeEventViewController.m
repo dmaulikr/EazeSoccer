@@ -75,6 +75,9 @@
     } else {
         [self retrieveEvents];
     }
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

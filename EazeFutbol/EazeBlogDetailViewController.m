@@ -136,6 +136,9 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)textViewShouldBeginEditing:(UITextView *)textView {

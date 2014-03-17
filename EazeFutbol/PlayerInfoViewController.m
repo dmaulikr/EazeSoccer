@@ -115,6 +115,9 @@
     if (!player.hasvideos) {
         _videoButton.enabled = NO;
     }
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {

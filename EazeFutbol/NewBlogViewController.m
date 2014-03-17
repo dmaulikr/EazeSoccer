@@ -150,6 +150,9 @@
         
         selectplay = NO;
     }
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

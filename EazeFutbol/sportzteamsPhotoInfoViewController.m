@@ -132,6 +132,9 @@
     }
     
     self.title = photo.displayname;
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)displayPhoto:(Photo *)thephoto {

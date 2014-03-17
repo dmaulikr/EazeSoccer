@@ -37,6 +37,9 @@
     [super viewWillAppear:animated];
     
     self.title = self.athlete.full_name;
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

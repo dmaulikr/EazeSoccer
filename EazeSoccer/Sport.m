@@ -30,8 +30,10 @@
 @synthesize alert_interval;
 @synthesize gamelog_interval;
 @synthesize newsfeed_interval;
+
 @synthesize beta;
 @synthesize approved;
+@synthesize hideAds;
 
 @synthesize package;
 @synthesize silverMedia;
@@ -58,6 +60,7 @@
         footballOffensePositions = [[NSMutableDictionary alloc] init];
         footballDefensePositions = [[NSMutableDictionary alloc] init];
         logosize = @"";
+        hideAds = NO;
         return self;
     } else
         return nil;
@@ -84,8 +87,11 @@
         alert_interval = [sportDictionary objectForKey:@"alert_interval"];
         gamelog_interval = [sportDictionary objectForKey:@"gamelog_interval"];
         newsfeed_interval = [sportDictionary objectForKey:@"newsfeed_interval"];
+        
         beta = [[sportDictionary objectForKey:@"beta"] boolValue];
         approved = [[sportDictionary objectForKey:@"approved"] boolValue];
+        hideAds = [[sportDictionary objectForKey:@"hideads"] boolValue];
+        
         package = [sportDictionary objectForKey:@"package"];
         silverMedia = [[sportDictionary objectForKey:@"silverMedia"] intValue];
         goldMedia = [[sportDictionary objectForKey:@"goldMedia"] intValue];

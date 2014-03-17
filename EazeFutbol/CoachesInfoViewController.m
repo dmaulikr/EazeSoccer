@@ -7,6 +7,7 @@
 //
 
 #import "CoachesInfoViewController.h"
+#import "EazesportzAppDelegate.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -62,6 +63,9 @@
     self.title = coach.fullname;
     [staffPosition setText:coach.speciality];
     coachImage.image = [coach mediumimage];
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

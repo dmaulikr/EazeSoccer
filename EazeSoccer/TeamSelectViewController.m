@@ -103,19 +103,6 @@
         if (!sport) {
             if ([sport isGoldPackage])
                 [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
-
-/*            if (teamList.count == 1) {
-                currentSettings.team = [teamList objectAtIndex:0];
-                [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                                  Token:currentSettings.user.authtoken];
-                [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                                    Token:currentSettings.user.authtoken];
-                [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                                Token:currentSettings.user.authtoken];
-                self.tabBarController.tabBar.hidden = NO;
-                self.navigationItem.hidesBackButton = NO;
-                [self.navigationController popToRootViewControllerAnimated:YES];
-            } else */
             
             if (teamList.count == 0) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No teams entered yet!"

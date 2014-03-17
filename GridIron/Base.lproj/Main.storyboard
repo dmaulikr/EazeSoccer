@@ -3591,6 +3591,13 @@
                                     <outlet property="delegate" destination="scM-6l-Dm5" id="aCr-GW-Qbk"/>
                                 </connections>
                             </collectionView>
+                            <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="61y-Xw-7FF">
+                                <rect key="frame" x="0.0" y="473" width="320" height="50"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Vb8-Q2-9nD"/>
+                                </constraints>
+                            </adBannerView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="LNq-gM-khF">
                                 <rect key="frame" x="142" y="266" width="37" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -3604,6 +3611,9 @@
                             <constraint firstAttribute="centerX" secondItem="LNq-gM-khF" secondAttribute="centerX" id="CYI-qY-q5t"/>
                             <constraint firstItem="JKE-ne-MMm" firstAttribute="centerY" secondItem="LNq-gM-khF" secondAttribute="centerY" id="TyQ-Du-y8b"/>
                             <constraint firstItem="JKE-ne-MMm" firstAttribute="leading" secondItem="WnE-ee-NJu" secondAttribute="leading" id="WrL-vt-uHV"/>
+                            <constraint firstItem="61y-Xw-7FF" firstAttribute="leading" secondItem="JKE-ne-MMm" secondAttribute="leading" id="XzI-Vn-jfp"/>
+                            <constraint firstItem="61y-Xw-7FF" firstAttribute="trailing" secondItem="JKE-ne-MMm" secondAttribute="trailing" id="dBe-Cq-j3l"/>
+                            <constraint firstItem="vdh-5E-2eG" firstAttribute="top" secondItem="61y-Xw-7FF" secondAttribute="bottom" constant="1" id="pK2-iG-7AW"/>
                             <constraint firstAttribute="centerY" secondItem="LNq-gM-khF" secondAttribute="centerY" id="vZH-Vd-GxJ"/>
                         </constraints>
                     </view>
@@ -3623,6 +3633,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="LNq-gM-khF" id="iya-Dr-1ky"/>
+                        <outlet property="bannerView" destination="61y-Xw-7FF" id="QHf-mp-MRY"/>
                         <outlet property="collectionView" destination="JKE-ne-MMm" id="dFb-te-ap6"/>
                         <outlet property="searchButton" destination="WcS-NF-I2A" id="KIp-mA-DaW"/>
                         <outlet property="videoButton" destination="6pS-K8-n8c" id="QU2-z0-17d"/>
@@ -6181,12 +6192,22 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="color" cocoaTouchSystemColor="darkTextColor"/>
                             </activityIndicatorView>
+                            <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="wSc-z2-xmW">
+                                <rect key="frame" x="0.0" y="473" width="320" height="50"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="I3K-9d-iHl"/>
+                                </constraints>
+                            </adBannerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Hjn-rT-ny4" firstAttribute="leading" secondItem="QXv-c7-Wqs" secondAttribute="leading" id="0J7-pq-hsm"/>
+                            <constraint firstItem="eNT-rN-Ira" firstAttribute="top" secondItem="wSc-z2-xmW" secondAttribute="bottom" constant="1" id="2gN-jR-zNo"/>
+                            <constraint firstItem="wSc-z2-xmW" firstAttribute="trailing" secondItem="c9M-t0-EC0" secondAttribute="trailing" id="40K-Xi-hQO"/>
                             <constraint firstAttribute="trailing" secondItem="Hjn-rT-ny4" secondAttribute="trailing" id="9F5-Ci-7h9"/>
                             <constraint firstItem="c9M-t0-EC0" firstAttribute="top" secondItem="QXv-c7-Wqs" secondAttribute="top" constant="266" id="DXO-bv-RXo"/>
+                            <constraint firstItem="wSc-z2-xmW" firstAttribute="leading" secondItem="c9M-t0-EC0" secondAttribute="leading" id="ST1-ej-54s"/>
                             <constraint firstItem="c9M-t0-EC0" firstAttribute="leading" secondItem="Hjn-rT-ny4" secondAttribute="leading" id="n6V-bN-wIg"/>
                             <constraint firstAttribute="centerX" secondItem="c9M-t0-EC0" secondAttribute="centerX" id="oqF-yn-yym"/>
                             <constraint firstItem="eNT-rN-Ira" firstAttribute="top" secondItem="Hjn-rT-ny4" secondAttribute="bottom" id="vUp-GU-YmQ"/>
@@ -6205,6 +6226,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="c9M-t0-EC0" id="GOl-Ne-ZQa"/>
+                        <outlet property="bannerView" destination="wSc-z2-xmW" id="nHo-qC-hfu"/>
                         <outlet property="collectionView" destination="Hjn-rT-ny4" id="YiX-KI-MT0"/>
                         <outlet property="searchButton" destination="q8Y-hs-5tx" id="avn-0q-4fU"/>
                         <segue destination="A4F-jN-gzS" kind="push" identifier="PlayerSelectSegue" id="pKw-En-l0c"/>
@@ -7390,26 +7412,26 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rsC-24-oJr"/>
+        <segue reference="U5X-wO-G5t"/>
+        <segue reference="Fm2-b1-d4C"/>
+        <segue reference="L8v-h7-nBc"/>
         <segue reference="ikV-2c-Qat"/>
+        <segue reference="rsC-24-oJr"/>
+        <segue reference="DNX-Gq-M0O"/>
+        <segue reference="fg8-yf-RAd"/>
+        <segue reference="sII-op-5fz"/>
+        <segue reference="pKw-En-l0c"/>
+        <segue reference="TME-s1-5eB"/>
+        <segue reference="46Q-GN-s2A"/>
         <segue reference="lhU-fA-ckU"/>
-        <segue reference="SBJ-lV-vNF"/>
-        <segue reference="aFE-b5-ozV"/>
         <segue reference="cE1-Iv-vdu"/>
         <segue reference="Q9T-K4-6KE"/>
+        <segue reference="aFE-b5-ozV"/>
         <segue reference="Kxb-MC-IPM"/>
-        <segue reference="c0l-SU-hTv"/>
-        <segue reference="JwK-nG-TL9"/>
+        <segue reference="SBJ-lV-vNF"/>
+        <segue reference="Xqe-LA-FSD"/>
         <segue reference="5Ze-pe-ijb"/>
         <segue reference="Osk-wZ-NuI"/>
-        <segue reference="Xqe-LA-FSD"/>
-        <segue reference="U5X-wO-G5t"/>
-        <segue reference="nmJ-n5-BFD"/>
-        <segue reference="L8v-h7-nBc"/>
-        <segue reference="dhB-Aj-2qv"/>
-        <segue reference="vuM-Lv-gjj"/>
-        <segue reference="Fm2-b1-d4C"/>
-        <segue reference="DNX-Gq-M0O"/>
-        <segue reference="az2-8o-FDT"/>
+        <segue reference="JwK-nG-TL9"/>
     </inferredMetricsTieBreakers>
 </document>

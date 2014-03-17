@@ -28,8 +28,10 @@
 @property(nonatomic, strong) NSNumber *alert_interval;
 @property(nonatomic, strong) NSNumber *gamelog_interval;
 @property(nonatomic, strong) NSNumber *newsfeed_interval;
+
 @property(nonatomic, assign) BOOL beta;
 @property(nonatomic, assign) BOOL approved;
+@property(nonatomic, assign) BOOL hideAds;
 
 @property(nonatomic, strong) NSString *package;
 @property(nonatomic, assign) int silverMedia;

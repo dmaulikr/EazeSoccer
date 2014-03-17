@@ -8,6 +8,8 @@
 
 #import "PhotosViewController.h"
 
+#import <iAd/iAd.h>
+
 @interface EazePhotosViewController : PhotosViewController
 
 - (IBAction)searchButtonClicked:(id)sender;
@@ -15,4 +17,5 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *videoButton;
 
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @end

@@ -41,6 +41,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
+}
+
 -(BOOL)shouldAutorotate {
     return NO;
 }

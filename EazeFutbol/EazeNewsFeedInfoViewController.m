@@ -124,6 +124,9 @@
     
     [_newsTextView setText:newsitem.news];
     [_titleLabel setText:newsitem.title];
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

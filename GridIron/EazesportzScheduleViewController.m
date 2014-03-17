@@ -48,6 +48,9 @@
         [alert show];
     } else
         [super viewWillAppear:animated];
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

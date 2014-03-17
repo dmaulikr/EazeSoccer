@@ -67,6 +67,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotAlerts:) name:@"AlertListChangedNotification" object:nil];
     [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
                                                       Token:currentSettings.user.authtoken];
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)gotAlerts:(NSNotification *)notification {

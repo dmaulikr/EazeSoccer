@@ -60,6 +60,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNews:) name:@"NewsListChangedNotification" object:nil];
     getNews = [[EazesportzRetrieveNews alloc] init];
     [getNews retrieveNews:currentSettings.sport Team:currentSettings.team User:currentSettings.user];
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

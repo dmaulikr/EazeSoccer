@@ -58,6 +58,9 @@
     _statSelector.selectedSegmentIndex = 0;
         
     [_playerStatsTableView reloadData];
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 #pragma mark - Table view data source

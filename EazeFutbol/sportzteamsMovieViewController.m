@@ -90,6 +90,9 @@
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
     }
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

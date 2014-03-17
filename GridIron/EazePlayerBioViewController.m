@@ -7,6 +7,7 @@
 //
 
 #import "EazePlayerBioViewController.h"
+#import "EazesportzAppDelegate.h"
 
 @interface EazePlayerBioViewController ()
 
@@ -37,6 +38,9 @@
     _playerNameLabel.text = player.full_name;
     _playerImageView.image = player.mediumimage;
     _playerBioTextView.text = player.bio;
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
