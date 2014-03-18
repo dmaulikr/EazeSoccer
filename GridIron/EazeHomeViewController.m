@@ -217,9 +217,14 @@
                 break;
                 
             default:
-                if (([currentSettings.sport isGoldPackage]) || ([currentSettings.sport isPlatinumPackage]))
+                if ((([currentSettings.sport isGoldPackage]) || ([currentSettings.sport isPlatinumPackage])) && (currentSettings.user.userid.length > 0))
                     [self performSegueWithIdentifier:@"BroadcastEventsSegue" sender:self];
-                else {
+                else if (currentSettings.user.userid.length == 0) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"You must log in to view live events." delegate:nil
+                                                          cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                    [alert show];
+                } else {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                                     message:[NSString stringWithFormat:@"%@ does not support live events", currentSettings.team.team_name]
                                                     delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

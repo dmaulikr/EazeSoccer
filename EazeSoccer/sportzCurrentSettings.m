@@ -474,6 +474,11 @@
                 [image drawInRect:CGRectMake(0, 0 , 125.0, 125.0)];
                 break;
                 
+            case 200:
+                UIGraphicsBeginImageContext(CGSizeMake(200.0, 200.0));
+                [image drawInRect:CGRectMake(0, 0, 200.0, 200.0)];
+                break;
+                
             case 512:
                 UIGraphicsBeginImageContext(CGSizeMake(512.0, 512));
                 [image drawInRect:CGRectMake(0, 0 , 512.0, 512)];
@@ -496,6 +501,11 @@
                 [image drawInRect:CGRectMake(0, 0 , 190.0, 125.0)];
                 break;
                 
+            case 200:
+                UIGraphicsBeginImageContext(CGSizeMake(200.0, 150.0));
+                [image drawInRect:CGRectMake(0, 0, 200.0, 150.0)];
+                break;
+                
             case 512:
                 UIGraphicsBeginImageContext(CGSizeMake(512.0, 345.0));
                 [image drawInRect:CGRectMake(0, 0 , 512.0, 345.0)];
@@ -516,6 +526,11 @@
             case 125:
                 UIGraphicsBeginImageContext(CGSizeMake(125.0, 190.0));
                 [image drawInRect:CGRectMake(0, 0 , 125.0, 190.0)];
+                break;
+                
+            case 200:
+                UIGraphicsBeginImageContext(CGSizeMake(150.0, 200.0));
+                [image drawInRect:CGRectMake(0, 0, 150.0, 200.0)];
                 break;
                 
             case 512:

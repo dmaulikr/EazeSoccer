@@ -89,7 +89,21 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    playerImage.image = player.mediumimage;
+    if (player.mediumimage == nil) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:player.mediumpic]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                playerImage.image = [UIImage imageWithData:image];
+            });
+        });
+    } else {
+        playerImage.image = player.mediumimage;
+    }
+    
     [self.numberLabel setText:[player.number stringValue]];
     [self.nameLabel setText:player.full_name];
     [self.yearLabel setText:player.year];
