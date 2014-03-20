@@ -164,6 +164,12 @@
             destController.game = gameSelectController.thegame;
         else if (usersSelectController.user)
             destController.user = usersSelectController.user;
+        else if (self.player)
+            destController.player =self.player;
+        else if (self.game)
+            destController.game = self.game;
+        else if (self.user)
+            destController.user = self.user;
     }
 }
 
@@ -180,17 +186,21 @@
         self.user = nil;
         gameSelectController = nil;
         gamelogSelectController.game = nil;
+        usersSelectController = nil;
         [self performSegueWithIdentifier:@"PlayerSelectSegue" sender:self];
     } else if ([title isEqualToString:@"Game"]) {
         self.player = nil;
         self.user = nil;
         playerSelectController = nil;
         gamelogSelectController = nil;
+        usersSelectController = nil;
         [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
     } else if ([title isEqualToString:@"Play"]) {
         self.player = nil;
         self.user = nil;
         playerSelectController = nil;
+        usersSelectController = nil;
+        
         if (gameSelectController.thegame) {
             [self performSegueWithIdentifier:@"GamePlaySelectSegue" sender:self];
         } else {
@@ -205,12 +215,16 @@
         self.player = nil;
         self.game = nil;
         gamelogSelectController.game = nil;
+        playerSelectController = nil;
         [self performSegueWithIdentifier:@"UserSelectSegue" sender:self];
     } else if ([title isEqualToString:@"All"]) {
         self.game = nil;
         self.user = nil;
         self.player = nil;
-        gamelogSelectController.game = nil;
+        gamelogSelectController = nil;
+        playerSelectController = nil;
+        gameSelectController = nil;
+        usersSelectController = nil;
         
         NSURL *url;
         

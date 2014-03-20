@@ -205,7 +205,7 @@
             case 2:
                 if ([currentSettings.sport.name isEqualToString:@"Football"])
                     [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
-                else if ([currentSettings.sport.name isEqualToString:@"BasketballGameInfoSegue"])
+                else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
                     [self performSegueWithIdentifier:@"BasketballGameInfoSegue" sender:self];
                 else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
                     [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];

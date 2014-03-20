@@ -153,17 +153,20 @@
         self.user = nil;
         gameSelectController = nil;
         gamelogSelectController.game = nil;
+        usersSelectController = nil;
         [self performSegueWithIdentifier:@"PlayerSelectSegue" sender:self];
     } else if ([title isEqualToString:@"Game"]) {
         self.player = nil;
         self.user = nil;
         playerSelectController = nil;
         gamelogSelectController.game = nil;
+        usersSelectController = nil;
         [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
     } else if ([title isEqualToString:@"Play"]) {
         self.player = nil;
         self.user = nil;
         playerSelectController = nil;
+        usersSelectController = nil;
         
         if (gameSelectController.thegame)
             [self performSegueWithIdentifier:@"GamePlaySelectSegue" sender:self];
@@ -183,7 +186,10 @@
         self.game = nil;
         self.user = nil;
         self.player = nil;
-        gamelogSelectController.game = nil;
+        gamelogSelectController = nil;
+        playerSelectController = nil;
+        gameSelectController = nil;
+        usersSelectController = nil;
         
         [super retrieveVideos];
     }

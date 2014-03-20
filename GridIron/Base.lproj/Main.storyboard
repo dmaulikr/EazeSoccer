@@ -2598,7 +2598,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8ES-Ky-C6w">
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8ES-Ky-C6w">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -2740,6 +2740,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="dyb-OO-tjF" id="teq-2C-dez"/>
                         <outlet property="videoCollectionView" destination="fPm-1r-A7s" id="njM-Dg-TzV"/>
                     </connections>
                 </viewController>
@@ -2771,7 +2772,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="59"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q04-oL-l28">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q04-oL-l28">
                                                     <rect key="frame" x="78" y="5" width="181" height="18"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <constraints>
@@ -2781,7 +2782,7 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Jersey:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kAq-lv-SzP">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jersey:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kAq-lv-SzP">
                                                     <rect key="frame" x="78" y="32" width="40" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <constraints>
@@ -2791,7 +2792,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ujV-Wn-Qxf">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ujV-Wn-Qxf">
                                                     <rect key="frame" x="126" y="32" width="20" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <constraints>
@@ -2800,14 +2801,14 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KKT-gt-E2w">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KKT-gt-E2w">
                                                     <rect key="frame" x="20" y="5" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="woo-FW-o2l"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Position:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ai0-Uq-sej">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Position:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ai0-Uq-sej">
                                                     <rect key="frame" x="154" y="32" width="42" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="80" id="339-EU-NnQ"/>
@@ -7665,26 +7666,26 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Osk-wZ-NuI"/>
-        <segue reference="aFE-b5-ozV"/>
         <segue reference="U5X-wO-G5t"/>
         <segue reference="L8v-h7-nBc"/>
         <segue reference="lhU-fA-ckU"/>
-        <segue reference="Kxb-MC-IPM"/>
+        <segue reference="uke-b0-p5o"/>
+        <segue reference="10B-LG-VUf"/>
+        <segue reference="fg8-yf-RAd"/>
+        <segue reference="pKw-En-l0c"/>
+        <segue reference="sII-op-5fz"/>
+        <segue reference="46Q-GN-s2A"/>
         <segue reference="SBJ-lV-vNF"/>
         <segue reference="cE1-Iv-vdu"/>
         <segue reference="Q9T-K4-6KE"/>
-        <segue reference="c0l-SU-hTv"/>
+        <segue reference="aFE-b5-ozV"/>
+        <segue reference="Kxb-MC-IPM"/>
         <segue reference="Xqe-LA-FSD"/>
-        <segue reference="nxO-Nw-Wt8"/>
-        <segue reference="JwK-nG-TL9"/>
-        <segue reference="t0J-R2-70q"/>
         <segue reference="ud0-u2-W90"/>
         <segue reference="5Ze-pe-ijb"/>
+        <segue reference="nxO-Nw-Wt8"/>
+        <segue reference="JwK-nG-TL9"/>
+        <segue reference="Osk-wZ-NuI"/>
         <segue reference="rsC-24-oJr"/>
-        <segue reference="46Q-GN-s2A"/>
-        <segue reference="pKw-En-l0c"/>
-        <segue reference="sII-op-5fz"/>
-        <segue reference="fg8-yf-RAd"/>
     </inferredMetricsTieBreakers>
 </document>

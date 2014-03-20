@@ -97,7 +97,14 @@
 - (void)gotVideos:(NSNotification *)notification {
     if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
         videos = getVideos.videos;
-        [_collectionView reloadData];
+        
+        if (videos.count > 0)
+            [_collectionView reloadData];
+        else {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No videos match search criteria!" delegate:nil
+                                                      cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+            [alertView show];
+        }
     } else {
         UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving videos" delegate:nil
                                                   cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];

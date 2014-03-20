@@ -11,4 +11,5 @@
 @interface EazeFeaturedVideosViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UICollectionView *videoCollectionView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @end
