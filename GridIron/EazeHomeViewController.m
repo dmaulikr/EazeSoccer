@@ -114,7 +114,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 5;
+    if ([currentSettings.sport isPlatinumPackage])
+        return 6;
+    else
+        return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -127,6 +130,7 @@
     switch (indexPath.row) {
             
         case 0:
+            cell.backgroundColor = [UIColor whiteColor];
             if (currentSettings.team.teamid.length > 0) {
                 cell.homeTableCellImage.image = [currentSettings.team getImage:@"thumb"];
                 cell.homeTableCellTitle.text = currentSettings.sport.sitename;
@@ -142,7 +146,7 @@
             break;
             
         case 1:
-            cell.backgroundColor = [UIColor lightTextColor];
+            cell.backgroundColor = [UIColor lightGrayColor];
             cell.homeTableCellImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"news_icon.JPG"], 1)];
             
             if (newsitem) {
@@ -173,10 +177,17 @@
             break;
             
         case 3:
-            cell.backgroundColor = [UIColor lightTextColor];
+            cell.backgroundColor = [UIColor lightGrayColor];
             cell.homeTableCellImage.image = [UIImage imageNamed:@"camera-photo-button.png"];
-            cell.homeTableCellTitle.text = @"Photos and Highlights";
-            cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured photos and highlights for %@", currentSettings.team.mascot ];
+            cell.homeTableCellTitle.text = @"Game Photos";
+            cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured photos for %@", currentSettings.team.mascot ];
+            break;
+            
+        case 4:
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.homeTableCellImage.image = [UIImage imageNamed:@"sports-highlights.png"];
+            cell.homeTableCellTitle.text = @"Game Highlights";
+            cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured highlights for %@", currentSettings.team.mascot ];
             break;
             
         default:
@@ -212,8 +223,13 @@
                 break;
                 
             case 3:
-                if ((currentSettings.featuredVideos) && (currentSettings.featuredPhotos))
+                if (currentSettings.featuredPhotos)
                     [self performSegueWithIdentifier:@"FeaturedPhotosSegue" sender:self];
+                break;
+                
+            case 4:
+                if (currentSettings.featuredVideos)
+                    [self performSegueWithIdentifier:@"FeaturedVideosSegue" sender:self];
                 break;
                 
             default:

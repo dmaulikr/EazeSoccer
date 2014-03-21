@@ -2319,11 +2319,6 @@
                                 <segue destination="scM-6l-Dm5" kind="push" id="c7J-WS-lIL"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem image="film-clap-board.png" id="OHz-i0-pyM">
-                            <connections>
-                                <segue destination="75N-go-te2" kind="push" id="KyT-jW-d4r"/>
-                            </connections>
-                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Featured Photos" id="vBp-AF-I8P"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -2331,7 +2326,6 @@
                         <outlet property="photosButton" destination="be2-pD-RIy" id="kp6-uo-ar7"/>
                         <outlet property="scrollView" destination="4nA-LK-469" id="G79-kr-TwZ"/>
                         <outlet property="tapGesture" destination="Rva-u2-rzq" id="9rw-Te-5p2"/>
-                        <outlet property="videoButton" destination="OHz-i0-pyM" id="cM3-He-j3O"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cbN-Ro-JsB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2342,7 +2336,7 @@
                 </swipeGestureRecognizer>
                 <tapGestureRecognizer id="Rva-u2-rzq"/>
             </objects>
-            <point key="canvasLocation" x="3249" y="-2632"/>
+            <point key="canvasLocation" x="2816" y="-3068"/>
         </scene>
         <!--Eaze News View Controller-->
         <scene sceneID="dZf-T7-qk0">
@@ -2754,7 +2748,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ckc-m2-BxY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4034" y="-2632"/>
+            <point key="canvasLocation" x="2823" y="-2362"/>
         </scene>
         <!--Eaze Roster View Controller - Roster-->
         <scene sceneID="y9z-Jb-qeL">
@@ -2819,17 +2813,16 @@
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Position:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ai0-Uq-sej">
                                                     <rect key="frame" x="154" y="32" width="42" height="16"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="80" id="339-EU-NnQ"/>
                                                         <constraint firstAttribute="width" constant="42" id="3nZ-Gg-uF6"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Pos" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ykX-vj-pN2">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Pos" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ykX-vj-pN2">
                                                     <rect key="frame" x="204" y="32" width="60" height="16"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="80" id="7qi-Xx-cHa"/>
+                                                        <constraint firstAttribute="width" constant="60" id="7qi-Xx-cHa"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -2894,10 +2887,9 @@
                             <constraint firstItem="wCy-Pi-uoC" firstAttribute="top" secondItem="Ba0-ix-h9p" secondAttribute="top" constant="64" id="8kj-6m-S6z"/>
                             <constraint firstItem="wCy-Pi-uoC" firstAttribute="leading" secondItem="79x-sz-eMk" secondAttribute="leading" id="9Bb-QQ-hEh"/>
                             <constraint firstAttribute="trailing" secondItem="wCy-Pi-uoC" secondAttribute="trailing" id="A7p-GA-WD8"/>
-                            <constraint firstAttribute="bottom" secondItem="79x-sz-eMk" secondAttribute="bottom" constant="44" id="EBB-Wi-3ei"/>
-                            <constraint firstItem="UzL-EN-ugl" firstAttribute="top" secondItem="79x-sz-eMk" secondAttribute="bottom" constant="1" id="GfV-7X-FoG"/>
                             <constraint firstItem="UzL-EN-ugl" firstAttribute="top" secondItem="wCy-Pi-uoC" secondAttribute="bottom" constant="49" id="PM7-lq-zf4"/>
                             <constraint firstItem="wCy-Pi-uoC" firstAttribute="trailing" secondItem="79x-sz-eMk" secondAttribute="trailing" id="s2v-Cv-Tf0"/>
+                            <constraint firstAttribute="bottom" secondItem="79x-sz-eMk" secondAttribute="bottom" constant="44" id="zUS-fV-u1K"/>
                         </constraints>
                     </view>
                     <toolbarItems>
@@ -3170,7 +3162,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KpK-rD-c3M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3185" y="-556"/>
+            <point key="canvasLocation" x="3577" y="-724"/>
         </scene>
         <!--Eaze Player Bio View Controller - Player Bio-->
         <scene sceneID="So6-vK-WUk">
@@ -3243,7 +3235,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ynn-Ki-wkg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3925" y="-862"/>
+            <point key="canvasLocation" x="5683" y="-1566"/>
         </scene>
         <!--Eaze Alert View Controller - Alerts-->
         <scene sceneID="U8R-6e-VCU">
@@ -3473,6 +3465,7 @@
                         <segue destination="sbF-He-cj4" kind="push" identifier="SoccerGameInfoSegue" id="dQs-rn-xud"/>
                         <segue destination="Knq-Ea-4wF" kind="push" identifier="RosterSegue" id="nuA-Ui-b0Y"/>
                         <segue destination="tVk-cb-Cr3" kind="push" identifier="BroadcastEventsSegue" id="2e2-9g-Xax"/>
+                        <segue destination="75N-go-te2" kind="push" identifier="FeaturedVideosSegue" id="dBh-ka-gsy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ck-3r-0Wv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5687,7 +5680,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L0u-hW-6Ok" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3195" y="-1568"/>
+            <point key="canvasLocation" x="3577" y="-1536"/>
         </scene>
         <!--Coaches Info View Controller-->
         <scene sceneID="yVH-hl-ygI">
@@ -5775,7 +5768,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="clT-AO-t28" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3925" y="-1568"/>
+            <point key="canvasLocation" x="4307" y="-1536"/>
         </scene>
         <!--Eazesportz Custom Navigation Controller - Blog-->
         <scene sceneID="Wzl-39-pVk">
@@ -7660,7 +7653,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <image name="arrow-big-02.png" width="30" height="30"/>
         <image name="calendar.png" width="29" height="30"/>
         <image name="emergency.png" width="30" height="30"/>
-        <image name="film-clap-board.png" width="29" height="30"/>
         <image name="film.png" width="30" height="30"/>
         <image name="hierarchy.png" width="30" height="30"/>
         <image name="multi-agents.png" width="32" height="32"/>
@@ -7676,24 +7668,24 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
     <inferredMetricsTieBreakers>
         <segue reference="U5X-wO-G5t"/>
         <segue reference="L8v-h7-nBc"/>
+        <segue reference="8zo-Fl-QHd"/>
+        <segue reference="dQs-rn-xud"/>
+        <segue reference="tzB-DL-eOU"/>
+        <segue reference="lhU-fA-ckU"/>
         <segue reference="uke-b0-p5o"/>
+        <segue reference="10B-LG-VUf"/>
+        <segue reference="pKw-En-l0c"/>
         <segue reference="fg8-yf-RAd"/>
         <segue reference="sII-op-5fz"/>
         <segue reference="46Q-GN-s2A"/>
-        <segue reference="pKw-En-l0c"/>
-        <segue reference="Abd-7Q-WAV"/>
-        <segue reference="Q9T-K4-6KE"/>
-        <segue reference="cE1-Iv-vdu"/>
-        <segue reference="c0l-SU-hTv"/>
-        <segue reference="aFE-b5-ozV"/>
-        <segue reference="Kxb-MC-IPM"/>
-        <segue reference="SBJ-lV-vNF"/>
-        <segue reference="Xqe-LA-FSD"/>
-        <segue reference="JwK-nG-TL9"/>
-        <segue reference="Osk-wZ-NuI"/>
-        <segue reference="ud0-u2-W90"/>
-        <segue reference="nxO-Nw-Wt8"/>
-        <segue reference="5Ze-pe-ijb"/>
+        <segue reference="c7J-WS-lIL"/>
         <segue reference="rsC-24-oJr"/>
+        <segue reference="Xqe-LA-FSD"/>
+        <segue reference="CHs-wz-4BG"/>
+        <segue reference="JwK-nG-TL9"/>
+        <segue reference="ud0-u2-W90"/>
+        <segue reference="5Ze-pe-ijb"/>
+        <segue reference="Osk-wZ-NuI"/>
+        <segue reference="wfY-m1-545"/>
     </inferredMetricsTieBreakers>
 </document>
