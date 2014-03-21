@@ -13,6 +13,7 @@
 #import "EazeNewsFeedInfoViewController.h"
 #import "EazesportzRetrieveNews.h"
 #import "EazeWebViewController.h"
+#import "EazesportzRetrieveVideos.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -42,10 +43,11 @@
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
     
-    refreshControl = UIRefreshControl.alloc.init;
-    [refreshControl addTarget:self action:@selector(startRefresh) forControlEvents:UIControlEventValueChanged];
-    [self.tableView addSubview:refreshControl];
+//    refreshControl = UIRefreshControl.alloc.init;
+//    [refreshControl addTarget:self action:@selector(startRefresh) forControlEvents:UIControlEventValueChanged];
+//    [self.tableView addSubview:refreshControl];
     _activityIndicator.hidesWhenStopped = YES;
+    getNews = [[EazesportzRetrieveNews alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,8 +60,10 @@
     //    [super viewWillAppear:animated];
         
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotNews:) name:@"NewsListChangedNotification" object:nil];
-    getNews = [[EazesportzRetrieveNews alloc] init];
-    [getNews retrieveNews:currentSettings.sport Team:currentSettings.team User:currentSettings.user];
+    
+    if (getNews.news.count == 0) {
+        [self startRefresh];
+    }
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
@@ -72,11 +76,13 @@
 }
 
 - (void)startRefresh {
+    [_activityIndicator startAnimating];
     [getNews retrieveNews:currentSettings.sport Team:currentSettings.team User:currentSettings.user];
 }
 
 - (void)gotNews:(NSNotification *)notification {
     if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        [_activityIndicator stopAnimating];
         [_tableView reloadData];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Error getting news!" delegate:nil cancelButtonTitle:@"Ok"
@@ -108,7 +114,7 @@
     
     // Configure the cell...
     
-    // Add image
+    cell.tag = indexPath.row;
     
     cell.newsTitleLabel.numberOfLines = 3;
     cell.newsTitleLabel.text = feeditem.title;
@@ -142,7 +148,26 @@
         cell.gameLabel.text = @"";
     
     if (feeditem.videoclip_id.length > 0) {
-        cell.imageView.image = [currentSettings normalizedImage:feeditem.videoPoster scaledToSize:50];
+        if (feeditem.videoPoster == nil) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                Video *video = [[[EazesportzRetrieveVideos alloc] init] getVideoSynchronous:currentSettings.sport Team:currentSettings.team
+                                                                                    VideoId:feeditem.videoclip_id User:currentSettings.user];
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:video.poster_url]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (cell.tag == indexPath.row) {
+                        UIImage *animage = [UIImage imageWithData:image];
+                        cell.imageView.image = [currentSettings normalizedImage:animage scaledToSize:50];
+                        [cell setNeedsLayout];
+                    }
+                });
+            });
+        } else {
+            cell.imageView.image = [currentSettings normalizedImage:feeditem.videoPoster scaledToSize:50];
+        }
     } else if (feeditem.tinyurl.length > 0) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
@@ -151,8 +176,11 @@
             
             //this will set the image when loading is finished
             dispatch_async(dispatch_get_main_queue(), ^{
-                cell.imageView.image = [UIImage imageWithData:image];
-                [_tableView reloadData];
+                if (cell.tag == indexPath.row) {
+                    cell.imageView.image = [UIImage imageWithData:image];
+                    [_tableView reloadData];
+                    [cell setNeedsLayout];
+                }
             });
         });
     } else if (feeditem.athlete.length > 0) {
@@ -235,6 +263,10 @@
     if ([title isEqualToString:@"Find Site"]) {
         [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
     }
+}
+
+- (IBAction)refreshButtonClicked:(id)sender {
+    [self startRefresh];
 }
 
 @end

@@ -103,6 +103,8 @@
         cell = [[GameScheduleTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
+    cell.tag = indexPath.row;
+    
     GameSchedule *game = [currentSettings.gameList objectAtIndex:indexPath.row];
     [cell.hometeamLabel setText:[currentSettings.team team_name]];
     [cell.visitorteamLabel setText:game.opponent_name];
@@ -143,8 +145,24 @@
     }
     
     [cell.wonlostLabel setText:WonLost];
-        
-    [cell.visitorImageView setImage:[game vsimage]];
+    
+    if (game.vsimage == nil) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:game.opponentpic]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (cell.tag == indexPath.row) {
+                    cell.visitorImageView.image = [UIImage imageWithData:image];
+                    [cell setNeedsLayout];
+                }
+            });
+        });
+    } else {
+        [cell.visitorImageView setImage:[game vsimage]];
+    }
     
     return cell;
 }

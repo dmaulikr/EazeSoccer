@@ -74,6 +74,8 @@
         cell = [[RosterTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
+    cell.tag = indexPath.row;
+    
     Athlete *aplayer = [currentSettings.roster objectAtIndex:indexPath.row];
     cell.playernameLabel.text = aplayer.name;
     cell.playerNumberLabel.text = [aplayer.number stringValue];
@@ -87,7 +89,10 @@
             
             //this will set the image when loading is finished
             dispatch_async(dispatch_get_main_queue(), ^{
-                cell.rosterImage.image = [UIImage imageWithData:image];
+                if (cell.tag == indexPath.row) {
+                    cell.rosterImage.image = [UIImage imageWithData:image];
+                    [cell setNeedsLayout];
+                }
             });
         });
     } else

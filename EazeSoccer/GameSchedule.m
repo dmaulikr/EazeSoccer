@@ -144,7 +144,6 @@
         opponentpic = [gameScheduleDictionary objectForKey:@"opponentpic"];
         
         if ((![opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) && (![opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
-            vsimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
             dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             //this will start the image loading in bg
             dispatch_async(concurrentQueue, ^{

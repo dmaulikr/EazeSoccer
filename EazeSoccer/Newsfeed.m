@@ -36,6 +36,7 @@
         coach = @"";
         newsid = @"";
         team = @"";
+        videoPoster = nil;
         return self;
     } else
         return nil;
@@ -57,12 +58,11 @@
         videoclip_id = [newsDict objectForKey:@"videoclip_id"];
         
         if (videoclip_id.length > 0) {
-            Video *video = [[[EazesportzRetrieveVideos alloc] init] getVideoSynchronous:currentSettings.sport Team:currentSettings.team
-                                                                                VideoId:videoclip_id User:currentSettings.user];
-            
             dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-            //this will start the image loading in bg
+                //this will start the image loading in bg
             dispatch_async(concurrentQueue, ^{
+                Video *video = [[[EazesportzRetrieveVideos alloc] init] getVideoSynchronous:currentSettings.sport Team:currentSettings.team
+                                                                                    VideoId:videoclip_id User:currentSettings.user];
                 NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:video.poster_url]];
                 
                 //this will set the image when loading is finished
