@@ -146,7 +146,7 @@
             break;
             
         case 1:
-            cell.backgroundColor = [UIColor lightGrayColor];
+            cell.backgroundColor = [UIColor whiteColor];
             cell.homeTableCellImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"news_icon.JPG"], 1)];
             
             if (newsitem) {
@@ -177,8 +177,8 @@
             break;
             
         case 3:
-            cell.backgroundColor = [UIColor lightGrayColor];
-            cell.homeTableCellImage.image = [UIImage imageNamed:@"camera-photo-button.png"];
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.homeTableCellImage.image = [UIImage imageNamed:@"camera-icon-md.png"];
             cell.homeTableCellTitle.text = @"Game Photos";
             cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured photos for %@", currentSettings.team.mascot ];
             break;

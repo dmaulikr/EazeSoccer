@@ -18,6 +18,7 @@
 #import "EditCoachViewController.h"
 #import "EditPlayerViewController.h"
 #import "EditGameViewController.h"
+#import "EazesportzRetrieveVideos.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -67,8 +68,6 @@
     _coachSelectionContainer.hidden = YES;
     _gameSelectionContainer.hidden = YES;
     
-    UIImage *image;
-    
     if (newsitem) {
         newNewsFeed = NO;
         _newsTitleTextField.text = newsitem.title;
@@ -99,12 +98,27 @@
         
         // Add image
                 
-        if (newsitem.athlete.length > 0) {
-            image = [[currentSettings findAthlete:newsitem.athlete] getImage:@"thumb"];
+        if (newsitem.videoclip_id.length > 0) {
+            [_newsFeedImageView setImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125]];
+        } else if (newsitem.tinyurl.length > 0) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:newsitem.thumburl]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_newsFeedImageView setImage:[UIImage imageWithData:image]];
+                });
+            });
+        } else if (newsitem.athlete.length > 0) {
+            [_newsFeedImageView setImage:[currentSettings normalizedImage:[[currentSettings findAthlete:newsitem.athlete] thumbimage] scaledToSize:125]];
+        } else if (newsitem.game.length > 0) {
+           [_newsFeedImageView setImage:[currentSettings normalizedImage:[[currentSettings findGame:newsitem.game] vsimage] scaledToSize:125]];
         } else if (newsitem.coach.length > 0) {
-            image = [[currentSettings findCoach:newsitem.coach] getImage:@"thumb"];
-        } else if (newsitem.team.length > 0) {
-            image = [[currentSettings findTeam:newsitem.team ] getImage:@"thumb"];
+            [_newsFeedImageView setImage:[[currentSettings findCoach:newsitem.coach] thumbimage]];
+        } else {
+            [_newsFeedImageView setImage:[currentSettings.team getImage:@"thumb"]];
         }
         
     } else {
@@ -118,9 +132,8 @@
         _coachButton.enabled = NO;
         _teamLabel.text = currentSettings.team.team_name;
         newsitem.team = currentSettings.team.teamid;
-        image = [currentSettings.team getImage:@"thumb"];
+        _newsFeedImageView.image = [currentSettings.team getImage:@"thumb"];
     }
-    _newsFeedImageView.image = image;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

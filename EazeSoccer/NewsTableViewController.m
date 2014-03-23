@@ -12,6 +12,7 @@
 #import "sportzServerInit.h"
 #import "NewsFeedEditViewController.h"
 #import "NewsTableCell.h"
+#import "EazesportzRetrieveVideos.h"
 
 @interface NewsTableViewController () <UIAlertViewDelegate>
 
@@ -93,6 +94,8 @@
     
     // Configure the cell...
     
+    cell.tag = indexPath.row;
+    
     Newsfeed *feeditem = [newsfeed objectAtIndex:indexPath.row];
     
     cell.newsTitleLabel.text = feeditem.title;
@@ -115,19 +118,55 @@
         cell.coachLabel.text = @"";
     
     if (feeditem.game.length > 0)
-        cell.gameLabel.text = [[currentSettings findGame:feeditem.game] game_name];
+        cell.gameLabel.text = [[currentSettings findGame:feeditem.game] vsOpponent];
     else
         cell.gameLabel.text = @"";
     
-    // Add image
-    
-    if (feeditem.athlete.length > 0) {
-        cell.imageView.image = [[currentSettings findAthlete:feeditem.athlete] getImage:@"thumb"];
+    if (feeditem.videoclip_id.length > 0) {
+        if (feeditem.videoPoster == nil) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                Video *video = [[[EazesportzRetrieveVideos alloc] init] getVideoSynchronous:currentSettings.sport Team:currentSettings.team
+                                                                                    VideoId:feeditem.videoclip_id User:currentSettings.user];
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:video.poster_url]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (cell.tag == indexPath.row) {
+                        UIImage *animage = [UIImage imageWithData:image];
+                        cell.imageView.image = [currentSettings normalizedImage:animage scaledToSize:50];
+                        [cell setNeedsLayout];
+                    }
+                });
+            });
+        } else {
+            cell.imageView.image = [currentSettings normalizedImage:feeditem.videoPoster scaledToSize:50];
+        }
+    } else if (feeditem.tinyurl.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:feeditem.tinyurl]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (cell.tag == indexPath.row) {
+                    cell.imageView.image = [UIImage imageWithData:image];
+                    [cell setNeedsLayout];
+                }
+            });
+        });
+    } else if (feeditem.athlete.length > 0) {
+        cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findAthlete:feeditem.athlete] tinyimage] scaledToSize:50];
+    } else if (feeditem.game.length > 0) {
+        cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findGame:feeditem.game] vsimage] scaledToSize:50];
     } else if (feeditem.coach.length > 0) {
-        cell.imageView.image = [[currentSettings findCoach:feeditem.coach] getImage:@"thumb"];
-    } else if (feeditem.team.length > 0) {
-        cell.imageView.image = [[currentSettings findTeam:feeditem.team] getImage:@"thumb"];
+        cell.imageView.image = [[currentSettings findCoach:feeditem.coach] tinyimage];
+    } else {
+        cell.imageView.image = [currentSettings.team getImage:@"tiny"];
     }
+
     return cell;
 }
 

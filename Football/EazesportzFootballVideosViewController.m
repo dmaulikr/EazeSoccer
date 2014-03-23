@@ -51,16 +51,11 @@
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
     if (gamelogController.gamelog) {
-        NSURL *url = [NSURL URLWithString:[sportzServerInit getGameLogVideos:gamelog.gamelogid Team:currentSettings.team.teamid
-                                          Token:currentSettings.user.authtoken]];
-
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
-        [self.activityIndicator startAnimating];
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    } else {
-        [self getVideos];
+        self.gamelog = gamelogController.gamelog;
     }
+    
     _gamelogContainer.hidden = YES;
+    [self viewWillAppear:YES];
 }
 
 - (IBAction)searchButtonClicked:(id)sender {
