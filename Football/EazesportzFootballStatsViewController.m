@@ -2110,6 +2110,12 @@
     [self displayStats];
 }
 
+- (Gamelogs *)populateGameLogEntries {
+    Gamelogs *log = [[Gamelogs alloc] init];
+    
+    return log;
+}
+
 - (IBAction)toggleButtonClicked:(id)sender {
     if (addstats) {
         [_toggleButton setTitle:@"Add" forState:UIControlStateNormal];

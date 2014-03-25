@@ -15,8 +15,8 @@
 		2B93F9A518E111BA00D15D08 /* EazesCustomTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = B43B5D0D188989AE0072248F /* EazesCustomTabBarController.m */; };
 		2BFB0D3218E13C6600EBAE26 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B93F99C18E0778300D15D08 /* AWSRuntime.framework */; };
 		2BFB0D3318E13C6600EBAE26 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B93F99D18E0778300D15D08 /* AWSS3.framework */; };
-		2BFB0D3418E13C9700EBAE26 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B93F99C18E0778300D15D08 /* AWSRuntime.framework */; };
-		2BFB0D3518E13C9700EBAE26 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B93F99D18E0778300D15D08 /* AWSS3.framework */; };
+		2BFB0D3818E1474200EBAE26 /* AWSRuntime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BFB0D3618E1474200EBAE26 /* AWSRuntime.framework */; };
+		2BFB0D3918E1474200EBAE26 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BFB0D3718E1474200EBAE26 /* AWSS3.framework */; };
 		B402F95018219197006648DD /* EditTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B402F94F18219197006648DD /* EditTeamViewController.m */; };
 		B40C1880184FF8B90022C8CC /* EazesportzFootballPlayerStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B40C187F184FF8B90022C8CC /* EazesportzFootballPlayerStatsViewController.m */; };
 		B410241C184F81D9003DAE00 /* EazesportzFootballPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B410241B184F81D9003DAE00 /* EazesportzFootballPhotosViewController.m */; };
@@ -1662,6 +1662,8 @@
 /* Begin PBXFileReference section */
 		2B93F99C18E0778300D15D08 /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSRuntime.framework; sourceTree = "<group>"; };
 		2B93F99D18E0778300D15D08 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSS3.framework; sourceTree = "<group>"; };
+		2BFB0D3618E1474200EBAE26 /* AWSRuntime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSRuntime.framework; path = "../../aws-ios-sdk-1.7.1/AWSRuntime.framework"; sourceTree = "<group>"; };
+		2BFB0D3718E1474200EBAE26 /* AWSS3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSS3.framework; path = "../../aws-ios-sdk-1.7.1/AWSS3.framework"; sourceTree = "<group>"; };
 		B402F94E18219197006648DD /* EditTeamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTeamViewController.h; sourceTree = "<group>"; };
 		B402F94F18219197006648DD /* EditTeamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditTeamViewController.m; sourceTree = "<group>"; };
 		B40C187E184FF8B90022C8CC /* EazesportzFootballPlayerStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzFootballPlayerStatsViewController.h; sourceTree = "<group>"; };
@@ -2250,8 +2252,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BFB0D3418E13C9700EBAE26 /* AWSRuntime.framework in Frameworks */,
-				2BFB0D3518E13C9700EBAE26 /* AWSS3.framework in Frameworks */,
+				2BFB0D3818E1474200EBAE26 /* AWSRuntime.framework in Frameworks */,
+				2BFB0D3918E1474200EBAE26 /* AWSS3.framework in Frameworks */,
 				B478717418D0AC4D000AC45D /* CoreLocation.framework in Frameworks */,
 				B482E34E185B61D000CEFF0A /* iAd.framework in Frameworks */,
 				B482E34D185B61C100CEFF0A /* MobileCoreServices.framework in Frameworks */,
@@ -2984,6 +2986,8 @@
 		B4F9882F18208AC70093EF7E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2BFB0D3618E1474200EBAE26 /* AWSRuntime.framework */,
+				2BFB0D3718E1474200EBAE26 /* AWSS3.framework */,
 				2B93F99C18E0778300D15D08 /* AWSRuntime.framework */,
 				2B93F99D18E0778300D15D08 /* AWSS3.framework */,
 				B478717318D0AC4D000AC45D /* CoreLocation.framework */,
@@ -5400,15 +5404,16 @@
 		B482E261185B5D6B00CEFF0A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/dirctdt/Development/IOS/sportzteams/EazeSoccer/GridIron,
 					"$(PROJECT_DIR)",
+					/Users/Gil/IOS,
+					"Development/aws-ios-sdk-1.7.1",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GridIron/GridIron-Prefix.pch";
@@ -5428,15 +5433,16 @@
 		B482E262185B5D6B00CEFF0A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/dirctdt/Development/IOS/sportzteams/EazeSoccer/GridIron,
 					"$(PROJECT_DIR)",
+					/Users/Gil/IOS,
+					"Development/aws-ios-sdk-1.7.1",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GridIron/GridIron-Prefix.pch";
