@@ -244,4 +244,14 @@
     _bannerView.hidden = YES;
 }
 
+- (IBAction)gameButtonClicked:(id)sender {
+    if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
+    } else if ([currentSettings.sport.name isEqualToString:@"Bsketball"]) {
+        [self performSegueWithIdentifier:@"BasketballGameInfoSegue" sender:self];
+    } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+        [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
+    }
+}
+
 @end

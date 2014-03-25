@@ -77,6 +77,7 @@
 - (BOOL)followingAthlete:(NSString *)athleteid;
 
 - (void)insertPlayerRoster:(Athlete *)player;
+- (Athlete *)retrievePlayer:(NSString *)playerid;
 
 - (GameSchedule *)retrieveGame:(NSString *)gameid;
 - (GameSchedule *)findGame:(NSString *)gamescheduleid;

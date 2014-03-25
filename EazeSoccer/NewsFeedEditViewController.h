@@ -15,6 +15,7 @@
 @property(nonatomic, strong) Newsfeed *newsitem;
 
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+@property (weak, nonatomic) IBOutlet UITextField *externalUrlTextField;
 
 @property (weak, nonatomic) IBOutlet UITextField *newsTitleTextField;
 @property (weak, nonatomic) IBOutlet UIImageView *newsFeedImageView;

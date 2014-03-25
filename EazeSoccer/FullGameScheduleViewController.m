@@ -138,4 +138,12 @@
                                                         Token:currentSettings.user.authtoken];
 }
 
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 @end

@@ -95,6 +95,7 @@
         }
         
         _newsTextView.text = newsitem.news;
+        _externalUrlTextField.text = newsitem.external_url;
         
         // Add image
                 

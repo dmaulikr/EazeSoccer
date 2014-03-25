@@ -256,6 +256,38 @@
     return agame;
 }
 
+- (Athlete *)retrievePlayer:(NSString *)playerid {
+    Athlete *aplayer = nil;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    NSURL *url;
+    
+    if (self.user.authtoken)
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", self.sport.id, @"/athletes/", playerid, @".json?auth_token=", self.user.authtoken]];
+    else
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                   @"/sports/", self.sport.id, @"/athletes/", playerid, @".json"]];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *error = nil;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if ([httpResponse statusCode] == 200) {
+        aplayer = [[Athlete alloc] initWithDictionary:serverData];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving Athlete"
+                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+    return aplayer;
+}
+
 - (BOOL)deleteCoach:(Coach *)acoach {
     NSURL *url = [NSURL URLWithString:[sportzServerInit getCoach:[acoach coachid] Token:user.authtoken]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
