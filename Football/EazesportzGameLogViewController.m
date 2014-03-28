@@ -16,6 +16,7 @@
 
 @implementation EazesportzGameLogViewController {
     NSIndexPath *deleteIndexPath;
+    NSArray *sortedlogs;
 }
 
 @synthesize game;
@@ -45,6 +46,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    NSSortDescriptor *lastDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES
+                                                                     selector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"time" ascending:NO
+                                                                     selector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    NSArray * descriptors = [NSArray arrayWithObjects:lastDescriptor, firstDescriptor, nil];
+    game.gamelogs = [(NSArray*)[game.gamelogs sortedArrayUsingDescriptors:descriptors] mutableCopy];
+    
     [_gamelogTableView reloadData];
 }
 

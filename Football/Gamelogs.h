@@ -35,6 +35,6 @@
 - (id)initWithDictionary:(NSDictionary *)gamelogDictionary;
 - (id)initDeleteGameLog;
 
-- (BOOL)saveGamelog;
+- (void)saveGamelog;
 
 @end

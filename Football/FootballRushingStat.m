@@ -88,84 +88,84 @@
     return copy;
 }
 
-- (BOOL)saveStats {
+- (void)saveStats {
     if (([attempts intValue] > 0) || ([fumbles intValue] > 0) || ([fumbles_lost intValue] > 0) || ([longest intValue] > 0) ||
         ([td intValue] > 0) || ([yards intValue] > 0) || ([firstdowns intValue] > 0) || ([twopointconv intValue] > 0)) {
-        NSURL *aurl;
-        NSBundle *mainBundle = [NSBundle mainBundle];
-        
-        if (football_rushing_id.length > 0) {
-            aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                         @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_rushings/", football_rushing_id,
-                                         @".json?auth_token=", currentSettings.user.authtoken]];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSURL *aurl;
+            NSBundle *mainBundle = [NSBundle mainBundle];
             
-        } else {
-            aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                         @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_rushings.json?gameschedule_id=",
-                                         gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
-        }
-        
-        if ([yards intValue] > 0)
-            average = [NSNumber numberWithFloat:[yards floatValue]/[attempts floatValue]];
-        else
-            average = [NSNumber numberWithFloat:0.0];
-        
-        NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
-                                         [attempts stringValue], @"attempts", [average stringValue], @"average",
-                                         [fumbles stringValue], @"fumbles", [fumbles_lost stringValue], @"fumbles_lost",
-                                         [longest stringValue], @"longest", [td stringValue], @"td", [yards stringValue], @"yards",
-                                         [firstdowns stringValue], @"firstdowns", [twopointconv stringValue], @"twopointconv", nil];
-        
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
-        NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"football_rushing", nil];
-        
-        NSError *jsonSerializationError = nil;
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        
-        if (football_rushing_id.length > 0) {
-            if (([attempts intValue] == 0) && ([yards intValue] == 0) && ([average floatValue] == 0.0) && ([longest intValue] == 0) &&
-                ([fumbles intValue] == 0) && ([fumbles_lost intValue] == 0) && ([firstdowns intValue] == 0) && ([twopointconv intValue] == 0) &&
-                ([td intValue] == 0))
-                [request setHTTPMethod:@"DELETE"];
+            if (football_rushing_id.length > 0) {
+                aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                             @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_rushings/", football_rushing_id,
+                                             @".json?auth_token=", currentSettings.user.authtoken]];
+                
+            } else {
+                aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                             @"/sports/", currentSettings.sport.id, @"/athletes/", athlete_id, @"/football_rushings.json?gameschedule_id=",
+                                             gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
+            }
+            
+            if ([attempts intValue] > 0)
+                average = [NSNumber numberWithFloat:[yards floatValue]/[attempts floatValue]];
             else
-                [request setHTTPMethod:@"PUT"];
-        } else {
-            [request setHTTPMethod:@"POST"];
-        }
-        
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-        
-        if (!jsonSerializationError) {
-            NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            NSLog(@"Serialized JSON: %@", serJson);
-        } else {
-            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-        }
-        
-        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPBody:jsonData];
-        
-        //Capturing server response
-        NSURLResponse* response;
-        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-        NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-        NSLog(@"%@", serverData);
-        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        NSDictionary *items = [serverData objectForKey:@"rushing"];
-        
-        if ([httpResponse statusCode] == 200) {
+                average = [NSNumber numberWithFloat:0.0];
             
-            if (football_rushing_id.length == 0)
-                football_rushing_id = [items objectForKey:@"_id"];
+            NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", @"Totals", @"livestats",
+                                             [attempts stringValue], @"attempts", [average stringValue], @"average",
+                                             [fumbles stringValue], @"fumbles", [fumbles_lost stringValue], @"fumbles_lost",
+                                             [longest stringValue], @"longest", [td stringValue], @"td", [yards stringValue], @"yards",
+                                             [firstdowns stringValue], @"firstdowns", [twopointconv stringValue], @"twopointconv", nil];
             
-            return YES;
-        } else {
-            httperror = [serverData objectForKey:@"error"];
-            return NO;
-        }
-    } else
-        return YES;
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+            NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"football_rushing", nil];
+            
+            NSError *jsonSerializationError = nil;
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            
+            if (football_rushing_id.length > 0) {
+                if (([attempts intValue] == 0) && ([yards intValue] == 0) && ([average floatValue] == 0.0) && ([longest intValue] == 0) &&
+                    ([fumbles intValue] == 0) && ([fumbles_lost intValue] == 0) && ([firstdowns intValue] == 0) && ([twopointconv intValue] == 0) &&
+                    ([td intValue] == 0))
+                    [request setHTTPMethod:@"DELETE"];
+                else
+                    [request setHTTPMethod:@"PUT"];
+            } else {
+                [request setHTTPMethod:@"POST"];
+            }
+            
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+            
+            if (!jsonSerializationError) {
+                NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                NSLog(@"Serialized JSON: %@", serJson);
+            } else {
+                NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+            }
+            
+            [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+            [request setHTTPBody:jsonData];
+            
+            //Capturing server response
+            NSURLResponse* response;
+            NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+            NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+            NSLog(@"%@", serverData);
+            NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+            NSDictionary *items = [serverData objectForKey:@"rushing"];
+            
+            if ([httpResponse statusCode] == 200) {
+                
+                if (football_rushing_id.length == 0) {
+                    football_rushing_id = [items objectForKey:@"_id"];
+//                    [[[currentSettings findAthlete:athlete_id] football_rushing_stats] addObject:self];
+                }
+            } else {
+                httperror = [serverData objectForKey:@"error"];
+            }
+        });
+    }
 }
 
 @end

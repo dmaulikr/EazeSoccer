@@ -28,6 +28,6 @@
 - (id)initWithDictionary:(NSDictionary *)placekickerDictionary;
 - (id)copyWithZone:(NSZone *)zone;
 
-- (BOOL)saveStats;
+- (void)saveStats;
 
 @end

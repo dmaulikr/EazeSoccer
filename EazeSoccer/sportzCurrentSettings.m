@@ -136,6 +136,16 @@
     return result;
 }
 
+- (void)replaceAthleteById:(Athlete *)athlete {
+    for (int i = 0; i < roster.count; i++) {
+        if ([[[roster objectAtIndex:i] athleteid] isEqualToString:athlete.athleteid]) {
+            [roster removeObjectAtIndex:i];
+            [roster insertObject:athlete atIndex:i];
+            break;
+        }
+    }
+}
+
 - (BOOL)followingAthlete:(NSString *)athleteid {
     for (int cnt = 0; cnt < [roster count]; cnt++) {
         if ([[[roster objectAtIndex:cnt] athleteid] isEqualToString:athleteid]) {

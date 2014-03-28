@@ -23,6 +23,6 @@
 - (id)initWithDictionary:(NSDictionary *)kickerDictionary;
 - (id)copyWithZone:(NSZone *)zone;
 
-- (BOOL)saveStats;
+- (void)saveStats;
 
 @end

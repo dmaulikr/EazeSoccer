@@ -115,88 +115,83 @@
     }
 }
 
-- (BOOL)saveGamelog {
-    NSURL *aurl;
-    NSBundle *mainBundle = [NSBundle mainBundle];
-    
-    if (gamelogid.length == 0) {
-        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                     @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules/", gameschedule_id,
-                                     @"/gamelogs.json?auth_token=", currentSettings.user.authtoken]];
+- (void)saveGamelog {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *aurl;
+        NSBundle *mainBundle = [NSBundle mainBundle];
         
-        NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", logentry, @"logentry",
-                                         period, @"period", time, @"time", score, @"score", player, @"player", assistplayer, @"assist",
-                                         [yards stringValue], @"yards", nil];
-        
-        if (football_rushing_id.length > 0) {
-            [statDict setValue:football_rushing_id forKey:@"football_rushing_id"];
-        }
-        
-        if (football_passing_id.length > 0) {
-            [statDict setValue:football_passing_id forKey:@"football_passing_id"];
-        }
-        
-        if (football_returner_id.length > 0) {
-            [statDict setValue:football_returner_id forKey:@"football_returner_id"];
-        }
-        
-        if (football_defense_id.length > 0) {
-            [statDict setValue:football_defense_id forKey:@"football_defense_id"];
-        }
-        
-        if (football_place_kicker_id.length > 0) {
-            [statDict setValue:football_place_kicker_id forKey:@"football_place_kicker_id"];
-        }
-        
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
-        NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"gamelog", nil];
-        
-        NSError *jsonSerializationError = nil;
-        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        
-        if (gamelogid.length > 0) {
-            [request setHTTPMethod:@"PUT"];
-        } else {
-            [request setHTTPMethod:@"POST"];
-        }
-        
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
-        
-        if (!jsonSerializationError) {
-            NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            NSLog(@"Serialized JSON: %@", serJson);
-        } else {
-            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
-        }
-        
-        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPBody:jsonData];
-        
-        //Capturing server response
-        NSURLResponse* response;
-        NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-        NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-        NSLog(@"%@", serverData);
-        NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        
-        if ([httpResponse statusCode] == 200) {
-            logentrytext = [serverData objectForKey:@"logentrytext"];
+        if (gamelogid.length == 0) {
+            aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                         @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules/", gameschedule_id,
+                                         @"/gamelogs.json?auth_token=", currentSettings.user.authtoken]];
             
-            if (gamelogid.length == 0)
-                gamelogid = [serverData objectForKey:@"id"];
+            NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id", logentry, @"logentry",
+                                             period, @"period", time, @"time", score, @"score", player, @"player", assistplayer, @"assist",
+                                             [yards stringValue], @"yards", nil];
             
-            return YES;
-        } else {
-            httperror = [serverData objectForKey:@"error"];
-            return NO;
+            if (football_rushing_id.length > 0) {
+                [statDict setValue:football_rushing_id forKey:@"football_rushing_id"];
+            }
+            
+            if (football_passing_id.length > 0) {
+                [statDict setValue:football_passing_id forKey:@"football_passing_id"];
+            }
+            
+            if (football_returner_id.length > 0) {
+                [statDict setValue:football_returner_id forKey:@"football_returner_id"];
+            }
+            
+            if (football_defense_id.length > 0) {
+                [statDict setValue:football_defense_id forKey:@"football_defense_id"];
+            }
+            
+            if (football_place_kicker_id.length > 0) {
+                [statDict setValue:football_place_kicker_id forKey:@"football_place_kicker_id"];
+            }
+            
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+            NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"gamelog", nil];
+            
+            NSError *jsonSerializationError = nil;
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            
+            if (gamelogid.length > 0) {
+                [request setHTTPMethod:@"PUT"];
+            } else {
+                [request setHTTPMethod:@"POST"];
+            }
+            
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+            
+            if (!jsonSerializationError) {
+                NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                NSLog(@"Serialized JSON: %@", serJson);
+            } else {
+                NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+            }
+            
+            [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+            [request setHTTPBody:jsonData];
+            
+            //Capturing server response
+            NSURLResponse* response;
+            NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+            NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+            NSLog(@"%@", serverData);
+            NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+            [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+            
+            if ([httpResponse statusCode] == 200) {
+                logentrytext = [serverData objectForKey:@"logentrytext"];
+                
+                if (gamelogid.length == 0)
+                    gamelogid = [serverData objectForKey:@"id"];
+                
+            } else {
+                httperror = [serverData objectForKey:@"error"];
+            }
         }
-    } else {
-//        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-//                                    @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules/",
-//                                     gameschedule_id, @"/gamelogs/", gamelogid, @".json?auth_token=", currentSettings.user.authtoken]];
-        return YES;
-    }
+    });
 }
 
 @end

@@ -31,6 +31,6 @@
 - (id)initWithDictionary:(NSDictionary *)defenseDirectory;
 - (id)copyWithZone:(NSZone *)zone;
 
-- (BOOL)saveStats;
+- (void)saveStats;
 
 @end

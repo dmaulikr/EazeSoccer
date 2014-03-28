@@ -15,11 +15,13 @@
 #import "PlayerSelectionViewController.h"
 #import "EazesportzFootballDefenseTotalsViewController.h"
 #import "EazesportzFootballPlaceKickerTotalsViewController.h"
-#import "EazesportzKickoffStatsViewController.h"
-#import "EazesportzPunterStatsViewController.h"
-#import "EazesportzReturnerStatsViewController.h"
+#import "EazesportzFootballKickerTotalsViewController.h"
+#import "EazesportzFootballPunterTotalsViewController.h"
+#import "EazesportzFootballReturnerTotalsViewController.h"
 #import "EazesportzFootballReceivingTotalsViewController.h"
 #import "EditGameViewController.h"
+#import "Gamelogs.h"
+#import "EazesportzFootballTotalsViewController.h"
 
 
 @interface EazesportzFootballStatsViewController () <UIAlertViewDelegate>
@@ -38,7 +40,7 @@
 
     NSMutableArray *footballRB, *footballQB, *footballWR, *footballOL, *footballDEF, *footballPK, *footballK, *footballPUNT, *footballRET;
     
-    BOOL minuspenalty, addstats, touchdown, safety, twopoint;
+    BOOL minuspenalty, addstats, touchdown, safety, twopoint, interception, fumblerecovered, fieldgoal, xpmade, puntreturn, koreturn;
     Athlete *receiver;
 }
 
@@ -106,6 +108,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rosterChanged:) name:@"RosterChangedNotification" object:nil];
+    
     qbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballQB];
     rbs = [[NSMutableArray alloc] initWithArray:currentSettings.footballRB];
     wrs = [[NSMutableArray alloc] initWithArray:currentSettings.footballWR];
@@ -115,9 +119,11 @@
     kickerlist = [[NSMutableArray alloc] initWithArray:currentSettings.footballK];
     returnerlist = [[NSMutableArray alloc] initWithArray:currentSettings.footballRET];
     
-    qb = NO, rb = NO, wr = NO, pk = NO, kicker= NO, punter = NO, returner = NO;
+    if (!athlete)
+        qb = NO, rb = NO, wr = NO, pk = NO, kicker= NO, punter = NO, returner = NO;
+    
     addstats = YES;
-    touchdown = twopoint = safety = NO;
+    touchdown = twopoint = safety = interception = fumblerecovered = koreturn = puntreturn = NO;
     
     for (int cnt = 0; cnt < currentSettings.roster.count; cnt++) {
         Athlete *player = [currentSettings.roster objectAtIndex:cnt];
@@ -227,6 +233,16 @@
     _gamelogContainer.hidden = YES;
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)rosterChanged:(NSNotification *)notification {
+    [_statsTableView reloadData];
+}
+
 - (IBAction)offenseButtonClicked:(id)sender {
     offense = YES;
     defense = NO;
@@ -250,113 +266,6 @@
 
 - (IBAction)savestatsButtonClicked:(id)sender {
     game.period = [NSNumber numberWithInt:[_quarterTextField.text intValue]];
-    
-    if (offense) {
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            FootballPassingStat *passstat = [[currentSettings.roster objectAtIndex:i] getFBPassingStat:game.id];
-            if (passstat) {
-                if (![passstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[passstat httperror]
-                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                    return;
-                }
-            }
-        }
-        
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            FootballRushingStat *rushstat = [[currentSettings.roster objectAtIndex:i] getFBRushingStat:game.id];
-            if (rushstat) {
-                if (![rushstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[rushstat httperror]
-                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                    return;
-                }
-            }
-        }
-
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            FootballReceivingStat *recstat = [[currentSettings.roster objectAtIndex:i] getFBReceiverStat:game.id];
-            if (recstat) {
-                if (![recstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[recstat httperror]
-                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                    return;
-                }
-            }
-        }
-    } else if (defense) {
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            FootballDefenseStats *defstat = [[currentSettings.roster objectAtIndex:i] getFBDefenseStat:game.id];
-            if (defstat) {
-                if (![defstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[defstat httperror]
-                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                    return;
-                }
-            }
-        }
-    } else {
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            FootballPlaceKickerStats *pkstat = [[currentSettings.roster objectAtIndex:i] getFBPlaceKickerStat:game.id];
-            if (pkstat) {
-                if (![pkstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[pkstat httperror]
-                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                    return;
-                }
-            }
-        }
-
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            FootballPunterStats *puntstat = [[currentSettings.roster objectAtIndex:i] getFBPunterStat:game.id];
-            if (puntstat) {
-                if (![puntstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[puntstat httperror]
-                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                    return;
-                }
-            }
-        }
-
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            FootballKickerStats *kickstat = [[currentSettings.roster objectAtIndex:i] getFBKickerStat:game.id];
-            if (kickstat) {
-                if (![kickstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[kickstat httperror]
-                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                    return;
-                }
-            }
-        }
-        
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            FootballReturnerStats *retstat = [[currentSettings.roster objectAtIndex:i] getFBReturnerStat:game.id];
-            if (retstat) {
-                if (![retstat saveStats]) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:[retstat httperror]
-                                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                    [alert show];
-                    return;
-                }
-            }
-        }
-    }
-    
     game.togo = [NSNumber numberWithInt:[_togoTextField.text intValue]];
     game.down = [NSNumber numberWithInt:[_downTextField.text intValue]];
     game.ballon = [NSNumber numberWithInt:[_ballonTextField.text intValue]];
@@ -407,6 +316,26 @@
     }
 }
 
+- (void)displayImage:(Athlete *)player Cell:(UITableViewCell *)cell Row:(NSIndexPath *)indexPath {
+    if (player.tinyimage == nil) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:player.tinypic]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (cell.tag == indexPath.row) {
+                    cell.imageView.image = [UIImage imageWithData:image];
+                    [cell setNeedsLayout];
+                }
+            });
+        });
+    } else {
+        [cell.imageView setImage:[player tinyimage]];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *acell = [tableView dequeueReusableCellWithIdentifier:@"PlayerTableCell" forIndexPath:indexPath];
     
@@ -414,14 +343,16 @@
         acell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PlayerTableCell"];
     }
     
-    
     Athlete *player;
+    
+    acell.tag = indexPath.row;
+    
     
     if (offense) {
         if (indexPath.section == 0) {
             if (indexPath.row < qbs.count) {
                 player = [qbs objectAtIndex:indexPath.row];
-                acell.imageView.image = player.tinyimage;
+                [self displayImage:player Cell:acell Row:indexPath];
                 acell.textLabel.text = [player numberLogname];
                 acell.detailTextLabel.text = player.position;
             } else if (indexPath.row == (qbs.count)) {
@@ -432,7 +363,7 @@
         } else if (indexPath.section == 1) {
             if (indexPath.row < rbs.count) {
                 player = [rbs objectAtIndex:indexPath.row];
-                acell.imageView.image = player.tinyimage;
+                [self displayImage:player Cell:acell Row:indexPath];
                 acell.textLabel.text = [player numberLogname];
                 acell.detailTextLabel.text = player.position;
             } else if (indexPath.row == (rbs.count)) {
@@ -443,7 +374,7 @@
         } else if (indexPath.section == 2) {
             if (indexPath.row < wrs.count) {
                 player = [wrs objectAtIndex:indexPath.row];
-                acell.imageView.image = player.tinyimage;
+                [self displayImage:player Cell:acell Row:indexPath];
                 acell.textLabel.text = [player numberLogname];
                 acell.detailTextLabel.text = player.position;
             } else if (indexPath.row == (wrs.count)) {
@@ -456,7 +387,7 @@
         if (indexPath.section == 0) {
             if (indexPath.row < pks.count) {
                 player = [pks objectAtIndex:indexPath.row];
-                acell.imageView.image = player.tinyimage;
+                [self displayImage:player Cell:acell Row:indexPath];
                 acell.textLabel.text = [player numberLogname];
                 acell.detailTextLabel.text = player.position;
             } else {
@@ -467,7 +398,7 @@
         } else if (indexPath.section == 1) {
             if (indexPath.row < kickerlist.count) {
                 player = [kickerlist objectAtIndex:indexPath.row];
-                acell.imageView.image = player.tinyimage;
+                [self displayImage:player Cell:acell Row:indexPath];
                 acell.textLabel.text = [player numberLogname];
                 acell.detailTextLabel.text = player.position;
             } else {
@@ -478,7 +409,7 @@
         } else if (indexPath.section == 2) {
             if (indexPath.row < punterlist.count) {
                 player = [punterlist objectAtIndex:indexPath.row];
-                acell.imageView.image = player.tinyimage;
+                [self displayImage:player Cell:acell Row:indexPath];
                 acell.textLabel.text = [player numberLogname];
                 acell.detailTextLabel.text = player.position;
             } else {
@@ -489,7 +420,7 @@
         } else {
             if (indexPath.row < returnerlist.count) {
                 player = [returnerlist objectAtIndex:indexPath.row];
-                acell.imageView.image = player.tinyimage;
+                [self displayImage:player Cell:acell Row:indexPath];
                 acell.textLabel.text = [player numberLogname];
                 acell.detailTextLabel.text = player.position;
             } else {
@@ -501,7 +432,7 @@
     } else {
         if (indexPath.row < defenselist.count) {
             player = [defenselist objectAtIndex:indexPath.row];
-            acell.imageView.image = player.tinyimage;
+            [self displayImage:player Cell:acell Row:indexPath];
             acell.textLabel.text = [player numberLogname];
             acell.detailTextLabel.text = player.position;
         } else {
@@ -511,320 +442,6 @@
         }
     }
     
-    /* else if (specialteams) {
-        if (indexPath.section == 0) {
-            if (indexPath.row < pks.count) {
-                player = [pks objectAtIndex:indexPath.row];
-                FootballPlaceKickerStats *stat = [player findFootballPlaceKickerStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
-                cell.namelabel.text = player.numberLogname;
-                cell.label1.text = [stat.fgattempts stringValue];
-                cell.label2.text = [stat.fgmade stringValue];
-                cell.label3.text = [stat.fgblocked stringValue];
-                cell.label4.text = [stat.fglong stringValue];
-                cell.label5.text = [stat.xpattempts stringValue];
-                cell.label6.text = [stat.xpmade stringValue];
-                cell.label7.text = [stat.xpblocked stringValue];
-                cell.label8.text = @"";
-                cell.label9.text = @"";
-                cell.label10.text = @"";
-                cell.label11.text = @"";
- 
-            } else if (indexPath.row == pks.count) {
-                cell.fbimageView.image = [currentSettings.team getImage:@"tiny"];
-                cell.namelabel.text = @"Totals";
-                
-                int fga = 0, fgm = 0, fgblk = 0, fglong = 0, xpa = 0, xpm = 0, xpblock = 0;
-                
-                for (int cnt = 0; cnt < pks.count; cnt++) {
-                    FootballPlaceKickerStats *astat = [[pks objectAtIndex:cnt] findFootballPlaceKickerStat:game.id];
-                    fga += [astat.fgattempts intValue];
-                    fgm += [astat.fgmade intValue];
-                    
-                    if (fglong < [astat.fglong intValue])
-                        fglong = [astat.fglong intValue];
-                    
-                    fgblk += [astat.fgblocked intValue];
-                    xpa += [astat.xpattempts intValue];
-                    xpm += [astat.xpmade intValue];
-                    xpblock += [astat.xpblocked intValue];
-                }
-                
-                cell.label1.text = [NSString stringWithFormat:@"%d", fga];
-                cell.label2.text = [NSString stringWithFormat:@"%d", fgm];
-                cell.label3.text = [NSString stringWithFormat:@"%d", fgblk];
-                cell.label4.text = [NSString stringWithFormat:@"%d", fglong];
-                cell.label5.text = [NSString stringWithFormat:@"%d", xpa];
-                cell.label6.text = [NSString stringWithFormat:@"%d", xpm];
-                cell.label7.text = [NSString stringWithFormat:@"%d", xpblock];
-                cell.label8.text = @"";
-                cell.label9.text = @"";
-                cell.label10.text = @"";
-                cell.label11.text = @"";
-            } else {
-                cell = [self addPlayerCell:cell];
-            }
-        } else if (indexPath.section == 1) {
-            if (indexPath.row < kickerlist.count) {
-                player = [kickerlist objectAtIndex:indexPath.row];
-                FootballKickerStats *stat = [player findFootballKickerStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
-                cell.namelabel.text = player.numberLogname;
-                cell.label1.text = [stat.koattempts stringValue];
-                cell.label2.text = @"";
-                cell.label3.text = [stat.koreturned stringValue];
-                cell.label4.text =  @"";
-                cell.label5.text = [stat.kotouchbacks stringValue];
-                cell.label6.text =  @"";
-                cell.label7.text =  @"";
-                cell.label8.text = @"";
-                cell.label9.text = @"";
-                cell.label10.text = @"";
-                cell.label11.text = @"";
-            } else if (indexPath.row == kickerlist.count) {
-                cell.fbimageView.image = [currentSettings.team getImage:@"tiny"];
-                cell.namelabel.text = @"Totals";
-                
-                int kickoffs = 0, touchbacks = 0, returned = 0;
-                
-                for (int cnt = 0; cnt < kickerlist.count; cnt++) {
-                    FootballKickerStats *astat = [[kickerlist objectAtIndex:cnt] findFootballKickerStat:game.id];
-                    kickoffs += [astat.koattempts intValue];
-                    touchbacks += [astat.kotouchbacks intValue];
-                    returned += [astat.koreturned intValue];
-                }
-                
-                cell.label1.text = [NSString stringWithFormat:@"%d", kickoffs];
-                cell.label2.text = @"";
-                cell.label3.text = [NSString stringWithFormat:@"%d", returned];
-                cell.label4.text =  @"";
-                cell.label5.text = [NSString stringWithFormat:@"%d", touchbacks];
-                cell.label6.text =  @"";
-                cell.label7.text =  @"";
-                cell.label8.text = @"";
-                cell.label9.text = @"";
-                cell.label10.text = @"";
-                cell.label11.text = @"";
-            } else {
-                cell = [self addPlayerCell:cell];
-            }
-        } else if (indexPath.section == 2) {
-            if (indexPath.row < punterlist.count) {
-                player = [punterlist objectAtIndex:indexPath.row];
-                FootballPunterStats *stat = [player findFootballPunterStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
-                cell.namelabel.text = player.numberLogname;
-                cell.label1.text = [stat.punts stringValue];
-                cell.label2.text = [stat.punts_blocked stringValue];
-                cell.label3.text = [stat.punts_yards stringValue];
-                cell.label4.text =  [stat.punts_long stringValue];
-                
-                if ([stat.punts intValue] > 0)
-                    cell.label5.text = [[NSNumber numberWithFloat:([stat.punts_yards floatValue]/[stat.punts floatValue])] stringValue];
-                else
-                    cell.label5.text = @"0.0";
-                
-                cell.label6.text =  @"";
-                cell.label7.text =  @"";
-                cell.label8.text = @"";
-                cell.label9.text = @"";
-                cell.label10.text = @"";
-                cell.label11.text = @"";
-            } else if (indexPath.row == punterlist.count) {
-                cell.fbimageView.image = [currentSettings.team getImage:@"tiny"];
-                cell.namelabel.text = @"Totals";
-                
-                int punts = 0, blocked = 0, yards = 0, longest = 0;
-                
-                for (int cnt = 0; cnt < punterlist.count; cnt++) {
-                    FootballPunterStats *astat = [[punterlist objectAtIndex:cnt] findFootballPunterStat:game.id];
-                    punts += [astat.punts intValue];
-                    blocked += [astat.punts_blocked intValue];
-                    yards += [astat.punts_yards intValue];
-                    
-                    if (longest < [astat.punts_long intValue])
-                        longest = [astat.punts_long intValue];
-                }
-                
-                float average;
-                
-                if (punts > 0)
-                    average = (float)yards/(float)punts;
-                else
-                    average = 0.0;
-                
-                cell.label1.text = [NSString stringWithFormat:@"%d", punts];
-                cell.label2.text = [NSString stringWithFormat:@"%d", blocked];
-                cell.label3.text = [NSString stringWithFormat:@"%d", yards];
-                cell.label4.text = [NSString stringWithFormat:@"%d", longest];
-                cell.label5.text = [NSString stringWithFormat:@"%.02f", average];
-                cell.label6.text =  @"";
-                cell.label7.text =  @"";
-                cell.label8.text = @"";
-                cell.label9.text = @"";
-                cell.label10.text = @"";
-                cell.label11.text = @"";
-            } else {
-                cell = [self addPlayerCell:cell];
-            }
-        } else {
-            if (indexPath.row < returnerlist.count) {
-                player = [returnerlist objectAtIndex:indexPath.row];
-                FootballReturnerStats *stat = [player findFootballReturnerStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
-                cell.namelabel.text = player.numberLogname;
-                cell.label1.text = [stat.punt_return stringValue];
-                cell.label2.text = [stat.punt_returnyards stringValue];
-                cell.label3.text = [stat.punt_returntd stringValue];
-                cell.label4.text =  [stat.punt_returnlong stringValue];
-                
-                if ([stat.punt_return intValue] > 0)
-                    cell.label5.text = [[NSNumber numberWithFloat:([stat.punt_returnyards floatValue]/[stat.punt_return floatValue])] stringValue];
-                else
-                    cell.label5.text = @"0.0";
-                
-                cell.label6.text =  [stat.koreturn stringValue];
-                cell.label7.text =  [stat.koyards stringValue];
-                cell.label8.text = [stat.kotd stringValue];
-                cell.label9.text = [stat.kolong stringValue];
-                
-                if ([stat.koreturn intValue] > 0)
-                    cell.label10.text = [[NSNumber numberWithFloat:([stat.koyards floatValue]/[stat.koreturn floatValue])] stringValue];
-                else
-                    cell.label10.text = @"0.0";
-                
-                cell.label11.text = @"";
-            } else if (indexPath.row == returnerlist.count) {
-                cell.fbimageView.image = [currentSettings.team getImage:@"tiny"];
-                cell.namelabel.text = @"Totals";
-                
-                int punts = 0, pyards = 0, ptd = 0, plong = 0, kickoffs = 0, kyards = 0, ktd = 0, klong = 0;
-                
-                for (int cnt = 0; cnt < returnerlist.count; cnt++) {
-                    FootballReturnerStats *astat = [[returnerlist objectAtIndex:cnt] findFootballReturnerStat:game.id];
-                    punts += [astat.punt_return intValue];
-                    pyards += [astat.punt_returnyards intValue];
-                    ptd += [astat.punt_returntd intValue];
-                    
-                    if (plong < [astat.punt_returnlong intValue])
-                        plong = [astat.punt_returnlong intValue];
-                    
-                    kickoffs += [astat.koreturn intValue];
-                    kyards += [astat.koyards intValue];
-                    ktd += [astat.kotd intValue];
-                    
-                    if (klong < [astat.kolong intValue])
-                        klong = [astat.kolong intValue];
-                }
-                
-                float paverage, kaverage;
-                
-                if (punts > 0)
-                    paverage = (float)pyards/(float)punts;
-                else
-                    paverage = 0.0;
-                
-                if (kickoffs > 0)
-                    kaverage = (float)kyards/(float)kickoffs;
-                else
-                    kaverage = 0.0;
-                
-                cell.label1.text = [NSString stringWithFormat:@"%d", punts];
-                cell.label2.text = [NSString stringWithFormat:@"%d", pyards];
-                cell.label3.text = [NSString stringWithFormat:@"%d", ptd];
-                cell.label4.text = [NSString stringWithFormat:@"%d", plong];
-                cell.label5.text = [NSString stringWithFormat:@"%.02f", paverage];
-                cell.label6.text = [NSString stringWithFormat:@"%d", kickoffs];
-                cell.label7.text = [NSString stringWithFormat:@"%d", kyards];
-                cell.label8.text = [NSString stringWithFormat:@"%d", ktd];
-                cell.label9.text = [NSString stringWithFormat:@"%d", klong];
-                cell.label10.text = [NSString stringWithFormat:@"%.02f", kaverage];
-                cell.label11.text = @"";
-            } else {
-                cell = [self addPlayerCell:cell];
-            }
-        }
-        
-    } else {
-        if (indexPath.row < defenselist.count) {
-            player = [defenselist objectAtIndex:indexPath.row];
-            FootballDefenseStats *stat = [player findFootballDefenseStat:game.id];
-            cell.fbimageView.image = [player getImage:@"tiny"];
-            cell.namelabel.text = player.numberLogname;
-            
-            if ([stat.assists intValue] > 0)
-                cell.label1.text = [NSString stringWithFormat:@"%.01f", ([stat.tackles floatValue] + ([stat.assists floatValue]/2))];
-            else
-                cell.label1.text = [stat.tackles stringValue];
-            
-//            cell.label2.text = [stat.assists stringValue];
-            
-            if ([stat.sackassist intValue] > 0)
-                cell.label2.text = [NSString stringWithFormat:@"%.01f", ([stat.sacks floatValue] + ([stat.sackassist floatValue]/2))];
-            else
-                cell.label2.text = [stat.sacks stringValue];
-            
-            cell.label3.text = [stat.interceptions stringValue];
-            cell.label4.text = [stat.pass_defended stringValue];
-            cell.label5.text = [stat.int_yards stringValue];
-            cell.label6.text = [stat.int_long stringValue];
-            cell.label7.text = [stat.td stringValue];
-            cell.label8.text = [stat.fumbles_recovered stringValue];
-            cell.label9.text = [stat.safety stringValue];
-            cell.label10.text = @"";
-            cell.label11.text = @"";
-        } else if (indexPath.row == defenselist.count) {
-            cell.fbimageView.image = [currentSettings.team getImage:@"tiny"];
-            cell.namelabel.text = @"Totals";
-            
-            int tackles = 0, assists = 0, sacks = 0, sackassists = 0, interceptions = 0, passdef = 0, retyards = 0, retlong = 0, td = 0, fumbrec = 0, safety = 0;
-            
-            for (int cnt = 0; cnt < defenselist.count; cnt++) {
-                FootballDefenseStats *astat = [[defenselist objectAtIndex:cnt] findFootballDefenseStat:game.id];
-                tackles += [astat.tackles intValue];
-                td += [astat.td intValue];
-                assists += [astat.assists intValue];
-                sackassists += [astat.sackassist intValue];
-                sacks += [astat.sacks intValue];
-                interceptions += [astat.interceptions intValue];
-                passdef += [astat.pass_defended intValue];
-                retyards += [astat.int_yards intValue];
-                
-                if (retlong < [astat.int_long intValue])
-                    retlong = [astat.int_long intValue];
-                
-                fumbrec += [astat.fumbles_recovered intValue];
-                safety += [astat.safety intValue];
-            }
-            
-            if (assists > 0)
-                cell.label1.text = [NSString stringWithFormat:@"%.01f", ((float)tackles + ((float)assists/2))];
-            else
-                cell.label1.text = [NSString stringWithFormat:@"%d", tackles];
-            
-            //            cell.label2.text = [stat.assists stringValue];
-            
-            if (sackassists > 0)
-                cell.label2.text = [NSString stringWithFormat:@"%.01f", ((float)sacks + ((float)sackassists/2))];
-            else
-                cell.label2.text = [NSString stringWithFormat:@"%d", sacks];
-            
-            cell.label3.text = [NSString stringWithFormat:@"%d", interceptions];
-            cell.label4.text = [NSString stringWithFormat:@"%d", passdef];
-            cell.label5.text = [NSString stringWithFormat:@"%d", retyards];
-            cell.label6.text = [NSString stringWithFormat:@"%d", retlong];
-            cell.label7.text = [NSString stringWithFormat:@"%d", td];
-            cell.label8.text = [NSString stringWithFormat:@"%d", fumbrec];
-            cell.label9.text = [NSString stringWithFormat:@"%d", safety];
-            cell.label10.text = @"";
-            cell.label11.text = @"";
-        } else {
-            cell = [self addPlayerCell:cell];
-        }
-    } */
-
-    
-//    return cell;
     return acell;
 }
 
@@ -892,11 +509,11 @@
                     _playerSelectContainer.hidden = NO;
                 }
             } else {
+                wr = YES;
                 if (indexPath.row < wrs.count)
                     [self performSegueWithIdentifier:@"TotalsReceivingSegue" sender:self];
                 else if (indexPath.row == (wrs.count)) {
                     _playerSelectContainer.hidden = NO;
-                    wr = YES;
                 }
             }
         } else if (defense) {
@@ -916,25 +533,28 @@
                     _playerSelectContainer.hidden = NO;
                 }
             } else if (indexPath.section == 1) {
-                if (indexPath.row < kickerlist.count)
-                    [self performSegueWithIdentifier:@"KickerStatSegue" sender:self];
-                else if (indexPath.row == (kickerlist.count)) {
+                kicker = YES;
+                if (indexPath.row < kickerlist.count) {
+                    athlete = [kickerlist objectAtIndex:indexPath.row];
+                    [self displayStats];
+                } else if (indexPath.row == (kickerlist.count)) {
                     _playerSelectContainer.hidden = NO;
-                    kicker = YES;
                 }
             } else if (indexPath.section == 2) {
-                if (indexPath.row < punterlist.count)
-                    [self performSegueWithIdentifier:@"PunterStatSegue" sender:self];
-                else if (indexPath.row == (punterlist.count)) {
+                punter = YES;
+                if (indexPath.row < punterlist.count) {
+                    athlete = [punterlist objectAtIndex:indexPath.row];
+                    [self displayStats];
+                } else if (indexPath.row == (punterlist.count)) {
                     _playerSelectContainer.hidden = NO;
-                    punter = YES;
                 }
             } else {
-                if (indexPath.row < returnerlist.count)
-                    [self performSegueWithIdentifier:@"ReturnerStatSegue" sender:self];
-                else if (indexPath.row == (returnerlist.count)) {
+                returner = YES;
+                if (indexPath.row < returnerlist.count) {
+                    athlete = [returnerlist objectAtIndex:indexPath.row];
+                    [self displayStats];
+                } else if (indexPath.row == (returnerlist.count)) {
                     _playerSelectContainer.hidden = NO;
-                    returner = YES;
                 }
             }
         }
@@ -948,85 +568,39 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
+    
     if ([segue.identifier isEqualToString:@"PassingStatSegue"]) {
         EazesportzFootballPassingTotalsViewController *destController = segue.destinationViewController;
-        if (!playerController.player) {
-            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
-            athlete = destController.player = [qbs objectAtIndex:indexPath.row];
-        } else {
-            destController.player = playerController.player;
-            playerController.player = nil;
-        }
+        athlete = destController.player = athlete;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"RushingStatSegue"]) {
         EazesportzFootballRushingTotalsViewController *destController = segue.destinationViewController;
-        if (!playerController.player) {
-            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
-            destController.player = [rbs objectAtIndex:indexPath.row];
-        } else {
-            destController.player = playerController.player;
-            playerController.player = nil;
-        }
+        destController.player = athlete;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"DefenseStatSegue"]) {
         EazesportzFootballDefenseTotalsViewController *destController = segue.destinationViewController;
-        if (!playerController.player) {
-            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
-            destController.player = [defenselist objectAtIndex:indexPath.row];
-        } else {
-            destController.player = playerController.player;
-            playerController.player = nil;
-        }
+        destController.player = athlete;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"PlaceKickerStatSegue"]) {
         EazesportzFootballPlaceKickerTotalsViewController *destController = segue.destinationViewController;
-        if (!playerController.player) {
-            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
-            destController.player = [pks objectAtIndex:indexPath.row];
-        } else {
-            destController.player = playerController.player;
-            playerController.player = nil;
-        }
+        destController.player = athlete;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"KickerStatSegue"]) {
-        EazesportzKickoffStatsViewController *destController = segue.destinationViewController;
-        if (!playerController.player) {
-            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
-            destController.player = [kickerlist objectAtIndex:indexPath.row];
-        } else {
-            destController.player = playerController.player;
-            playerController.player = nil;
-        }
+        EazesportzFootballKickerTotalsViewController *destController = segue.destinationViewController;
+        destController.player = athlete;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"PunterStatSegue"]) {
-        EazesportzPunterStatsViewController *destController = segue.destinationViewController;
-        if (!playerController.player) {
-            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
-            destController.player = [punterlist objectAtIndex:indexPath.row];
-        } else {
-            destController.player = playerController.player;
-            playerController.player = nil;
-        }
+        EazesportzFootballPunterTotalsViewController *destController = segue.destinationViewController;
+        destController.player = athlete;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"ReturnerStatSegue"]) {
-        EazesportzReturnerStatsViewController *destController = segue.destinationViewController;
-        if (!playerController.player) {
-            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
-            destController.player = [returnerlist objectAtIndex:indexPath.row];
-        } else {
-            destController.player = playerController.player;
-            playerController.player = nil;
-        }
+        EazesportzFootballReturnerTotalsViewController *destController = segue.destinationViewController;
+        destController.player = athlete;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"TotalsReceivingSegue"]) {
         EazesportzFootballReceivingTotalsViewController *destController = segue.destinationViewController;
-        if (!playerController.player) {
-            NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
-            destController.player = [wrs objectAtIndex:indexPath.row];
-        } else {
-            destController.player = playerController.player;
-            playerController.player = nil;
-        }
+        destController.player = athlete;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
         playerController = segue.destinationViewController;
@@ -1035,6 +609,17 @@
     } else if ([segue.identifier isEqualToString:@"EditGameSgeue"]) {
         EditGameViewController *destController = segue.destinationViewController;
         destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"GameTotalsSegue"]) {
+        EazesportzFootballTotalsViewController *destController = segue.destinationViewController;
+        destController.game = game;
+        destController.qbs = qbs;
+        destController.rbs = rbs;
+        destController.wrs = wrs;
+        destController.returnerlist = returnerlist;
+        destController.kickerlist = kickerlist;
+        destController.punterlist = punterlist;
+        destController.pks = pks;
+        destController.defenselist = defenselist;
     }
 }
 
@@ -1043,6 +628,7 @@
         if (completion) {
             receiver = playerController.player;
             _receiverTextField.text = receiver.logname;
+            completion = NO;
         } else if (offense) {
             if (qb) {
                 if (![qbs containsObject:playerController.player]) {
@@ -1053,61 +639,47 @@
             } else if (rb) {
                 if (![rbs containsObject:playerController.player]) {
                     [rbs addObject:playerController.player];
-                    [_statsTableView reloadData];
                 } else {
                     [self displayPlayerAlreadyInListAlert:playerController.player];
                 }
-                rb = NO;
             } else if (wr) {
                 if (![wrs containsObject:playerController.player]) {
                     [wrs addObject:playerController.player];
-                    [_statsTableView reloadData];
                 } else {
                     [self displayPlayerAlreadyInListAlert:playerController.player];
                 }
-                wr = NO;
             }
         } else if (defense) {
             if (![defenselist containsObject:playerController.player]) {
                 [defenselist addObject:playerController.player];
-                [_statsTableView reloadData];
             } else {
                 [self displayPlayerAlreadyInListAlert:playerController.player];
             }
-            defense = NO;
         } else {
             if (pk) {
                 if (![pks containsObject:playerController.player]) {
                     [pks addObject:playerController.player];
-                    [_statsTableView reloadData];
                 } else {
                     [self displayPlayerAlreadyInListAlert:playerController.player];
                 }
-                pk = NO;
             } else if (kicker) {
                 if (![kickerlist containsObject:playerController.player]) {
                     [kickerlist addObject:playerController.player];
-                    [_statsTableView reloadData];
                 } else {
                     [self displayPlayerAlreadyInListAlert:playerController.player];
                 }
-                kicker = NO;
             } else if (punter) {
                 if (![punterlist containsObject:playerController.player]) {
                     [punterlist addObject:playerController.player];
-                    [_statsTableView reloadData];
                 } else {
                     [self displayPlayerAlreadyInListAlert:playerController.player];
                 }
-                punter = NO;
             } else if (returner) {
                 if (![returnerlist containsObject:playerController.player]) {
                     [returnerlist addObject:playerController.player];
-                    [_statsTableView reloadData];
                 } else {
                     [self displayPlayerAlreadyInListAlert:playerController.player];
                 }
-                returner = NO;
             }
         }
     }
@@ -1179,6 +751,8 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     } else if (textField == _receiverTextField) {
+        if (qb)
+            completion = YES;
         [textField resignFirstResponder];
     } else {
         textField.text = @"";
@@ -1336,7 +910,8 @@
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
     _gamelogContainer.hidden = YES;
-    [self viewWillAppear:YES];
+//    [self viewWillAppear:YES];
+    [_statsTableView reloadData];
 }
 
 - (IBAction)finalButtonClicked:(id)sender {
@@ -1400,10 +975,10 @@
         
         if (addstats) {
             stat.attempts = [NSNumber numberWithInt:[stat.attempts intValue] + 1];
-            [self yardsStats:NO];
+            [self yardStats:NO Text:@"Yards"];
         } else if ([stat.attempts intValue] > 0) {
             stat.attempts = [NSNumber numberWithInt:[stat.attempts intValue] - 1];
-            [self yardsStats:YES];
+            [self yardStats:YES Text:@""];
         }
 
         _statData1.text = [stat.attempts stringValue];
@@ -1416,6 +991,55 @@
             stat.tackles = [NSNumber numberWithInt:[stat.tackles intValue] - 1];
         
         _statData1.text = [stat.tackles stringValue];
+    } else if (pk) {
+        FootballPlaceKickerStats *stat = [athlete findFootballPlaceKickerStat:game.id];
+        
+        if (addstats)
+            stat.fgattempts= [NSNumber numberWithInt:[stat.fgattempts intValue] + 1];
+        else
+            stat.fgattempts= [NSNumber numberWithInt:[stat.fgattempts intValue] - 1];
+        
+        _statData1.text = [stat.fgattempts stringValue];
+    } else if (kicker) {
+        FootballKickerStats *stat = [athlete findFootballKickerStat:game.id];
+        koreturn = YES;
+        
+        if (addstats) {
+            stat.koattempts = [NSNumber numberWithInt:[stat.koattempts intValue] + 1];
+            stat.koreturned = [NSNumber numberWithInt:[stat.koreturned intValue] + 1];
+        } else {
+            stat.koattempts = [NSNumber numberWithInt:[stat.koattempts intValue] - 1];
+            stat.koreturned = [NSNumber numberWithInt:[stat.koreturned intValue] - 1];
+        }
+        
+        _statData2.text = [stat.koattempts stringValue];
+        _statData3.text = [stat.koreturned stringValue];
+    } else if (returner) {
+        FootballReturnerStats *stat = [athlete findFootballReturnerStat:game.id];
+        
+        if (addstats) {
+            [self yardStats:NO Text:@"Return Yards"];
+            stat.koreturn = [NSNumber numberWithInt:[stat.koreturn intValue] + 1];
+            koreturn = YES;
+        } else {
+            [self yardStats:YES Text:@""];
+            stat.koreturn = [NSNumber numberWithInt:[stat.koreturn intValue] - 1];
+            koreturn = NO;
+        }
+        
+        _statData1.text = [stat.koreturn stringValue];
+    } else {
+        FootballPunterStats *stat = [athlete findFootballPunterStat:game.id];
+        
+        if (addstats) {
+            [self yardStats:NO Text:@"Punt Yards"];
+            stat.punts = [NSNumber numberWithInt:[stat.punts intValue] + 1];
+        } else {
+            [self yardStats:YES Text:@""];
+            stat.punts = [NSNumber numberWithInt:[stat.punts intValue] - 1];
+        }
+        
+        _statData1.text = [stat.punts stringValue];
     }
 }
 
@@ -1430,7 +1054,7 @@
             _receiverTextField.enabled = YES;
             _playerSelectContainer.hidden = NO;
             completion = YES;
-            [self yardsStats:NO];
+            [self yardStats:NO Text:@"Yards"];
             [self fumbleStats:NO];
         } else if ([stat.completions intValue] > 0) {
             stat.completions = [NSNumber numberWithInt:[stat.completions intValue] - 1];
@@ -1440,12 +1064,12 @@
             _receiverTextField.text = @"";
             _playerSelectContainer.hidden = YES;
             completion = NO;
-            [self yardsStats:YES];
+            [self yardStats:YES Text:@""];
             [self fumbleStats:YES];
         }
         
-        _statData1.text = [stat.attempts stringValue];
-        _statData2.text = [stat.completions stringValue];
+        _statData1.text = [stat.completions stringValue];
+        _statData2.text = [stat.attempts stringValue];
     } else if (rb) {
         FootballRushingStat *stat = [athlete findFootballRushingStat:game.id];
         
@@ -1454,7 +1078,7 @@
         else if ([stat.firstdowns intValue] > 0)
             stat.firstdowns = [NSNumber numberWithInt:[stat.firstdowns intValue] - 1];
         
-        _statData5.text = [stat.firstdowns stringValue];
+        _statData6.text = [stat.firstdowns stringValue];
     } else if (defense) {
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
@@ -1464,6 +1088,65 @@
             stat.assists = [NSNumber numberWithInt:[stat.assists intValue] - 1];
         
         _statData2.text = [stat.assists stringValue];
+    } else if (pk) {
+        FootballPlaceKickerStats *stat = [athlete findFootballPlaceKickerStat:game.id];
+        
+        if (addstats) {
+            stat.fgattempts= [NSNumber numberWithInt:[stat.fgattempts intValue] + 1];
+            stat.fgmade = [NSNumber numberWithInt:[stat.fgmade intValue] + 1];
+            fieldgoal = YES;
+            [self yardStats:NO Text:@"Length"];
+            [self scoreStats:NO];
+        } else {
+            stat.fgattempts= [NSNumber numberWithInt:[stat.fgattempts intValue] - 1];
+            stat.fgmade = [NSNumber numberWithInt:[stat.fgmade intValue] - 1];
+            fieldgoal = NO;
+            [self yardStats:YES Text:@""];
+            [self scoreStats:YES];
+        }
+        
+        _statData1.text = [stat.fgattempts stringValue];
+        _statData2.text = [stat.fgmade stringValue];
+    } else if (kicker) {
+        FootballKickerStats *stat = [athlete findFootballKickerStat:game.id];
+        
+        if (addstats) {
+            stat.koreturned = [NSNumber numberWithInt:[stat.koattempts intValue] - 1];
+            stat.kotouchbacks = [NSNumber numberWithInt:[stat.kotouchbacks intValue] + 1];
+        } else if ([stat.kotouchbacks intValue] > 0){
+            stat.kotouchbacks = [NSNumber numberWithInt:[stat.kotouchbacks intValue] - 1];
+        }
+        
+        _statData3.text = [stat.koreturned stringValue];
+        _statData4.text = [stat.kotouchbacks stringValue];
+    } else if (returner) {
+        FootballReturnerStats *stat = [athlete findFootballReturnerStat:game.id];
+        
+        if (addstats) {
+            [self yardStats:NO Text:@"Return Yards"];
+            stat.punt_return = [NSNumber numberWithInt:[stat.punt_return intValue] + 1];
+            puntreturn = YES;
+      } else if ([stat.punt_return intValue] > 0) {
+            [self yardStats:YES Text:@""];
+            stat.punt_return = [NSNumber numberWithInt:[stat.punt_return intValue] - 1];
+            puntreturn = NO;
+        }
+        
+        _statData6.text = [stat.punt_return stringValue];
+    } else {
+        FootballPunterStats *stat = [athlete findFootballPunterStat:game.id];
+        [self yardStats:YES Text:@""];
+        
+        if (addstats) {
+            stat.punts_blocked = [NSNumber numberWithInt:[stat.punts_blocked intValue] + 1];
+            stat.punts = [NSNumber numberWithInt:[stat.punts intValue] + 1];
+        } else if (([stat.punts_blocked intValue] > 0) && ([stat.punts intValue] > 0)) {
+            stat.punts_blocked = [NSNumber numberWithInt:[stat.punts_blocked intValue] - 1];
+            stat.punts = [NSNumber numberWithInt:[stat.punts intValue] - 1];
+        }
+        
+        _statData4.text = [stat.punts_blocked stringValue];
+        _statData1.text = [stat.punts stringValue];
     }
 }
 
@@ -1480,10 +1163,14 @@
     } else if (rb) {
         FootballRushingStat *stat = [athlete findFootballRushingStat:game.id];
         
-        if (addstats) {
+        if ((addstats) && (!_yardsTextField.hidden)) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
             touchdown = YES;
             [self scoreStats:NO];
+        } else if (_yardsTextField.hidden) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Enter rush attempt and yards first!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
         } else if ([stat.td intValue] > 0) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
             touchdown = NO;
@@ -1502,6 +1189,46 @@
             stat.sacks = [NSNumber numberWithInt:[stat.sacks intValue] - 1];
         
         _statData3.text = [stat.sacks stringValue];
+    } else if (pk) {
+        FootballPlaceKickerStats *stat = [athlete findFootballPlaceKickerStat:game.id];
+        
+        if (addstats)
+            stat.fgblocked = [NSNumber numberWithInt:[stat.fgblocked intValue] + 1];
+        else if ([stat.fgblocked intValue] > 0)
+            stat.fgblocked = [NSNumber numberWithInt:[stat.fgblocked intValue] - 1];
+        
+        _statData3.text = [stat.fgblocked stringValue];
+    } else if (returner) {
+        if ((puntreturn) || (koreturn)) {
+            FootballReturnerStats *stat = [athlete findFootballReturnerStat:game.id];
+            
+            if (addstats) {
+                touchdown = YES;
+                [self scoreStats:NO];
+                if (puntreturn) {
+                    stat.punt_returntd = [NSNumber numberWithInt:[stat.punt_returntd intValue] + 1];
+                    _statData8.text = [stat.punt_returntd stringValue];
+                } else {
+                    stat.kotd = [NSNumber numberWithInt:[stat.kotd intValue] + 1];
+                    _statData3.text = [stat.kotd stringValue];
+                }
+            } else {
+                touchdown = NO;
+                [self scoreStats:YES];
+                if ((puntreturn) && ([stat.punt_returntd intValue] > 0)) {
+                    stat.punt_returntd = [NSNumber numberWithInt:[stat.punt_returntd intValue] - 1];
+                    _statData8.text = [stat.punt_returntd stringValue];
+                } else if ((koreturn) && ([stat.kotd intValue] > 0)) {
+                    stat.kotd = [NSNumber numberWithInt:[stat.kotd intValue] - 1];
+                    _statData3.text = [stat.kotd stringValue];
+                }
+            }            
+         } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Please select punt or kickoff return before posting TD!"
+                                                           delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     }
 }
 
@@ -1552,7 +1279,16 @@
         else if ([stat.sackassist intValue] > 0)
             stat.sackassist = [NSNumber numberWithInt:[stat.sackassist intValue] - 1];
         
-        _statData2.text = [stat.sackassist stringValue];
+        _statData4.text = [stat.sackassist stringValue];
+    } else if (pk) {
+        FootballPlaceKickerStats *stat = [athlete findFootballPlaceKickerStat:game.id];
+        
+        if (addstats)
+            stat.xpattempts = [NSNumber numberWithInt:[stat.xpattempts intValue] + 1];
+        else if ([stat.xpattempts intValue] > 0)
+            stat.xpattempts = [NSNumber numberWithInt:[stat.xpattempts intValue] - 1];
+        
+        _statData7.text = [stat.xpattempts stringValue];
     }
 }
 
@@ -1575,13 +1311,32 @@
         
         if (addstats) {
             stat.interceptions = [NSNumber numberWithInt:[stat.interceptions intValue] + 1];
-            [self yardsStats:NO];
+            interception = YES;
+            [self yardStats:NO Text:@"Return Yards"];
         } else if ([stat.interceptions intValue] > 0) {
             stat.interceptions = [NSNumber numberWithInt:[stat.interceptions intValue] - 1];
-            [self yardsStats:YES];
+            interception = NO;
+            [self yardStats:YES Text:@""];
         }
         
-        _statData2.text = [stat.interceptions stringValue];
+        _statData5.text = [stat.interceptions stringValue];
+    } else if (pk) {
+        FootballPlaceKickerStats *stat = [athlete findFootballPlaceKickerStat:game.id];
+        
+        if (addstats) {
+            stat.xpattempts = [NSNumber numberWithInt:[stat.xpattempts intValue] + 1];
+            stat.xpmade = [NSNumber numberWithInt:[stat.xpmade intValue] + 1];
+            xpmade = YES;
+            [self scoreStats:NO];
+        } else if ([stat.xpmade intValue] > 0) {
+            stat.xpattempts = [NSNumber numberWithInt:[stat.xpattempts intValue] - 1];
+            stat.xpmade = [NSNumber numberWithInt:[stat.xpmade intValue] - 1];
+            xpmade = NO;
+            [self scoreStats:YES];
+        }
+        
+        _statData7.text = [stat.xpattempts stringValue];
+        _statData8.text = [stat.xpmade stringValue];
     }
 }
 
@@ -1590,9 +1345,16 @@
         FootballPassingStat *stat = [athlete findFootballPassingStat:game.id];
         
         if (addstats) {
-            stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
-            touchdown = YES;
-            [self scoreStats:NO];
+            if (receiver) {
+                stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
+                touchdown = YES;
+                [self scoreStats:NO];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Receiver must be selected to post a score!"
+                                                               delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
+            }
         } else if ([stat.td intValue] > 0) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
             touchdown = NO;
@@ -1617,6 +1379,18 @@
             stat.pass_defended = [NSNumber numberWithInt:[stat.pass_defended intValue] - 1];
     
         _statData6.text = [stat.pass_defended stringValue];
+    } else if (pk) {
+        FootballPlaceKickerStats *stat = [athlete findFootballPlaceKickerStat:game.id];
+        
+        if (addstats) {
+            stat.xpblocked = [NSNumber numberWithInt:[stat.xpblocked intValue] + 1];
+            stat.xpattempts = [NSNumber numberWithInt:[stat.xpattempts intValue] + 1];
+        } else if ([stat.xpblocked intValue] > 0) {
+            stat.xpblocked = [NSNumber numberWithInt:[stat.xpblocked intValue] - 1];
+            stat.xpattempts = [NSNumber numberWithInt:[stat.xpattempts intValue] - 1];
+        }
+        
+        _statData9.text = [stat.xpblocked stringValue];
     }
 }
 
@@ -1625,10 +1399,19 @@
         FootballPassingStat *stat = [athlete findFootballPassingStat:game.id];
         
         if (addstats) {
-            stat.twopointconv = [NSNumber numberWithInt:[stat.twopointconv intValue] + 1];
-            [self scoreStats:NO];
+            if (receiver) {
+                stat.twopointconv = [NSNumber numberWithInt:[stat.twopointconv intValue] + 1];
+                twopoint = YES;
+                [self scoreStats:NO];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Receiver must be selected to post a score!"
+                                                               delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
+            }
         } else if ([stat.twopointconv intValue] > 0) {
             stat.twopointconv = [NSNumber numberWithInt:[stat.twopointconv intValue] - 1];
+            twopoint = NO;
             [self scoreStats:YES];
             
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"  message:@"If you already saved a score you should delete the game log to adjust stats. Stats will be automatically updated!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -1640,10 +1423,13 @@
     } else if (defense) {
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
-        if (addstats)
+        if (addstats) {
             stat.fumbles_recovered = [NSNumber numberWithInt:[stat.fumbles_recovered intValue] + 1];
-        else if ([stat.fumbles_recovered intValue] > 0)
+            [self yardStats:NO Text:@"Return Yards"];
+        } else if ([stat.fumbles_recovered intValue] > 0) {
             stat.fumbles_recovered = [NSNumber numberWithInt:[stat.fumbles_recovered intValue] - 1];
+            [self yardStats:YES Text:@""];
+        }
         
         _statData8.text = [stat.fumbles_recovered stringValue];
     }
@@ -1654,15 +1440,21 @@
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
         if (addstats) {
-            stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
-            touchdown = YES;
-            [self scoreStats:NO];
+            if ((interception) || (fumblerecovered)) {
+                stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
+                touchdown = YES;
+                [self scoreStats:NO];
+            }  else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"If you already saved a score you should delete the game log to adjust stats. Stats will be automatically updated! If not, continue." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                [alert show];
+            }
         } else if ([stat.td intValue] > 0) {
             stat.td = [NSNumber numberWithInt:[stat.td intValue] - 1];
             touchdown = NO;
             [self scoreStats:YES];
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"  message:@"If you already saved a score you should delete the game log to adjust stats. Stats will be automatically updated!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"  message:@"If you already saved a score you should delete the game log to adjust stats. Stats will be automatically updated! If not, continue." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
@@ -1688,6 +1480,20 @@
         }
         
         _statData10.text = [stat.td stringValue];
+    }
+}
+
+- (void)yardStats:(BOOL)hidden Text:(NSString *)textString {
+    _yardsLabel.text = textString;
+    
+    if (hidden) {
+        _yardsLabel.hidden = YES;
+        _yardsTextField.hidden = YES;
+        _yardsTextField.enabled = NO;
+    } else {
+        _yardsLabel.hidden = NO;
+        _yardsTextField.hidden = NO;
+        _yardsTextField.enabled = YES;
     }
 }
 
@@ -1738,31 +1544,33 @@
     }
 }
 
-- (void)yardsStats:(BOOL)hidden {
-    if (hidden) {
-        _yardsLabel.hidden = YES;
-        _yardsTextField.hidden = YES;
-        _yardsTextField.enabled = NO;
-        _yardsTextField.text = @"";
-    } else {
-        _yardsLabel.hidden = NO;
-        _yardsTextField.hidden = NO;
-        _yardsTextField.enabled = YES;
-    }
-}
-
 - (void)displayStats {
+    interception = touchdown = twopoint = safety = fieldgoal = xpmade = puntreturn = koreturn = fumblerecovered = NO;
+    
     if (athlete) {
         _refreshButton.hidden = NO;
         _refreshButton.enabled = YES;
         _savePlayerStatsButton.hidden = NO;
         _savePlayerStatsButton.enabled = YES;
-        _playerImageView.image = [athlete thumbimage];
         _playerNameLabel.text = [athlete numberLogname];
         _toggleButton.hidden = NO;
         _toggleButton.enabled = YES;
         _totalsButton.hidden = NO;
         _totalsButton.enabled = YES;
+
+        if (athlete.thumbimage == nil) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:athlete.thumb]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    _playerImageView.image = [UIImage imageWithData:image];
+                });
+            });
+        } else
+            _playerImageView.image = [athlete thumbimage];
         
         if (offense) {
             if (qb) {
@@ -1774,7 +1582,7 @@
                 _statLabel2.text = @"ATT";
                 _statData2.text = [stat.attempts stringValue];
                 _statLabel3.text = @"PCT";
-                _statData3.text = [stat.comp_percentage stringValue];
+                _statData3.text = [NSString stringWithFormat:@"%.02f", [stat.comp_percentage floatValue]];
                 _statLabel4.text = @"YDS";
                 _statData4.text = [stat.yards stringValue];
                 _statLabel5.text = @"TD";
@@ -1815,15 +1623,6 @@
                 _buttonEight.hidden = YES;
                 _buttonNine.enabled = NO;
                 _buttonNine.hidden = YES;
-                
-                _receiverTextField.hidden = YES;
-                _receiverTextField.enabled = NO;
-                _yardsLabel.hidden = YES;
-                _yardsTextField.hidden = YES;
-                _yardsTextField.enabled = NO;
-                
-                [self fumbleStats:YES];
-                [self scoreStats:YES];
             } else if (rb) {
                 _statTitleLabel.text = @"Rushing Statistics";
                 FootballRushingStat *stat = [athlete findFootballRushingStat:game.id];
@@ -1833,7 +1632,7 @@
                 _statLabel2.text = @"YDS";
                 _statData2.text = [stat.yards stringValue];
                 _statLabel3.text = @"AVG";
-                _statData3.text = [stat.average stringValue];
+                _statData3.text = [NSString stringWithFormat:@"%.02f", [stat.average floatValue]];
                 _statLabel4.text = @"TD";
                 _statData4.text = [stat.td stringValue];
                 _statLabel5.text = @"LNG";
@@ -1873,14 +1672,6 @@
                 _buttonEight.hidden = YES;
                 _buttonNine.enabled = NO;
                 _buttonNine.hidden = YES;
-                
-                _receiverTextField.hidden = YES;
-                _receiverTextField.enabled = NO;
-                _yardsTextField.hidden = YES;
-                _yardsLabel.hidden = YES;
-                
-                [self fumbleStats:YES];
-                [self scoreStats:YES];
             }
         } else if (defense) {
             _statTitleLabel.text = @"Defensive Statistics";
@@ -1934,16 +1725,8 @@
             [_buttonNine setTitle:@"Safety" forState:UIControlStateNormal];
             _buttonNine.enabled = YES;
             _buttonNine.hidden = NO;
-            
-            _receiverTextField.hidden = YES;
-            _receiverTextField.enabled = NO;
-            _yardsTextField.hidden = YES;
-            _yardsLabel.hidden = YES;
-            
-            [self fumbleStats:YES];
-            [self scoreStats:YES];
         } else if (pk) {
-            _statTitleLabel.text = @"Defensive Statistics";
+            _statTitleLabel.text = @"Place Kicker Statistics";
             FootballPlaceKickerStats *stat = [athlete findFootballPlaceKickerStat:game.id];
             
             _statLabel1.text = @"FGA";
@@ -1991,15 +1774,152 @@
             _buttonEight.hidden = YES;
             _buttonNine.enabled = NO;
             _buttonNine.hidden = YES;
+        } else if (kicker) {
+            _statTitleLabel.text = @"Kicker Statistics";
+            FootballKickerStats *stat = [athlete findFootballKickerStat:game.id];
             
-            _receiverTextField.hidden = YES;
-            _receiverTextField.enabled = NO;
-            _yardsTextField.hidden = YES;
-            _yardsLabel.hidden = YES;
+            _statLabel1.text = @"";
+            _statData1.text = @"";
+            _statLabel2.text = @"KO";
+            _statData2.text = [stat.koattempts stringValue];
+            _statLabel3.text = @"RET";
+            _statData3.text = [stat.koreturned stringValue];
+            _statLabel4.text = @"TCH";
+            _statData4.text = [stat.kotouchbacks stringValue];
+            _statLabel5.text = @"";
+            _statData5.text = @"";
+            _statLabel6.text = @"";
+            _statData6.text = @"";
+            _statLabel7.text = @"";
+            _statData7.text = @"";
+            _statLabel8.text = @"";
+            _statData8.text = @"";
+            _statLabel9.text = @"";
+            _statData9.text = @"";
+            _statLabel10.text = @"";
+            _statData10.text = @"";
             
-            [self fumbleStats:YES];
-            [self scoreStats:YES];
+            [_buttonOne setTitle:@"Kickoff" forState:UIControlStateNormal];
+            _buttonOne.enabled = YES;
+            _buttonOne.hidden = NO;
+            [_buttonTwo setTitle:@"Touchback" forState:UIControlStateNormal];
+            _buttonTwo.enabled = YES;
+            _buttonTwo.hidden = NO;
+            _buttonThree.enabled = NO;
+            _buttonThree.hidden = YES;
+            _buttonFour.enabled = NO;
+            _buttonFour.hidden = YES;
+            _buttonFive.enabled = NO;
+            _buttonFive.hidden = YES;
+            _buttonSix.enabled = NO;
+            _buttonSix.hidden = YES;
+            _buttonSeven.enabled = NO;
+            _buttonSeven.hidden = YES;
+            _buttonEight.enabled = NO;
+            _buttonEight.hidden = YES;
+            _buttonNine.enabled = NO;
+            _buttonNine.hidden = YES;
+            
+        } else if (returner) {
+            _statTitleLabel.text = @"Returner Statistics";
+            FootballReturnerStats *stat = [athlete findFootballReturnerStat:game.id];
+            
+            _statLabel1.text = @"RET";
+            _statData1.text = [stat.koreturn stringValue];
+            _statLabel2.text = @"YDS";
+            _statData2.text = [stat.koyards stringValue];
+            _statLabel3.text = @"TD";
+            _statData3.text = [stat.kotd stringValue];
+            _statLabel4.text = @"LNG";
+            _statData4.text = [stat.kolong stringValue];
+            _statLabel5.text = @"";
+            _statData5.text = @"";
+            _statLabel6.text = @"PUNT";
+            _statData6.text = [stat.punt_return stringValue];
+            _statLabel7.text = @"YDS";
+            _statData7.text = [stat.punt_returnyards stringValue];
+            _statLabel8.text = @"TD";
+            _statData8.text = [stat.punt_returntd stringValue];
+            _statLabel9.text = @"LNG";
+            _statData9.text = [stat.punt_returnlong stringValue];
+            _statLabel10.text = @"";
+            _statData10.text = @"";
+            
+            [_buttonOne setTitle:@"Kick Return" forState:UIControlStateNormal];
+            _buttonOne.enabled = YES;
+            _buttonOne.hidden = NO;
+            [_buttonTwo setTitle:@"Punt Return" forState:UIControlStateNormal];
+            _buttonTwo.enabled = YES;
+            _buttonTwo.hidden = NO;
+            [_buttonThree setTitle:@"TD" forState:UIControlStateNormal];
+            _buttonThree.enabled = YES;
+            _buttonThree.hidden = NO;
+            _buttonFour.enabled = NO;
+            _buttonFour.hidden = YES;
+            _buttonFive.enabled = NO;
+            _buttonFive.hidden = YES;
+            _buttonSix.enabled = NO;
+            _buttonSix.hidden = YES;
+            _buttonSeven.enabled = NO;
+            _buttonSeven.hidden = YES;
+            _buttonEight.enabled = NO;
+            _buttonEight.hidden = YES;
+            _buttonNine.enabled = NO;
+            _buttonNine.hidden = YES;
+        } else if (punter) {
+            _statTitleLabel.text = @"Punter Statistics";
+            FootballPunterStats *stat = [athlete findFootballPunterStat:game.id];
+            
+            _statLabel1.text = @"PUNT";
+            _statData1.text = [stat.punts stringValue];
+            _statLabel2.text = @"YDS";
+            _statData2.text = [stat.punts_yards stringValue];
+            _statLabel3.text = @"LNG";
+            _statData3.text = [stat.punts_long stringValue];
+            _statLabel4.text = @"BLK";
+            _statData4.text = [stat.punts_blocked stringValue];
+            _statLabel5.text = @"";
+            _statData5.text = @"";
+            _statLabel6.text = @"";
+            _statData6.text = @"";
+            _statLabel7.text = @"";
+            _statData7.text = @"";
+            _statLabel8.text = @"";
+            _statData8.text = @"";
+            _statLabel9.text = @"";
+            _statData9.text = @"";
+            _statLabel10.text = @"";
+            _statData10.text = @"";
+            
+            [_buttonOne setTitle:@"Punt" forState:UIControlStateNormal];
+            _buttonOne.enabled = YES;
+            _buttonOne.hidden = NO;
+            [_buttonTwo setTitle:@"Blocked" forState:UIControlStateNormal];
+            _buttonTwo.enabled = YES;
+            _buttonTwo.hidden = NO;
+            _buttonThree.enabled = NO;
+            _buttonThree.hidden = YES;
+            _buttonFour.enabled = NO;
+            _buttonFour.hidden = YES;
+            _buttonFive.enabled = NO;
+            _buttonFive.hidden = YES;
+            _buttonSix.enabled = NO;
+            _buttonSix.hidden = YES;
+            _buttonSeven.enabled = NO;
+            _buttonSeven.hidden = YES;
+            _buttonEight.enabled = NO;
+            _buttonEight.hidden = YES;
+            _buttonNine.enabled = NO;
+            _buttonNine.hidden = YES;
         }
+        
+        _receiverTextField.hidden = YES;
+        _receiverTextField.enabled = NO;
+        _yardsTextField.hidden = YES;
+        _yardsLabel.hidden = YES;
+        
+        [self fumbleStats:YES];
+        [self scoreStats:YES];
     } else {
         _statTitleLabel.text = @"Player Statistics";
         _playerNameLabel.text = @"";
@@ -2069,51 +1989,228 @@
 }
 
 - (IBAction)savePlayerStatsButtonClicked:(id)sender {
-    if ((qb) && (receiver)) {
-        FootballReceivingStat *stat = [receiver findFootballReceivingStat:game.id];
-        stat.receptions = [NSNumber numberWithInt:[stat.receptions intValue] + 1];
-        stat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] + [stat.yards intValue]];
+    if (qb) {
+        FootballPassingStat *passstat = [athlete findFootballPassingStat:game.id];
+        FootballReceivingStat *recstat;
         
-        if ([_fumbleSwitch isOn])
-            stat.fumbles = [NSNumber numberWithInt:[stat.fumbles intValue] + 1];
+        if (receiver) {
+            recstat = [receiver findFootballReceivingStat:game.id];
+            recstat.receptions = [NSNumber numberWithInt:[recstat.receptions intValue] + 1];
+            recstat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] + [recstat.yards intValue]];
+            passstat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] + [passstat.yards intValue]];
+            _statData4.text = [passstat.yards stringValue];
+            
+            if (touchdown)
+                recstat.td = [NSNumber numberWithInt:[recstat.td intValue] + 1];
+            else if (twopoint)
+                recstat.twopointconv = [NSNumber numberWithInt:[recstat.twopointconv intValue] + 1];
         
-        if ([_fumbleLostSwitch isOn])
-            stat.fumbles_lost = [NSNumber numberWithInt:[stat.fumbles_lost intValue] + 1];
+            [recstat saveStats];
+        }
+                
+        if (_yardsLostTextField.text.length > 0)
+            passstat.yards_lost = [NSNumber numberWithInt:[passstat.yards_lost intValue] + [_yardsLostTextField.text intValue]];
         
-        if (touchdown) {
-            stat.td = [NSNumber numberWithInt:[stat.td intValue] + 1];
-        } else if (twopoint) {
-            stat.twopointconv = [NSNumber numberWithInt:[stat.twopointconv intValue] + 1];
+        [passstat saveStats];
+        
+        if ((touchdown) || (twopoint)) {
+            Gamelogs *gamelog = [self populateGameLogEntries];
+            gamelog.football_passing_id = passstat.football_passing_id;
+            gamelog.assistplayer = receiver.athleteid;
+            gamelog.logentry = @"yard pass to";
+            [game updateGamelog:gamelog];
+            [game saveGameschedule];
         }
         
-        [receiver saveFootballGameStats:game.id];
         receiver = nil;
     } else if (rb) {
         FootballRushingStat *stat = [athlete findFootballRushingStat:game.id];
         stat.yards = [NSNumber numberWithInt:[stat.yards intValue] + [_yardsTextField.text intValue]];
         
-        if ([_fumbleSwitch isOn])
-            stat.fumbles = [NSNumber numberWithInt:[stat.fumbles intValue] + 1];
+        if ([_yardsTextField.text intValue] > [stat.longest intValue])
+            stat.longest = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
         
-        if ([_fumbleLostSwitch isOn])
-            stat.fumbles_lost = [NSNumber numberWithInt:[stat.fumbles_lost intValue] + 1];
+        [stat saveStats];
         
+        if ((touchdown) || (twopoint)) {
+            Gamelogs *gamelog = [self populateGameLogEntries];
+            gamelog.logentry = @"yard run";
+            gamelog.football_rushing_id = stat.football_rushing_id;
+            [game updateGamelog:gamelog];
+            [game saveGameschedule];
+        }
     } else if (defense) {
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
         if (_yardsTextField.text.length > 0) {
             stat.int_yards = [NSNumber numberWithInt:[stat.int_yards intValue] + [_yardsTextField.text intValue]];
         }
+        
+        [stat saveStats];
+        
+        if ((touchdown) || (twopoint)) {
+            Gamelogs *gamelog = [self populateGameLogEntries];
+            gamelog.football_defense_id = stat.football_defense_id;
+            
+            if (touchdown) {
+                if (interception)
+                    gamelog.logentry = @"yard interception return";
+                else
+                    gamelog.logentry = @"yard fumble return";
+                
+                gamelog.score = @"TD";
+            } else {
+                gamelog.logentry = @"safety";
+                gamelog.score = @"2P";
+            }
+            
+            [game updateGamelog:gamelog];
+            [game saveGameschedule];
+        }
+    } else if (pk) {
+        FootballPlaceKickerStats *stat = [athlete findFootballPlaceKickerStat:game.id];
+        
+        if ((fieldgoal) && ([stat.fglong intValue] > [_yardsTextField.text intValue])) {
+            stat.fglong = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
+        }
+        
+        [stat saveStats];
+        
+        if ((fieldgoal) || (xpmade)) {
+            Gamelogs *gamelog = [self populateGameLogEntries];
+            gamelog.football_place_kicker_id = stat.football_place_kicker_id;
+            
+            if (fieldgoal) {
+                gamelog.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
+            }
+            
+            gamelog.logentry = athlete.logname;
+            [game updateGamelog:gamelog];
+            [game saveGameschedule];
+        }
+    } else if (returner) {
+        FootballReturnerStats *stat = [athlete findFootballReturnerStat:game.id];
+        
+        if (_yardsTextField.text.length > 0) {
+            if (koreturn) {
+                stat.koyards = [NSNumber numberWithInt:[stat.koyards intValue] + [_yardsTextField.text intValue]];
+                if ([_yardsTextField.text intValue] > [stat.kolong intValue])
+                    stat.kolong = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
+            } else {
+                stat.punt_returnyards = [NSNumber numberWithInt:[stat.punt_returnyards intValue] + [_yardsTextField.text intValue]];
+                if ([_yardsTextField.text intValue] > [stat.punt_returnlong intValue])
+                    stat.punt_returnlong = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
+            }
+        }
+        
+        [stat saveStats];
+        
+        if (touchdown) {
+            Gamelogs *gamelog = [self populateGameLogEntries];
+            gamelog.football_returner_id = stat.football_returner_id;
+            gamelog.logentry = athlete.logname;
+            [game updateGamelog:gamelog];
+            [game saveGameschedule];
+        }
+    } else if (kicker) {
+        FootballKickerStats *stat = [athlete findFootballKickerStat:game.id];
+        
+        [stat saveStats];
+    } else {
+        FootballPunterStats *stat = [athlete findFootballPunterStat:game.id];
+        stat.punts_yards = [NSNumber numberWithInt:[stat.punts_yards intValue] + [_yardsTextField.text intValue]];
+        
+        if ([stat.punts_long intValue] < [_yardsTextField.text intValue])
+            stat.punts_long = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
+        
+        [stat saveStats];
     }
     
-    [athlete saveFootballGameStats:game.id];
-    [self displayStats];
+    _yardsTextField.text = @"";
+    _yardsLostTextField.text = @"";
+    [self viewWillAppear:YES];
+    touchdown = twopoint = fieldgoal = xpmade = puntreturn = koreturn = NO;
 }
 
 - (Gamelogs *)populateGameLogEntries {
-    Gamelogs *log = [[Gamelogs alloc] init];
+    Gamelogs *gamelog = [[Gamelogs alloc] init];
     
-    return log;
+    gamelog.gameschedule_id = game.id;
+    
+    switch ([_quarterStatTextField.text intValue]) {
+        case 1:
+            gamelog.period = @"Q1";
+            if (touchdown )
+                game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 6];
+            else if (twopoint)
+                game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 2];
+            else if (fieldgoal)
+                game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 3];
+            else if (xpmade)
+                game.homeq1 = [NSNumber numberWithInt:[game.homeq1 intValue] + 1];
+            break;
+            
+        case 2:
+            gamelog.period = @"Q2";
+            if (touchdown )
+                game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 6];
+            else if (twopoint)
+                game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 2];
+            else if (fieldgoal)
+                game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 3];
+            else if (xpmade)
+                game.homeq2 = [NSNumber numberWithInt:[game.homeq2 intValue] + 1];
+            break;
+            
+        case 3:
+            gamelog.period = @"Q3";
+            if (touchdown )
+                game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 6];
+            else if (twopoint)
+                game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 2];
+            else if (fieldgoal)
+                game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 3];
+            else if (xpmade)
+                game.homeq3 = [NSNumber numberWithInt:[game.homeq3 intValue] + 1];
+            break;
+            
+        default:
+            gamelog.period = @"Q4";
+            if (touchdown )
+                game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 6];
+            else if (twopoint)
+                game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 2];
+            else if (fieldgoal)
+                game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 3];
+            else if (xpmade)
+                game.homeq4 = [NSNumber numberWithInt:[game.homeq4 intValue] + 1];
+            break;
+    }
+    
+    if ([_minutesStatTextField.text intValue] < 10) {
+        int minute = [_minutesStatTextField.text intValue];
+        _secondsStatTextField.text = [NSString stringWithFormat:@"0%d", minute];
+    }
+    
+    if ([_secondsStatTextField.text intValue] < 10) {
+        int minute = [_secondsStatTextField.text intValue];
+        _minutesStatTextField.text = [NSString stringWithFormat:@"0%d", minute];
+    }
+    
+    gamelog.time = [NSString stringWithFormat:@"%@%@%@", _minutesStatTextField.text, @":", _secondsStatTextField.text];
+    gamelog.player = athlete.athleteid;
+    gamelog.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
+
+    if (touchdown)
+        gamelog.score = @"TD";
+    else if (twopoint)
+        gamelog.score = @"2P";
+    else if (xpmade)
+        gamelog.score = @"XP";
+    else if (fieldgoal)
+        gamelog.score = @"FG";
+    
+    return gamelog;
 }
 
 - (IBAction)toggleButtonClicked:(id)sender {
@@ -2129,8 +2226,7 @@
 - (IBAction)refreshButtonClicked:(id)sender {
     if (athlete) {
         Athlete *newplayer = [currentSettings retrievePlayer:athlete.athleteid];
-        [currentSettings.roster removeObject:athlete];
-        [currentSettings insertPlayerRoster:newplayer];
+        [currentSettings replaceAthleteById:newplayer];
         athlete = newplayer;
         [self displayStats];
         [_statsTableView reloadData];
@@ -2154,6 +2250,12 @@
         [self performSegueWithIdentifier:@"DefenseStatSegue" sender:self];
     else if (pk)
         [self performSegueWithIdentifier:@"PlaceKickerStatSegue" sender:self];
+    else if (kicker)
+        [self performSegueWithIdentifier:@"KickerStatSegue" sender:self];
+    else if (returner)
+        [self performSegueWithIdentifier:@"ReturnerStatSegue" sender:self];
+    else if (punter)
+        [self performSegueWithIdentifier:@"PunterStatSegue" sender:self];
 }
 
 - (IBAction)fumbleSwitchToggle:(id)sender {
@@ -2173,14 +2275,39 @@
                 stat.fumbles = [NSNumber numberWithInt:[stat.fumbles intValue] - 1];
         } else if (rb) {
             FootballRushingStat *stat = [athlete findFootballRushingStat:game.id];
+            
             if ([stat.fumbles intValue] > 0)
                 stat.fumbles = [NSNumber numberWithInt:[stat.fumbles intValue] - 1];
+            
             _statData7.text = [stat.fumbles stringValue];
         }
     }
 }
 
 - (IBAction)fumblelostSwitchToggle:(id)sender {
+    if ([_fumbleLostSwitch isOn]) {
+        if (qb) {
+            FootballReceivingStat *stat = [athlete findFootballReceivingStat:game.id];
+            stat.fumbles_lost = [NSNumber numberWithInt:[stat.fumbles_lost intValue] + 1];
+        } else if (rb) {
+            FootballRushingStat *stat = [athlete findFootballRushingStat:game.id];
+            stat.fumbles_lost = [NSNumber numberWithInt:[stat.fumbles_lost intValue] + 1];
+            _statData7.text = [stat.fumbles_lost stringValue];
+        }
+    } else if (![_fumbleLostSwitch isOn]) {
+        if (qb) {
+            FootballReceivingStat *stat = [athlete findFootballReceivingStat:game.id];
+            if ([stat.fumbles_lost intValue] > 0)
+            stat.fumbles_lost = [NSNumber numberWithInt:[stat.fumbles_lost intValue] - 1];
+        } else if (rb) {
+            FootballRushingStat *stat = [athlete findFootballRushingStat:game.id];
+            
+            if ([stat.fumbles_lost intValue] > 0)
+                stat.fumbles_lost = [NSNumber numberWithInt:[stat.fumbles_lost intValue] - 1];
+            
+            _statData7.text = [stat.fumbles_lost stringValue];
+        }
+    }
 }
 
 @end

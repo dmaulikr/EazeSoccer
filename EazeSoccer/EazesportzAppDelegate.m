@@ -68,7 +68,7 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    if (([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) || (currentSettings.user.authtoken)) {
+    if (([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) && (currentSettings.user.authtoken)) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
 
         [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
@@ -112,5 +112,58 @@
     return orientations;
 }
  */
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    NSLog(@"Launched with URL: %@", url.absoluteString);
+    
+    NSDictionary *userDict = [self urlPathToDictionary:url.absoluteString];
+    
+    //Do something with the information in userDict
+    
+    if (userDict.count > 0) {
+        
+    }
+    
+    return YES;
+}
+
+/*
+ -(NSDictionary *)urlPathToDictionary:(NSString *)path
+ Takes a url in the form of: your_prefix://this_item/value1/that_item/value2/some_other_item/value3
+ And turns it into a dictionary in the form of:
+ {
+ this_item: @"value1",
+ that_item: @"value2",
+ some_other_item: @"value3"
+ }
+ 
+ Handles everything properly if there is a trailing slash or not.
+ Returns `nil` if there aren't the proper combinations of keys and pairs (must be an even number)
+ 
+ NOTE: This example assumes you're using ARC. If not, you'll need to add your own autorelease statements.
+ */
+
+-(NSDictionary *)urlPathToDictionary:(NSString *)path {
+    //Get the string everything after the :// of the URL.
+    NSString *stringNoPrefix = [[path componentsSeparatedByString:@"://"] lastObject];
+    //Get all the parts of the url
+    NSMutableArray *parts = [[stringNoPrefix componentsSeparatedByString:@"/"] mutableCopy];
+    //Make sure the last object isn't empty
+    if([[parts lastObject] isEqualToString:@""])[parts removeLastObject];
+    
+    if([parts count] % 2 != 0)//Make sure that the array has an even number
+        return nil;
+    
+    //We already know how many values there are, so don't make a mutable dictionary larger than it needs to be.
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:([parts count] / 2)];
+    
+    //Add all our parts to the dictionary
+    for (int i=0; i<[parts count]; i+=2) {
+        [dict setObject:[parts objectAtIndex:i+1] forKey:[parts objectAtIndex:i]];
+    }
+    
+    //Return an NSDictionary, not an NSMutableDictionary
+    return [NSDictionary dictionaryWithDictionary:dict];
+}
 
 @end

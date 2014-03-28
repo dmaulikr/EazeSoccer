@@ -109,12 +109,17 @@
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         NSDictionary *loginData;
         
+        NSArray* cfBundleURLTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
+        NSDictionary* cfBundleURLTypes0 = [cfBundleURLTypes objectAtIndex:0];
+        NSArray *schemearray = [cfBundleURLTypes0 objectForKey:@"CFBundleURLSchemes"];
+        
         if (admin)
             loginData = [[NSDictionary alloc] initWithObjectsAndKeys:[_emailText text], @"email",[_passwordText text], @"password",
-                         [_nameText text], @"name", [NSString stringWithFormat:@"%d", admin], @"admin", nil];
+                         [_nameText text], @"name", [NSString stringWithFormat:@"%d", admin], @"admin",
+                         [schemearray objectAtIndex:0], @"mobile", nil];
         else
             loginData = [[NSDictionary alloc] initWithObjectsAndKeys:[_emailText text], @"email",[_passwordText text], @"password",
-                                  [_nameText text], @"name", sport.id, @"site", nil];
+                        [_nameText text], @"name", sport.id, @"site", [schemearray objectAtIndex:0], @"mobile", nil];
         
         NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
         [jsonDict setValue:loginData forKey:@"user"];

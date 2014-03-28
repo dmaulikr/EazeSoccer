@@ -29,6 +29,6 @@
 - (id)initWithDictionary:(NSDictionary *)returnerDictionary;
 - (id)copyWithZone:(NSZone *)zone;
 
-- (BOOL)saveStats;
+- (void)saveStats;
 
 @end

@@ -65,6 +65,7 @@
 - (Athlete *)findAthleteByNumber:(NSNumber *)number;
 - (NSMutableArray *)findAthleteByPosition:(NSString *)position;
 //- (Athlete *)addAthleteStats:(Athlete *)athlete Stats:(Stats *)stats;
+- (void)replaceAthleteById:(Athlete *)athlete;
 
 - (Coach *)findCoach:(NSString *)coachid;
 - (Team *)findTeam:(NSString *)teamid;

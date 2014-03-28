@@ -635,6 +635,7 @@
         thestat = [[FootballPassingStat alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+        [football_passing_stats addObject:thestat];
     }
     
     return  thestat;
@@ -691,6 +692,7 @@
         thestat = [[FootballRushingStat alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+        [self.football_rushing_stats addObject:thestat];
     }
     
     return  thestat;
@@ -745,6 +747,7 @@
         thestat = [[FootballReceivingStat alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+        [football_receiving_stats addObject:thestat];
     }
     
     return  thestat;
@@ -798,6 +801,7 @@
         thestat = [[FootballDefenseStats alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+        [football_defense_stats addObject:thestat];
     }
     
     return  thestat;
@@ -852,6 +856,7 @@
         thestat = [[FootballKickerStats alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+        [football_kicker_stats addObject:thestat];
     }
     
     return  thestat;
@@ -908,6 +913,7 @@
         thestat = [[FootballPlaceKickerStats alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+        [football_place_kicker_stats addObject:thestat];
     }
     
     return  thestat;
@@ -962,6 +968,7 @@
         thestat = [[FootballPunterStats alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+        [football_punter_stats addObject:thestat];
     }
     
     return  thestat;
@@ -1016,6 +1023,7 @@
         thestat = [[FootballReturnerStats alloc] init];
         thestat.athlete_id = athleteid;
         thestat.gameschedule_id = gameid;
+        [football_returner_stats addObject:thestat];
     }
     
     return  thestat;
@@ -1277,25 +1285,19 @@
     FootballPassingStat *astats = [self findFootballPassingStat:gameid];
     
     if (astats.football_passing_id.length > 0) {
-        if (![astats saveStats]) {
-            return NO;
-        }
+        [astats saveStats];
     }
     
     FootballReceivingStat *recstats = [self findFootballReceivingStat:gameid];
     
     if (recstats.football_receiving_id.length > 0) {
-        if (![recstats saveStats]) {
-            return NO;
-        }
+        [recstats saveStats];
     }
     
     FootballRushingStat *rushstats = [self findFootballRushingStat:gameid];
     
     if (rushstats.football_rushing_id.length > 0) {
-        if (![rushstats saveStats]) {
-            return NO;
-        }
+        [rushstats saveStats];
     }
         
     return YES;
