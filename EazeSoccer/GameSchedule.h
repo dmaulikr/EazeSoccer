@@ -14,7 +14,10 @@
 
 @property(nonatomic, strong) NSString *opponent;
 @property(nonatomic, strong) NSString *opponentpic;
+@property(nonatomic, strong) NSDate *opponentpic_updated_at;
 @property(nonatomic, assign) BOOL eazesportzOpponent;
+@property (nonatomic, strong) NSString *opponent_sport_id;
+@property (nonatomic, strong) NSString *opponent_team_id;
 @property(nonatomic, strong) NSString *opponent_mascot;
 @property(nonatomic, strong) NSString *opponent_name;
 @property(nonatomic, strong) NSString *startdate;
@@ -48,7 +51,7 @@
 @property(nonatomic, strong) NSNumber *togo;
 
 @property(nonatomic, strong) NSDate *gamedatetime;
-@property(nonatomic, strong) UIImage *vsimage;
+//@property(nonatomic, strong) UIImage *vsimage;
 
 @property(nonatomic, strong) NSNumber *homescore;
 @property(nonatomic, strong) NSNumber *opponentscore;

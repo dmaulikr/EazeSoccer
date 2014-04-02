@@ -51,6 +51,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotCoaches:) name:@"CoachListChangedNotification" object:nil];
 //    [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid
 //                                                        Token:currentSettings.user.authtoken];
+    if (currentSettings.isSiteOwner) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton,  nil];
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -128,5 +133,8 @@
     }
 }
 
+
+- (IBAction)addButtonClicked:(id)sender {
+}
 
 @end

@@ -126,7 +126,7 @@
             user.media_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"media_alert"] integerValue]];
             user.stat_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"stat_alert"] integerValue]];
             user.score_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"score_alert"] integerValue]];
-            user.admin = [NSNumber numberWithInteger:[[userdata objectForKey:@"admin"] integerValue]];
+            user.admin = [[userdata objectForKey:@"admin"] boolValue];
             
             [_userButton setTitle:user.username forState:UIControlStateNormal];
         } else {
@@ -262,7 +262,7 @@
     Athlete *athlete = [video.athletes objectAtIndex:indexPath.row];
     cell.textLabel.font = [UIFont systemFontOfSize:12.0];
     cell.textLabel.text = athlete.full_name;
-    cell.imageView.image = [athlete getImage:@"tiny"];
+    cell.imageView.image = [currentSettings getRosterTinyImage:athlete];
     cell.detailTextLabel.text = athlete.position;
     return cell;
 }

@@ -30,9 +30,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.coachesButton, self.searchButton, nil];
-    
-    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,6 +43,14 @@
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+    
+    if ([currentSettings isSiteOwner]) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.coachesButton, self.addButton, nil];
+    } else {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.coachesButton, self.searchButton, nil];
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 -(BOOL)shouldAutorotate {
@@ -81,7 +86,7 @@
     cell.playerNumberLabel.text = [aplayer.number stringValue];
     cell.playerPositionLabel.text = aplayer.position;
     
-    if (aplayer.tinyimage == nil) {
+    if ([currentSettings getRosterTinyImage:aplayer] == nil) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
@@ -96,7 +101,7 @@
             });
         });
     } else
-        cell.rosterImage.image = aplayer.tinyimage;
+        cell.rosterImage.image = [currentSettings getRosterTinyImage:aplayer];
     
     if ([currentSettings hasAlerts:aplayer.athleteid] == NO)
         cell.alertImage.image = nil;

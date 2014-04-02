@@ -67,6 +67,14 @@
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+    
+    if ([currentSettings isSiteOwner]) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.refreshButton, nil];
+    } else {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, nil];
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -184,9 +192,10 @@
             });
         });
     } else if (feeditem.athlete.length > 0) {
-        cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findAthlete:feeditem.athlete] getImage:@"tiny"] scaledToSize:50];
+        cell.imageView.image = [currentSettings normalizedImage:
+                                [currentSettings getRosterTinyImage:[currentSettings findAthlete:feeditem.athlete]] scaledToSize:50];
     } else if (feeditem.game.length > 0) {
-        cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findGame:feeditem.game] vsimage] scaledToSize:50];
+        cell.imageView.image = [currentSettings normalizedImage:[currentSettings getOpponentImage:[currentSettings findGame:feeditem.game]] scaledToSize:50];
     } else if (feeditem.coach.length > 0) {
         cell.imageView.image = [[currentSettings findCoach:feeditem.coach] getImage:@"tiny"];
     } else {
@@ -199,7 +208,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Newsfeed *newsitem = [getNews.news objectAtIndex:indexPath.row];
     
-    if (newsitem.external_url.length > 0) {
+    if ((newsitem.external_url.length > 0) && (![currentSettings isSiteOwner ])) {
         [self performSegueWithIdentifier:@"NewsExternalUrlSegue" sender:self];
     } else {
         [self performSegueWithIdentifier:@"NewsInfoSegue" sender:self];

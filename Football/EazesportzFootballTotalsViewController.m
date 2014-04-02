@@ -111,7 +111,7 @@
             if (indexPath.row < qbs.count) {
                 player = [qbs objectAtIndex:indexPath.row];
                 FootballPassingStat *stat = [player findFootballPassingStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.attempts stringValue];
                 cell.label2.text = [stat.completions stringValue];
@@ -166,7 +166,7 @@
             if (indexPath.row < rbs.count) {
                 player = [rbs objectAtIndex:indexPath.row];
                 FootballRushingStat *stat = [player findFootballRushingStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.attempts stringValue];
                 cell.label2.text = [stat.yards stringValue];
@@ -223,7 +223,7 @@
             if (indexPath.row < wrs.count) {
                 player = [wrs objectAtIndex:indexPath.row];
                 FootballReceivingStat *stat = [player findFootballReceivingStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.receptions stringValue];
                 cell.label2.text = [stat.yards stringValue];
@@ -282,7 +282,7 @@
             if (indexPath.row < pks.count) {
                 player = [pks objectAtIndex:indexPath.row];
                 FootballPlaceKickerStats *stat = [player findFootballPlaceKickerStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.fgattempts stringValue];
                 cell.label2.text = [stat.fgmade stringValue];
@@ -333,7 +333,7 @@
             if (indexPath.row < kickerlist.count) {
                 player = [kickerlist objectAtIndex:indexPath.row];
                 FootballKickerStats *stat = [player findFootballKickerStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.koattempts stringValue];
                 cell.label2.text = @"";
@@ -377,7 +377,7 @@
             if (indexPath.row < punterlist.count) {
                 player = [punterlist objectAtIndex:indexPath.row];
                 FootballPunterStats *stat = [player findFootballPunterStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.punts stringValue];
                 cell.label2.text = [stat.punts_blocked stringValue];
@@ -436,7 +436,7 @@
             if (indexPath.row < returnerlist.count) {
                 player = [returnerlist objectAtIndex:indexPath.row];
                 FootballReturnerStats *stat = [player findFootballReturnerStat:game.id];
-                cell.fbimageView.image = [player getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
                 cell.namelabel.text = player.numberLogname;
                 cell.label1.text = [stat.punt_return stringValue];
                 cell.label2.text = [stat.punt_returnyards stringValue];
@@ -514,7 +514,7 @@
         if (indexPath.row < defenselist.count) {
             player = [defenselist objectAtIndex:indexPath.row];
             FootballDefenseStats *stat = [player findFootballDefenseStat:game.id];
-            cell.fbimageView.image = [player getImage:@"tiny"];
+            cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
             cell.namelabel.text = player.numberLogname;
             
             if ([stat.assists intValue] > 0)

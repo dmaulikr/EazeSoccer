@@ -95,6 +95,15 @@
     } else {
         
     }
+    
+    _playButton.hidden = YES;
+    _playLabel.hidden = YES;
+    
+    if ([currentSettings isSiteOwner]) {
+        self.navigationItem.rightBarButtonItem = self.editBarButton;
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

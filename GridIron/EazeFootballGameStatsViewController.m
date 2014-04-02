@@ -20,8 +20,11 @@
 #import "EazesportzStatTableHeaderCell.h"
 #import "EazeFootballPlayerStatsViewController.h"
 #import "EazesportzRetrieveAlerts.h"
+#import "PlayerSelectionViewController.h"
+#import "EazeAddPlayerStatsViewController.h"
+#import "EazesportzFootballReceivingTotalsViewController.h"
 
-@interface EazeFootballGameStatsViewController ()
+@interface EazeFootballGameStatsViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -36,7 +39,9 @@
     EazesportzRetrieveFootballKickerStats *getKicker;
     EazesportzRetrieveFootballReturnerGameStats *getReturner;
     
-    NSMutableArray *puntreturner, *kickreturner;
+    NSMutableArray *puntreturner, *kickreturner, *passlist, *rushlist, *receiverlist, *defenselist, *kickerlist, *punterlist, *returnerlist;
+    
+    PlayerSelectionViewController *playerSelectController;
 }
 
 @synthesize game;
@@ -62,6 +67,13 @@
     getDefense = [[EazesportzRetrieveFootballDefenseGameStats alloc] init];
     getKicker = [[EazesportzRetrieveFootballKickerStats alloc] init];
     getReturner = [[EazesportzRetrieveFootballReturnerGameStats alloc] init];
+    
+    if (currentSettings.isSiteOwner)
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.addButton, nil];
+    else
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -115,6 +127,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    _playerSelectContainer.hidden = YES;
     
     visiblestats = @"Team";
     
@@ -160,36 +173,43 @@
 - (void)gotPassing:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _passButton.enabled = YES;
+        passlist = getPassing.passing;
     }
 }
 
 - (void)gotRushing:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _rushButton.enabled = YES;
+        rushlist = getRushing.rushing;
     }
 }
 
 - (void)gotReceiving:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _receiverButton.enabled = YES;
+        receiverlist = getReceiving.receiving;
     }
 }
 
 - (void)gotDefense:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _defenseButton.enabled = YES;
+        defenselist = getDefense.defense;
     }
 }
 
 - (void)gotKicker:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _kickerButton.enabled = YES;
+        kickerlist = getKicker.kicker;
+        punterlist = getKicker.punter;
     }
 }
 
 - (void)gotReturner:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _returnerButton.enabled = YES;
+        returnerlist = getReturner.returner;
     }
 }
 
@@ -210,18 +230,18 @@
     if ([visiblestats isEqualToString:@"Team"]) {
         return 6;
     } else if ([visiblestats isEqualToString:@"Pass"]) {
-        return getPassing.passing.count + 1;
+        return passlist.count + 1;
     } else if ([visiblestats isEqualToString:@"Rush"]) {
-        return getRushing.rushing.count + 1;
+        return rushlist.count + 1;
     } else if ([visiblestats isEqualToString:@"Rec"]) {
-        return getReceiving.receiving.count + 1;
+        return receiverlist.count + 1;
     } else if ([visiblestats isEqualToString:@"Def"]) {
-        return getDefense.defense.count + 1;
+        return defenselist.count + 1;
     } else if ([visiblestats isEqualToString:@"Kick"]) {
         if (section == 0)
-            return getKicker.kicker.count + 1;
+            return kickerlist.count + 1;
         else
-            return getKicker.punter.count + 1;
+            return punterlist.count + 1;
     } else if ([visiblestats isEqualToString:@"Ret"]) {
         if (section == 0) {
             puntreturner = [[NSMutableArray alloc] init];
@@ -306,8 +326,8 @@
         
         FootballPassingStat *stat;
         
-        if (indexPath.row < getPassing.passing.count) {
-            stat = [getPassing.passing objectAtIndex:indexPath.row];
+        if (indexPath.row < passlist.count) {
+            stat = [passlist objectAtIndex:indexPath.row];
             cell.playerLabel.text = [[currentSettings findAthlete:stat.athlete_id] logname];
         } else {
             stat = getPassing.totals;
@@ -342,8 +362,8 @@
         
         FootballRushingStat *stat;
         
-        if (indexPath.row < getRushing.rushing.count) {
-            stat = [getRushing.rushing objectAtIndex:indexPath.row];
+        if (indexPath.row < rushlist.count) {
+            stat = [rushlist objectAtIndex:indexPath.row];
             cell.playerLabel.text = [[currentSettings findAthlete:stat.athlete_id] logname];
         } else {
             stat = getRushing.totals;
@@ -378,8 +398,8 @@
         
         FootballReceivingStat *stat;
         
-        if (indexPath.row < getReceiving.receiving.count) {
-            stat = [getReceiving.receiving objectAtIndex:indexPath.row];
+        if (indexPath.row < receiverlist.count) {
+            stat = [receiverlist objectAtIndex:indexPath.row];
             cell.playerLabel.text = [[currentSettings findAthlete:stat.athlete_id] logname];
         } else {
             stat = getReceiving.totals;
@@ -414,8 +434,8 @@
         
         FootballDefenseStats *stat;
         
-        if (indexPath.row < getDefense.defense.count) {
-            stat = [getDefense.defense objectAtIndex:indexPath.row];
+        if (indexPath.row < defenselist.count) {
+            stat = [defenselist objectAtIndex:indexPath.row];
             cell.playerLabel.text = [[currentSettings findAthlete:stat.athlete_id] logname];
         } else {
             stat = getDefense.totals;
@@ -446,8 +466,8 @@
         if (indexPath.section == 0) {
             FootballPlaceKickerStats *stat;
             
-            if (indexPath.row < getKicker.kicker.count) {
-                stat = [getKicker.kicker objectAtIndex:indexPath.row];
+            if (indexPath.row < kickerlist.count) {
+                stat = [kickerlist objectAtIndex:indexPath.row];
                 cell.playerLabel.text = [[currentSettings findAthlete:stat.athlete_id] logname];
             } else {
                 stat = getKicker.totals;
@@ -463,8 +483,8 @@
         } else {
             FootballPunterStats *stat;
             
-            if (indexPath.row < getKicker.punter.count) {
-                stat = [getKicker.punter objectAtIndex:indexPath.row];
+            if (indexPath.row < punterlist.count) {
+                stat = [punterlist objectAtIndex:indexPath.row];
                 cell.playerLabel.text = [[currentSettings findAthlete:stat.athlete_id] logname];
             } else {
                 stat = getKicker.puntertotals;
@@ -550,25 +570,40 @@
         UITableViewCell *cell;
         
         return cell;
-    }
-     
+    }     
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (([visiblestats isEqualToString:@"Pass"]) && (indexPath.row < getPassing.passing.count)) {
-        [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
-    } else if (([visiblestats isEqualToString:@"Rush"]) && (indexPath.row < getRushing.rushing.count)) {
-        [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
-    } else if (([visiblestats isEqualToString:@"Rec"]) && (indexPath.row < getReceiving.receiving.count)) {
-        [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
-    } else if (([visiblestats isEqualToString:@"Def"]) && (indexPath.row < getDefense.defense.count)) {
-        [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
-    } else if (([visiblestats isEqualToString:@"Kick"]) && (indexPath.row < getKicker.kicker.count)) {
-        [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
-    } else if (([visiblestats isEqualToString:@"Ret"]) && (indexPath.row < getReturner.returner.count)) {
-        [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+    if (currentSettings.isSiteOwner) {
+        if (([visiblestats isEqualToString:@"Pass"]) && (indexPath.row < passlist.count)) {
+            [self performSegueWithIdentifier:@"AddPlayerStatSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Rush"]) && (indexPath.row < rushlist.count)) {
+            [self performSegueWithIdentifier:@"AddPlayerStatSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Rec"]) && (indexPath.row < receiverlist.count)) {
+            [self performSegueWithIdentifier:@"ReceiverStatSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Def"]) && (indexPath.row < defenselist.count)) {
+            [self performSegueWithIdentifier:@"AddPlayerStatSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Kick"]) && (indexPath.row < kickerlist.count)) {
+            [self performSegueWithIdentifier:@"AddPlayerStatSegue" sender:self];
+        } else if ([visiblestats isEqualToString:@"Ret"]) {
+            [self performSegueWithIdentifier:@"AddPlayerStatSegue" sender:self];
+        }
+    } else {
+        if (([visiblestats isEqualToString:@"Pass"]) && (indexPath.row < passlist.count)) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Rush"]) && (indexPath.row < rushlist.count)) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Rec"]) && (indexPath.row < receiverlist.count)) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Def"]) && (indexPath.row < defenselist.count)) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Kick"]) && (indexPath.row < getKicker.kicker.count)) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        } else if (([visiblestats isEqualToString:@"Ret"]) && (indexPath.row < getReturner.returner.count)) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+        }
     }
 }
 
@@ -590,6 +625,35 @@
             destController.player = [currentSettings findAthlete:[[getKicker.kicker objectAtIndex:indexpath.row] athlete_id]];
         else if ([visiblestats isEqualToString:@"Ret"])
             destController.player = [currentSettings findAthlete:[[getReturner.returner objectAtIndex:indexpath.row] athlete_id]];
+    } else if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
+        playerSelectController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"AddPlayerStatSegue"]) {
+        EazeAddPlayerStatsViewController *destController = segue.destinationViewController;
+        destController.game = game;
+        
+        if ([visiblestats isEqualToString:@"Pass"]) {
+            destController.athlete = [currentSettings findAthlete:[[passlist objectAtIndex:indexpath.row] athlete_id]];
+            destController.position = @"Pass";
+        } else if ([visiblestats isEqualToString:@"Rush"]) {
+            destController.athlete = [currentSettings findAthlete:[[rushlist objectAtIndex:indexpath.row] athlete_id]];
+            destController.position = @"Rush";
+        } else if ([visiblestats isEqualToString:@"Def"]) {
+            destController.athlete = [currentSettings findAthlete:[[defenselist objectAtIndex:indexpath.row] athlete_id]];
+            destController.position = @"Def";
+        } else if (([visiblestats isEqualToString:@"Kick"]) && (indexpath.section == 0)) {
+            destController.athlete = [currentSettings findAthlete:[[kickerlist objectAtIndex:indexpath.row] athlete_id]];
+            destController.position = @"Kick";
+        } else if (([visiblestats isEqualToString:@"Kick"]) && (indexpath.section == 1)) {
+            destController.athlete = [currentSettings findAthlete:[[punterlist objectAtIndex:indexpath.row] athlete_id]];
+            destController.position = @"Punt";
+        } else if ([visiblestats isEqualToString:@"Ret"]) {
+            destController.athlete = [currentSettings findAthlete:[[returnerlist objectAtIndex:indexpath.row] athlete_id]];
+            destController.position = @"Ret";
+        }
+    } else if ([segue.identifier isEqualToString:@"ReceiverStatSegue"]) {
+        EazesportzFootballReceivingTotalsViewController *destController = segue.destinationViewController;
+        destController.game = game;
+        destController.player = [currentSettings findAthlete:[[receiverlist objectAtIndex:indexpath.row] athlete_id]];
     }
 }
 
@@ -764,6 +828,70 @@
     }
     
     [self viewWillAppear:YES];
+}
+
+- (IBAction)addButtonClicked:(id)sender {
+    if (![visiblestats isEqualToString:@"Team"]) {
+        playerSelectController.player = nil;
+        [playerSelectController viewWillAppear:YES];
+        _playerSelectContainer.hidden = NO;
+    }
+}
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
+    if (playerSelectController.player) {
+        Athlete *player =playerSelectController.player;
+        
+        if (([visiblestats isEqualToString:@"Pass"]) && (![self inPlayerList:passlist Player:player])) {
+            [passlist addObject:[player findFootballPassingStat:game.id]];
+            [_statTableView reloadData];
+        } else if (([visiblestats isEqualToString:@"Rush"]) && (![self inPlayerList:rushlist Player:player])) {
+            [rushlist addObject:[player findFootballRushingStat:game.id]];
+            [_statTableView reloadData];
+        } else if (([visiblestats isEqualToString:@"Rec"]) && (![self inPlayerList:receiverlist Player:player])) {
+            [receiverlist addObject:[player findFootballReceivingStat:game.id]];
+            [_statTableView reloadData];
+        } else if (([visiblestats isEqualToString:@"Def"]) && (![self inPlayerList:defenselist Player:player])){
+            [defenselist addObject:[player findFootballDefenseStat:game.id]];
+            [_statTableView reloadData];
+        } else if ([visiblestats isEqualToString:@"Kick"]) {
+            UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Select" message:@"Kicker or Punter" delegate:self cancelButtonTitle:@"Cancel"
+                                                      otherButtonTitles:@"Kicker", @"Punter", nil];
+            [alertview show];
+        } else if (([visiblestats isEqualToString:@"Ret"]) && (![self inPlayerList:returnerlist Player:player])) {
+            [returnerlist addObject:[player findFootballReturnerStat:game.id]];
+            [_statTableView reloadData];
+        }
+    }
+    
+    _playerSelectContainer.hidden = YES;
+}
+
+- (BOOL)inPlayerList:(NSMutableArray *)playerlist Player:(Athlete *)player {
+    BOOL found = NO;
+    
+    if (playerlist.count > 0) {
+        for (int i = 0; i < playerlist.count; i++) {
+            if ([[[playerlist objectAtIndex:i] athlete_id] isEqualToString:player.athleteid]) {
+                found = YES;
+                break;
+            }
+        }
+    } else
+        found = NO;
+    
+    return found;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if (([title isEqualToString:@"Kicker"]) && (![self inPlayerList:kickerlist Player:playerSelectController.player])) {
+        [kickerlist addObject:[playerSelectController.player findFootballPlaceKickerStat:game.id]];
+    } else if (([title isEqualToString:@"Punter"]) && (![self inPlayerList:punterlist Player:playerSelectController.player])) {
+        [punterlist addObject:[playerSelectController.player findFootballPunterStat:game.id]];
+    }
+    [_statTableView reloadData];
 }
 
 @end

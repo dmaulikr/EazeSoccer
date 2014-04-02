@@ -10,12 +10,15 @@
 #import "EazesportzAppDelegate.h"
 #import "sportzCurrentSettings.h"
 #import "sportzServerInit.h"
+#import "EazesportzRetrieveSport.h"
+#import "EazesportzRetrieveTeams.h"
+#import "EazesportzLogin.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface ProgramInfoViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate,
-                                        UIAlertViewDelegate, AmazonServiceRequestDelegate>
+                                        UIAlertViewDelegate, AmazonServiceRequestDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
 @end
 
@@ -25,9 +28,15 @@
     NSMutableDictionary *serverData;
     NSMutableData *theData;
     int responseStatusCode;
+    
+    NSMutableArray *countryarray;
+    NSString *country;
+    
+    EazesportzRetrieveTeams *getTeams;
 }
 
 @synthesize sport;
+@synthesize sportid;
 @synthesize popover;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,7 +52,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    
     _cameraRollButton.layer.cornerRadius = 4;
     _deleteButton.layer.cornerRadius = 4;
 //    _deleteButton.backgroundColor = [UIColor redColor];
@@ -51,13 +62,13 @@
     _yearTextField.keyboardType = UIKeyboardTypeNumberPad;
     _zipcodeTextField.keyboardType = UIKeyboardTypeNumberPad;
     
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
-    [_scrollView addGestureRecognizer:singleTap];
-}
-
-- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
-    CGPoint touchPoint = [gesture locationInView:_scrollView];
-    [self.view endEditing:YES];
+    _countryTextField.inputView = _pickerView.inputView;
+    
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Countries" ofType:@"plist"];
+    NSArray *temparray = [[NSArray alloc] initWithContentsOfFile:plistPath];
+    countryarray = [[NSMutableArray alloc] init];
+    [countryarray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:@"United States", @"name", @"US", @"code", nil]];
+    [countryarray addObjectsFromArray:temparray];
 }
 
 - (void)didReceiveMemoryWarning
@@ -71,24 +82,34 @@
 
     newmedia = NO;
     imageselected = NO;
+    _pickerView.hidden = YES;
     
-    if (currentSettings.sport.id.length == 0) {
-        self.navigationItem.hidesBackButton = YES;
-        _deleteButton.hidden = YES;
-        _deleteButton.enabled = NO;
-        newsport = YES;
-        sport = [[Sport alloc] init];
-    } else {
-        [currentSettings retrieveSport];
-        sport = currentSettings.sport;
+    
+    if (currentSettings.isSiteOwner) {
+        sport = [currentSettings retrieveSport:(currentSettings.sport.id)];
         _sitenameTextField.text = sport.sitename;
         _mascotTextField.text = sport.mascot;
         _yearTextField.text = sport.year;
         _zipcodeTextField.text = sport.zip;
         newsport = NO;
+        _logoImage.image = [currentSettings.sport getImage:@"thumb"];
+    } else if (sportid.length > 0) {
+        sport = [currentSettings retrieveSport:(sportid)];
+        _sitenameTextField.text = sport.sitename;
+        _mascotTextField.text = sport.mascot;
+        _yearTextField.text = sport.year;
+        _zipcodeTextField.text = sport.zip;
+        _logoImage.image = [sport getImage:@"thumb"];
+        newsport = NO;
+    } else {
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            self.navigationItem.hidesBackButton = YES;
+        
+        _deleteButton.hidden = YES;
+        _deleteButton.enabled = NO;
+        newsport = YES;
+        sport = [[Sport alloc] init];
     }
-    
-    _logoImage.image = [currentSettings.sport getImage:@"thumb"];
 }
 
 - (IBAction)cameraRollButtonClicked:(id)sender {
@@ -99,15 +120,21 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = NO;
-        imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
-        UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        apopover.delegate = self;
         
-        // set contentsize
-        [apopover setPopoverContentSize:CGSizeMake(220,300)];
-        
-        [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        self.popover = apopover;
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+            UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            apopover.delegate = self;
+            
+            // set contentsize
+            [apopover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            self.popover = apopover;
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            newmedia = NO;
+        }
     }
 }
 
@@ -138,11 +165,7 @@
 
 -(void)image:(UIImage *)imag finishedSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     if (error) {
-        UIAlertView *alert = [[UIAlertView alloc]
-                              initWithTitle: @"Save failed"
-                              message: @"Failed to save image"
-                              delegate: self
-                              cancelButtonTitle:@"OK"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Save failed" message: @"Failed to save image" delegate: self cancelButtonTitle:@"OK"
                               otherButtonTitles:nil];
         [alert show];
     }
@@ -165,7 +188,7 @@
     
     NSMutableDictionary *sportDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[_sitenameTextField text], @"sitename",
                                      [_mascotTextField text], @"mascot", _yearTextField.text, @"year", _zipcodeTextField.text, @"zip",
-                                      currentSettings.user.email, @"contactemail", @"Fall", @"season", nil];
+                                      currentSettings.user.email, @"contactemail", @"Fall", @"season", _countryTextField.text, @"country", nil];
     
     NSBundle *mainBundle = [NSBundle mainBundle];
 
@@ -209,7 +232,10 @@
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
-    textField.text = @"";
+    if (textField == _countryTextField) {
+        _pickerView.hidden = NO;
+        [textField resignFirstResponder];
+    }
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
@@ -247,23 +273,72 @@
             currentSettings.sport.id = [[serverData objectForKey:@"sport"] objectForKey:@"_id"];
         }
         
-//        currentSettings.sport = sport;
-        
         if (imageselected) {
             [self uploadImage:currentSettings.sport];
-        } else if (currentSettings.team.teamid.length == 0) {
-            [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Update Successfull!"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
+            [self saveCompleted];
         }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Updating Sport" message:[serverData objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
+    }
+}
+
+- (void)saveCompleted {
+    currentSettings.user = [[[EazesportzLogin alloc] init] getUserSynchronous:currentSettings.user.userid];
+    
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
+    else {
+        [currentSettings setUpSport:currentSettings.user.adminsite];
+        
+/*        if ([[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:currentSettings.user.adminsite Token:currentSettings.user.authtoken]) {
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            
+            //make a file name to write the data to using the documents directory:
+            NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt", documentsDirectory];
+            NSString *sportFile = [NSString stringWithFormat:@"%@/currentsport.txt", documentsDirectory];
+            //create content - four lines of text
+            NSString *content = currentSettings.sport.id;
+            //save content to the documents directory
+            [content writeToFile:fileName atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+            [currentSettings.sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+            
+            getTeams = [[EazesportzRetrieveTeams alloc] init];
+            if ([[[EazesportzRetrieveTeams alloc] init] retrieveTeamsSynchronous:currentSettings.sport.id Token:currentSettings.user.authtoken]) {
+                currentSettings.teams = getTeams.teams;
+                currentSettings.team = nil;
+            }
+        }
+ */
+        
+        UITabBarController *tabBarController = self.tabBarController;
+        
+        for (UIViewController *viewController in tabBarController.viewControllers)
+        {
+            if ([viewController isKindOfClass:[UINavigationController class]])
+                [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+        }
+        
+        UIView * fromView = tabBarController.selectedViewController.view;
+        UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+        
+        if (fromView != toView) {
+            // Transition using a page curl.
+            [UIView transitionFromView:fromView
+                                toView:toView
+                              duration:0.5
+                               options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                            completion:^(BOOL finished) {
+                                if (finished) {
+                                    tabBarController.selectedIndex = 0;
+                                }
+                            }];
+        } else
+            [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 
@@ -349,16 +424,7 @@
     NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
-
-        if (currentSettings.team.teamid.length == 0) {
-             [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Update Successful!"
-                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-            [self viewWillAppear:YES];
-        }
+        [self saveCompleted];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -375,6 +441,42 @@
     [alert show];
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+}
+
+//Method to define how many columns/dials to show
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+// Method to define the numberOfRows in a component using the array.
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
+    return countryarray.count;
+}
+
+// Method to show the title of row for a component.
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    NSDictionary *subDict = [countryarray objectAtIndex:row];
+    return [subDict objectForKey:@"name"];
+}
+
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    NSDictionary *subDict = [countryarray objectAtIndex:row];
+    _countryTextField.text = [subDict objectForKey:@"name"];
+    country = [subDict objectForKey:@"name"];
+    _pickerView.hidden = YES;
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

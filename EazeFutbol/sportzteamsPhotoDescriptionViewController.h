@@ -22,5 +22,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *gameTagLabel;
 @property (weak, nonatomic) IBOutlet UILabel *photoTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UILabel *playLabel;
+@property (weak, nonatomic) IBOutlet UIButton *playButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editBarButton;
 
 @end

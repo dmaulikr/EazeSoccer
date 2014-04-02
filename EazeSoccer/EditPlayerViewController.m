@@ -58,7 +58,11 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    else
+        self.view.backgroundColor = [UIColor whiteColor];
+    
     _activityIndicator.hidesWhenStopped = YES;
 
     _bioTextView.layer.cornerRadius = 4;
@@ -73,6 +77,8 @@
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.statsButton, self.doneButton, nil];
     
     self.navigationController.toolbarHidden = YES;
+    
+//    [_heightPicker setBackgroundColor:[UIColor whiteColor]];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -120,7 +126,7 @@
         _seasonTextField.text = player.season;
         _bioTextView.text = player.bio;
         
-        _playerImage.image = [player getImage:@"thumb"];
+        _playerImage.image = [currentSettings getRosterTinyImage:player];
 
         _positionTextField.text = player.position;
         
@@ -154,7 +160,7 @@
         [_videosButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         [_photosButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     }
- }
+}
 
 - (void)displayDataEntryAlert:(NSString *)message {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:message
@@ -198,7 +204,16 @@
     if (imageselected)
         [self uploadImage:player];
     else
-        [self.navigationController popViewControllerAnimated:YES];
+        [self playerSaved];
+}
+
+- (void)playerSaved {
+    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Ahtlete Update Successful!"
+                                                   delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
 }
 
 //Method to define how many columns/dials to show
@@ -301,15 +316,21 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = NO;
-        imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
-        UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        apopover.delegate = self;
-       
-        // set contentsize
-        [apopover setPopoverContentSize:CGSizeMake(220,300)];
         
-        [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        self.popover = apopover;
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+            UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            apopover.delegate = self;
+           
+            // set contentsize
+            [apopover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            self.popover = apopover;
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            newmedia = NO;
+        }
     }
 }
 
@@ -374,8 +395,12 @@
     } else if (textField == _positionTextField) {
         [_positionTextField resignFirstResponder];
     } else if (textField == _heightTextField) {
+        if (_heightPicker.hidden)
+            _heightPicker.hidden = NO;
+        else
+            _heightPicker.hidden = YES;
+            
         [_heightTextField resignFirstResponder];
-        _heightPicker.hidden = NO;
     }
 }
 
@@ -517,12 +542,7 @@
     NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Ahtlete Update Successful!"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        [self playerSaved];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -597,6 +617,19 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

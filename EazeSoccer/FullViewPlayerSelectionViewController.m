@@ -76,7 +76,24 @@
     cell.playernameLabel.text = aplayer.name;
     cell.playerNumberLabel.text = [aplayer.number stringValue];
     cell.playerPositionLabel.text = aplayer.position;
-    cell.rosterImage.image = [aplayer getImage:@"tiny"];
+    
+    if ([currentSettings getRosterTinyImage:aplayer] == nil) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:aplayer.tinypic]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (cell.tag == indexPath.row) {
+                    cell.rosterImage.image = [UIImage imageWithData:image];
+                    [cell setNeedsLayout];
+                }
+            });
+        });
+    } else {
+        cell.rosterImage.image = [currentSettings getRosterTinyImage:aplayer];
+    }
     
     if ([currentSettings hasAlerts:aplayer.athleteid] == NO)
         cell.alertLabel.textColor = [UIColor clearColor];

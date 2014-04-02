@@ -42,6 +42,7 @@
 @property(nonatomic, strong) NSString *thumb;
 @property(nonatomic, strong) NSString *mediumpic;
 @property(nonatomic, strong) NSString *largepic;
+@property(nonatomic, strong) NSDate *pic_updated_at;
 @property(nonatomic, strong) NSString *teamname;
 @property(nonatomic, strong) NSNumber *following;
 @property(nonatomic, assign) BOOL hasphotos;
@@ -61,9 +62,9 @@
 
 @property(nonatomic, strong) NSMutableArray *soccer_stats;
 
-@property(nonatomic, strong) UIImage *thumbimage;
-@property(nonatomic, strong) UIImage *tinyimage;
-@property(nonatomic, strong) UIImage *mediumimage;
+//@property(nonatomic, strong) UIImage *thumbimage;
+//@property(nonatomic, strong) UIImage *tinyimage;
+//@property(nonatomic, strong) UIImage *mediumimage;
 
 @property(nonatomic, strong) NSString *httperror;
 
@@ -134,6 +135,6 @@
 
 - (Soccer *)soccerSeasonTotals;
 
-- (UIImage *)getImage:(NSString *)size;
+//- (UIImage *)getImage:(NSString *)size;
 
 @end

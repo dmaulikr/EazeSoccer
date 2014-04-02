@@ -49,6 +49,7 @@
     }
     
     originalRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:stringurl]];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }
 

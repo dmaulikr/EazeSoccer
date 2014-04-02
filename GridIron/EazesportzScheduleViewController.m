@@ -11,12 +11,15 @@
 #import "EazeFootballGameSummaryViewController.h"
 #import "EazeBasketballGameSummaryViewController.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
+#import "EditGameViewController.h"
 
 @interface EazesportzScheduleViewController () <UIAlertViewDelegate>
 
 @end
 
-@implementation EazesportzScheduleViewController
+@implementation EazesportzScheduleViewController {
+    BOOL editgame, addgame;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,41 +43,68 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    addgame = editgame = NO;
+    
     if (currentSettings.sport.id.length == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please select a sport before continuing"
                                                        delegate:self cancelButtonTitle:@"Select Site" otherButtonTitles:nil, nil];
         
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
-    } else
+    } else {
         [super viewWillAppear:animated];
+        
+        if ((currentSettings.isSiteOwner) && (currentSettings.gameList.count > 0))
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, self.editGameButton, self.standingsButton, nil];
+        else if ((currentSettings.isSiteOwner) && (currentSettings.gameList.count == 0))
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addGameButton, nil];
+        else
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.standingsButton, nil];
+        
+        self.navigationController.toolbarHidden = YES;
+        
+        if (currentSettings.gameList.count == 0) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No Games Scheduled!" delegate:nil cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSIndexPath *indexPath = [self.gamesTableView indexPathForSelectedRow];
-    
-    if ([segue.identifier isEqualToString:@"GameFootballSegue"]) {
-        EazeFootballGameSummaryViewController *destController = segue.destinationViewController;
-        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
-    } else if ([segue.identifier isEqualToString:@"GameBasketballSegue"]) {
-        EazeBasketballGameSummaryViewController *destCotroller = segue.destinationViewController;
-        destCotroller.game = [currentSettings.gameList objectAtIndex:indexPath.row];
-    } else if ([segue.identifier isEqualToString:@"GameSoccerSegue"]) {
-        EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
-        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    if (![segue.identifier isEqualToString:@"NewGameSegue"]) {
+        NSIndexPath *indexPath = [self.gamesTableView indexPathForSelectedRow];
+        
+        if ([segue.identifier isEqualToString:@"GameFootballSegue"]) {
+            EazeFootballGameSummaryViewController *destController = segue.destinationViewController;
+            destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        } else if ([segue.identifier isEqualToString:@"GameBasketballSegue"]) {
+            EazeBasketballGameSummaryViewController *destCotroller = segue.destinationViewController;
+            destCotroller.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        } else if ([segue.identifier isEqualToString:@"GameSoccerSegue"]) {
+            EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
+            destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        } else if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
+            EditGameViewController *destController = segue.destinationViewController;
+            destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        }
     }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([currentSettings.sport.name isEqualToString:@"Football"]) {
-        [self performSegueWithIdentifier:@"GameFootballSegue" sender:self];
-    } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
-        [self performSegueWithIdentifier:@"GameBasketballSegue" sender:self];
-    } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
-        [self performSegueWithIdentifier:@"GameSoccerSegue" sender:self];
+    if ((editgame) || (addgame)) {
+        [self performSegueWithIdentifier:@"EditGameSegue" sender:self];
+    } else {
+        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            [self performSegueWithIdentifier:@"GameFootballSegue" sender:self];
+        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+            [self performSegueWithIdentifier:@"GameBasketballSegue" sender:self];
+        } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+            [self performSegueWithIdentifier:@"GameSoccerSegue" sender:self];
+        }
     }
 }
 
@@ -111,6 +141,13 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+- (IBAction)editGameButtonClicked:(id)sender {
+    if (editgame)
+        editgame = NO;
+    else
+        editgame = YES;
 }
 
 @end

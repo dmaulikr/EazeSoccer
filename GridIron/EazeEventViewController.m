@@ -172,7 +172,7 @@
         EazeEventGameTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EventGameTableCell" forIndexPath:indexPath];
         cell.eventLabel.text = @"Live Game!";
         cell.homeImageView.image = [team getImage:@"tiny"];
-        cell.visitorImageView.image = game.vsimage;
+        cell.visitorImageView.image = [currentSettings getOpponentImage:game];
         cell.hometeamLabel.text = team.mascot;
         cell.visitorTeamLabel.text = game.opponent_mascot;
         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];

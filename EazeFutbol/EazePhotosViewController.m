@@ -40,9 +40,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, nil];
-    
-    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -97,6 +94,14 @@
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+    
+    if ([currentSettings isSiteOwner]) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton, nil];
+    } else {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, nil];
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)displayUpgradeAlert {

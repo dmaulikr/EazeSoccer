@@ -15,5 +15,7 @@
 @property(nonatomic, strong) Coach *coach;
 
 @property (weak, nonatomic) IBOutlet UITableView *coachTableView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
+- (IBAction)addButtonClicked:(id)sender;
 
 @end

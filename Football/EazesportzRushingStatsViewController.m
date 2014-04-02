@@ -66,7 +66,7 @@
     _colonLabel.hidden = YES;
     _rushyardsTextField.hidden = YES;
     
-    _playerImageView.image = [player getImage:@"tiny"];
+    _playerImageView.image = [currentSettings getRosterTinyImage:player];
     _playerNameLabel.text = player.logname;
     _playerNumberLabel.text = [player.number stringValue];
     

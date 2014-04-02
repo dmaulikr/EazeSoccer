@@ -61,7 +61,7 @@
     
     touchdown = safety = interception = NO;
     
-    _playerImageView.image = [player getImage:@"tiny"];
+    _playerImageView.image = [currentSettings getRosterTinyImage:player];
     _playerNumbeLabel.text = [player.number stringValue];
     _playerNameLabel.text = player.logname;
     

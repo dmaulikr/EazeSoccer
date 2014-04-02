@@ -158,9 +158,9 @@
             });
         });
     } else if (feeditem.athlete.length > 0) {
-        cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findAthlete:feeditem.athlete] tinyimage] scaledToSize:50];
+        cell.imageView.image = [currentSettings normalizedImage:[currentSettings getRosterTinyImage:[currentSettings findAthlete:feeditem.athlete]] scaledToSize:50];
     } else if (feeditem.game.length > 0) {
-        cell.imageView.image = [currentSettings normalizedImage:[[currentSettings findGame:feeditem.game] vsimage] scaledToSize:50];
+        cell.imageView.image = [currentSettings normalizedImage:[currentSettings getOpponentImage:[currentSettings findGame:feeditem.game]] scaledToSize:50];
     } else if (feeditem.coach.length > 0) {
         cell.imageView.image = [[currentSettings findCoach:feeditem.coach] tinyimage];
     } else {

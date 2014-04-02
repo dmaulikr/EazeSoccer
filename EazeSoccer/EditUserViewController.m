@@ -99,7 +99,7 @@
     _emailTextField.text = user.email;
     _usernameTextField.text = user.username;
     
-    if (![user.admin boolValue]) {
+    if (!user.admin) {
         if ([user.isactive boolValue])
             _activeSwitch.selected = YES;
         else
@@ -152,7 +152,7 @@
 - (IBAction)submitButtonClicked:(id)sender {
     NSURL *aurl;
     
-    if (currentSettings.user.admin)
+    if (currentSettings.isSiteOwner)
         aurl = [NSURL URLWithString:[sportzServerInit updateUser:currentSettings.user.userid Token:currentSettings.user.authtoken]];
     else
         aurl = [NSURL URLWithString:[sportzServerInit updateUser:user.userid Token:currentSettings.user.authtoken]];
@@ -161,7 +161,7 @@
     
     BOOL activeuser = NO;
     
-    if (!currentSettings.user.admin)
+    if (!currentSettings.isSiteOwner)
         activeuser = _activeSwitch.isSelected;
     else
         activeuser = YES;
@@ -169,7 +169,7 @@
     NSMutableDictionary *userDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _emailTextField.text, @"email",
                                       _usernameTextField.text, @"name", [NSString stringWithFormat:@"%d", activeuser], @"is_active", nil];
     
-    if (currentSettings.user.admin) {
+    if (currentSettings.isSiteOwner) {
         [userDict setObject:currentSettings.user.email forKey:@"email"];
         [userDict setObject:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED] forKey:@"password"];
         [userDict setObject:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED] forKey:@"current_password"];

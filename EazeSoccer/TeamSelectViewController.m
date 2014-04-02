@@ -205,6 +205,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!sport) {
+        currentSettings.opponentimages = [[NSMutableArray alloc] init];
+        currentSettings.rosterimages = [[NSMutableArray alloc] init];
         currentSettings.team = [teamList objectAtIndex:indexPath.row];
         [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
                                                           Token:currentSettings.user.authtoken];        

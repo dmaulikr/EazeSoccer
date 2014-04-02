@@ -23,6 +23,8 @@
 
 @implementation EazeLoginViewController
 
+@synthesize registeradmin;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -40,8 +42,7 @@
     
     _loginMessageLabel.layer.cornerRadius = 6;
     _emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
+    _loginMessageLabel.numberOfLines = 0;
 }
 
 - (void)didReceiveMemoryWarning
@@ -53,7 +54,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _loginMessageLabel.numberOfLines = 0;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
+    
+    if (currentSettings.newuser) {
+        _emailTextField.text = currentSettings.newuser.email;
+    }
 }
 
 -(BOOL)shouldAutorotate {
@@ -67,7 +72,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if ([KeychainWrapper searchKeychainCopyMatchingIdentifier:GOMOBIEMAIL] != nil) {  // Use keychain email and password
+    if (registeradmin) {
+        [self performSegueWithIdentifier:@"RegisterLoginSegue" sender:self];
+    } else if ([KeychainWrapper searchKeychainCopyMatchingIdentifier:GOMOBIEMAIL] != nil) {  // Use keychain email and password
         [self login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
            Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
     }
@@ -90,22 +97,40 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     } else {
+        if (currentSettings.changesite)
+            currentSettings.changesite = NO;
+        
         if (![currentSettings initS3Bucket]) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Storage Access Issue. Please restart app!"
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
-        if (currentSettings.team.teamid.length > 0) {
+        
+        if ((currentSettings.newuser.email.length > 0) && (currentSettings.sport.id.length == 0)) {
+            currentSettings.newuser = nil;
+            [self performSegueWithIdentifier:@"CreateSiteSegue" sender:self];
+        } else if (currentSettings.team.teamid.length > 0) {
             [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
                                                             Token:currentSettings.user.authtoken];
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        } else {
+            if (currentSettings.sport.id.length == 0) {
+                if (currentSettings.user.adminsite.length > 0)
+                    [currentSettings setUpSport:currentSettings.user.adminsite];
+                else
+                    [currentSettings setUpSport:currentSettings.user.default_site];
+            }
+            [self.navigationController popToRootViewControllerAnimated:YES];
         }
-        [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 
 - (void) login:(NSString *)myemail Password:(NSString *)mypassword {
-    [[[EazesportzLogin alloc] init] Login:myemail Password:mypassword Site:currentSettings.sport.id];
+    if (registeradmin)
+        [[[EazesportzLogin alloc] init] Login:myemail Password:mypassword];
+    else
+        [[[EazesportzLogin alloc] init] Login:myemail Password:mypassword Site:currentSettings.sport.id];
 }
 
 - (IBAction)loginButtonClicked:(id)sender {
@@ -127,8 +152,15 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"RegisterLoginSegue"]) {
         sportzteamsRegisterLoginViewController *destController = segue.destinationViewController;
-        destController.sport = currentSettings.sport;
-        destController.admin = NO;
+        
+        if (registeradmin ) {
+            destController.sport = nil;
+            destController.admin = YES;
+            registeradmin = NO;
+        } else {
+            destController.sport = currentSettings.sport;
+            destController.admin = NO;
+        }
     }
 }
 

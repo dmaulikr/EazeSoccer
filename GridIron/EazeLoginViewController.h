@@ -15,4 +15,6 @@
 - (IBAction)loginButtonClicked:(id)sender;
 - (IBAction)registerButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *loginMessageLabel;
+
+@property (nonatomic, assign) BOOL registeradmin;
 @end

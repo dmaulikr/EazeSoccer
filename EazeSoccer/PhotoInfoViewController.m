@@ -69,6 +69,11 @@
     newPhoto = NO;
     
     [self registerForKeyboardNotifications];
+    
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, self.cameraBarButton,
+                                                   self.cameraRollBarButton, nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -131,7 +136,7 @@
             user.media_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"media_alert"] integerValue]];
             user.stat_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"stat_alert"] integerValue]];
             user.score_alert = [NSNumber numberWithInteger:[[userdata objectForKey:@"score_alert"] integerValue]];
-            user.admin = [NSNumber numberWithInteger:[[userdata objectForKey:@"admin"] integerValue]];
+            user.admin = [[userdata objectForKey:@"admin"] boolValue];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Problem Retrieving User"
                                                             message:[NSString stringWithFormat:@"%d", responseStatusCode]
@@ -288,7 +293,7 @@
     Athlete *athlete = [photo.athletes objectAtIndex:indexPath.row];
     cell.textLabel.font = [UIFont systemFontOfSize:12.0];
     cell.textLabel.text = athlete.full_name;
-    cell.imageView.image = [athlete getImage:@"tiny"];
+    cell.imageView.image = [currentSettings getRosterTinyImage:athlete];
     cell.detailTextLabel.text = athlete.position;
     return cell;
 }
@@ -838,4 +843,17 @@
     scrollView.scrollIndicatorInsets = contentInsets;
 }
 
+- (IBAction)saveBarButtonClicked:(id)sender {
+}
+
+- (IBAction)deleteBarButtonClicked:(id)sender {
+}
+
+- (IBAction)cameraBarButtonClicked:(id)sender {
+    [self cameraButtonClicked:sender];
+}
+
+- (IBAction)cameraRollBarButtonClicked:(id)sender {
+    [self cameraRollButtonClicked:sender];
+}
 @end

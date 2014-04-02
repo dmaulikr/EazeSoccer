@@ -170,7 +170,7 @@
                 Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
                 cell.playerName.text = player.numberLogname;
                 stats = [player findSoccerGameStats:game.id];
-                cell.imageView.image = [player getImage:@"tiny"];
+                cell.imageView.image = [currentSettings getRosterTinyImage:player];
             } else {
                 cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
                 cell.playerName.text = @"Totals";
@@ -213,7 +213,7 @@
             Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
             cell.playerName.text = player.numberLogname;
             stats = [[Soccer alloc] init];
-            cell.imageView.image = [player getImage:@"tiny"];
+            cell.imageView.image = [currentSettings getRosterTinyImage:player];
         }
         
         cell.label1.text = [stats.goals stringValue];
@@ -228,7 +228,7 @@
                 Athlete *player = [goalies objectAtIndex:indexPath.row];
                 cell.playerName.text = player.numberLogname;
                 stats = [player findSoccerGameStats:game.id];
-                cell.imageView.image = [player getImage:@"tiny"];
+                cell.imageView.image = [currentSettings getRosterTinyImage:player];
             } else {
                 cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
                 cell.playerName.text = @"Totals";

@@ -13,6 +13,7 @@
 @interface ProgramInfoViewController : UIViewController
 
 @property(nonatomic, strong) Sport *sport;
+@property (nonatomic, strong) NSString *sportid;
 @property(nonatomic, strong) UIPopoverController *popover;
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -21,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *zipcodeTextField;
 @property (weak, nonatomic) IBOutlet UITextField *yearTextField;
 @property (weak, nonatomic) IBOutlet UIImageView *logoImage;
+@property (weak, nonatomic) IBOutlet UITextField *countryTextField;
 
 @property (weak, nonatomic) IBOutlet UIButton *cameraRollButton;
 - (IBAction)cameraRollButtonClicked:(id)sender;
@@ -29,5 +31,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 - (IBAction)deleteButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIPickerView *pickerView;
 
 @end

@@ -252,7 +252,7 @@
             } else if ((game) && (indexPath.row < qbs.count)) { // game
                 stat = [qbs objectAtIndex:indexPath.row];
                 Athlete *aplayer = [currentSettings findAthlete:stat.athlete_id];
-                cell.fbimageView.image = [aplayer getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:aplayer];
                 cell.namelabel.text = aplayer.numberLogname;
             } else {
                 cell.namelabel.text = @"Totals";
@@ -298,7 +298,7 @@
             } else if ((game) && (indexPath.row < rbs.count)) { // game
                 stat = [rbs objectAtIndex:indexPath.row];
                 Athlete *aplayer = [currentSettings findAthlete:stat.athlete_id];
-                cell.fbimageView.image = [aplayer getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:aplayer];
                 cell.namelabel.text = aplayer.numberLogname;
             } else {
                 cell.namelabel.text = @"Totals";
@@ -347,7 +347,7 @@
             } else if ((game) && (indexPath.row < wrs.count)) {
                 stat = [wrs objectAtIndex:indexPath.row];
                 Athlete *aplayer = [currentSettings findAthlete:stat.athlete_id];
-                cell.fbimageView.image = [aplayer getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:aplayer];
                 cell.namelabel.text = aplayer.logname;
             } else {
                 cell.namelabel.text = @"Totals";
@@ -399,7 +399,7 @@
             } else if ((game) && (indexPath.row < pks.count)) {
                 stat = [pks objectAtIndex:indexPath.row];
                 Athlete *aplayer = [currentSettings findAthlete:stat.athlete_id];
-                cell.fbimageView.image = [aplayer getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:aplayer];
                 cell.namelabel.text = aplayer.logname;
             } else {
                 cell.namelabel.text = @"Totals";
@@ -419,7 +419,7 @@
                 }
             }
             
-            cell.fbimageView.image = [player getImage:@"tiny"];
+            cell.fbimageView.image = [currentSettings getRosterTinyImage:player];
             cell.namelabel.text = player.numberLogname;
             cell.label1.text = [stat.fgattempts stringValue];
             cell.label2.text = [stat.fgmade stringValue];
@@ -443,7 +443,7 @@
             } else if ((game) && (indexPath.row < kickerlist.count)) {
                 stat = [kickerlist objectAtIndex:indexPath.row];
                 Athlete *aplayer = [currentSettings findAthlete:stat.athlete_id];
-                cell.fbimageView.image = [aplayer getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:aplayer];
                 cell.namelabel.text = aplayer.logname;
             } else {
                 cell.namelabel.text = @"Totals";
@@ -478,7 +478,7 @@
             } else if ((game) && (indexPath.row < punterlist.count)) {
                 stat = [punterlist objectAtIndex:indexPath.row];
                 Athlete *aplayer = [currentSettings findAthlete:stat.athlete_id];
-                cell.fbimageView.image = [aplayer getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:aplayer];
                 cell.namelabel.text = aplayer.logname;
             } else {
                 cell.namelabel.text = @"Totals";
@@ -522,7 +522,7 @@
             } else if ((game) && (indexPath.row < retrunerlist.count)) {
                 stat = [retrunerlist objectAtIndex:indexPath.row];
                 Athlete *aplayer = [currentSettings findAthlete:stat.athlete_id];
-                cell.fbimageView.image = [aplayer getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:aplayer];
                 cell.namelabel.text = aplayer.logname;
             } else {
                 cell.namelabel.text = @"Totals";
@@ -581,7 +581,7 @@
             } else if ((game) && (indexPath.row < defenselist.count)) {
                 stat = [defenselist objectAtIndex:indexPath.row];
                 Athlete *aplayer = [currentSettings findAthlete:stat.athlete_id];
-                cell.fbimageView.image = [aplayer getImage:@"tiny"];
+                cell.fbimageView.image = [currentSettings getRosterTinyImage:aplayer];
                 cell.namelabel.text = aplayer.logname;
             } else {
                 cell.namelabel.text = @"Totals";

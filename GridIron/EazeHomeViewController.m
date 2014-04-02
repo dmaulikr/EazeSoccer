@@ -25,6 +25,7 @@
 #import "EazesportzRetrieveFeaturedPhotos.h"
 #import "EazeFeaturedPhotosViewController.h"
 #import "EazeEventViewController.h"
+#import "EditTeamViewController.h"
 
 @interface EazeHomeViewController () <UIAlertViewDelegate>
 
@@ -35,6 +36,7 @@
     EazesportzRetrieveNews *getNews;
     Newsfeed *newsitem;
     GameSchedule *game;
+    BOOL editTeam;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -57,9 +59,18 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if (currentSettings.isSiteOwner) {
+        if (currentSettings.teams.count > 0)
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, self.editTeamButton, self.changeTeamButton, nil];
+        else
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, nil];
+    } else
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.changeTeamButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
+    _teamPicker.hidden = YES;
+    
     if (currentSettings.team.teamid.length > 0) {
-        _teamPicker.hidden = YES;
-        
         if (currentSettings.teams.count > 1)
             _changeTeamButton.enabled = YES;
         else {
@@ -71,27 +82,42 @@
         else
             newsitem = nil;
         
-        [_homeTableView reloadData];
     } else if (currentSettings.sport.id.length > 0) {
-        if ([currentSettings.sport.teamcount intValue] > 1) {
+        if (currentSettings.teams.count > 1) {
             _teamPicker.hidden = NO;
             _changeTeamButton.enabled = YES;
             [_teamPicker reloadAllComponents];
-        } else {
+        } else if (currentSettings.teams.count == 1) {
             currentSettings.team = [currentSettings.teams objectAtIndex:0];
             _changeTeamButton.enabled = NO;
             [self teamSelected];
+        } else {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                            message:[NSString stringWithFormat:@"No Teams entered yet for %@", currentSettings.sport.sitename]
+                                                               delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+            currentSettings.gameList = nil;
+            newsitem = nil;
         }
+    } else {
+        _changeTeamButton.enabled = NO;
     }
+    
+    editTeam = NO;
+    
+    [_homeTableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (currentSettings.changesite) {
+    if (currentSettings.firstuse) {
+        [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
+    } else if ((currentSettings.changesite) || (currentSettings.sport.id.length == 0)) {
         [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
-    } else
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
+    } else {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -114,6 +140,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
+//    if (currentSettings.team.teamid.length == 0)
+  //      return 0;
     if ([currentSettings.sport isPlatinumPackage])
         return 6;
     else
@@ -168,8 +196,13 @@
             cell.homeTableCellImage.image = [UIImage imageNamed:@"Terrible-football-play.png"];
             
             if (game) {
-                cell.homeTableCellTitle.text = [NSString stringWithFormat:@"%@ Last Game", currentSettings.team.mascot];
-                cell.homeTableCellText.text = game.game_name;
+                if (currentSettings.team.teamid.length > 0) {
+                    cell.homeTableCellTitle.text = [NSString stringWithFormat:@"%@ Last Game",  currentSettings.team.mascot];
+                    cell.homeTableCellText.text = game.game_name;
+                } else  {
+                    cell.homeTableCellTitle.text = @"No Team Selected";
+                    cell.homeTableCellText.text = @"";
+                }
             } else {
                 cell.homeTableCellTitle.text = @"No games scheduled";
                 cell.homeTableCellText.text = @"Contact admin with questions";
@@ -180,14 +213,16 @@
             cell.backgroundColor = [UIColor whiteColor];
             cell.homeTableCellImage.image = [UIImage imageNamed:@"camera-icon-md.png"];
             cell.homeTableCellTitle.text = @"Game Photos";
-            cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured photos for %@", currentSettings.team.mascot ];
+            cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured photos for %@", currentSettings.team.teamid.length > 0 ?
+                                           currentSettings.team.mascot : @" - No Team Selected"];
             break;
             
         case 4:
             cell.backgroundColor = [UIColor whiteColor];
             cell.homeTableCellImage.image = [UIImage imageNamed:@"sports-highlights.png"];
             cell.homeTableCellTitle.text = @"Game Highlights";
-            cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured highlights for %@", currentSettings.team.mascot ];
+            cell.homeTableCellText.text = [ NSString stringWithFormat:@"Featured highlights for %@", currentSettings.team.teamid.length > 0 ?
+                                           currentSettings.team.mascot : @" - No Team Selected"];
             break;
             
         default:
@@ -214,12 +249,14 @@
                 break;
                 
             case 2:
-                if ([currentSettings.sport.name isEqualToString:@"Football"])
-                    [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
-                else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
-                    [self performSegueWithIdentifier:@"BasketballGameInfoSegue" sender:self];
-                else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
-                    [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
+                if (game) {
+                    if ([currentSettings.sport.name isEqualToString:@"Football"])
+                        [self performSegueWithIdentifier:@"FootballGameInfoSegue" sender:self];
+                    else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
+                        [self performSegueWithIdentifier:@"BasketballGameInfoSegue" sender:self];
+                    else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
+                        [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
+                }
                 break;
                 
             case 3:
@@ -273,6 +310,12 @@
         destController.sport = currentSettings.sport;
         destController.team = currentSettings.team;
         destController.user = currentSettings.user;
+    } else if ([segue.identifier isEqualToString:@"EditTeamSegue"]) {
+        EditTeamViewController *destController = segue.destinationViewController;
+        if (editTeam)
+            destController.team = currentSettings.team;
+        else
+            destController.team = nil;
     }
 }
 
@@ -305,6 +348,8 @@
     _teamPicker.hidden = YES;
     [_activityIndicator startAnimating];
     
+    currentSettings.opponentimages = [[NSMutableArray alloc] init];
+    currentSettings.rosterimages = [[NSMutableArray alloc] init];
     [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
@@ -362,6 +407,16 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+- (IBAction)addTeamButtonClicked:(id)sender {
+    editTeam = NO;
+    [self performSegueWithIdentifier:@"EditTeamSegue" sender:self];
+}
+
+- (IBAction)editTeamButtonClicked:(id)sender {
+    editTeam = YES;
+    [self performSegueWithIdentifier:@"EditTeamSegue" sender:self];
 }
 
 @end

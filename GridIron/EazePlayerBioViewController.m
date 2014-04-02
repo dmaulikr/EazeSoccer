@@ -30,17 +30,30 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    _playerBioTextView.layer.borderWidth = 1.0f;
+    _playerBioTextView.layer.borderColor = [[UIColor grayColor] CGColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savedPlayer:) name:@"AthleteSavedNotification" object:nil];
+
     _playerNameLabel.text = player.full_name;
-    _playerImageView.image = player.mediumimage;
+    _playerImageView.image = [currentSettings getRosterMediumImage:player];
     _playerBioTextView.text = player.bio;
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+    
+    if (currentSettings.isSiteOwner) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, nil];
+        _playerBioTextView.editable = YES;
+    } else {
+        _playerBioTextView.editable = NO;
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -70,6 +83,21 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+- (IBAction)saveButtonClicked:(id)sender {
+    player.bio = _playerBioTextView.text;
+    [player saveAthlete];
+}
+
+- (void)savedPlayer:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Player Bio Updated" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error Saving Bio" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 @end

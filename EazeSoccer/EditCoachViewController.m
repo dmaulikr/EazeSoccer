@@ -42,11 +42,17 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    else
+        self.view.backgroundColor = [UIColor whiteColor];
+    
     _bioTextView.layer.cornerRadius = 4;
     _deleteButton.layer.cornerRadius = 4;
     _activityIndicator.hidesWhenStopped = YES;
     _yearsOnStaffTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _bioTextView.layer.borderWidth = 1.0f;
+    _bioTextView.layer.borderColor = [[UIColor grayColor] CGColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -190,15 +196,21 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = NO;
-        imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
-        UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        apopover.delegate = self;
         
-        // set contentsize
-        [apopover setPopoverContentSize:CGSizeMake(220,300)];
-        
-        [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        self.popover = apopover;
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+            UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            apopover.delegate = self;
+            
+            // set contentsize
+            [apopover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            self.popover = apopover;
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            newmedia = NO;
+        }
     }
 }
 
@@ -378,6 +390,14 @@
     [alert show];
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

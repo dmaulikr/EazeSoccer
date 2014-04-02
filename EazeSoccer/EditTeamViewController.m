@@ -25,6 +25,7 @@
     NSMutableData *theData;
     int responseStatusCode;
     NSMutableDictionary *serverData;
+    EazesportzRetrieveTeams *getTeams;
 }
 
 @synthesize team;
@@ -43,10 +44,16 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    else
+        self.view.backgroundColor = [UIColor whiteColor];
+    
     _activityIndicator.hidesWhenStopped = YES;
 //    _deleteButton.backgroundColor = [UIColor redColor];
     _teamlogoLabel.layer.cornerRadius = 4;
+    
+    getTeams = [[EazesportzRetrieveTeams alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -160,6 +167,28 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)saveCompleted {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotTeams:) name:@"TeamListChangedNotification" object:nil];
+    [getTeams retrieveTeams:currentSettings.sport.id Token:currentSettings.user.authtoken];
+}
+
+- (void)gotTeams:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        currentSettings.teams = getTeams.teams;
+        
+        if (currentSettings.teams.count == 1)
+            currentSettings.team = [getTeams.teams objectAtIndex:0];
+        else
+            currentSettings.team = nil;
+
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[[notification userInfo] objectForKey:@"Result"] delegate:nil
+                                                  cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
 - (IBAction)submitButtonClicked:(id)sender {
     team.team_name = _teamnameTextField.text;
     team.mascot = _mascotTextField.text;
@@ -170,7 +199,7 @@
         if (imageselected)
             [self uploadImage:team];
         else {
-            [self.navigationController popViewControllerAnimated:YES];
+            [self saveCompleted];
         }
         
     } else {
@@ -189,6 +218,11 @@
                           cancelButtonTitle:@"Cancel"
                           otherButtonTitles:@"Confirm", nil];
     [alert show];
+}
+
+- (IBAction)useSportMascotButtonClicked:(id)sender {
+    _teamImage.image = [currentSettings.sport getImage:@"thumb"];
+    _mascotTextField.text = currentSettings.sport.mascot;
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -221,7 +255,7 @@
             _teamnameTextField.text = @"";
             _mascotTextField.text = @"";
             _teamImage.image = nil;
-            [self.navigationController popViewControllerAnimated:YES];
+            [self saveCompleted];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Team" message:[teamDict objectForKey:@"error"]
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -274,9 +308,7 @@
     NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        [[[EazesportzRetrieveTeams alloc] init] retrieveTeams:currentSettings.sport.id Token:currentSettings.user.authtoken];
-        
-        [self.navigationController popViewControllerAnimated:YES];
+        [self saveCompleted];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -293,6 +325,19 @@
     [alert show];
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

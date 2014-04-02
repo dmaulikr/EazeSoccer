@@ -89,7 +89,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (player.mediumimage == nil) {
+    if ([currentSettings getRosterMediumImage:player] == nil) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
@@ -101,7 +101,7 @@
             });
         });
     } else {
-        playerImage.image = player.mediumimage;
+        playerImage.image = [currentSettings getRosterMediumImage:player];
     }
     
     [self.numberLabel setText:[player.number stringValue]];
@@ -132,6 +132,14 @@
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+    
+    if ([currentSettings isSiteOwner]) {
+        _editButton.enabled = YES;
+        _editButton.hidden = NO;
+    } else {
+        _editButton.enabled = NO;
+        _editButton.hidden = YES;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {

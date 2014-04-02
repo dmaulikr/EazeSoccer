@@ -10,6 +10,8 @@
 
 @interface FindSiteViewController : UIViewController
 
+@property (nonatomic, assign) BOOL findsite;
+
 @property (weak, nonatomic) IBOutlet UIView *stateListContainer;
 @property (weak, nonatomic) IBOutlet UITextField *sitenameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *zipcodeTextfield;

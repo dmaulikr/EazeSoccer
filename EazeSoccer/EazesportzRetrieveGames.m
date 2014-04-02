@@ -57,7 +57,9 @@
         currentSettings.gameList = [[NSMutableArray alloc] init];
         
         for (int i = 0; i < [serverData count]; i++ ) {
-            [currentSettings.gameList addObject:[[GameSchedule alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+            GameSchedule *game = [[GameSchedule alloc] initWithDictionary:[serverData objectAtIndex:i]];
+            [currentSettings replaceOpponentTinyImage:game];
+            [currentSettings.gameList addObject:game];
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GameListChangedNotification" object:nil

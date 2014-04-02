@@ -17,6 +17,7 @@
 #import "EazeBasketballGameSummaryViewController.h"
 #import "EazeFootballGameSummaryViewController.h"
 #import "sportzteamsMovieViewController.h"
+#import "NewsFeedEditViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -49,6 +50,8 @@
     _gameButton.layer.cornerRadius = 6;
     _newsTextView.editable = NO;
     [[_imageButton imageView] setContentMode: UIViewContentModeScaleAspectFit];
+    _newsTextView.layer.borderWidth = 1.0f;
+    _newsTextView.layer.borderColor = [[UIColor grayColor] CGColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -86,11 +89,13 @@
         });
     } else if (newsitem.athlete.length > 0) {
         _imageButton.enabled = YES;
-        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findAthlete:newsitem.athlete] getImage:@"thumb"] scaledToSize:125]
+        [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+                                          [currentSettings getRosterThumbImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:125]
                       forState:UIControlStateNormal];
     } else if (newsitem.game.length > 0) {
         _imageButton.enabled = YES;
-        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findGame:newsitem.game] vsimage] scaledToSize:50]
+        [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+                                          [currentSettings getOpponentImage:[currentSettings findGame:newsitem.game]] scaledToSize:50]
                       forState:UIControlStateNormal];
     } else if (newsitem.coach.length > 0) {
         _imageButton.enabled = YES;
@@ -127,6 +132,12 @@
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+    
+    if ([currentSettings isSiteOwner]) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.editButton, nil];
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -148,6 +159,9 @@
     } else if ([segue.identifier isEqualToString:@"VideoClipSegue"]) {
         sportzteamsMovieViewController *destController = segue.destinationViewController;
         destController.videoid = newsitem.videoclip_id;
+    } else if ([segue.identifier isEqualToString:@"EditNewsitemSegue"]) {
+        NewsFeedEditViewController *destController = segue.destinationViewController;
+        destController.newsitem = newsitem;
     }
 }
 

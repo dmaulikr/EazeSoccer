@@ -58,5 +58,13 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
 
 @property(nonatomic, strong) GameScheduleViewController *gameController;
+- (IBAction)saveBarButtonClicked:(id)sender;
+- (IBAction)deleteBarButtonClicked:(id)sender;
+- (IBAction)cameraBarButtonClicked:(id)sender;
+- (IBAction)cameraRollBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteBarButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraBarButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraRollBarButton;
 
 @end

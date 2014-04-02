@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Sport.h"
 
 @interface SelectSiteTableViewController : UITableViewController
+
+@property (nonatomic, assign) BOOL selectSite;
+@property (nonatomic, strong, readonly) Sport *sport;
 
 @property(nonatomic, strong) NSString *state;
 @property(nonatomic, strong) NSString *zipcode;

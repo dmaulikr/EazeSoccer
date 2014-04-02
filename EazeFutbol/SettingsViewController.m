@@ -11,6 +11,10 @@
 #import "sportzServerInit.h"
 #import "sportzConstants.h"
 #import "KeychainWrapper.h"
+#import "EazeLoginViewController.h"
+#import "ProgramInfoViewController.h"
+#import "EazesportzRetrieveSport.h"
+#import "EazesportzRetrieveTeams.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -18,7 +22,10 @@
 
 @end
 
-@implementation SettingsViewController
+@implementation SettingsViewController {
+    BOOL newsite;
+    EazesportzRetrieveTeams *getTeams;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -75,6 +82,17 @@
             [_logoutButton setTitle:@"Login" forState:UIControlStateNormal];
             _usernameLabel.text = @"No User Logged in!";
         }
+        
+        if ((currentSettings.user.admin) && (currentSettings.user.adminsite.length > 0)) {
+            _addSiteLabel.text = @"Manage My Site";
+            [_addSiteButton setTitle:@"My Site" forState:UIControlStateNormal];
+        } else if ((currentSettings.user.admin) && (currentSettings.user.adminsite.length == 0)) {
+            _addSiteLabel.text = @"My Site Info";
+            [_addSiteButton setTitle:@"My Site" forState:UIControlStateNormal];
+        } else if (!currentSettings.isSiteOwner) {
+            _addSiteLabel.text = @"Create New Site";
+            [_addSiteButton setTitle:@"New Site" forState:UIControlStateNormal];
+        }
     }
     
     _contactLabel.text = currentSettings.sport.sitename;
@@ -104,16 +122,13 @@
         NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:nil error:nil];
+        NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         NSLog(@"%@", serverData);
         
         if ([httpResponse statusCode] == 200) {
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
-            currentSettings.user.email = @"";
-            currentSettings.user.authtoken = nil;
-            currentSettings.user.username = @"";
-            currentSettings.user.userid = @"";
+            currentSettings.user = nil;
             UITabBarController *tabBarController = self.tabBarController;
           
             for (UIViewController *viewController in tabBarController.viewControllers)
@@ -211,6 +226,67 @@
     }
     
     self.tabBarController.selectedIndex = 0;
+}
+
+- (IBAction)addSiteButtonClicked:(id)sender {
+    if (currentSettings.user.adminsite.length > 0) {
+        [[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:currentSettings.user.adminsite Token:currentSettings.user.authtoken];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        //make a file name to write the data to using the documents directory:
+        NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt", documentsDirectory];
+        NSString *sportFile = [NSString stringWithFormat:@"%@/currentsport.txt", documentsDirectory];
+        //create content - four lines of text
+        NSString *content = currentSettings.sport.id;
+        //save content to the documents directory
+        [content writeToFile:fileName atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+        [currentSettings.sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+        getTeams = [[EazesportzRetrieveTeams alloc] init];
+        
+        if ([getTeams retrieveTeamsSynchronous:currentSettings.sport.id Token:currentSettings.user.authtoken]) {
+            currentSettings.teams = getTeams.teams;
+            
+            if (currentSettings.teams.count == 1)
+                currentSettings.team = [currentSettings.teams objectAtIndex:0];
+            else
+                currentSettings.team = nil;
+            
+            UITabBarController *tabBarController = self.tabBarController;
+            
+            for (UIViewController *viewController in tabBarController.viewControllers) {
+                if ([viewController isKindOfClass:[UINavigationController class]])
+                    [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+            }
+            
+            UIView * fromView = tabBarController.selectedViewController.view;
+            UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+            
+            // Transition using a page curl.
+            [UIView transitionFromView:fromView toView:toView duration:0.5
+                        options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                            completion:^(BOOL finished) {
+                                if (finished) {
+                                    tabBarController.selectedIndex = 0;
+                                }
+                            }];
+        }
+    } else if ((currentSettings.user.userid.length > 0) && (currentSettings.user.admin) && (currentSettings.user.adminsite.length == 0)) {
+        [self performSegueWithIdentifier:@"EditSiteSegue" sender:self];
+    } else {
+        newsite = YES;
+        [self performSegueWithIdentifier:@"NewSiteSegue" sender:self];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"EditSiteSegue"]) {
+        ProgramInfoViewController *destController = segue.destinationViewController;
+        destController.sportid = currentSettings.user.adminsite;
+    } else if (([segue.identifier isEqualToString:@"LoginSegue"]) && (newsite)) {
+        EazeLoginViewController *destController = segue.destinationViewController;
+        destController.registeradmin = YES;
+    }
 }
 
 @end

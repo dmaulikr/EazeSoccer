@@ -11,6 +11,10 @@
 #import <iAd/iAd.h>
 
 @interface EazesportzScheduleViewController : GameScheduleViewController
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addGameButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editGameButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *standingsButton;
+- (IBAction)editGameButtonClicked:(id)sender;
 
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @end

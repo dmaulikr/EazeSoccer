@@ -11,6 +11,9 @@
 #import "sportzServerInit.h"
 #import "FindEazesportzSiteViewController.h"
 #import "TeamSelectViewController.h"
+#import "FindSiteViewController.h"
+#import "SelectSiteTableViewController.h"
+#import "EazesportzRetrieveTeams.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -26,6 +29,9 @@
     BOOL oppImage, newmedia;
     FindEazesportzSiteViewController *findSiteController;
     TeamSelectViewController *teamSelectController;
+    FindSiteViewController *siteController;
+    SelectSiteTableViewController *selectSiteController;
+    NSMutableArray *opponentTeams;
 }
 
 @synthesize game;
@@ -44,11 +50,14 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    if ([[[NSBundle mainBundle]objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    else
+        self.view.backgroundColor = [UIColor whiteColor];
+    
     _activityIndicator.hidesWhenStopped = YES;
     
     _selectDateButton.layer.cornerRadius = 6;
-    _selectDateButton.backgroundColor = [UIColor greenColor];
     _homeScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
     _visitorScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
 }
@@ -77,6 +86,7 @@
     _datePicker.enabled = NO;
     _findsiteContainer.hidden = YES;
     _findTeamContainer.hidden = YES;
+    _teamPicker.hidden = YES;
     
     if (game) {
         _opponentTextField.text = game.opponent;
@@ -132,6 +142,35 @@
         _mascotTextField.text = @"";
         _opponentImageButton.enabled = YES;
         [_leagueSwitch setOn:NO];
+        [_homeawaySwitch setOn:NO];
+        
+        if (!game)
+            game = [[GameSchedule alloc] init];
+    }
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (siteController.findsite) {
+        if ((siteController.stateTextField.text.length > 0) && (siteController.countryTextField.text.length > 0) &&
+            (siteController.sportTextField.text.length > 0)) {
+            siteController.findsite = NO;
+            [self performSegueWithIdentifier:@"SelectSiteSegue" sender:self];
+        }
+    } else if (selectSiteController.selectSite) {
+        selectSiteController.selectSite = NO;
+        
+        if (selectSiteController.sport.id.length > 0) {
+            [_opponentImageButton setImage:[selectSiteController.sport getImage:@"tiny"] forState:UIControlStateNormal];
+            _opponentTextField.text = selectSiteController.sport.sitename;
+            game.opponent_sport_id = selectSiteController.sport.id;
+            opponentTeams = [[[EazesportzRetrieveTeams alloc] init] retrieveTeamsSynchronous:selectSiteController.sport.id
+                                                                                       Token:currentSettings.user.authtoken];
+            _teamPicker.hidden = NO;
+            [_teamPicker reloadAllComponents];
+        }
     }
 }
 
@@ -142,10 +181,17 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)sender {
     if ((sender == _gameDateTextField) || (sender == _gameTimeTextField)) {
-        _datePicker.hidden = NO;
-        _datePicker.enabled = YES;
-        _selectDateButton.hidden = NO;
-        _selectDateButton.enabled = YES;
+        if (_datePicker.hidden) {
+            _datePicker.hidden = NO;
+            _datePicker.enabled = YES;
+            _selectDateButton.hidden = NO;
+            _selectDateButton.enabled = YES;
+        } else {
+            _datePicker.hidden = YES;
+            _datePicker.enabled = NO;
+            _selectDateButton.hidden = YES;
+            _selectDateButton.enabled = NO;
+        }
         [sender resignFirstResponder];
     }
 }
@@ -184,11 +230,14 @@
     pickerDate = [_datePicker date];
     //    NSString *selectionString = [[NSString alloc] initWithFormat:@"%@", [pickerDate descriptionWithLocale:usLocale]];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MM-dd-yyyy hh:mm:ss a"];
+    [formatter setDateFormat:@"MM-dd-yyyy HH:mm:ss a"];
     NSArray *datetime = [[formatter stringFromDate:pickerDate] componentsSeparatedByString:@" "];
     _gameDateTextField.text = [datetime objectAtIndex:0];
     _gameTimeTextField.text = [datetime objectAtIndex:1];
-    _gameTimeTextField.text = [_gameTimeTextField.text stringByAppendingString:[datetime objectAtIndex:2]];
+    
+    if (datetime.count > 2)
+        _gameTimeTextField.text = [_gameTimeTextField.text stringByAppendingString:[datetime objectAtIndex:2]];
+    
     _datePicker.hidden = YES;
     _datePicker.enabled = NO;
     _selectDateButton.hidden = YES;
@@ -212,9 +261,6 @@
         [formatter setDateFormat:@"HH:mm"];
         NSString *timedata = [formatter stringFromDate:pickerDate];
 
-        if (!game)
-            game = [[GameSchedule alloc] init];
-        
         game.startdate = datetime[0];
         game.starttime = timedata;
         game.opponent = _opponentTextField.text;
@@ -352,12 +398,16 @@
 }
 
 - (void)gameDeleted:(NSNotification *)notification {
-        [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (IBAction)searchEazesportzButtonClicked:(id)sender {
-    _findsiteContainer.hidden = NO;
-    [findSiteController viewWillAppear:YES];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+        _findsiteContainer.hidden = NO;
+        [findSiteController viewWillAppear:YES];
+    } else {
+        [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
+    }
 }
 
 - (IBAction)findsiteSelected:(UIStoryboardSegue *)segue {
@@ -375,6 +425,17 @@
         findSiteController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"TeamSelectSegue"]) {
         teamSelectController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"FindSiteSegue"]) {
+        siteController = segue.destinationViewController;
+        siteController.findsite = YES;
+    } else if ([segue.identifier isEqualToString:@"SelectSiteSegue"]) {
+        selectSiteController = segue.destinationViewController;
+        selectSiteController.selectSite = YES;
+        selectSiteController.state = siteController.stateTextField.text;
+        selectSiteController.country = siteController.countryTextField.text;
+        selectSiteController.sitename = siteController.sitenameTextField.text;
+        selectSiteController.sportname = siteController.sportTextField.text;
+        selectSiteController.city = siteController.cityTextField.text;
     }
 }
 
@@ -406,15 +467,21 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = NO;
-        imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
-        UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        apopover.delegate = self;
         
-        // set contentsize
-        [apopover setPopoverContentSize:CGSizeMake(220,300)];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+            UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            apopover.delegate = self;
         
-        [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        self.popover = apopover;
+            // set contentsize
+            [apopover setPopoverContentSize:CGSizeMake(220,300)];
+        
+            [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            self.popover = apopover;
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            newmedia = NO;           
+        }
     }
 }
 
@@ -456,6 +523,39 @@
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+// Method to define the numberOfRows in a component using the array.
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
+    return opponentTeams.count;
+}
+
+// Method to show the title of row for a component.
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    return [[opponentTeams objectAtIndex:row] team_name];
+}
+
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    game.opponent_team_id = [[opponentTeams objectAtIndex:row] teamid];
+    _mascotTextField.text = [[opponentTeams objectAtIndex:row] mascot];
+    _teamPicker.hidden = YES;
 }
 
 @end

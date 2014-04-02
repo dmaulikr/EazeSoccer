@@ -28,6 +28,7 @@
 @synthesize avatarprocessing;
 @synthesize tier;
 @synthesize default_site;
+@synthesize adminsite;
 
 @synthesize awskeyid;
 @synthesize awssecretkey;
@@ -73,7 +74,7 @@
         media_alert = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"media_alert"] integerValue]];
         stat_alert = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"stat_alert"] integerValue]];
         score_alert = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"score_alert"] integerValue]];
-        admin = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"admin"] integerValue]];
+        admin = [[userDictionary objectForKey:@"admin"] boolValue];
         awssecretkey = [userDictionary objectForKey:@"awskey"];
         awskeyid = [userDictionary objectForKey:@"awskeyid"];
         tier = [userDictionary objectForKey:@"tier"];
@@ -83,6 +84,8 @@
             default_site = [userDictionary objectForKey:@"default_site"];
         else
             default_site = @"";
+        
+        adminsite = [userDictionary objectForKey:@"adminsite"];
         
         return self;
     } else {

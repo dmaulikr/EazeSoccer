@@ -22,12 +22,13 @@
 @property(nonatomic, strong) NSNumber *blog_alert;
 @property(nonatomic, strong) NSNumber *stat_alert;
 @property(nonatomic, strong) NSNumber *score_alert;
-@property(nonatomic, assign) NSNumber *admin;
+@property(nonatomic, assign) BOOL admin;
 @property(nonatomic, strong) NSString *teammanagerid;
 @property(nonatomic, strong) NSNumber *isactive;
 @property(nonatomic, assign) BOOL avatarprocessing;
 @property(nonatomic, strong) NSString *tier;
 @property(nonatomic, strong) NSString *default_site;
+@property (nonatomic, strong) NSString *adminsite;
 
 @property(nonatomic, strong) NSString *awssecretkey;
 @property(nonatomic, strong) NSString *awskeyid;

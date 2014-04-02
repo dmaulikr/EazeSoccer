@@ -9,6 +9,7 @@
 #import "EazesportzPunterStatsViewController.h"
 #import "FootballPunterStats.h"
 #import "EazesportzFootballPunterTotalsViewController.h"
+#import "EazesportzAppDelegate.h"
 
 @interface EazesportzPunterStatsViewController () <UIAlertViewDelegate>
 
@@ -60,7 +61,7 @@
         originalstat = nil;
     }
     
-    _playerImage.image = [player getImage:@"tiny"];
+    _playerImage.image = [currentSettings getRosterTinyImage:player];
     _playerNumberLabel.text = [player.number stringValue];
     _playerNameLabel.text = player.logname;
     

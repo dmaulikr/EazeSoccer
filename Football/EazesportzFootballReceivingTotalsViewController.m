@@ -8,6 +8,7 @@
 
 #import "EazesportzFootballReceivingTotalsViewController.h"
 #import "FootballReceivingStat.h"
+#import "EazesportzAppDelegate.h"
 
 @interface EazesportzFootballReceivingTotalsViewController ()
 
@@ -33,7 +34,11 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    else
+        self.view.backgroundColor = [UIColor whiteColor];
+    
     self.title = @"Receiving Totals";
     
     _attemptsTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -55,9 +60,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _playerImage.image = [player getImage:@"tiny"];
-    _playerName.text = player.logname;
-    _playerNumber.text = [player.number stringValue];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+        _playerImage.image = [currentSettings getRosterTinyImage:player];
+        _playerName.text = player.logname;
+        _playerNumber.text = [player.number stringValue];
+    } else {
+        _playerImage.image =[currentSettings getRosterThumbImage:player];
+        _playerName.text = player.numberLogname;
+    }
+    
     
     stat = [player findFootballReceivingStat:game.id];
     
@@ -80,6 +91,11 @@
                                           cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
@@ -116,5 +132,14 @@
     } else
         return  NO;
 }
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 
 @end

@@ -25,7 +25,6 @@
 @implementation SelectSiteTableViewController {
     NSMutableArray *siteList;
     
-    Sport *sport;
     EazesportzRetrieveTeams *getTeams;
 }
 
@@ -35,6 +34,7 @@
 @synthesize country;
 @synthesize zipcode;
 @synthesize sportname;
+@synthesize sport;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -167,9 +167,16 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    currentSettings.sport.id = @"";
     sport = [siteList objectAtIndex:indexPath.row];
-    [[[EazesportzRetrieveSport alloc] init] retrieveSport:sport.id Token:currentSettings.user.authtoken];
+
+    if (!_selectSite) {
+        currentSettings.sport.id = @"";
+        [currentSettings setUpSport:sport.id];
+//        [[[EazesportzRetrieveSport alloc] init] retrieveSport:sport.id Token:currentSettings.user.authtoken];
+        [self gotSport:nil];
+    } else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -204,14 +211,7 @@
         currentSettings.changesite = NO;
         self.tabBarController.tabBar.hidden = NO;
     }
-    
-/*    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome!"
-                                                    message:[NSString stringWithFormat:@"%@%@", @"Welcome to ", currentSettings.sport.sitename]
-                                                   delegate:self cancelButtonTitle:@"Continue" otherButtonTitles:nil, nil];
-    
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
- */
+/*
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
@@ -233,6 +233,7 @@
             currentSettings.team = nil;
         }
     }
+*/
     
     UIImageView *myGraphic;
     

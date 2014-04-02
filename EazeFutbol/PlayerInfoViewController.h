@@ -36,5 +36,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *weightTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *followPlayerLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bioLabel;
+@property (weak, nonatomic) IBOutlet UIButton *editButton;
 
 @end

@@ -19,10 +19,12 @@
 #import "EditPlayerViewController.h"
 #import "EditGameViewController.h"
 #import "EazesportzRetrieveVideos.h"
+#import "EazeWebViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
-@interface NewsFeedEditViewController () <UIAlertViewDelegate>
+@interface NewsFeedEditViewController () <UIAlertViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIPopoverControllerDelegate, UIAlertViewDelegate, AmazonServiceRequestDelegate>
 
 @end
 
@@ -31,7 +33,8 @@
     CoachSelectionViewController *coachController;
     GameScheduleViewController *gameController;
     
-    BOOL newNewsFeed;
+    BOOL newNewsFeed, imageselected, newmedia;
+    long responseStatusCode;
 }
 
 @synthesize newsitem;
@@ -49,11 +52,20 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    _activityIndicator.hidesWhenStopped = YES;
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    else
+        self.view.backgroundColor = [UIColor whiteColor];
     
     _playerTextField.inputView = playerController.inputView;
     _coachTextField.inputView = coachController.inputView;
     _gameTextField.inputView = gameController.inputView;
+    _newsTextView.layer.borderWidth = 1.0f;
+    _newsTextView.layer.borderColor = [[UIColor grayColor] CGColor];
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, nil];
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -97,6 +109,14 @@
         _newsTextView.text = newsitem.news;
         _externalUrlTextField.text = newsitem.external_url;
         
+        if (newsitem.external_url.length > 0) {
+            _testUrlButton.hidden = NO;
+            _testUrlButton.enabled = YES;
+        } else {
+            _testUrlButton.hidden = YES;
+            _testUrlButton.enabled = NO;
+        }
+        
         // Add image
                 
         if (newsitem.videoclip_id.length > 0) {
@@ -113,9 +133,10 @@
                 });
             });
         } else if (newsitem.athlete.length > 0) {
-            [_newsFeedImageView setImage:[currentSettings normalizedImage:[[currentSettings findAthlete:newsitem.athlete] thumbimage] scaledToSize:125]];
+            [_newsFeedImageView setImage:[currentSettings normalizedImage:[currentSettings getRosterThumbImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:125]];
         } else if (newsitem.game.length > 0) {
-           [_newsFeedImageView setImage:[currentSettings normalizedImage:[[currentSettings findGame:newsitem.game] vsimage] scaledToSize:125]];
+           [_newsFeedImageView setImage:[currentSettings normalizedImage:[currentSettings getOpponentImage:
+                                                                          [currentSettings findGame:newsitem.game]] scaledToSize:125]];
         } else if (newsitem.coach.length > 0) {
             [_newsFeedImageView setImage:[[currentSettings findCoach:newsitem.coach] thumbimage]];
         } else {
@@ -134,6 +155,9 @@
         _teamLabel.text = currentSettings.team.team_name;
         newsitem.team = currentSettings.team.teamid;
         _newsFeedImageView.image = [currentSettings.team getImage:@"thumb"];
+        _deleteBarButton.enabled = NO;
+        _testUrlButton.hidden = YES;
+        _testUrlButton.enabled = NO;
     }
 }
 
@@ -153,14 +177,18 @@
     } else if ([segue.identifier isEqualToString:@"GameInfoSegue"]) {
         EditGameViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:newsitem.game];
+    } else if ([segue.identifier isEqualToString:@"NewsExternalUrlSegue"]) {
+        EazeWebViewController *destController = segue.destinationViewController;
+        destController.external_url = [NSURL URLWithString:newsitem.external_url];
     }
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
     newsitem.title = _newsTitleTextField.text;
     newsitem.news = _newsTextView.text;
+    
     if ([newsitem saveNewsFeed]) {
-        [self.navigationController popViewControllerAnimated:YES];
+        [self newsitemSaved];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating news data" message:[newsitem httperror]
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -221,7 +249,7 @@
 
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
-        _gameTextField.text = gameController.thegame.game_name;
+        _gameTextField.text = [gameController.thegame vsOpponent];
         newsitem.game = gameController.thegame.id;
         _gameButton.enabled = YES;
     }
@@ -283,6 +311,184 @@
             [alert show];
         }
     }
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:sender];
+}
+
+- (IBAction)deleteBarButtonClicked:(id)sender {
+    [self deleteButtonClicked:sender];
+}
+
+- (IBAction)cameraRollButtonClicked:(id)sender {
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
+        imagePicker.allowsEditing = NO;
+        
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+            UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            apopover.delegate = self;
+            
+            // set contentsize
+            [apopover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            self.popover = apopover;
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            newmedia = NO;
+        }
+    }
+}
+
+- (IBAction)cameraButtonClicked:(id)sender {
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.delegate = self;
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
+        imagePicker.allowsEditing = NO;
+        [self presentViewController:imagePicker animated:YES completion:nil];
+        newmedia = YES;
+    }
+}
+
+#pragma mark -
+#pragma mark UIImagePickerControllerDelegate
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    NSString *mediaType = info[UIImagePickerControllerMediaType];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
+        NSData *imgData=UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
+        NSLog(@"%d", [imgData length]);
+        UIImage *image = [[UIImage alloc] initWithData:imgData];
+        
+        if (newmedia)
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
+        
+        _newsFeedImageView.image = [currentSettings normalizedImage:image scaledToSize:512];
+        
+        imageselected = YES;
+    }
+    else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
+    {
+        // Code here to support video if enabled
+    }
+}
+
+-(void)image:(UIImage *)imag finishedSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (error) {
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle: @"Save failed"
+                              message: @"Failed to save image"
+                              delegate: nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)uploadImage:(Coach *)acoach {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [_activityIndicator startAnimating];
+    // Upload image data.  Remember to set the content type.
+    NSString *imagepath = [NSString stringWithFormat:@"%@%@%@%@%@", @"uploads/coachesphotos/", acoach.coachid, @"/",
+                           acoach.lastname, acoach.firstname];
+    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:imagepath inBucket:[[currentSettings getBucket] name]];
+    por.contentType = @"image/jpeg";
+    
+    UIImage *image = _newsFeedImageView.image;
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    por.data = imageData;
+    int imagesize = imageData.length;
+    por.delegate = self;
+    
+    // Put the image data into the specified s3 bucket and object.
+    [[currentSettings getS3] putObject:por];
+    return YES;
+}
+
+-(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
+{
+    [_activityIndicator stopAnimating];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/newsfeeds/%@/updatephoto.json?auth_token=%@",
+                                       [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
+                                       newsitem.newsid, currentSettings.user.authtoken]];
+    NSMutableURLRequest *urlrequest = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse* urlresponse;
+    NSError *error = nil;
+    NSString *path = [NSString stringWithFormat:@"%@%@%@%@", @"uploads/newsfeedsphotos/", newsitem.newsid, @"/",
+                      [NSString stringWithFormat:@"%@_%@", newsitem.newsid, currentSettings.sport.id]];
+    NSMutableDictionary *athDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: path, @"filepath", @"image/jpeg",
+                                    @"filetype", [NSString stringWithFormat:@"%@_%@", newsitem.newsid, currentSettings.sport.id], @"filename", nil];
+    
+    //    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:athDict options:0 error:&error];
+    [urlrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlrequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [urlrequest setHTTPMethod:@"PUT"];
+    [urlrequest setHTTPBody:jsonData];
+    NSData* result = [NSURLConnection sendSynchronousRequest:urlrequest  returningResponse:&urlresponse error:&error];
+    responseStatusCode = [(NSHTTPURLResponse*)urlresponse statusCode];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if (responseStatusCode == 200) {
+        [self newsitemSaved];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
+-(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Photo Upload Error" delegate:self
+                                          cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert setAlertViewStyle:UIAlertViewStyleDefault];
+    [alert show];
+    [_activityIndicator stopAnimating];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+}
+
+- (void)newsitemSaved {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"News Item Saved!" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
+    _deleteBarButton.enabled = YES;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (IBAction)testUrlButtonClicked:(id)sender {
+    [self performSegueWithIdentifier:@"NewsExternalUrlSegue" sender:self];
 }
 
 @end

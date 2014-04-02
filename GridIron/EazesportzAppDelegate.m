@@ -31,6 +31,17 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    //Clear keychain on first run in case of reinstallation
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"]) {
+        // Delete values from keychain here
+        [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
+        [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
+        
+        [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:@"FirstRun"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+
     currentSettings = [[sportzCurrentSettings alloc] init];
 
     NSArray *paths = NSSearchPathForDirectoriesInDomains
@@ -55,7 +66,7 @@
         }
     } else {
         myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg-640x1136.png"]];
-        currentSettings.changesite = YES;
+//        currentSettings.changesite = YES;
     }
     
     [self.window.rootViewController.view addSubview: myGraphic];
@@ -81,7 +92,8 @@
         }
     } else if (content) {
         [self getSport];
-    }
+    } else
+        currentSettings.firstuse = YES;
     
     return YES;
 }
@@ -179,5 +191,68 @@
     }
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    NSLog(@"Launched with URL: %@", url.absoluteString);
+    
+    NSDictionary *userDict = [self urlPathToDictionary:url.absoluteString];
+    
+    //Do something with the information in userDict
+    
+    if (userDict.count > 0) {
+        NSString *email = [userDict objectForKey:@"email"];
+        NSString *admin = [userDict objectForKey:@"admin"];
+        currentSettings.newuser = [[User alloc] init];
+        currentSettings.newuser.email = email;
+        
+        if (admin.length > 0) {
+            currentSettings.newuser.admin = YES;
+        } else {
+            currentSettings.newuser.admin = NO;
+        }
+        
+        currentSettings.firstuse = NO;
+    }
+    
+    return YES;
+}
+
+/*
+ -(NSDictionary *)urlPathToDictionary:(NSString *)path
+ Takes a url in the form of: your_prefix://this_item/value1/that_item/value2/some_other_item/value3
+ And turns it into a dictionary in the form of:
+ {
+ this_item: @"value1",
+ that_item: @"value2",
+ some_other_item: @"value3"
+ }
+ 
+ Handles everything properly if there is a trailing slash or not.
+ Returns `nil` if there aren't the proper combinations of keys and pairs (must be an even number)
+ 
+ NOTE: This example assumes you're using ARC. If not, you'll need to add your own autorelease statements.
+ */
+
+-(NSDictionary *)urlPathToDictionary:(NSString *)path {
+    //Get the string everything after the :// of the URL.
+    NSString *stringNoPrefix = [[path componentsSeparatedByString:@"://"] lastObject];
+    //Get all the parts of the url
+    NSMutableArray *parts = [[stringNoPrefix componentsSeparatedByString:@"/"] mutableCopy];
+    //Make sure the last object isn't empty
+    if([[parts lastObject] isEqualToString:@""])[parts removeLastObject];
+    
+    if([parts count] % 2 != 0)//Make sure that the array has an even number
+        return nil;
+    
+    //We already know how many values there are, so don't make a mutable dictionary larger than it needs to be.
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:([parts count] / 2)];
+    
+    //Add all our parts to the dictionary
+    for (int i=0; i<[parts count]; i+=2) {
+        [dict setObject:[parts objectAtIndex:i+1] forKey:[parts objectAtIndex:i]];
+    }
+    
+    //Return an NSDictionary, not an NSMutableDictionary
+    return [NSDictionary dictionaryWithDictionary:dict];
+}
 
 @end

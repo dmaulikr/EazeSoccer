@@ -8,6 +8,9 @@
 
 #import "sportzCurrentSettings.h"
 #import "sportzServerInit.h"
+#import "EazesportzImage.h"
+#import "EazesportzRetrieveTeams.h"
+#import "EazesportzRetrieveSport.h"
 
 @implementation sportzCurrentSettings {
     AmazonS3Client *s3;
@@ -29,6 +32,8 @@
 @synthesize teams;
 @synthesize sponsors;
 @synthesize alerts;
+@synthesize rosterimages;
+@synthesize opponentimages;
 
 @synthesize featuredPhotos;
 @synthesize featuredVideos;
@@ -50,6 +55,9 @@
 @synthesize rootwindow;
 @synthesize sitechanged;
 @synthesize changesite;
+@synthesize firstuse;
+
+@synthesize newuser;
 
 - (id)init {
     if (self = [super init]) {
@@ -59,6 +67,8 @@
         
         featuredVideos = nil;
         featuredPhotos = nil;
+        
+        newuser = nil;
         
         footballWR = [[NSMutableArray alloc] init];
         footballQB = [[NSMutableArray alloc] init];
@@ -70,6 +80,8 @@
         footballPUNT = [[NSMutableArray alloc] init];
         footballRET = [[NSMutableArray alloc] init];
         lastAlertUpdate = [NSDate dateWithTimeIntervalSinceNow:0];
+        rosterimages = [[NSMutableArray alloc] init];
+        opponentimages = [[NSMutableArray alloc] init];
         
         refreshGames = YES;
         
@@ -355,8 +367,9 @@
             [footballRET addObject:player];
 }
 
-- (void)retrieveSport {
-    NSURL *url = [NSURL URLWithString:[sportzServerInit getSport:self.user.authtoken]];
+- (Sport *)retrieveSport:(NSString *)sport {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.json?auth_token=%@",
+                                       [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], sport, user.authtoken]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSURLResponse* response;
     NSError *error = nil;
@@ -365,13 +378,9 @@
     
     if (responseStatusCode == 200) {
         NSDictionary *sportdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-        self.sport = [[Sport alloc] initWithDictionary:sportdata];
+        return [[Sport alloc] initWithDictionary:sportdata];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error retrieving Sport"
-                              message:[NSString stringWithFormat:@"%d", responseStatusCode] delegate:nil cancelButtonTitle:@"Ok"
-                              otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+        return nil;
     }
 }
 
@@ -479,7 +488,7 @@
             }
         }
         // Create the picture bucket.
-        if ((s3bucket == nil) && ([self.user.admin boolValue]) && ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
+        if ((s3bucket == nil) && (self.user.admin) && ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
             S3CreateBucketRequest *createBucketRequest = [[S3CreateBucketRequest alloc] initWithName:bucket andRegion:[S3Region USWest2]];
             S3CreateBucketResponse *createBucketResponse = [s3 createBucket:createBucketRequest];
             if(createBucketResponse.error != nil) {
@@ -601,6 +610,211 @@
  */
     
     return normalizedImage;
+}
+
+- (void)replaceOpponentTinyImage:(GameSchedule *)thegame {
+    BOOL found = NO;
+    
+    for (int i = 0; i < opponentimages.count; i++) {
+        EazesportzImage *animage = [opponentimages objectAtIndex:i];
+        
+        if ([animage.modelid isEqualToString:thegame.id]) {
+            if ((![thegame.opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) &&
+                (![thegame.opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
+                [animage setTiny:thegame.opponentpic UpdatedAt:thegame.opponentpic_updated_at];
+            } else{
+                animage.noimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+            }
+            found = YES;
+            break;
+        }
+    }
+    
+    if (!found) {
+        EazesportzImage *animage = [[EazesportzImage alloc] initWithId:thegame.id];
+        if ((![thegame.opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) &&
+            (![thegame.opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
+            [animage setTiny:thegame.opponentpic UpdatedAt:thegame.opponentpic_updated_at];
+        } else {
+            animage.noimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        }
+        [opponentimages addObject:animage];
+    }
+}
+
+- (void)removeOldOpponentImages {
+    for (int i = 0; i < opponentimages.count; i++) {
+        BOOL found = NO;
+        EazesportzImage *animage = [opponentimages objectAtIndex:i];
+        
+        for (int count = 0; count < gameList.count; count++) {
+            if (![[[gameList objectAtIndex:count] id] isEqualToString:animage.modelid]) {
+                found = YES;
+                break;
+            }
+        }
+        
+        if (!found) {
+            [opponentimages removeObject:animage];
+        }
+    }    
+}
+
+- (UIImage *)getOpponentImage:(GameSchedule *)agame {
+    UIImage *image = nil;
+    
+    for (int i = 0; i < opponentimages.count; i++) {
+        if ([[[opponentimages objectAtIndex:i] modelid] isEqualToString:agame.id]) {
+            EazesportzImage *animage = [opponentimages objectAtIndex:i];
+            if (animage.noimage == nil)
+                image = animage.tiny;
+            else
+                image = animage.noimage;
+            break;
+        }
+    }
+    
+    return image;
+}
+
+- (void)replaceRosterImages:(Athlete *)player {
+    BOOL found = NO;
+    
+    for (int i = 0; i < rosterimages.count; i++) {
+        EazesportzImage *animage = [rosterimages objectAtIndex:i];
+        
+        if ([animage.modelid isEqualToString:player.athleteid]) {
+            if (![player.tinypic isEqualToString:@"/pics/tiny/missing.png"]) {
+                [animage setTiny:player.tinypic UpdatedAt:player.pic_updated_at];
+                [animage setThumb:player.thumb UpdatedAt:player.pic_updated_at];
+                [animage setMedium:player.mediumpic UpdatedAt:player.pic_updated_at];
+//                [animage setLarge:player.largepic UpdatedAt:player.pic_updated_at];
+            } else{
+                animage.noimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+            }
+            found = YES;
+            break;
+        }
+    }
+    
+    if (!found) {
+        EazesportzImage *animage = [[EazesportzImage alloc] initWithId:player.athleteid];
+        if (![player.tinypic isEqualToString:@"/pics/tiny/missing.png"]) {
+            [animage setTiny:player.tinypic UpdatedAt:player.pic_updated_at];
+            [animage setThumb:player.thumb UpdatedAt:player.pic_updated_at];
+            [animage setMedium:player.mediumpic UpdatedAt:player.pic_updated_at];
+//            [animage setLarge:player.largepic UpdatedAt:player.pic_updated_at];
+        } else {
+            animage.noimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        }
+        [rosterimages addObject:animage];
+    }
+}
+
+- (UIImage *)getRosterTinyImage:(Athlete *)player {
+    UIImage *image = nil;
+    
+    for (int i = 0; i < rosterimages.count; i++) {
+        if ([[[rosterimages objectAtIndex:i] modelid] isEqualToString:player.athleteid]) {
+            EazesportzImage *animage = [rosterimages objectAtIndex:i];
+            if (animage.noimage == nil)
+                image = animage.tiny;
+            else
+                image = animage.noimage;
+            break;
+        }
+    }
+    
+    return image;
+}
+
+- (UIImage *)getRosterThumbImage:(Athlete *)player {
+    UIImage *image = nil;
+    
+    for (int i = 0; i < rosterimages.count; i++) {
+        if ([[[rosterimages objectAtIndex:i] modelid] isEqualToString:player.athleteid]) {
+            EazesportzImage *animage = [rosterimages objectAtIndex:i];
+            if (animage.noimage == nil)
+                image = animage.thumb;
+            else
+                image = animage.noimage;
+            break;
+        }
+    }
+    
+    return image;
+}
+
+- (UIImage *)getRosterMediumImage:(Athlete *)player {
+    UIImage *image = nil;
+    
+    for (int i = 0; i < rosterimages.count; i++) {
+        if ([[[rosterimages objectAtIndex:i] modelid] isEqualToString:player.athleteid]) {
+            EazesportzImage *animage = [rosterimages objectAtIndex:i];
+            if (animage.noimage == nil)
+                image = animage.medium;
+            else
+                image = animage.noimage;
+            break;
+        }
+    }
+    
+    return image;
+}
+
+- (UIImage *)getRosterLargeImage:(Athlete *)player {
+    UIImage *image = nil;
+    
+    for (int i = 0; i < rosterimages.count; i++) {
+        if ([[[rosterimages objectAtIndex:i] modelid] isEqualToString:player.athleteid]) {
+            EazesportzImage *animage = [rosterimages objectAtIndex:i];
+            if (animage.noimage == nil)
+                image = animage.large;
+            else
+                image = animage.noimage;
+            break;
+        }
+    }
+    
+    return image;
+}
+
+- (BOOL)isSiteOwner {
+    if ((user.admin) && (user.adminsite.length > 0)) {
+        if ([user.adminsite isEqualToString:sport.id])
+            return YES;
+        else
+            return NO;
+    } else
+        return NO;
+}
+
+- (void)setUpSport:(NSString *)sportid {
+    EazesportzRetrieveTeams *getTeams;
+    
+    if ([[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:sportid Token:user.authtoken]) {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        //make a file name to write the data to using the documents directory:
+        NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt", documentsDirectory];
+        NSString *sportFile = [NSString stringWithFormat:@"%@/currentsport.txt", documentsDirectory];
+        //create content - four lines of text
+        NSString *content = sport.id;
+        //save content to the documents directory
+        [content writeToFile:fileName atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+        [sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+        
+        getTeams = [[EazesportzRetrieveTeams alloc] init];
+        if ([getTeams retrieveTeamsSynchronous:sport.id Token:user.authtoken]) {
+            teams = getTeams.teams;
+            
+            if (teams.count > 1)
+                team = nil;
+            else
+                team = [teams objectAtIndex:0];
+        }
+    }
 }
 
 @end

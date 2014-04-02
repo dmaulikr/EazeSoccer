@@ -36,6 +36,8 @@
 @property(nonatomic, strong) NSMutableArray *teams;
 @property(nonatomic, strong) NSMutableArray *sponsors;
 @property(nonatomic, strong) NSMutableArray *alerts;
+@property(nonatomic, strong) NSMutableArray *rosterimages;
+@property(nonatomic, strong) NSMutableArray *opponentimages;
 
 @property(nonatomic, strong) NSMutableArray *featuredPhotos;
 @property(nonatomic, strong) NSMutableArray *featuredVideos;
@@ -57,6 +59,9 @@
 @property(nonatomic, strong) UIWindow *rootwindow;
 @property(nonatomic, assign) BOOL sitechanged;
 @property(nonatomic, assign) BOOL changesite;
+@property(nonatomic, assign) BOOL firstuse;
+
+@property (nonatomic, strong) User *newuser;
 
 - (UIImage *)getBannerImage;
 
@@ -85,7 +90,7 @@
 
 - (BOOL)deleteCoach:(Coach *)acoach;
 
-- (void)retrieveSport;
+- (Sport *)retrieveSport:(NSString *)sport;
 
 - (int)teamFouls:(NSString *)gameid;
 - (int)teamTotalPoints:(NSString *)gameid;
@@ -95,6 +100,19 @@
 - (AmazonS3Client *)getS3;
 
 - (UIImage *)normalizedImage:(UIImage *)image scaledToSize:(int)size;
+
+- (void)replaceOpponentTinyImage:(GameSchedule *)thegame;
+- (UIImage *)getOpponentImage:(GameSchedule *)agame;
+
+- (void)replaceRosterImages:(Athlete *)player;
+- (UIImage *)getRosterTinyImage:(Athlete *)player;
+- (UIImage *)getRosterThumbImage:(Athlete *)player;
+- (UIImage *)getRosterMediumImage:(Athlete *)player;
+- (UIImage *)getRosterLargeImage:(Athlete *)player;
+
+- (BOOL)isSiteOwner;
+
+- (void)setUpSport:(NSString *)sportid;
 
 @end
 

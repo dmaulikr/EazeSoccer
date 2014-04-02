@@ -37,4 +37,10 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *statTableView;
 - (IBAction)refreshButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
+- (IBAction)addButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *playerSelectContainer;
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+
 @end

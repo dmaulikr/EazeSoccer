@@ -85,8 +85,9 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error Logging in - No network connection" delegate:nil
-                                              cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error"
+                            message:@"Error Logging in - Check your email. Did you confirm your account? Make sure you are connected to the internet."
+                            delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
     [errorView show];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
@@ -111,9 +112,10 @@
         NSLog(@"%@", userdata);
         
         if([userdata count] > 0) {
+            currentSettings.user = [[User alloc] init];
             currentSettings.user.email = [userdata objectForKey:@"email"];
             
-            if ([KeychainWrapper createKeychainValue:currentSettings.user.email forIdentifier:GOMOBIEMAIL]) {
+            if ([KeychainWrapper createKeychainValue:email forIdentifier:GOMOBIEMAIL]) {
                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:GOMOBIEMAIL];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 NSLog(@"** email saved successfully to Keychain!!");
@@ -245,6 +247,22 @@
         return  newrequest;
     } else {
         return request;
+    }
+}
+
+- (User *)getUserSynchronous:(NSString *)userid {
+    NSURL *url = [NSURL URLWithString:[sportzServerInit getUser:userid Token:currentSettings.user.authtoken]];
+    NSURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse *response;
+    NSError *jsonSerializationError = nil;
+    NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&jsonSerializationError];
+    long statusCode = [(NSHTTPURLResponse*)response statusCode];
+    
+    if (statusCode == 200) {
+        NSDictionary *userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+        return [[User alloc] initWithDictionary:userdata];
+    } else {
+        return nil;;
     }
 }
 

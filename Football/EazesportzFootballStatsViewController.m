@@ -187,7 +187,7 @@
 
     if (game) {
          _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats vs. ", game.opponent_name];
-       
+        _lastplayLabel.text = game.lastplay;
         _gameClockLabel.text = game.currentgametime;
         NSArray *timearray = [game.currentgametime componentsSeparatedByString:@":"];
         _minutesTextField.text = timearray[0];
@@ -200,25 +200,38 @@
         _visitorScoreTextField.text = [game.opponentscore stringValue];
         _penaltyYardsLabel.text = [NSString stringWithFormat:@"%d%@%d", [game.penalty intValue], @"/", [game.penaltyyards intValue]];
         _penaltyYardsTextField.hidden = YES;
-        
+
         _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
-        
+
         _homeTimeOutsTextField.text = [game.hometimeouts stringValue];
         _visitorTimeOutsTextField.text = [game.opponenttimeouts stringValue];
         _ballonTextField.text = [game.ballon stringValue];
         _downTextField.text = [game.down stringValue];
         _togoTextField.text = [game.togo stringValue];
         _quarterTextField.text = [game.period stringValue];
-        
+
         if (!game.gameisfinal) {
             _finalLabel.hidden = YES;
         }
         
+        [_homeMascotButton setTitle:currentSettings.team.mascot forState:UIControlStateNormal];
+        [_visitorMascotButton setTitle:game.opponent_mascot forState:UIControlStateNormal];
+        
+        if ([game.possession isEqualToString:currentSettings.team.mascot]) {
+            _homePossessionImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"footballpossessionimage.png"], 1)];
+            _visitorPossessionImage.hidden = YES;
+            _homePossessionImage.hidden = NO;
+        } else {
+            _visitorPossessionImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"footballpossessionimage.png"], 1)];
+            _homePossessionImage.hidden = YES;
+            _visitorPossessionImage.hidden = NO;
+        }
+
          _finalButton.enabled = YES;
         _finalButton.hidden = NO;
-        
+
         [self displayStats];
-        
+
         [_statsTableView reloadData];
     } else if (athlete)
         _statLabel.text = [NSString stringWithFormat:@"%@%@", @"Stats for ", athlete.logname];
@@ -317,7 +330,7 @@
 }
 
 - (void)displayImage:(Athlete *)player Cell:(UITableViewCell *)cell Row:(NSIndexPath *)indexPath {
-    if (player.tinyimage == nil) {
+    if ([currentSettings getRosterTinyImage:player] == nil) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
@@ -332,7 +345,7 @@
             });
         });
     } else {
-        [cell.imageView setImage:[player tinyimage]];
+        [cell.imageView setImage:[currentSettings getRosterTinyImage:player]];
     }
 }
 
@@ -985,10 +998,13 @@
     } else if (defense) {
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
-        if (addstats)
+        if (addstats) {
             stat.tackles = [NSNumber numberWithInt:[stat.tackles intValue] + 1];
-        else if ([stat.tackles intValue] > 0)
+            game.lastplay = [NSString stringWithFormat:@"%@ - Tackle", athlete.logname];
+        } else if ([stat.tackles intValue] > 0) {
             stat.tackles = [NSNumber numberWithInt:[stat.tackles intValue] - 1];
+            game.lastplay = @"";
+        }
         
         _statData1.text = [stat.tackles stringValue];
     } else if (pk) {
@@ -1056,6 +1072,8 @@
             completion = YES;
             [self yardStats:NO Text:@"Yards"];
             [self fumbleStats:NO];
+            playerController.player = nil;
+            [playerController viewWillAppear:YES];
         } else if ([stat.completions intValue] > 0) {
             stat.completions = [NSNumber numberWithInt:[stat.completions intValue] - 1];
             stat.attempts = [NSNumber numberWithInt:[stat.attempts intValue] - 1];
@@ -1082,10 +1100,13 @@
     } else if (defense) {
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
-        if (addstats)
+        if (addstats) {
             stat.assists = [NSNumber numberWithInt:[stat.assists intValue] + 1];
-        else if ([stat.assists intValue] > 0)
+            game.lastplay = [NSString stringWithFormat:@"%@ - tackle assist", athlete.logname];
+        } else if ([stat.assists intValue] > 0) {
             stat.assists = [NSNumber numberWithInt:[stat.assists intValue] - 1];
+            game.lastplay = @"";
+        }
         
         _statData2.text = [stat.assists stringValue];
     } else if (pk) {
@@ -1183,10 +1204,13 @@
     } else if (defense) {
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
-        if (addstats)
+        if (addstats) {
             stat.sacks = [NSNumber numberWithInt:[stat.sacks intValue] + 1];
-        else if ([stat.sacks intValue] > 0)
+            game.lastplay = [NSString stringWithFormat:@"%@ - Sack", athlete.logname];
+        } else if ([stat.sacks intValue] > 0) {
             stat.sacks = [NSNumber numberWithInt:[stat.sacks intValue] - 1];
+            game.lastplay = @"";
+        }
         
         _statData3.text = [stat.sacks stringValue];
     } else if (pk) {
@@ -1236,24 +1260,20 @@
     if (qb) {
         FootballPassingStat *stat = [athlete findFootballPassingStat:game.id];
 
-        if (addstats)
-            stat.firstdowns = [NSNumber numberWithInt:[stat.firstdowns intValue] + 1];
-        else if ([stat.firstdowns intValue] > 0)
-                stat.firstdowns = [NSNumber numberWithInt:[stat.firstdowns intValue] - 1];
-        
-        _statData6.text = [stat.firstdowns stringValue];
-        
         if (_receiverTextField.text.length > 0) {
             FootballReceivingStat *recstat = [receiver findFootballReceivingStat:game.id];
-            
-            if (addstats)
+            if (addstats) {
+                stat.firstdowns = [NSNumber numberWithInt:[stat.firstdowns intValue] + 1];
                 recstat.firstdowns = [NSNumber numberWithInt:[recstat.firstdowns intValue] + 1];
-            else if ([recstat.firstdowns intValue] > 0)
+            } else if ([stat.firstdowns intValue] > 0) {
+                stat.firstdowns = [NSNumber numberWithInt:[stat.firstdowns intValue] - 1];
                 recstat.firstdowns = [NSNumber numberWithInt:[recstat.firstdowns intValue] - 1];
-
+            }
+            
+            _statData6.text = [stat.firstdowns stringValue];
+            
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Completion to receiver must be added before adding a first down!"
-                                                           delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Completion to receiver must be added before adding a first down! If you are adjusting stat errors, use the totals page." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
@@ -1274,10 +1294,13 @@
     } else if (defense) {
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
-        if (addstats)
+        if (addstats) {
             stat.sackassist = [NSNumber numberWithInt:[stat.sackassist intValue] + 1];
-        else if ([stat.sackassist intValue] > 0)
+            game.lastplay = [NSString stringWithFormat:@"%@ - sack assist", athlete.logname];
+        } else if ([stat.sackassist intValue] > 0) {
             stat.sackassist = [NSNumber numberWithInt:[stat.sackassist intValue] - 1];
+            game.lastplay = @"";
+        }
         
         _statData4.text = [stat.sackassist stringValue];
     } else if (pk) {
@@ -1373,10 +1396,13 @@
     } else if (defense) {
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
-        if (addstats)
+        if (addstats) {
             stat.pass_defended = [NSNumber numberWithInt:[stat.pass_defended intValue] + 1];
-        else if ([stat.pass_defended intValue] > 0)
+            game.lastplay = [NSString stringWithFormat:@"%@ - Pass Defended", athlete.logname];
+        } else if ([stat.pass_defended intValue] > 0) {
             stat.pass_defended = [NSNumber numberWithInt:[stat.pass_defended intValue] - 1];
+            game.lastplay = @"";
+        }
     
         _statData6.text = [stat.pass_defended stringValue];
     } else if (pk) {
@@ -1425,10 +1451,12 @@
         
         if (addstats) {
             stat.fumbles_recovered = [NSNumber numberWithInt:[stat.fumbles_recovered intValue] + 1];
+            game.lastplay = [NSString stringWithFormat:@"%@ - Fumble Recovered", athlete.logname];
             [self yardStats:NO Text:@"Return Yards"];
         } else if ([stat.fumbles_recovered intValue] > 0) {
             stat.fumbles_recovered = [NSNumber numberWithInt:[stat.fumbles_recovered intValue] - 1];
             [self yardStats:YES Text:@""];
+            game.lastplay = @"";
         }
         
         _statData8.text = [stat.fumbles_recovered stringValue];
@@ -1542,6 +1570,9 @@
         else if (rb)
             _fumbleLabel.text = @"Fumble";
     }
+    
+    [_fumbleSwitch setOn:NO];
+    [_fumbleLostSwitch setOn:NO];
 }
 
 - (void)displayStats {
@@ -1558,7 +1589,7 @@
         _totalsButton.hidden = NO;
         _totalsButton.enabled = YES;
 
-        if (athlete.thumbimage == nil) {
+        if ([currentSettings getRosterThumbImage:athlete] == nil) {
             dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             //this will start the image loading in bg
             dispatch_async(concurrentQueue, ^{
@@ -1570,7 +1601,7 @@
                 });
             });
         } else
-            _playerImageView.image = [athlete thumbimage];
+            _playerImageView.image = [currentSettings getRosterThumbImage:athlete];
         
         if (offense) {
             if (qb) {
@@ -2308,6 +2339,20 @@
             _statData7.text = [stat.fumbles_lost stringValue];
         }
     }
+}
+
+- (IBAction)visitorMascotButtonClicked:(id)sender {
+    game.possession = game.opponent_mascot;
+    _visitorPossessionImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"footballpossessionimage.png"], 1)];
+    _homePossessionImage.hidden = YES;
+    _visitorPossessionImage.hidden = NO;
+}
+
+- (IBAction)homeMascotButtonClicked:(id)sender {
+    game.possession = currentSettings.team.mascot;
+    _homePossessionImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"footballpossessionimage.png"], 1)];
+    _visitorPossessionImage.hidden = YES;
+    _homePossessionImage.hidden = NO;
 }
 
 @end

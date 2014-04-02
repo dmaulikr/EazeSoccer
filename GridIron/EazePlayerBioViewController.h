@@ -19,4 +19,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *playerImageView;
 @property (weak, nonatomic) IBOutlet UITextView *playerBioTextView;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
+- (IBAction)saveButtonClicked:(id)sender;
 @end

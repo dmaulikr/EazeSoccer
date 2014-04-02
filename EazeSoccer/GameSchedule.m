@@ -32,7 +32,10 @@
 @synthesize opponent_name;
 @synthesize opponent_mascot;
 @synthesize opponentpic;
+@synthesize opponentpic_updated_at;
 @synthesize eazesportzOpponent;
+@synthesize opponent_sport_id;
+@synthesize opponent_team_id;
 @synthesize gameisfinal;
 @synthesize lastplay;
 @synthesize homescore;
@@ -60,7 +63,7 @@
 @synthesize currentqtr;
 
 @synthesize gamedatetime;
-@synthesize vsimage;
+//@synthesize vsimage;
 
 @synthesize togo;
 
@@ -94,6 +97,8 @@
         opponent_mascot = @"";
         opponentImage = nil;
         eazesportzOpponent = NO;
+        opponent_team_id = @"";
+        opponent_sport_id = @"";
         gameisfinal = NO;
         lastplay = @"";
         homescore = [NSNumber numberWithInt:0];
@@ -126,7 +131,7 @@
         socceroppck = [NSNumber numberWithInt:0];
         socceroppsaves = [NSNumber numberWithInt:0];
         socceroppsog = [NSNumber numberWithInt:0];
-        vsimage = nil;
+//        vsimage = nil;
 
         return self;
     } else
@@ -142,7 +147,8 @@
         opponent_name = [gameScheduleDictionary objectForKey:@"opponent_name"];
         opponent_mascot = [gameScheduleDictionary objectForKey:@"opponent_mascot"];
         opponentpic = [gameScheduleDictionary objectForKey:@"opponentpic"];
-        
+        opponentpic_updated_at = [gameScheduleDictionary objectForKey:@"opponentpic_updated_at"];
+/*
         if ((![opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) && (![opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
             dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             //this will start the image loading in bg
@@ -157,8 +163,10 @@
         } else {
             vsimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         }
-        
+*/
         eazesportzOpponent = [[gameScheduleDictionary objectForKey:@"eazesportzOpponent"] boolValue];
+        opponent_sport_id = [gameScheduleDictionary objectForKey:@"opponent_sport_id"];
+        opponent_team_id = [gameScheduleDictionary objectForKey:@"opponent_team_id"];
         location = [gameScheduleDictionary objectForKey:@"location"];
         starttime = [gameScheduleDictionary objectForKey:@"starttime"];
         startdate = [gameScheduleDictionary objectForKey:@"gamedate"];
@@ -281,8 +289,8 @@
     NSArray *time = [starttime componentsSeparatedByString:@":"];
     
     NSMutableDictionary *gamedict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:opponent, @"opponent",
-                                     opponent_mascot, @"opponent_mascot", location, @"location",
-                                     event, @"event", startdate, @"gamedate",
+                                     opponent_mascot, @"opponent_mascot", location, @"location", opponent_team_id, @"opponent_team_id",
+                                     event, @"event", startdate, @"gamedate", lastplay, @"lastplay", opponent_sport_id, @"opponent_sport_id",
                                      [time objectAtIndex:0], @"starttime(4i)", [time objectAtIndex:1], @"starttime(5i)",
                                      homeaway, @"homeaway", [homescore stringValue], @"homescore",
                                      [opponentscore stringValue], @"opponentscore", [[NSNumber numberWithBool:leaguegame] stringValue], @"league",

@@ -56,7 +56,9 @@
     if (responseStatusCode == 200) {
         currentSettings.roster = [[NSMutableArray alloc] init];
         for (int i = 0; i < [serverData count]; i++ ) {
-            [currentSettings.roster addObject:[[Athlete alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+            Athlete *player = [[Athlete alloc] initWithDictionary:[serverData objectAtIndex:i]];
+            [currentSettings replaceRosterImages:player];
+            [currentSettings.roster addObject:player];
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"RosterChangedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];

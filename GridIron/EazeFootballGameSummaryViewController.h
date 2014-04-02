@@ -16,17 +16,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *homeImage;
 @property (weak, nonatomic) IBOutlet UIImageView *visitorImage;
-@property (weak, nonatomic) IBOutlet UILabel *sbhomeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *sbvisitorLabel;
-@property (weak, nonatomic) IBOutlet UILabel *clockLabel;
 @property (weak, nonatomic) IBOutlet UILabel *homeScoreLabel;
-@property (weak, nonatomic) IBOutlet UILabel *visitorScoreLabel;
-@property (weak, nonatomic) IBOutlet UILabel *homeTimeOutLabel;
-@property (weak, nonatomic) IBOutlet UILabel *visitorTimeOutLabel;
-@property (weak, nonatomic) IBOutlet UILabel *downLabel;
-@property (weak, nonatomic) IBOutlet UILabel *togoLabel;
-@property (weak, nonatomic) IBOutlet UILabel *ballonLabel;
-@property (weak, nonatomic) IBOutlet UILabel *quarterLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sumhomeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sumvisitorLabel;
 @property (weak, nonatomic) IBOutlet UILabel *hq1Label;
@@ -44,5 +34,24 @@
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
 - (IBAction)statsButtonClicked:(id)sender;
+
+@property (weak, nonatomic) IBOutlet UITextField *minutesTextField;
+@property (weak, nonatomic) IBOutlet UITextField *secondsTextField;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveGameButton;
+- (IBAction)saveGameButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *visitorScoreTextField;
+@property (weak, nonatomic) IBOutlet UITextField *homeTimeOutTextField;
+@property (weak, nonatomic) IBOutlet UITextField *visitorTimeOutTextField;
+@property (weak, nonatomic) IBOutlet UITextField *quarterTextField;
+@property (weak, nonatomic) IBOutlet UITextField *togoTextField;
+@property (weak, nonatomic) IBOutlet UITextField *ballonTextField;
+@property (weak, nonatomic) IBOutlet UITextField *downTextField;
+@property (weak, nonatomic) IBOutlet UILabel *lastplayLabel;
+@property (weak, nonatomic) IBOutlet UIButton *homeMascotButton;
+- (IBAction)homeMascotButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIImageView *visitorPossessionImage;
+@property (weak, nonatomic) IBOutlet UIImageView *homePossessionImage;
+@property (weak, nonatomic) IBOutlet UIButton *visitorMascotButton;
+- (IBAction)visitorMascotButtonClicked:(id)sender;
 
 @end

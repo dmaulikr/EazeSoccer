@@ -8,6 +8,7 @@
 
 #import "EazesportzFootballPlaceKickerTotalsViewController.h"
 #import "FootballPlaceKickerStats.h"
+#import "EazesportzAppDelegate.h"
 
 @interface EazesportzFootballPlaceKickerTotalsViewController ()
 
@@ -55,7 +56,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _playerImage.image = [player getImage:@"tiny"];
+    _playerImage.image = [currentSettings getRosterTinyImage:player];
     _playerName.text = player.logname;
     _playerNumber.text = [player.number stringValue];
     

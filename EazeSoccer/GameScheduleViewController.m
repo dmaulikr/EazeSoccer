@@ -40,7 +40,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableData:) name:@"GameListChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,6 +50,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableData:) name:@"GameListChangedNotification" object:nil];
     
     [_gamesTableView reloadData];
 }
@@ -74,8 +74,12 @@
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)reloadTableData:(NSNotification *)notification {
-    // you grab your data our of the notifications userinfo
     [_gamesTableView reloadData];
 }
 
@@ -146,7 +150,7 @@
     
     [cell.wonlostLabel setText:WonLost];
     
-    if (game.vsimage == nil) {
+    if ([currentSettings getOpponentImage:game] == nil) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
@@ -161,7 +165,8 @@
             });
         });
     } else {
-        [cell.visitorImageView setImage:[game vsimage]];
+        cell.visitorImageView.image = [currentSettings getOpponentImage:game];
+//        [cell.visitorImageView setImage:[game vsimage]];
     }
     
     return cell;

@@ -8,6 +8,7 @@
 
 #import "CoachesInfoViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "EditCoachViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -66,6 +67,12 @@
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+
+    if (currentSettings.isSiteOwner) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.editButton,  nil];
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -91,6 +98,13 @@
 - (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
 {
     _bannerView.hidden = YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"EditCoachSegue"]) {
+        EditCoachViewController *destController = segue.destinationViewController;
+        destController.coach = coach;
+    }
 }
 
 @end

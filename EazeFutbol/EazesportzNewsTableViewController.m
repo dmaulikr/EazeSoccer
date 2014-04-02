@@ -154,7 +154,7 @@
     // Add image
     
     if (feeditem.athlete.length > 0) {
-        cell.imageView.image = [[currentSettings findAthlete:feeditem.athlete] getImage:@"tiny"];
+        cell.imageView.image = [currentSettings getRosterTinyImage:[currentSettings findAthlete:feeditem.athlete]];
     } else if (feeditem.coach.length > 0) {
         cell.imageView.image = [[currentSettings findCoach:feeditem.coach] getImage:@"tiny"];
     } else {

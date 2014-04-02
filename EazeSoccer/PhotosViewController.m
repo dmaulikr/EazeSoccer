@@ -72,7 +72,7 @@
     _gameContainer.hidden = YES;
     _userSelectContainer.hidden = YES;
     
-    if ([currentSettings.sport isPackageEnabled]) {
+    if (([currentSettings.sport isPackageEnabled]) || ([currentSettings isSiteOwner])) {
         if ((player) || (game) || (user))
             [self getPhotos];
         else if (photos)
@@ -395,6 +395,7 @@
     
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [activityIndicator startAnimating];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
@@ -428,6 +429,7 @@
         NSURL *url = [NSURL URLWithString:[sportzServerInit getTeamPhotos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
         NSURLRequest *request = [NSURLRequest requestWithURL:url];
         [activityIndicator startAnimating];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
     } else if ([title isEqualToString:@"Info"]) {
         [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];

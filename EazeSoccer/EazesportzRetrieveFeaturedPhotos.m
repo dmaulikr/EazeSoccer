@@ -36,6 +36,7 @@
                                     currentSettings.team.teamid]];
     
     originalRequest = [NSURLRequest requestWithURL:url];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
 }
 

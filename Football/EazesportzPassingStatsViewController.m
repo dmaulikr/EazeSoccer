@@ -106,7 +106,7 @@
         stat.gameschedule_id = game.id;
     }
 
-    _playerImageView.image = [player getImage:@"tiny"];
+    _playerImageView.image = [currentSettings getRosterTinyImage:player];
     _playerNumberLabel.text = [player.number stringValue];
     _playerNameLabel.text = player.logname;
     _attemptsLabel.text = [stat.attempts stringValue];

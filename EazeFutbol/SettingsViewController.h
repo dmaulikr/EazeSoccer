@@ -20,4 +20,8 @@
 - (IBAction)siteButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *contactButtonClicked;
 @property (weak, nonatomic) IBOutlet UILabel *contactLabel;
+- (IBAction)addSiteButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *addSiteLabel;
+@property (weak, nonatomic) IBOutlet UIButton *addSiteButton;
+
 @end

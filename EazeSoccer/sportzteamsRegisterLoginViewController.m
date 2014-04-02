@@ -200,13 +200,9 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    NSBundle *mainBundle = [NSBundle mainBundle];
     
     if([title isEqualToString:@"Ok"]) {
-        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
-            [self.navigationController popToRootViewControllerAnimated:YES];
-        else
-            [self.navigationController popViewControllerAnimated:YES];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

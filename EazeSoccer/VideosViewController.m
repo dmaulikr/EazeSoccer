@@ -90,11 +90,13 @@
 }
 
 - (void)retrieveVideos {
+    [_activityIndicator startAnimating];
     [getVideos retrieveVideos:currentSettings.sport Team:currentSettings.team Athlete:player Game:game SearchUser:user GameLog:(Gamelogs*)gamelog
                          User:currentSettings.user];
 }
 
 - (void)gotVideos:(NSNotification *)notification {
+    [_activityIndicator stopAnimating];
     if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
         videos = getVideos.videos;
         

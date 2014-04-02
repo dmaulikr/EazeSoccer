@@ -70,7 +70,7 @@
         originalStat = nil;
     }
     
-    _playerImage.image = [player getImage:@"tiny"];
+    _playerImage.image = [currentSettings getRosterTinyImage:player];
     _playerNumberLabel.text = [player.number stringValue];
     _playerNameLabel.text = player.logname;
     

@@ -28,5 +28,6 @@
 - (IBAction)submitButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 - (IBAction)deleteButtonClicked:(id)sender;
+- (IBAction)useSportMascotButtonClicked:(id)sender;
 
 @end

@@ -127,9 +127,9 @@
             [alert show];
         }
         
-        if ((currentSettings.user.default_site.length > 0) && (currentSettings.user.admin)) {
-            [[[EazesportzRetrieveSport alloc] init] retrieveSport:currentSettings.user.default_site Token:currentSettings.user.authtoken];
-        } else if (currentSettings.user.admin) {
+        if ((currentSettings.user.adminsite.length > 0) && (currentSettings.isSiteOwner)) {
+            [[[EazesportzRetrieveSport alloc] init] retrieveSport:currentSettings.user.adminsite Token:currentSettings.user.authtoken];
+        } else if (currentSettings.isSiteOwner) {
             [self performSegueWithIdentifier:@"CreateSportSegue" sender:self];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"You must be an administrator to use this application"
@@ -156,7 +156,7 @@
         [alert show];
     } else if ((![currentSettings.sport.name isEqualToString:[mainBundle objectForInfoDictionaryKey:@"sportzteams"]]) &&
                ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) &&
-               (currentSettings.user.admin)) {
+               (currentSettings.isSiteOwner)) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login"
                                                         message:@"Admin user cannot be used to view other sports"
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

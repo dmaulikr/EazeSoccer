@@ -37,6 +37,7 @@
 @synthesize thumb;
 @synthesize mediumpic;
 @synthesize largepic;
+@synthesize pic_updated_at;
 @synthesize teamid;
 @synthesize teamname;
 @synthesize following;
@@ -57,18 +58,18 @@
 
 @synthesize soccer_stats;
 
-@synthesize thumbimage;
-@synthesize tinyimage;
-@synthesize mediumimage;
+//@synthesize thumbimage;
+//@synthesize tinyimage;
+//@synthesize mediumimage;
 
 @synthesize httperror;
 
 - (id)init {
     if (self = [super init]) {
         imagesize = @"";
-        tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+//        tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+//        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+//        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
 
         if ([currentSettings.sport.name isEqualToString:@"Football"]) {
             football_passing_stats = [[NSMutableArray alloc] init];
@@ -120,11 +121,12 @@
         thumb = [athleteDictionary objectForKey:@"thumb"];
         mediumpic = [athleteDictionary objectForKey:@"mediumpic"];
         largepic = [athleteDictionary objectForKey:@"largepic"];
+        pic_updated_at = [athleteDictionary objectForKey:@"pic_updated_at"];
         following = [NSNumber numberWithBool:[[athleteDictionary objectForKey:@"following"] boolValue]];
         hasvideos = [[athleteDictionary objectForKey:@"hasvideos"] boolValue];
         hasphotos = [[athleteDictionary objectForKey:@"hasphotos"] boolValue];
         
-        [self loadImages];
+//        [self loadImages];
         
         if ([currentSettings.sport.name isEqualToString:@"Football"]) {
             
@@ -523,7 +525,7 @@
     
     return thestats;
 }
-
+/*
 - (UIImage *)getImage:(NSString *)size {
     UIImage *image;
     
@@ -620,7 +622,7 @@
         mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
     }
 }
-
+*/
 - (FootballPassingStat *)findFootballPassingStat:(NSString *)gameid {
     FootballPassingStat *thestat = nil;
     

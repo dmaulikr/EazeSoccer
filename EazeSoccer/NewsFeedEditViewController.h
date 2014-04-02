@@ -14,6 +14,8 @@
 
 @property(nonatomic, strong) Newsfeed *newsitem;
 
+@property(nonatomic, strong) UIPopoverController *popover;
+
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 @property (weak, nonatomic) IBOutlet UITextField *externalUrlTextField;
 
@@ -47,4 +49,13 @@
 @property (weak, nonatomic) IBOutlet UIButton *gameButton;
 @property (weak, nonatomic) IBOutlet UIButton *playerButton;
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
+- (IBAction)saveBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteBarButton;
+- (IBAction)deleteBarButtonClicked:(id)sender;
+- (IBAction)cameraRollButtonClicked:(id)sender;
+- (IBAction)cameraButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIButton *testUrlButton;
+- (IBAction)testUrlButtonClicked:(id)sender;
 @end

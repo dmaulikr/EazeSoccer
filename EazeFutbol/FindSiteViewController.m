@@ -53,7 +53,6 @@
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
     _zipcodeTextfield.keyboardType = UIKeyboardTypeNumberPad;
-//    _stateTextField.inputView = selectStateController.inputView;
     _sportTextField.inputView = _sportPicker.inputView;
     _siteselectView.layer.cornerRadius = 6;
     stateabreviation = @"";
@@ -180,7 +179,12 @@
 - (IBAction)submitButtonClicked:(id)sender {
     if (((_zipcodeTextfield.text.length > 0) || (_cityTextField.text.length > 0) || (_sitenameTextField.text.length > 0) ||
         (_stateTextField.text.length > 0) || (_countryTextField.text.length > 0)) && (_sportTextField.text.length > 0)) {
-        [self performSegueWithIdentifier:@"SelectSiteSegue" sender:self];
+        
+        if (_findsite)
+            [self.navigationController popViewControllerAnimated:YES];
+        else
+            [self performSegueWithIdentifier:@"SelectSiteSegue" sender:self];
+        
      } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!"
                                         message:@"Please enter valid search criteria! At least Country and Sport is required."
