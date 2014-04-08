@@ -35,7 +35,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
     
     _fgmTextField.keyboardType = UIKeyboardTypeNumberPad;
     _fgaTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -49,6 +48,12 @@
     _blocksTextField.keyboardType = UIKeyboardTypeNumberPad;
     _offrbTextField.keyboardType = UIKeyboardTypeNumberPad;
     _defrbTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _turnoverTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _stealsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    _threefgpTextField.enabled = NO;
+    _fgpTextField.enabled = NO;
+    _ftpTextField.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -61,6 +66,7 @@
     [super viewWillAppear:animated];
     _playernameLabel.text = [NSString stringWithFormat:@"%@%@%@", player.logname, @" Stats vs. ", game.opponent_mascot];
     
+    self.title = player.numberLogname;
     stats = [player findBasketballGameStatEntries:game.id];
     originalStats = [stats copy];
     _fgaTextField.text = [stats.twoattempt stringValue];
@@ -75,6 +81,23 @@
     _blocksTextField.text = [stats.blocks stringValue];
     _offrbTextField.text = [stats.offrebound stringValue];
     _defrbTextField.text = [stats.defrebound stringValue];
+    _turnoverTextField.text = [stats.turnovers stringValue];
+    _stealsTextField.text = [stats.steals stringValue];
+    
+    if ([stats.twomade intValue] > 0)
+        _fgpTextField.text = [NSString stringWithFormat:@"%.02f", [stats.twomade floatValue] / [stats.twoattempt floatValue]];
+    else
+        _fgpTextField.text = @"0.0";
+
+    if ([stats.threemade intValue] > 0)
+        _threefgpTextField.text = [NSString stringWithFormat:@"%.02f", [stats.threemade floatValue] / [stats.threeattempt floatValue]];
+    else
+        _threefgpTextField.text = @"0.0";
+    
+    if ([stats.ftmade intValue] > 0)
+        _ftpTextField.text = [NSString stringWithFormat:@"%.02f", [stats.ftmade floatValue] / [stats.ftattempt floatValue]];
+    else
+        _ftpTextField.text = @"0.0";
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -109,6 +132,23 @@
         return YES;
     else
         return NO;
+}
+
+- (IBAction)submitButtonClicked:(id)sender {
+    [stats saveStats];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

@@ -8,7 +8,6 @@
 
 #import "EazesportzRetrieveFeaturedPhotos.h"
 #import "EazesportzAppDelegate.h"
-#import "Photo.h"
 
 @implementation EazesportzRetrieveFeaturedPhotos {
     int responseStatusCode;
@@ -20,9 +19,15 @@
 
 @synthesize featuredphotos;
 
+- (id)init {
+    if (self = [super init] ) {
+        featuredphotos = nil;
+        return  self;
+    } else
+        return nil;
+}
+
 - (void)retrieveFeaturedPhotos:(NSString *)sportid Token:(NSString *)token {
-    featuredphotos = [[NSMutableArray alloc] init];
-    
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSURL *url;
     
@@ -59,14 +64,28 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
+    
     if (responseStatusCode == 200) {
-        featuredphotos = [[NSMutableArray alloc] init];
-        for (int i = 0; i < serverData.count; i++) {
-            [featuredphotos addObject:[[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]]];
+        if (featuredphotos) {
+            NSMutableArray *photolist = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < serverData.count; i++) {
+                Photo *photo = [[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]];
+                [self replaceFeaturedPhotoImages:photo];
+                [photolist addObject:photo];
+            }
+            
+            [self cleanUpFeaturedPhotosList:photolist];
+        } else {
+            featuredphotos = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < serverData.count; i++) {
+                Photo *photo = [[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]];
+                [photo loadImagesInBackground];
+                [featuredphotos addObject:photo];
+            }
         }
-        currentSettings.featuredPhotos = featuredphotos;
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FeaturedPhotosChangedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
@@ -83,6 +102,110 @@
         return  newrequest;
     } else {
         return request;
+    }
+}
+
+- (void)addFeaturedPhoto:(Photo *)photo {
+    [featuredphotos addObject:photo];
+}
+
+- (void)removeFeaturedPhoto:(Photo *)photo {
+    [featuredphotos removeObject:photo];
+}
+
+- (void)saveFeaturedPhotos {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    
+    NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/photos/updatefeaturedphotos.json?team_id=",
+                                        currentSettings.team.teamid, @"&auth_token=", currentSettings.user.authtoken]];
+    
+    NSMutableArray *thephotos = [[NSMutableArray alloc] init];
+    for (int i = 0; i < featuredphotos.count; i++) {
+        [thephotos addObject:[[featuredphotos objectAtIndex:i] photoid]];
+    }
+    
+    NSMutableDictionary *featuredphotolist = [[NSMutableDictionary alloc] initWithObjectsAndKeys:thephotos, @"photo_ids", nil];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:featuredphotolist options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    if ([httpResponse statusCode] != 200) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error adding photo to featured photo list"
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
+- (BOOL)isFeaturedPhoto:(Photo *)photo {
+    BOOL found = NO;
+    
+    for (int i = 0; i < featuredphotos.count; i++) {
+        if ([[[featuredphotos objectAtIndex:i] photoid] isEqualToString:photo.photoid]) {
+            found = YES;
+            break;
+        }
+    }
+    
+    return found;
+}
+
+ - (void)replaceFeaturedPhotoImages:(Photo *)photo {
+     BOOL found = NO;
+     
+     for (int i = 0; i < featuredphotos.count; i++) {
+     
+         if ([[[featuredphotos objectAtIndex:i] photoid] isEqualToString:photo.photoid]) {
+             found = YES;
+             break;
+         }
+     }
+     
+     if (!found) {
+         [photo loadImagesInBackground];
+         [featuredphotos addObject:photo];
+     }
+ }
+
+- (void)cleanUpFeaturedPhotosList:(NSMutableArray *)photolist {
+    
+    for (int i = 0; i < featuredphotos.count; i++) {
+        BOOL found = NO;
+        
+        for (int cnt = 0; cnt < photolist.count; cnt++) {
+            if ([[[photolist objectAtIndex:cnt] photoid] isEqualToString:[[featuredphotos objectAtIndex:i] photoid] ]) {
+                found = YES;
+                break;
+            }
+        }
+        
+        if (!found) {
+            [featuredphotos removeObjectAtIndex:i];
+        }
     }
 }
 

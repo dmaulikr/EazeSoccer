@@ -29,6 +29,10 @@
 @property(nonatomic, strong) NSNumber *teamonly;
 @property(nonatomic, strong) NSString *teamid;
 
+@property (nonatomic, strong) UIImage *thumbimage;
+@property (nonatomic, strong) UIImage *mediumimage;
+@property (nonatomic, strong) UIImage *largeimage;
+
 @property(nonatomic, strong) NSString *httperror;
 
 - (id)initWithDirectory:(NSDictionary *)sponsorDictionary;

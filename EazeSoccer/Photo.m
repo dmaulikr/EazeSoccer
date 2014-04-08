@@ -64,7 +64,7 @@
         } else
             self.thumbnail_url = @"";
         
-        [self loadImages];
+//        [self loadImages];
         self.description = [items objectForKey:@"description"];
         self.displayname = [items objectForKey:@"displayname"];
         self.teamid = [items objectForKey:@"teamid"];
@@ -141,7 +141,7 @@
     } else {
         thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
     }
-    
+
     if (medium_url.length > 0) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
@@ -152,7 +152,7 @@
     } else {
         mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
     }
-    
+
     if (large_url.length > 0) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
@@ -176,6 +176,10 @@
     NSData *data = UIImageJPEGRepresentation(image, 0.7);
     [data writeToFile:photofile atomically:YES];
     return YES;
+}
+
+- (void)loadImagesInBackground {
+    [self loadImages];
 }
 
 @end

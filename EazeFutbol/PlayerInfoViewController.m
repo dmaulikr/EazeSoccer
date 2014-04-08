@@ -21,6 +21,7 @@
 #import "EazeFootballPlayerStatsViewController.h"
 #import "EazeSoccerPlayerStatsViewController.h"
 #import "EazePlayerBioViewController.h"
+#import "EditPlayerViewController.h"
 
 @interface PlayerInfoViewController () <UIAlertViewDelegate>
 @end
@@ -182,6 +183,9 @@
         }
     } else if ([segue.identifier isEqualToString:@"PlayerBioSegue"]) {
         EazePlayerBioViewController *destController = segue.destinationViewController;
+        destController.player = player;
+    } else if ([segue.identifier isEqualToString:@"EditPlayerSegue"]) {
+        EditPlayerViewController *destController = segue.destinationViewController;
         destController.player = player;
     }
 }

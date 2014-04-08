@@ -35,4 +35,7 @@
 
 - (BOOL)saveStats;
 
+- (void)saveScoringStats;
+- (void)saveOtherStats;
+
 @end

@@ -160,8 +160,8 @@
         [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
         [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
         [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
-        [[[EazesportzRetrieveFeaturedPhotos alloc] init] retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
-        [[[EazesportzRetrieveFeaturedVideosController alloc] init] retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
+        [[currentSettings teamPhotos] retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
+        [[currentSettings teamVideos] retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
         
         if (currentSettings.user.authtoken.length > 0)
             [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];

@@ -43,7 +43,6 @@
     self.view.backgroundColor = [UIColor clearColor];
     _teamNameLabel.layer.cornerRadius = 4;
     _usernameLabel.layer.cornerRadius = 4;
-    _settingsView.layer.cornerRadius = 6;
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,28 +73,8 @@
             _teamNameLabel.text = currentSettings.team.team_name;
         else
             _teamNameLabel.text = @"Select Team";
-        
-        if (currentSettings.user.userid.length > 0) {
-            [_logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
-            _usernameLabel.text = currentSettings.user.email;
-        } else {
-            [_logoutButton setTitle:@"Login" forState:UIControlStateNormal];
-            _usernameLabel.text = @"No User Logged in!";
-        }
-        
-        if ((currentSettings.user.admin) && (currentSettings.user.adminsite.length > 0)) {
-            _addSiteLabel.text = @"Manage My Site";
-            [_addSiteButton setTitle:@"My Site" forState:UIControlStateNormal];
-        } else if ((currentSettings.user.admin) && (currentSettings.user.adminsite.length == 0)) {
-            _addSiteLabel.text = @"My Site Info";
-            [_addSiteButton setTitle:@"My Site" forState:UIControlStateNormal];
-        } else if (!currentSettings.isSiteOwner) {
-            _addSiteLabel.text = @"Create New Site";
-            [_addSiteButton setTitle:@"New Site" forState:UIControlStateNormal];
-        }
     }
-    
-    _contactLabel.text = currentSettings.sport.sitename;
+    [_settingsTableView reloadData];
 }
 
 - (IBAction)logoutButtonClicked:(id)sender {
@@ -229,7 +208,9 @@
 }
 
 - (IBAction)addSiteButtonClicked:(id)sender {
-    if (currentSettings.user.adminsite.length > 0) {
+    if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id])) {
+        [self performSegueWithIdentifier:@"EditSiteSegue" sender:self];
+    } else if (currentSettings.user.adminsite.length > 0) {
         [[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:currentSettings.user.adminsite Token:currentSettings.user.authtoken];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -271,7 +252,7 @@
                                 }
                             }];
         }
-    } else if ((currentSettings.user.userid.length > 0) && (currentSettings.user.admin) && (currentSettings.user.adminsite.length == 0)) {
+    } else if ((currentSettings.user.admin) && (currentSettings.user.adminsite.length == 0)) {
         [self performSegueWithIdentifier:@"EditSiteSegue" sender:self];
     } else {
         newsite = YES;
@@ -286,6 +267,192 @@
     } else if (([segue.identifier isEqualToString:@"LoginSegue"]) && (newsite)) {
         EazeLoginViewController *destController = segue.destinationViewController;
         destController.registeradmin = YES;
+    }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id]))
+        return 7;
+    else if (currentSettings.user.userid.length > 0)
+        return 6;
+    else
+        return 5;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"SettingsTableViewCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    // Configure the cell...
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    }
+    
+    cell.tag = indexPath.row;
+    
+    switch (indexPath.row) {
+            
+        case 0:
+            cell.backgroundColor = [UIColor whiteColor];
+            if (currentSettings.team.teamid.length > 0) {
+                cell.imageView.image = [currentSettings.team getImage:@"tiny"];
+                cell.detailTextLabel.text = currentSettings.sport.sitename;
+                cell.textLabel.text = @"Contacts";
+            } else {
+                cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
+                cell.textLabel.text = @"Welcome to Eazesportz";
+                cell.detailTextLabel.text = @"Contact us!";
+            }
+            break;
+            
+        case 1:
+            cell.backgroundColor = [UIColor whiteColor];
+            
+            if (currentSettings.user.userid.length > 0) {
+                if (currentSettings.user.tinyimage == nil) {
+                    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                    //this will start the image loading in bg
+                    dispatch_async(concurrentQueue, ^{
+                        NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:currentSettings.user.tiny]];
+                        
+                        //this will set the image when loading is finished
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (cell.tag == indexPath.row) {
+                                cell.imageView.image = [UIImage imageWithData:image];
+                                [cell setNeedsLayout];
+                            }
+                        });
+                    });
+                } else
+                    cell.imageView.image = currentSettings.user.tinyimage;
+                
+                cell.textLabel.text = @"My Profile";
+                cell.detailTextLabel.text = currentSettings.user.username;
+            } else {
+                cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
+                cell.textLabel.text = @"My Profile";
+                cell.detailTextLabel.text = @"Login to manage your profile!";
+            }
+            break;
+            
+        case 2:
+            cell.backgroundColor = [UIColor whiteColor];
+            if (currentSettings.team.teamid.length > 0) {
+                cell.imageView.image = [currentSettings.team getImage:@"tiny"];
+                cell.textLabel.text = currentSettings.team.team_name;
+                cell.detailTextLabel.text = @"Change Team";
+            } else  {
+                cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
+                cell.textLabel.text = @"Change Team";
+                cell.detailTextLabel.text = @"Select Program or Player first.";
+            }
+            break;
+            
+        case 3:
+            cell.backgroundColor = [UIColor whiteColor];
+            if (currentSettings.sport.id.length > 0)
+                cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            else
+                cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
+            
+            cell.textLabel.text = @"Change Sport";
+            cell.detailTextLabel.text = @"Find a Program or Player";
+            break;
+            
+        case 4:
+            cell.backgroundColor = [UIColor whiteColor];
+            if (currentSettings.user.userid.length > 0) {
+                if (currentSettings.user.tinyimage == nil) {
+                    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                    //this will start the image loading in bg
+                    dispatch_async(concurrentQueue, ^{
+                        NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:currentSettings.user.tiny]];
+                        
+                        //this will set the image when loading is finished
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (cell.tag == indexPath.row) {
+                                cell.imageView.image = [UIImage imageWithData:image];
+                                [cell setNeedsLayout];
+                            }
+                        });
+                    });
+                } else
+                    cell.imageView.image = currentSettings.user.tinyimage;
+                
+                cell.textLabel.text = currentSettings.user.email;
+                cell.detailTextLabel.text = @"Logout";
+            } else {
+                cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
+                cell.textLabel.text = @"Login to Eazesportz!";
+                cell.detailTextLabel.text = @"";
+            }
+            break;
+            
+        case 5:
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.imageView.image = nil;
+            if (currentSettings.user.admin) {
+                cell.textLabel.text = @"Manage My Site";
+                if (currentSettings.user.adminsite.length > 0)
+                    cell.detailTextLabel.text = @"Update my site information";
+                else
+                    cell.detailTextLabel.text = @"Finish create my new site!";
+            } else if (currentSettings.user.userid.length > 0) {
+                cell.textLabel.text = @"Create a site";
+                cell.detailTextLabel.text = @"Promote a program or player ...";
+            }
+            break;
+            
+        default:
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            cell.textLabel.text = @"Sponsors";
+            cell.detailTextLabel.text = @"Manage my sponsors ....";
+            break;
+    }
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (currentSettings.team.teamid.length > 0) {
+        switch (indexPath.row) {
+                
+            case 0:
+                [self performSegueWithIdentifier:@"ContactSegue" sender:self];
+                break;
+                
+            case 1:
+                [self profileButtonClicked:self];
+                break;
+                
+            case 2:
+                if (currentSettings.team.teamid.length > 0)
+                    [self changeTeamButtonClicked:self];
+                break;
+                
+            case 3:
+                [self siteButtonClicked:self];
+                break;
+                
+            case 4:
+                [self logoutButtonClicked:self];
+                break;
+                
+            case 5:
+                [self addSiteButtonClicked:self];
+                break;
+                
+            default:
+                [self performSegueWithIdentifier:@"SponsorSegue" sender:self];
+                break;
+        }
     }
 }
 

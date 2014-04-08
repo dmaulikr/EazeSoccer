@@ -34,4 +34,5 @@
 - (IBAction)cameraRollButtonClicked:(id)sender;
 - (IBAction)submitButtonClicked:(id)sender;
 - (IBAction)deleteButtonClicked:(id)sender;
+- (IBAction)cameraButtonClicked:(id)sender;
 @end

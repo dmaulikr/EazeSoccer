@@ -23,5 +23,6 @@
 - (IBAction)submitButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *importButton;
 - (IBAction)importButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *importMessageLabel;
 
 @end

@@ -168,4 +168,78 @@
     }
 }
 
+- (void)saveBasketballStats:(NSMutableDictionary *)dictionary {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *aurl;
+    
+    if (basketball_stat_id.length == 0)
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athleteid, @"/basketball_stats.json?gameschedule_id=",
+                                     gameschedule_id, @"&auth_token=", currentSettings.user.authtoken]];
+    else {
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", currentSettings.sport.id, @"/athletes/", athleteid, @"/basketball_stats/", basketball_stat_id,
+                                     @".json?auth_token=", currentSettings.user.authtoken]];
+        
+    }
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:dictionary, @"basketball_stat", nil];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    if (basketball_stat_id.length > 0) {
+        [request setHTTPMethod:@"PUT"];
+    } else {
+        [request setHTTPMethod:@"POST"];
+    }
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *items = [serverData objectForKey:@"bbstats"];
+    
+    if ([httpResponse statusCode] == 200) {
+        
+        if (basketball_stat_id.length == 0) {
+            basketball_stat_id = [items objectForKey:@"_id"];
+        }
+    } else {
+        httperror = [items objectForKey:@"error"];
+    }
+}
+
+- (void)saveScoringStats {
+    NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id",
+                                     [twoattempt stringValue] , @"twoattempt", [twomade stringValue], @"twomade",
+                                     [threeattempt stringValue], @"threeattempt", [threemade stringValue], @"threemade",
+                                     [ftattempt stringValue], @"ftattempt", [ftmade stringValue], @"ftmade", @"Totals", @"livestats", nil];
+    [self saveBasketballStats:statDict];
+}
+
+- (void)saveOtherStats {
+    NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: gameschedule_id, @"gameschedule_id",
+                                     [fouls stringValue], @"fouls", [assists stringValue], @"assists", [steals stringValue], @"steals",
+                                     [blocks stringValue], @"blocks", [offrebound stringValue], @"offrebound",
+                                     [defrebound stringValue], @"defrebound", [turnovers stringValue], @"turnovers",  @"Totals", @"livestats", nil];
+    [self saveBasketballStats:statDict];
+}
+
 @end

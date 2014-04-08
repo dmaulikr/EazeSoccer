@@ -642,7 +642,7 @@
             destController.position = @"Def";
         } else if (([visiblestats isEqualToString:@"Kick"]) && (indexpath.section == 0)) {
             destController.athlete = [currentSettings findAthlete:[[kickerlist objectAtIndex:indexpath.row] athlete_id]];
-            destController.position = @"Kick";
+            destController.position = @"PK";
         } else if (([visiblestats isEqualToString:@"Kick"]) && (indexpath.section == 1)) {
             destController.athlete = [currentSettings findAthlete:[[punterlist objectAtIndex:indexpath.row] athlete_id]];
             destController.position = @"Punt";

@@ -201,6 +201,7 @@
     Gamelogs *log = [[game gamelogs] objectAtIndex:indexPath.row];
     cell.textLabel.font = [UIFont systemFontOfSize:10];
     cell.textLabel.text = [log logentrytext];
+    cell.textLabel.textColor = [UIColor whiteColor];
     
     if ((log.hasphotos) || (log.hasvideos)) {
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

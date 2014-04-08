@@ -256,4 +256,16 @@
     _bannerView.hidden = YES;
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textFied {
+    textFied.text = @"";
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 @end

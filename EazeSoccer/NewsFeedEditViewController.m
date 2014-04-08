@@ -62,7 +62,7 @@
     _coachTextField.inputView = coachController.inputView;
     _gameTextField.inputView = gameController.inputView;
     _newsTextView.layer.borderWidth = 1.0f;
-    _newsTextView.layer.borderColor = [[UIColor grayColor] CGColor];
+    _newsTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, nil];
     self.navigationController.toolbarHidden = YES;

@@ -293,28 +293,7 @@
         [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
     else {
         [currentSettings setUpSport:currentSettings.user.adminsite];
-        
-/*        if ([[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:currentSettings.user.adminsite Token:currentSettings.user.authtoken]) {
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths objectAtIndex:0];
-            
-            //make a file name to write the data to using the documents directory:
-            NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt", documentsDirectory];
-            NSString *sportFile = [NSString stringWithFormat:@"%@/currentsport.txt", documentsDirectory];
-            //create content - four lines of text
-            NSString *content = currentSettings.sport.id;
-            //save content to the documents directory
-            [content writeToFile:fileName atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
-            [currentSettings.sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
-            
-            getTeams = [[EazesportzRetrieveTeams alloc] init];
-            if ([[[EazesportzRetrieveTeams alloc] init] retrieveTeamsSynchronous:currentSettings.sport.id Token:currentSettings.user.authtoken]) {
-                currentSettings.teams = getTeams.teams;
-                currentSettings.team = nil;
-            }
-        }
- */
-        
+                
         UITabBarController *tabBarController = self.tabBarController;
         
         for (UIViewController *viewController in tabBarController.viewControllers)

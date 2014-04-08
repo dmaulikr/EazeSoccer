@@ -31,7 +31,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     _playerBioTextView.layer.borderWidth = 1.0f;
-    _playerBioTextView.layer.borderColor = [[UIColor grayColor] CGColor];
+    _playerBioTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -98,6 +98,11 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error Saving Bio" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
     }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

@@ -260,12 +260,12 @@
                 break;
                 
             case 3:
-                if (currentSettings.featuredPhotos)
+                if (currentSettings.teamPhotos.featuredphotos.count > 0)
                     [self performSegueWithIdentifier:@"FeaturedPhotosSegue" sender:self];
                 break;
                 
             case 4:
-                if (currentSettings.featuredVideos)
+                if (currentSettings.teamVideos.featuredvideos.count > 0)
                     [self performSegueWithIdentifier:@"FeaturedVideosSegue" sender:self];
                 break;
                 
@@ -304,7 +304,7 @@
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"FeaturedPhotosSegue"]) {
         EazeFeaturedPhotosViewController *destController = segue.destinationViewController;
-        destController.photos = currentSettings.featuredPhotos;
+        destController.photos = currentSettings.teamPhotos.featuredphotos;
     } else if ([segue.identifier isEqualToString:@"BroadcastEventsSegue"]) {
         EazeEventViewController *destController = segue.destinationViewController;
         destController.sport = currentSettings.sport;
@@ -354,8 +354,8 @@
     [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
-    [[[EazesportzRetrieveFeaturedVideosController alloc] init] retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
-    [[[EazesportzRetrieveFeaturedPhotos alloc] init] retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
+    [currentSettings.teamVideos retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
+    [currentSettings.teamPhotos retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
     
     if (currentSettings.user.userid.length > 0) {
         [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid

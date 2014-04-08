@@ -10,6 +10,7 @@
 #import "EazesportzAppDelegate.h"
 #import "EazesportzStatTableHeaderCell.h"
 #import "EazeBasketballScoringTableCell.h"
+#import "BasketballTotalStatsViewController.h"
 
 @interface EazeBballPlayerStatsViewController ()
 
@@ -216,6 +217,22 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 30.0;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([currentSettings isSiteOwner]) {
+        [self performSegueWithIdentifier:@"EditTotalsSegue" sender:self];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSIndexPath *indexPath = [_playerStatsTableView indexPathForSelectedRow];
+    
+    if ([segue.identifier isEqualToString:@"EditTotalsSegue"]) {
+        BasketballTotalStatsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    }
 }
 
 - (IBAction)statSelectorButtonClicked:(id)sender {

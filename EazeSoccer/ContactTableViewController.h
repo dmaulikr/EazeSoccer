@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ContactTableViewController : UITableViewController
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addBarButton;
 
 @end

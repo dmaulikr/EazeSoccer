@@ -66,5 +66,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteBarButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraBarButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraRollBarButton;
+@property (weak, nonatomic) IBOutlet UISwitch *featuredSwitch;
 
 @end

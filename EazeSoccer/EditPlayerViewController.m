@@ -126,7 +126,7 @@
         _seasonTextField.text = player.season;
         _bioTextView.text = player.bio;
         
-        _playerImage.image = [currentSettings getRosterTinyImage:player];
+        _playerImage.image = [currentSettings getRosterThumbImage:player];
 
         _positionTextField.text = player.position;
         
@@ -362,7 +362,10 @@
         if (newmedia)
             UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
         
-       _playerImage.image = [currentSettings normalizedImage:image scaledToSize:512];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            _playerImage.image = [currentSettings normalizedImage:image scaledToSize:512];
+        else
+            _playerImage.image = [currentSettings normalizedImage:image scaledToSize:125];
         
         imageselected = YES;
     }

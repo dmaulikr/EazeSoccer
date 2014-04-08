@@ -14,6 +14,7 @@
 #import "EazesportzFootballStatTotalsTableCell.h"
 #import "EazesportzStatTableHeaderCell.h"
 #import "EazesportzRetrieveAlerts.h"
+#import "UpdateSoccerTotalsViewController.h"
 
 @interface EazesportzSoccerGameSummaryViewController ()
 
@@ -40,7 +41,22 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    
+    [self textFieldConfiguration:_secondsTextField];
+    [self textFieldConfiguration:_minutesTextField];
+    [self textFieldConfiguration:_visitorScoreTextField];
+    [self textFieldConfiguration:_visitorCKTextField];
+    [self textFieldConfiguration:_visitorShotsTextField];
+    [self textFieldConfiguration:_visitorSavesTextField];
+    [self textFieldConfiguration:_periodsTextField];
+    
+    _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorCKTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorShotsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorSavesTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _periodsTextField.keyboardType = UIKeyboardTypeNumberPad;
 }
 
 - (void)didReceiveMemoryWarning
@@ -60,22 +76,30 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    visiblestats = @"Team";
+    NSArray *gametime = [game.currentgametime componentsSeparatedByString:@":"];
+    _minutesTextField.text = [gametime objectAtIndex:0];
+    _secondsTextField.text = [gametime objectAtIndex:1];
+    _periodsTextField.text = [game.period stringValue];
+    _visitorSavesTextField.text = [game.socceroppsaves stringValue];
+    _visitorCKTextField.text = [game.socceroppck stringValue];
+    _visitorShotsTextField.text = [game.socceroppsog stringValue];
     
+    visiblestats = @"Team";
     _hometeamLabel.text = currentSettings.team.mascot;
     _homeimage.image = [currentSettings.team getImage:@"tiny"];
     _visitorteamLabel.text = game.opponent_mascot;
-    _vsitorimage.image = [game opponentImage];
-    _visitorscoreLabel.text = [game.opponentscore stringValue];
-    _homescoreLabel.text = [game.homescore stringValue];
-    _periodLabel.text = [game.period stringValue];
+    _vsitorimage.image = [currentSettings getOpponentImage:game];
+    _homescoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
     _homeCkLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeCK]];
     _homeshotsLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeShots]];
     _homesavesLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeSaves]];
-    _visitorsavesLabel.text = [game.socceroppsaves stringValue];
-    _visitorshotsLabel.text = [game.socceroppsog stringValue];
-    _visitorCKLabel.text = [game.socceroppck stringValue];
-    _clockLabel.text = game.currentgametime;
+    
+    if ([currentSettings isSiteOwner])
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, self.saveBarButton, nil];
+    else
+        self.navigationItem.rightBarButtonItem = self.refreshBarButton;
+    
+    self.navigationController.toolbarHidden = YES;
     
     [_statTableView reloadData];
 }
@@ -93,17 +117,22 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSIndexPath *indexPath = [_statTableView indexPathForSelectedRow];
+    
     if ([segue.identifier isEqualToString:@"GameStatsSegue"]) {
         EazeSoccerStatsViewController *destController = segue.destinationViewController;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
-        NSIndexPath *indexPath = [_statTableView indexPathForSelectedRow];
         EazeSoccerStatsViewController *destController = segue.destinationViewController;
         
         if (indexPath.section == 0)
             destController.athlete = [currentSettings.roster objectAtIndex:indexPath.row];
         else
             destController.athlete = [goalies objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"EditPlayerStatsSegue"]) {
+        UpdateSoccerTotalsViewController *destController = segue.destinationViewController;
+        destController.game = game;
+        destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
     }
 }
 
@@ -247,10 +276,10 @@
         Soccer *stats;
         
         if (indexPath.section == 0) {
-            cell.label1.text = [stats.goals stringValue];
             Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
             cell.playerLabel.text = player.logname;
             stats = [player findSoccerGameStats:game.id];
+            cell.label1.text = [stats.goals stringValue];
             cell.label2.text = [stats.shotstaken stringValue];
             cell.label3.text = [stats.assists stringValue];
             cell.label4.text = [stats.steals stringValue];
@@ -276,9 +305,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([visiblestats isEqualToString:@"Player"]) {
         if (indexPath.row < currentSettings.roster.count) {
-            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+            if ([currentSettings isSiteOwner])
+                 [self performSegueWithIdentifier:@"EditPlayerStatsSegue" sender:self];
+           else
+                [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
         } else if (indexPath.row < goalies.count) {
-            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+            if ([currentSettings isSiteOwner])
+                [self performSegueWithIdentifier:@"EditPlayerStatsSegue" sender:self];
+            else
+                [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
         }
     }
 }
@@ -336,6 +371,48 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 30.0;
+}
+
+- (void)textFieldConfiguration:(UITextField *)textField {
+    if (currentSettings.isSiteOwner) {
+        textField.enabled = YES;
+        textField.backgroundColor = [UIColor whiteColor];
+        textField.textColor = [UIColor blackColor];
+    } else {
+        textField.enabled = NO;
+        textField.backgroundColor = [UIColor blackColor];
+        textField.textColor = [UIColor yellowColor];
+    }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
+    NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+    BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+    
+    if (myStringMatchesRegEx) {
+        return YES;
+    } else
+        return NO;
+}
+
+- (void)textFieldWillBeginEditing:(UITextField *)textFied {
+    textFied.text = @"";
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    game.socceroppsog = [NSNumber numberWithInt:[_visitorShotsTextField.text intValue]];
+    game.socceroppsaves = [NSNumber numberWithInt:[_visitorSavesTextField.text intValue]];
+    game.socceroppck = [NSNumber numberWithInt:[_visitorCKTextField.text intValue]];
+    game.currentgametime = [NSString stringWithFormat:@"%@:%@", _minutesTextField.text, _secondsTextField.text];
+    game.period = [NSNumber numberWithInt:[_periodsTextField.text intValue]];
+    game.opponentscore = [NSNumber numberWithInt:[_visitorScoreTextField.text intValue]];
+    [game saveGameschedule];
 }
 
 @end

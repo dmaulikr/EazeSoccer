@@ -21,7 +21,7 @@
     NSArray *serverData;
     NSMutableData *theData;
     NSMutableArray *contacts;
-    int responseStatusCode;
+    long responseStatusCode;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -56,15 +56,29 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSURL *url;
     
-    if (currentSettings.user.authtoken)
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                    @"/sports/", currentSettings.sport.id, @"/contacts.json?auth_token=", currentSettings.user.authtoken]];
-    else
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                    @"/sports/", currentSettings.sport.id, @"/contacts.json"]];
+    if (currentSettings.sport.id.length > 0) {
+        if (currentSettings.user.authtoken)
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/contacts.json?auth_token=", currentSettings.user.authtoken]];
+        else
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/contacts.json"]];
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    } else {
+        Contact *contact = [[Contact alloc] init];
+        contact.title = @"Eazesportz, LLC.";
+        contact.email = @"info@eazesportz.com";
+        contacts = [[NSMutableArray alloc] init];
+        [contacts addObject:contacts];
+        [self.tableView reloadData];
+    }
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if (([currentSettings isSiteOwner]) && ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])) {
+        self.navigationItem.rightBarButtonItem = self.addBarButton;
+        self.navigationController.toolbarHidden = YES;
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -158,17 +172,18 @@
     [cell.contactMobile setText:[[contacts objectAtIndex:indexPath.row] mobile]];
     [cell.contactFax setText:[[contacts objectAtIndex:indexPath.row] fax]];
     [cell.contactEmail setText:[[contacts objectAtIndex:indexPath.row] email]];
+    
+    if ([currentSettings isSiteOwner]) {
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    }
+    
     return cell;
 }
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    //     gomobisportsNewsViewController *detailViewController = [[gomobisportsNewsViewController alloc] initWithNibName:@"NewsDetail" bundle:nil];
-    // Pass the selected object to the new view controller.
-    //     [self.navigationController pushViewController:detailViewController animated:YES];
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self performSegueWithIdentifier:@"ContactInfoSegue" sender:self];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -180,7 +195,10 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
-    return YES;
+    if ([currentSettings isSiteOwner])
+        return YES;
+    else
+        return  NO;
 }
 
 // Override to support editing the table view.
@@ -220,17 +238,5 @@
     return YES;
 }
 */
-
-/*
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
- */
 
 @end

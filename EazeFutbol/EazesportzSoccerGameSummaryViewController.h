@@ -16,18 +16,12 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *hometeamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *visitorteamLabel;
-@property (weak, nonatomic) IBOutlet UILabel *clockLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *homeimage;
 @property (weak, nonatomic) IBOutlet UIImageView *vsitorimage;
 @property (weak, nonatomic) IBOutlet UILabel *homescoreLabel;
-@property (weak, nonatomic) IBOutlet UILabel *visitorscoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *homeshotsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *homeCkLabel;
 @property (weak, nonatomic) IBOutlet UILabel *homesavesLabel;
-@property (weak, nonatomic) IBOutlet UILabel *visitorshotsLabel;
-@property (weak, nonatomic) IBOutlet UILabel *visitorCKLabel;
-@property (weak, nonatomic) IBOutlet UILabel *visitorsavesLabel;
-@property (weak, nonatomic) IBOutlet UILabel *periodLabel;
 
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
@@ -36,5 +30,16 @@
 - (IBAction)playerstatsButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *statTableView;
 @property (weak, nonatomic) IBOutlet UIButton *playerStatsButton;
+
+@property (weak, nonatomic) IBOutlet UITextField *minutesTextField;
+@property (weak, nonatomic) IBOutlet UITextField *secondsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *periodsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *visitorScoreTextField;
+@property (weak, nonatomic) IBOutlet UITextField *visitorShotsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *visitorCKTextField;
+@property (weak, nonatomic) IBOutlet UITextField *visitorSavesTextField;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
+- (IBAction)saveBarButtonClicked:(id)sender;
 
 @end

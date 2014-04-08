@@ -15,6 +15,10 @@
 #import "GameSchedule.h"
 #import "Alert.h"
 #import "Sponsor.h"
+#import "Photo.h"
+
+#import "EazesportzRetrieveFeaturedPhotos.h"
+#import "EazesportzRetrieveFeaturedVideosController.h"
 
 #import <AWSRuntime/AWSRuntime.h>
 #import <AWSS3/AWSS3.h>
@@ -36,11 +40,9 @@
 @property(nonatomic, strong) NSMutableArray *teams;
 @property(nonatomic, strong) NSMutableArray *sponsors;
 @property(nonatomic, strong) NSMutableArray *alerts;
+
 @property(nonatomic, strong) NSMutableArray *rosterimages;
 @property(nonatomic, strong) NSMutableArray *opponentimages;
-
-@property(nonatomic, strong) NSMutableArray *featuredPhotos;
-@property(nonatomic, strong) NSMutableArray *featuredVideos;
 
 @property(nonatomic, strong) NSDate *lastAlertUpdate;
 @property(nonatomic, strong) NSDate *lastGameUpdate;
@@ -62,6 +64,9 @@
 @property(nonatomic, assign) BOOL firstuse;
 
 @property (nonatomic, strong) User *newuser;
+
+@property (nonatomic, strong) EazesportzRetrieveFeaturedPhotos *teamPhotos;
+@property (nonatomic, strong) EazesportzRetrieveFeaturedVideosController *teamVideos;
 
 - (UIImage *)getBannerImage;
 

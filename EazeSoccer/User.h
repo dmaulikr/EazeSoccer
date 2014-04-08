@@ -33,6 +33,9 @@
 @property(nonatomic, strong) NSString *awssecretkey;
 @property(nonatomic, strong) NSString *awskeyid;
 
+@property(nonatomic, strong) UIImage *thumbimage;
+@property(nonatomic, strong) UIImage *tinyimage;
+
 - (BOOL)isBasic;
 
 - (id)initWithDictionary:(NSDictionary *)userDictionary;

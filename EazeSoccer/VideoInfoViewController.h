@@ -54,5 +54,14 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraBarButton;
+- (IBAction)cameraBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cameraRollBarButton;
+- (IBAction)cameraRollBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
+- (IBAction)saveBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteBarButton;
+- (IBAction)deleteBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UISwitch *featuredSwitch;
 
 @end

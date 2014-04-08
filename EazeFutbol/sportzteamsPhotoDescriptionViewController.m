@@ -16,6 +16,7 @@
 #import "EazeBasketballGameSummaryViewController.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "EazeFootballGameSummaryViewController.h"
+#import "PhotoInfoViewController.h"
 
 @interface sportzteamsPhotoDescriptionViewController ()
 
@@ -161,6 +162,9 @@
     } else if ([segue.identifier isEqualToString:@"SoccerGameInfoSegue"]) {
         EazesportzSoccerGameSummaryViewController *destController = segue .destinationViewController;
         destController.game = [currentSettings findGame:photo.schedule];
+    } else if ([segue.identifier isEqualToString:@"EditPhotoSegue"]) {
+        PhotoInfoViewController *destController = segue.destinationViewController;
+        destController.photo = photo;
     }
 }
 

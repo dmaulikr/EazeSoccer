@@ -15,6 +15,7 @@
 #import "EazeBasketballGameSummaryViewController.h"
 #import "EazeFootballGameSummaryViewController.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
+#import "EazesportzFootballVideoInfoViewController.h"
 
 @interface sportzteamsMovieViewController ()
 
@@ -93,6 +94,13 @@
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+    
+    if ([currentSettings isSiteOwner])
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.playBarButton, self.editBarButton, nil];
+    else
+        self.navigationItem.rightBarButtonItem = self.playBarButton;
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -226,6 +234,9 @@
     }  else if ([segue.identifier isEqualToString:@"SoccerGameInfoSegue"]) {
         EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:videoclip.schedule];
+    } else if ([segue.identifier isEqualToString:@"EditVideoSegue"]) {
+        EazesportzFootballVideoInfoViewController *destController = segue.destinationViewController;
+        destController.video = videoclip;
     }
 }
 

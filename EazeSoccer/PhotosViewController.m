@@ -73,10 +73,10 @@
     _userSelectContainer.hidden = YES;
     
     if (([currentSettings.sport isPackageEnabled]) || ([currentSettings isSiteOwner])) {
-        if ((player) || (game) || (user))
-            [self getPhotos];
-        else if (photos)
-            [self teamButtonClicked:self];
+//        if ((player) || (game) || (user))
+//            [self getPhotos];
+//        else if (!photos)
+//            [self teamButtonClicked:self];
         
 //        if (photos) {
 //            [_collectionView reloadData];
@@ -289,7 +289,9 @@
     if (responseStatusCode == 200) {
         photos = [[NSMutableArray alloc] init];
         for (int i = 0; i < [serverData count]; i++) {
-            [photos addObject:[[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]]];
+            Photo *photo = [[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]];
+            [photo loadImagesInBackground];
+            [photos addObject:photo];
         }
         [activityIndicator stopAnimating];
         [_collectionView reloadData];

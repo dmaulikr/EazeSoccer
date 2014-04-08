@@ -153,11 +153,7 @@
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
             NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:tiny]];
-            
-            //this will set the image when loading is finished
-            dispatch_async(dispatch_get_main_queue(), ^{
-                tinyimage = [UIImage imageWithData:image];
-            });
+            tinyimage = [UIImage imageWithData:image];
         });
     } else {
         tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
@@ -169,11 +165,7 @@
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
             NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:thumb]];
-            
-            //this will set the image when loading is finished
-            dispatch_async(dispatch_get_main_queue(), ^{
-                thumbimage = [UIImage imageWithData:image];
-            });
+            thumbimage = [UIImage imageWithData:image];
         });
     } else {
         thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
@@ -185,11 +177,7 @@
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
             NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:medium]];
-            
-            //this will set the image when loading is finished
-            dispatch_async(dispatch_get_main_queue(), ^{
-                mediumimage = [UIImage imageWithData:image];
-            });
+            mediumimage = [UIImage imageWithData:image];
         });
     } else {
         mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];

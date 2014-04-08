@@ -7,11 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Photo.h"
 
 @interface EazesportzRetrieveFeaturedPhotos : NSObject
 
 @property(nonatomic,strong) NSMutableArray *featuredphotos;
 
 - (void)retrieveFeaturedPhotos:(NSString *)sportid Token:(NSString *)token;
+- (void)addFeaturedPhoto:(Photo *)photo;
+- (void)removeFeaturedPhoto:(Photo *)photo;
+- (void)saveFeaturedPhotos;
+- (BOOL)isFeaturedPhoto:(Photo *)photo;
 
 @end

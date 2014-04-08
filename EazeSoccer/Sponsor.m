@@ -37,6 +37,10 @@
 @synthesize teamonly;
 @synthesize teamid;
 
+@synthesize thumbimage;
+@synthesize mediumimage;
+@synthesize largeimage;
+
 @synthesize httperror;
 
 - (id)initWithDirectory:(NSDictionary *)sponsorDictionary {
@@ -71,6 +75,8 @@
             thumb = [sponsorDictionary objectForKey:@"thumb"];
         else
             thumb = @"";
+        
+        [self loadImages];
         
         return self;
     } else {
@@ -228,6 +234,42 @@
 - (id)initDelete {
     self = nil;
     return self;
+}
+
+
+- (void)loadImages {
+    if (thumb.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:thumb]];
+            thumbimage = [UIImage imageWithData:image];
+        });
+    } else {
+        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+
+    if (medium.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:medium]];
+            mediumimage = [UIImage imageWithData:image];
+        });
+    } else {
+        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (large.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:large]];
+            largeimage = [UIImage imageWithData:image];
+        });
+    } else {
+        largeimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
 }
 
 @end

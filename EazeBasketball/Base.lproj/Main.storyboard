@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="8YX-ce-x5E">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="8YX-ce-x5E">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--Tab Bar Controller-->
@@ -619,7 +619,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9Dy-gj-6mw">
-                                                <rect key="frame" x="20" y="49" width="100" height="106.99999999999999"/>
+                                                <rect key="frame" x="20" y="49" width="100" height="107"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Position:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ka-Fp-8E2">
@@ -3725,7 +3725,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fxf-2G-aSA">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="454"/>
+                                        <rect key="frame" x="0.0" y="64" width="320" height="454"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zen-g8-29k">
@@ -3895,7 +3895,7 @@
                                         </constraints>
                                     </view>
                                     <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="6ba-GJ-aHs">
-                                        <rect key="frame" x="0.0" y="468" width="320" height="50"/>
+                                        <rect key="frame" x="0.0" y="473" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="a58-nW-G2C"/>
@@ -3903,13 +3903,13 @@
                                     </adBannerView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="fxf-2G-aSA" firstAttribute="top" secondItem="KPV-cC-ovY" secondAttribute="top" id="17Y-fO-hBh"/>
-                                    <constraint firstItem="6ba-GJ-aHs" firstAttribute="top" secondItem="fxf-2G-aSA" secondAttribute="bottom" constant="14" id="4Hd-zs-epO"/>
+                                    <constraint firstItem="fxf-2G-aSA" firstAttribute="top" secondItem="KPV-cC-ovY" secondAttribute="top" constant="64" id="17Y-fO-hBh"/>
+                                    <constraint firstItem="6ba-GJ-aHs" firstAttribute="top" secondItem="fxf-2G-aSA" secondAttribute="bottom" constant="-45" id="4Hd-zs-epO"/>
                                     <constraint firstItem="fxf-2G-aSA" firstAttribute="trailing" secondItem="6ba-GJ-aHs" secondAttribute="trailing" id="E9F-m2-jzO"/>
                                     <constraint firstItem="fxf-2G-aSA" firstAttribute="leading" secondItem="6ba-GJ-aHs" secondAttribute="leading" id="JCn-ji-hqe"/>
                                     <constraint firstAttribute="trailing" secondItem="fxf-2G-aSA" secondAttribute="trailing" id="WYW-td-P91"/>
                                     <constraint firstItem="fxf-2G-aSA" firstAttribute="leading" secondItem="KPV-cC-ovY" secondAttribute="leading" id="lnM-0r-9mX"/>
-                                    <constraint firstAttribute="bottom" secondItem="6ba-GJ-aHs" secondAttribute="bottom" constant="50" id="q9B-0B-9ju"/>
+                                    <constraint firstAttribute="bottom" secondItem="6ba-GJ-aHs" secondAttribute="bottom" constant="45" id="q9B-0B-9ju"/>
                                     <constraint firstItem="6ba-GJ-aHs" firstAttribute="centerX" secondItem="KPV-cC-ovY" secondAttribute="centerX" id="xJL-c5-ulH"/>
                                 </constraints>
                             </scrollView>
@@ -3959,8 +3959,8 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SR0-m4-6gH">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="339"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SR0-m4-6gH">
+                                        <rect key="frame" x="0.0" y="114" width="320" height="339"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Title" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4JH-Xo-gVk">
@@ -4884,18 +4884,18 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="Cev-RX-oZk"/>
         <segue reference="Msf-M3-jL9"/>
-        <segue reference="9Hc-Ht-4uW"/>
+        <segue reference="fTv-B5-B3I"/>
+        <segue reference="Qob-f3-kll"/>
+        <segue reference="vx6-F2-M6F"/>
+        <segue reference="DLa-sq-QzY"/>
+        <segue reference="XTL-Vm-Chw"/>
         <segue reference="sS0-et-L6e"/>
         <segue reference="awH-EH-ip5"/>
-        <segue reference="fTv-B5-B3I"/>
-        <segue reference="Yag-vw-lZg"/>
-        <segue reference="EbA-ha-M0F"/>
-        <segue reference="7Yh-Iy-keU"/>
-        <segue reference="XTL-Vm-Chw"/>
         <segue reference="WQq-D0-l0J"/>
         <segue reference="Bpc-Pg-zh1"/>
-        <segue reference="A7z-hl-SrE"/>
-        <segue reference="Qob-f3-kll"/>
+        <segue reference="lZD-VD-fQL"/>
+        <segue reference="Mm2-eP-CrY"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -33,6 +33,9 @@
 @synthesize awskeyid;
 @synthesize awssecretkey;
 
+@synthesize tinyimage;
+@synthesize thumbimage;
+
 - (BOOL)isBasic {
     if ([tier isEqualToString:@"Basic"])
         return YES;
@@ -68,6 +71,8 @@
         else
             tiny = @"";
         
+        [self loadImages];
+        
         isactive = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"is_active"] integerValue]];
         bio_alert = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"bio_alert"] integerValue]];
         blog_alert = [NSNumber numberWithInteger:[[userDictionary objectForKey:@"blog_alert"] integerValue]];
@@ -90,6 +95,32 @@
         return self;
     } else {
         return nil;
+    }
+}
+
+- (void)loadImages {
+    if (![tiny isEqualToString:@"/avatar/tiny/missing.png"]) {
+        tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:tiny]];
+            tinyimage = [UIImage imageWithData:image];
+        });
+    } else {
+        tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (![userthumb isEqualToString:@"/avatar/thumb/missing.png"]) {
+        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:userthumb]];
+            thumbimage = [UIImage imageWithData:image];
+        });
+    } else {
+        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
     }
 }
 

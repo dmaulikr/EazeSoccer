@@ -332,4 +332,26 @@
     }
 }
 
+- (IBAction)saveBarButtonClicked:(id)sender {
+}
+
+- (IBAction)fgaButtonClicked:(id)sender {
+}
+
+- (IBAction)fgmButtonClicked:(id)sender {
+}
+
+- (IBAction)threefgaButtonClicked:(id)sender {
+}
+
+- (IBAction)threefgmButtonClicked:(id)sender {
+}
+
+- (IBAction)ftaButtonClicked:(id)sender {
+}
+- (IBAction)ftmButtonClicked:(id)sender {
+}
+
+- (IBAction)toggleButtonClicked:(id)sender {
+}
 @end

@@ -56,16 +56,16 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     } else {
-            if (playerSelectController) {
-                if (playerSelectController.player)
-                    self.player = playerSelectController.player;
-            } else if (gameSelectController) {
-                if (gameSelectController.thegame)
-                    self.game = gameSelectController.thegame;
-            } else if (usersSelectController) {
-                if (usersSelectController.user)
-                    self.user = usersSelectController.user;
-            }
+//            if (playerSelectController) {
+//                if (playerSelectController.player)
+//                    self.player = playerSelectController.player;
+//            if (gameSelectController) {
+//                if (gameSelectController.thegame)
+//                    self.game = gameSelectController.thegame;
+//            if (usersSelectController) {
+//                if (usersSelectController.user)
+//                    self.user = usersSelectController.user;
+//            }
             
             if (gamelogSelectController) {
                 if (gamelogSelectController.game) {
@@ -104,6 +104,15 @@
     self.navigationController.toolbarHidden = YES;
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    playerSelectController = nil;
+    gamelogSelectController = nil;
+    gameSelectController = nil;
+    usersSelectController = nil;
+}
+
 - (void)displayUpgradeAlert {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                                     message:[NSString stringWithFormat:@"%@%@", @"No photos for ", currentSettings.team.team_name]
@@ -128,11 +137,11 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
-        playerSelectController = segue.destinationViewController;
-    } else if ([segue.identifier isEqualToString:@"GameSelectSegue"]) {
-        gameSelectController = segue.destinationViewController;
-    } else if ([segue.identifier isEqualToString:@"PhotoInfoSegue"]) {
+//    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
+//        playerSelectController = segue.destinationViewController;
+//    if ([segue.identifier isEqualToString:@"GameSelectSegue"]) {
+//        gameSelectController = segue.destinationViewController;
+    if ([segue.identifier isEqualToString:@"PhotoInfoSegue"]) {
         sportzteamsPhotoInfoViewController *destController = segue.destinationViewController;
         if ([[self.collectionView indexPathsForSelectedItems] count] > 0) {
             NSIndexPath *indexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
@@ -156,8 +165,8 @@
         } else {
             destController.photo = nil;
         }
-    } else if ([segue.identifier isEqualToString:@"UserSelectSegue"]) {
-        usersSelectController = segue.destinationViewController;
+//    } else if ([segue.identifier isEqualToString:@"UserSelectSegue"]) {
+//        usersSelectController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
         gamelogSelectController = segue.destinationViewController;
         gamelogSelectController.game = gameSelectController.thegame;
@@ -175,7 +184,8 @@
             destController.game = self.game;
         else if (self.user)
             destController.user = self.user;
-    }
+    } else
+        [super prepareForSegue:segue sender:self];
 }
 
 - (void)getPhotos {
@@ -192,14 +202,16 @@
         gameSelectController = nil;
         gamelogSelectController.game = nil;
         usersSelectController = nil;
-        [self performSegueWithIdentifier:@"PlayerSelectSegue" sender:self];
+        self.playerContainer.hidden = NO;
+//        [self performSegueWithIdentifier:@"PlayerSelectSegue" sender:self];
     } else if ([title isEqualToString:@"Game"]) {
         self.player = nil;
         self.user = nil;
         playerSelectController = nil;
         gamelogSelectController = nil;
         usersSelectController = nil;
-        [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
+        self.gameContainer.hidden = NO;
+//        [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
     } else if ([title isEqualToString:@"Play"]) {
         self.player = nil;
         self.user = nil;
@@ -221,7 +233,8 @@
         self.game = nil;
         gamelogSelectController.game = nil;
         playerSelectController = nil;
-        [self performSegueWithIdentifier:@"UserSelectSegue" sender:self];
+        self.userSelectContainer.hidden = NO;
+//        [self performSegueWithIdentifier:@"UserSelectSegue" sender:self];
     } else if ([title isEqualToString:@"All"]) {
         self.game = nil;
         self.user = nil;

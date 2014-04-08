@@ -51,8 +51,8 @@
     _commentTextView.layer.cornerRadius = 4;
     _blogEntry.layer.borderWidth = 1.0f;
     _commentTextView.layer.borderWidth = 1.0f;
-    _blogEntry.layer.borderColor = [[UIColor blackColor] CGColor];
-    _commentTextView.layer.borderColor = [[UIColor blackColor] CGColor];
+    _blogEntry.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    _commentTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
     
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];

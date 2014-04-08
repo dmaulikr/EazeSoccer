@@ -36,7 +36,9 @@
 - (IBAction)selectUser:(UIStoryboardSegue *)segue;
 
 - (void)getPhotos;
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIView *playerContainer;
 @property (weak, nonatomic) IBOutlet UIView *gameContainer;

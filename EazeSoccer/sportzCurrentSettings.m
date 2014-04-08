@@ -32,11 +32,9 @@
 @synthesize teams;
 @synthesize sponsors;
 @synthesize alerts;
+
 @synthesize rosterimages;
 @synthesize opponentimages;
-
-@synthesize featuredPhotos;
-@synthesize featuredVideos;
 
 @synthesize lastAlertUpdate;
 @synthesize lastGameUpdate;
@@ -59,14 +57,17 @@
 
 @synthesize newuser;
 
+@synthesize teamPhotos;
+@synthesize teamVideos;
+
 - (id)init {
     if (self = [super init]) {
         user = [[User alloc] init];
         sport = [Sport alloc];
         team = [Team alloc];
         
-        featuredVideos = nil;
-        featuredPhotos = nil;
+        teamPhotos = [[EazesportzRetrieveFeaturedPhotos alloc] init];
+        teamVideos = [[EazesportzRetrieveFeaturedVideosController alloc] init];
         
         newuser = nil;
         
@@ -808,11 +809,13 @@
         getTeams = [[EazesportzRetrieveTeams alloc] init];
         if ([getTeams retrieveTeamsSynchronous:sport.id Token:user.authtoken]) {
             teams = getTeams.teams;
+            team = nil;
             
-            if (teams.count > 1)
+/*            if (teams.count > 1)
                 team = nil;
             else
                 team = [teams objectAtIndex:0];
+ */
         }
     }
 }

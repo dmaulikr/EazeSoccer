@@ -1,27 +1,20 @@
 //
-//  ShotChartViewController.h
-//  Basketball Console
+//  EazeBasketballScoringStatsViewController.h
+//  EazeSportz
 //
-//  Created by Gilbert Zaldivar on 9/17/13.
-//  Copyright (c) 2013 Gilbert Zaldivar. All rights reserved.
+//  Created by Gilbert Zaldivar on 4/5/14.
+//  Copyright (c) 2014 Gil. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 #import "GameSchedule.h"
 #import "Athlete.h"
-#import "BasketballStats.h"
-#import "GameSchedule.h"
 
-@interface LiveBasketballStatsViewController : UIViewController
+@interface EazeBasketballScoringStatsViewController : UIViewController
 
-@property(nonatomic, strong) BasketballStats *stats;
 @property(nonatomic, strong) Athlete *player;
 @property(nonatomic, strong) GameSchedule *game;
-
-- (IBAction)threePointButtonClicked:(id)sender;
-- (IBAction)twoPointButtonClicked:(id)sender;
-- (IBAction)freeThrowButtonClicked:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UILabel *fieldGoalMadeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *fieldGoalAttemptLabel;
@@ -34,7 +27,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *FTPLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalPointsLabel;
 
-@property (weak, nonatomic) IBOutlet UIButton *savestatsButton;
 - (IBAction)saveBarButtonClicked:(id)sender;
 - (IBAction)fgaButtonClicked:(id)sender;
 - (IBAction)fgmButtonClicked:(id)sender;
@@ -43,6 +35,8 @@
 - (IBAction)ftaButtonClicked:(id)sender;
 - (IBAction)ftmButtonClicked:(id)sender;
 - (IBAction)toggleButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *toggleButton;
+
 @property (weak, nonatomic) IBOutlet UIImageView *playerImageView;
 
 @end

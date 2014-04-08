@@ -7,11 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Video.h"
 
 @interface EazesportzRetrieveFeaturedVideosController : NSObject
 
 @property(nonatomic, strong) NSMutableArray *featuredvideos;
 
 - (void)retrieveFeaturedVideos:(NSString *)sportid Token:(NSString *)token;
+- (void)addFeaturedVideo:(Video *)video;
+- (void)removeFeaturedVideo:(Video *)video;
+- (void)saveFeaturedVideos;
+- (BOOL)isFeaturedVideo:(Video *)video;
 
 @end

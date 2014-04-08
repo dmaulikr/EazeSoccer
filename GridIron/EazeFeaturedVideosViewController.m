@@ -48,7 +48,7 @@
     
     currentvideo = 0;
     
-    if (currentSettings.featuredVideos.count > 0)
+    if (currentSettings.teamVideos.featuredvideos.count > 0)
         [_videoCollectionView reloadData];
     else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
@@ -62,7 +62,7 @@
 #pragma mark - UICollectionView Datasource
 
 - (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
-    return [currentSettings.featuredVideos count];
+    return [currentSettings.teamVideos.featuredvideos count];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView {
@@ -73,7 +73,7 @@
     VideoCell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"VideoCell" forIndexPath:indexPath];
     cell.layer.cornerRadius = 6;
     cell.backgroundColor = [UIColor whiteColor];
-    Video *video = [currentSettings.featuredVideos objectAtIndex:indexPath.row];
+    Video *video = [currentSettings.teamVideos.featuredvideos objectAtIndex:indexPath.row];
 
     dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     //this will start the image loading in bg
@@ -113,7 +113,7 @@
     if ([segue.identifier isEqualToString:@"VideoPlaySegue"]) {
         NSIndexPath *indexPath = [[_videoCollectionView indexPathsForSelectedItems] objectAtIndex:0];
         sportzteamsMovieViewController *destController = segue.destinationViewController;
-        destController.videoclip = [currentSettings.featuredVideos objectAtIndex:indexPath.row];
+        destController.videoclip = [currentSettings.teamVideos.featuredvideos objectAtIndex:indexPath.row];
     }
 }
 

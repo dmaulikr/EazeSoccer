@@ -66,10 +66,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonNine;
 - (IBAction)buttonNineClicked:(id)sender;
 
-@property (weak, nonatomic) IBOutlet UILabel *yardsLostLabel;
-@property (weak, nonatomic) IBOutlet UITextField *yardsLostTextField;
 @property (weak, nonatomic) IBOutlet UITextField *receiverTextField;
-@property (weak, nonatomic) IBOutlet UILabel *yardsLabel;
 @property (weak, nonatomic) IBOutlet UITextField *yardsTextField;
 @property (weak, nonatomic) IBOutlet UILabel *fumbleLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *fumbleSwitch;
@@ -90,5 +87,6 @@
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *playerSelectContainer;
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *yardsPluMinusSegmentedControl;
 
 @end

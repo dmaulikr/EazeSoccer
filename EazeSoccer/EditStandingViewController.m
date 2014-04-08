@@ -32,7 +32,11 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    else
+        self.view.backgroundColor = [UIColor whiteColor];
+    
     _leagueWinsTextField.keyboardType = UIKeyboardTypeNumberPad;
     _leagueLossesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _nonleagueWinsTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -65,6 +69,7 @@
     if ((standing.teamid == [NSNull null]) && (standing.sportid == [NSNull null])) {
         _importButton.hidden = YES;
         _importButton.enabled = NO;
+        _importMessageLabel.hidden = YES;
     }
 }
 
@@ -164,6 +169,19 @@
         return YES;
     else
         return NO;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

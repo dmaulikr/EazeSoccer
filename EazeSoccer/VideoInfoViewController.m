@@ -59,20 +59,16 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
-/*    _cameraButton.layer.cornerRadius = 4;
-    _cameraButton.backgroundColor = [UIColor greenColor];
-    _cameraRollButton.layer.cornerRadius = 4;
-    _cameraRollButton.backgroundColor = [UIColor greenColor];
-    _deleteButton.layer.cornerRadius = 4;
-    _deleteButton.backgroundColor = [UIColor redColor];
-    _teamButton.layer.cornerRadius = 4;
-    _gameButton.layer.cornerRadius = 4;
-    _gameButton.backgroundColor = [UIColor whiteColor];
- */
     _gameTextField.inputView = gameController.inputView;
-//    _gameplayTextField.inputView = gameplaySelectController.inputView;
     _activityIndicator.hidesWhenStopped = YES;
+
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, self.cameraBarButton,
+                                                   self.cameraRollBarButton, nil];
+        self.view.backgroundColor = [UIColor whiteColor];
+    } else {
+        self.view.backgroundColor = [UIColor clearColor];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -83,6 +79,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
     addtags = [[NSMutableArray alloc] init];
     removetags = [[NSMutableArray alloc] init];
     
@@ -139,15 +136,18 @@
         
         if (video.schedule.length > 0) {
             video.game = [currentSettings findGame:video.schedule];
-            _gameTextField.text = video.game.game_name;
-//            _gameButton.backgroundColor = [UIColor greenColor];
+            _gameTextField.text = [video.game vsOpponent];
             [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
             _gameButton.enabled = YES;
         } else {
             _gameButton.enabled = NO;
-//            _gameButton.backgroundColor = [UIColor redColor];
             [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
+        
+        if ([currentSettings.teamVideos isFeaturedVideo:video])
+            [_featuredSwitch setOn:YES];
+        else
+            [_featuredSwitch setOn:NO];
         
     } else if (!newVideo) {
         video = [[Video alloc] init];
@@ -163,6 +163,7 @@
         _gameButton.enabled = NO;
         [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         video.userid = currentSettings.user.userid;
+        [_featuredSwitch setOn:NO];
     }
     
     _teamTextField.text = currentSettings.team.team_name;
@@ -335,7 +336,7 @@
 
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
-        _gameTextField.text = gameController.thegame.game_name;
+        _gameTextField.text = [gameController.thegame vsOpponent];
         video.schedule = gameController.thegame.id;
         video.game = gameController.thegame;
         _gameButton.enabled = YES;
@@ -762,14 +763,20 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.mediaTypes = [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
         imagePicker.allowsEditing = NO;
-        imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
-        _popover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        _popover.delegate = self;
         
-        // set contentsize
-        [_popover setPopoverContentSize:CGSizeMake(220,300)];
-        
-        [_popover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+            _popover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            _popover.delegate = self;
+            
+            // set contentsize
+            [_popover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [_popover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            newmedia = NO;
+        }
     }
 }
 
@@ -780,15 +787,21 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeMovie];
         imagePicker.allowsEditing = NO;
-        newmedia = YES;
-        _popover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        _popover.delegate = self;
         
-        // set contentsize
-        [_popover setPopoverContentSize:CGSizeMake(220,300)];
-        
-        [_popover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view
-                permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            newmedia = YES;
+            _popover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            _popover.delegate = self;
+            
+            // set contentsize
+            [_popover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [_popover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view
+                    permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            newmedia = NO;
+        }
     }
 }
 
@@ -798,7 +811,10 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     NSString *mediaType = info[UIImagePickerControllerMediaType];
     
-    [_popover dismissPopoverAnimated:YES];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        [_popover dismissPopoverAnimated:YES];
+    else
+        [self dismissViewControllerAnimated:YES completion:nil];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
         // Code here to support video if enabled
@@ -896,4 +912,32 @@
     }
 }
 
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
+- (IBAction)cameraBarButtonClicked:(id)sender {
+    [self cameraButtonClicked:sender];
+}
+
+- (IBAction)cameraRollBarButtonClicked:(id)sender {
+    [self cameraRollButtonClicked:sender];
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:sender];
+}
+
+- (IBAction)deleteBarButtonClicked:(id)sender {
+    [self deleteButtonClicked:sender];
+}
 @end

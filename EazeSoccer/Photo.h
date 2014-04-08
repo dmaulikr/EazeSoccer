@@ -37,4 +37,6 @@
 
 - (UIImage *)getImage:(NSString *)size;
 
+- (void)loadImagesInBackground;
+
 @end

@@ -1,4 +1,4 @@
-//
+ //
 //  PhotoInfoViewController.m
 //  FootballStatsConsole
 //
@@ -57,7 +57,11 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        self.view.backgroundColor = [UIColor clearColor];
+    else
+        self.view.backgroundColor = [UIColor whiteColor];
+    
     _gameTextField.inputView = gameController.inputView;
     _cameraButton.layer.cornerRadius = 4;
     _cameraRollButton.layer.cornerRadius = 4;
@@ -65,6 +69,9 @@
     _teamButton.layer.cornerRadius = 4;
     _deleteButton.layer.cornerRadius = 4;
     _descriptionTextView.layer.cornerRadius = 4;
+    _playerTableView.layer.borderWidth = 1.0f;
+    _playerTableView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    
     _activityIndicator.hidesWhenStopped = YES;
     newPhoto = NO;
     
@@ -98,15 +105,19 @@
         if (photo.medium_url.length > 0) {
             NSURL * imageURL = [NSURL URLWithString:photo.medium_url];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-            _photoImage.image = [UIImage imageWithData:imageData];
-            CGSize imageviewsize;
             
-            if (_photoImage.image.size.width > _photoImage.image.size.height)
-                imageviewsize = CGSizeMake(700.0, 525.0);
-            else
-                imageviewsize = CGSizeMake(525.0, 700.0);
-            
-            _photoImage.frame = CGRectMake(_photoImage.frame.origin.x,_photoImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+                _photoImage.image = [UIImage imageWithData:imageData];
+                CGSize imageviewsize;
+                
+                if (_photoImage.image.size.width > _photoImage.image.size.height)
+                    imageviewsize = CGSizeMake(700.0, 525.0);
+                else
+                    imageviewsize = CGSizeMake(525.0, 700.0);
+                
+                _photoImage.frame = CGRectMake(_photoImage.frame.origin.x,_photoImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
+            } else
+                _photoImage.image = [currentSettings normalizedImage:[UIImage imageWithData:imageData] scaledToSize:200];
         } else {
             _photoImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
         }
@@ -147,14 +158,17 @@
         
         if (photo.schedule.length > 0) {
             photo.game = [currentSettings retrieveGame:photo.schedule];
-            _gameTextField.text = photo.game.game_name;
-//            _gameButton.backgroundColor = [UIColor greenColor];
+            _gameTextField.text = [photo.game vsOpponent];
         } else {
             _gameButton.enabled = NO;
-//            _gameButton.backgroundColor = [UIColor whiteColor];
             [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
-                
+        
+        if ([currentSettings.teamPhotos isFeaturedPhoto:photo])
+            [_featuredSwitch setOn:YES];
+        else
+            [_featuredSwitch setOn:NO];
+        
     } else if (!newPhoto) {
         photo = [[Photo alloc] init];
         newPhoto = YES;
@@ -163,11 +177,12 @@
         _photonameTextField.text = @"";
         _descriptionTextView.text = @"";
         [_userButton setTitle:@"User" forState:UIControlStateNormal];
-        _photoImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        _photoImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:200];
         _gameButton.enabled = NO;
         user = currentSettings.user;
         photo.owner = currentSettings.user.userid;
         [_cameraButton setTitle:@"Camera" forState:UIControlStateNormal];
+        [_featuredSwitch setOn:NO];
     }
     
     _teamTextField.text = currentSettings.team.team_name;
@@ -181,7 +196,7 @@
 
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue {
     if (gameController.thegame) {
-        _gameTextField.text = gameController.thegame.game_name;
+        _gameTextField.text = [gameController.thegame vsOpponent];
         _gameButton.enabled = YES;
 //        _gameButton.backgroundColor = [UIColor greenColor];
         [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
@@ -447,16 +462,22 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = NO;
-        imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
-        UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        apopover.delegate = self;
         
-        // set contentsize
-        [apopover setPopoverContentSize:CGSizeMake(220,300)];
-        
-        [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view
-                            permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        self.popover = apopover;
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+            UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            apopover.delegate = self;
+            
+            // set contentsize
+            [apopover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view
+                                permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            self.popover = apopover;
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+        }
+        newmedia = NO;
     }
 }
 
@@ -481,7 +502,7 @@
     }
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPMethod:@"PUT"];
     [request setHTTPBody:jsonData];
     
@@ -492,7 +513,7 @@
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     if ([httpResponse statusCode] != 200) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error updating photo data"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                        message:[NSString stringWithFormat:@"%ld", (long)[httpResponse statusCode]]
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -520,7 +541,7 @@
     }
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPMethod:@"PUT"];
     [request setHTTPBody:jsonData];
     
@@ -545,17 +566,23 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = NO;
-//        [self presentViewController:imagePicker animated:YES completion:nil];
+        
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            newmedia = YES;
+            UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            apopover.delegate = self;
+            
+            // set contentsize
+            [apopover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view
+                    permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            self.popover = apopover;
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+        }
+        
         newmedia = YES;
-        UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        apopover.delegate = self;
-        
-        // set contentsize
-        [apopover setPopoverContentSize:CGSizeMake(220,300)];
-        
-        [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view
-                permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        self.popover = apopover;
     }
 }
 
@@ -569,28 +596,33 @@
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
         imgData = UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
-        NSLog(@"%d", [imgData length]);
+        NSLog(@"%lu", (unsigned long)[imgData length]);
         UIImage *image = [[UIImage alloc] initWithData:imgData];
         
         if (newmedia)
             UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
         
-        _photoImage.image = [currentSettings normalizedImage:image scaledToSize:700];
-        CGSize imageviewsize;
-        
-        if (image.size.width > image.size.height)
-            imageviewsize = CGSizeMake(700.0, 525.0);
-        else
-            imageviewsize = CGSizeMake(525.0, 700.0);
-        
-        CGFloat corrrectImageViewHeight = (imageviewsize.width/_photoImage.image.size.width) * _photoImage.image.size.height;
-//        _photoImage.frame = CGRectMake(_photoImage.frame.origin.x, _photoImage.frame.origin.y, _photoImage.image.size.width,
-//                                       _photoImage.image.size.height);
-//        _photoImage.frame = CGRectMake(_photoImage.frame.origin.x, _photoImage.frame.origin.x, CGRectGetWidth(_photoImage.bounds),
-//                                       corrrectImageViewHeight);
-        _photoImage.frame = CGRectMake(_photoImage.frame.origin.x,_photoImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            _photoImage.image = [currentSettings normalizedImage:image scaledToSize:700];
+            CGSize imageviewsize;
+            
+            if (image.size.width > image.size.height)
+                imageviewsize = CGSizeMake(700.0, 525.0);
+            else
+                imageviewsize = CGSizeMake(525.0, 700.0);
+            
+    //        CGFloat corrrectImageViewHeight = (imageviewsize.width/_photoImage.image.size.width) * _photoImage.image.size.height;
+    //        _photoImage.frame = CGRectMake(_photoImage.frame.origin.x, _photoImage.frame.origin.y, _photoImage.image.size.width,
+    //                                       _photoImage.image.size.height);
+    //        _photoImage.frame = CGRectMake(_photoImage.frame.origin.x, _photoImage.frame.origin.x, CGRectGetWidth(_photoImage.bounds),
+    //                                       corrrectImageViewHeight);
+            _photoImage.frame = CGRectMake(_photoImage.frame.origin.x,_photoImage.frame.origin.y, imageviewsize.width, imageviewsize.height);
+        } else {
+            _photoImage.image = [currentSettings normalizedImage:image scaledToSize:200];
+        }
         imageselected = YES;
-    }
+        [self dismissViewControllerAnimated:YES completion:nil];
+   }
     else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
     {
         // Code here to support video if enabled
@@ -676,7 +708,7 @@
     }
     
     [urlrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlrequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [urlrequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [urlrequest setHTTPMethod:@"POST"];
     [urlrequest setHTTPBody:jsonData];
     
@@ -698,6 +730,15 @@
         if (addtags.count > 0) {
             [self addPhotoTags:photo];
         }
+        
+        if (_featuredSwitch.isOn) {
+            [currentSettings.teamPhotos addFeaturedPhoto:photo];
+            [currentSettings.teamPhotos saveFeaturedPhotos];
+        } else if ([currentSettings.teamPhotos isFeaturedPhoto:photo]) {
+            [currentSettings.teamPhotos removeFeaturedPhoto:photo];
+            [currentSettings.teamPhotos saveFeaturedPhotos];
+        }
+        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload sucessful!"
                                                         message:@"Photo uploaded"
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -705,7 +746,7 @@
         [alert show];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error uploading photo"
-                                                        message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                        message:[NSString stringWithFormat:@"%ld", (long)[httpResponse statusCode]]
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -782,7 +823,7 @@
         }
         
         [urlrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [urlrequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+        [urlrequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
         [urlrequest setHTTPMethod:@"DELETE"];
         [urlrequest setHTTPBody:jsonData];
         
@@ -792,10 +833,16 @@
         NSMutableDictionary *photoDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)urlresponse;
         if ([httpResponse statusCode] == 200) {
+            
+            if ([currentSettings.teamPhotos isFeaturedPhoto:photo]) {
+                [currentSettings.teamPhotos removeFeaturedPhoto:photo];
+                [currentSettings.teamPhotos saveFeaturedPhotos];
+            }
+            
             [self.navigationController popViewControllerAnimated:YES];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Photo"
-                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                            message:[NSString stringWithFormat:@"%ld", (long)[httpResponse statusCode]]
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
@@ -844,9 +891,11 @@
 }
 
 - (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:sender];
 }
 
 - (IBAction)deleteBarButtonClicked:(id)sender {
+    [self deleteButtonClicked:sender];
 }
 
 - (IBAction)cameraBarButtonClicked:(id)sender {
@@ -856,4 +905,18 @@
 - (IBAction)cameraRollBarButtonClicked:(id)sender {
     [self cameraRollButtonClicked:sender];
 }
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
+}
+
 @end

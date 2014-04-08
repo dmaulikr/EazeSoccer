@@ -50,7 +50,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _yardsTextField.keyboardType = UIKeyboardTypeNumberPad;
-    _yardsLostTextField.keyboardType = UIKeyboardTypeNumberPad;
     _quarterStatTextField.keyboardType = UIKeyboardTypeNumberPad;
     _minutesStatTextField.keyboardType = UIKeyboardTypeNumberPad;
     _secondsStatTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -156,10 +155,10 @@
         
         if (addstats) {
             stat.attempts = [NSNumber numberWithInt:[stat.attempts intValue] + 1];
-            [self yardStats:NO Text:@"Yards"];
+            [self yardStats:NO];
         } else if ([stat.attempts intValue] > 0) {
             stat.attempts = [NSNumber numberWithInt:[stat.attempts intValue] - 1];
-            [self yardStats:YES Text:@""];
+            [self yardStats:YES];
         }
         
         _statData1.text = [stat.attempts stringValue];
@@ -202,11 +201,11 @@
         FootballReturnerStats *stat = [athlete findFootballReturnerStat:game.id];
         
         if (addstats) {
-            [self yardStats:NO Text:@"Return Yards"];
+            [self yardStats:NO];
             stat.koreturn = [NSNumber numberWithInt:[stat.koreturn intValue] + 1];
             koreturn = YES;
         } else {
-            [self yardStats:YES Text:@""];
+            [self yardStats:YES];
             stat.koreturn = [NSNumber numberWithInt:[stat.koreturn intValue] - 1];
             koreturn = NO;
         }
@@ -216,10 +215,10 @@
         FootballPunterStats *stat = [athlete findFootballPunterStat:game.id];
         
         if (addstats) {
-            [self yardStats:NO Text:@"Punt Yards"];
+            [self yardStats:NO];
             stat.punts = [NSNumber numberWithInt:[stat.punts intValue] + 1];
         } else {
-            [self yardStats:YES Text:@""];
+            [self yardStats:YES];
             stat.punts = [NSNumber numberWithInt:[stat.punts intValue] - 1];
         }
         
@@ -238,7 +237,7 @@
             _receiverTextField.enabled = YES;
             _playerSelectContainer.hidden = NO;
             completion = YES;
-            [self yardStats:NO Text:@"Yards"];
+            [self yardStats:NO];
             [self fumbleStats:NO];
             playerSelectController.player = nil;
             [playerSelectController viewWillAppear:YES];
@@ -250,7 +249,7 @@
             _receiverTextField.text = @"";
             _playerSelectContainer.hidden = YES;
             completion = NO;
-            [self yardStats:YES Text:@""];
+            [self yardStats:YES];
             [self fumbleStats:YES];
         }
         
@@ -284,13 +283,13 @@
             stat.fgattempts= [NSNumber numberWithInt:[stat.fgattempts intValue] + 1];
             stat.fgmade = [NSNumber numberWithInt:[stat.fgmade intValue] + 1];
             fieldgoal = YES;
-            [self yardStats:NO Text:@"Length"];
+            [self yardStats:NO];
             [self scoreStats:NO];
         } else {
             stat.fgattempts= [NSNumber numberWithInt:[stat.fgattempts intValue] - 1];
             stat.fgmade = [NSNumber numberWithInt:[stat.fgmade intValue] - 1];
             fieldgoal = NO;
-            [self yardStats:YES Text:@""];
+            [self yardStats:YES];
             [self scoreStats:YES];
         }
         
@@ -312,11 +311,11 @@
         FootballReturnerStats *stat = [athlete findFootballReturnerStat:game.id];
         
         if (addstats) {
-            [self yardStats:NO Text:@"Return Yards"];
+            [self yardStats:NO];
             stat.punt_return = [NSNumber numberWithInt:[stat.punt_return intValue] + 1];
             puntreturn = YES;
         } else if ([stat.punt_return intValue] > 0) {
-            [self yardStats:YES Text:@""];
+            [self yardStats:YES];
             stat.punt_return = [NSNumber numberWithInt:[stat.punt_return intValue] - 1];
             puntreturn = NO;
         }
@@ -324,7 +323,7 @@
         _statData6.text = [stat.punt_return stringValue];
     } else {
         FootballPunterStats *stat = [athlete findFootballPunterStat:game.id];
-        [self yardStats:YES Text:@""];
+        [self yardStats:YES];
         
         if (addstats) {
             stat.punts_blocked = [NSNumber numberWithInt:[stat.punts_blocked intValue] + 1];
@@ -345,12 +344,10 @@
         
         if (addstats) {
             stat.sacks = [NSNumber numberWithInt:[stat.sacks intValue] + 1];
-            _yardsLostTextField.hidden = NO;
-            _yardsLostLabel.hidden = NO;
+            [self yardStats:YES];
         } else if ([stat.sacks intValue] > 0) {
+            [self yardStats:NO];
             stat.sacks = [NSNumber numberWithInt:[stat.sacks intValue] - 1];
-            _yardsLostTextField.hidden = YES;
-            _yardsLostLabel.hidden = YES;
         }
         
         _statData8.text = [stat.sacks stringValue];
@@ -508,11 +505,11 @@
         if (addstats) {
             stat.interceptions = [NSNumber numberWithInt:[stat.interceptions intValue] + 1];
             interception = YES;
-            [self yardStats:NO Text:@"Yards"];
+            [self yardStats:NO];
         } else if ([stat.interceptions intValue] > 0) {
             stat.interceptions = [NSNumber numberWithInt:[stat.interceptions intValue] - 1];
             interception = NO;
-            [self yardStats:YES Text:@""];
+            [self yardStats:YES];
         }
         
         _statData5.text = [stat.interceptions stringValue];
@@ -625,10 +622,10 @@
         if (addstats) {
             stat.fumbles_recovered = [NSNumber numberWithInt:[stat.fumbles_recovered intValue] + 1];
             game.lastplay = [NSString stringWithFormat:@"%@ - Fumble Recovered", athlete.logname];
-            [self yardStats:NO Text:@"Yards"];
+            [self yardStats:NO];
         } else if ([stat.fumbles_recovered intValue] > 0) {
             stat.fumbles_recovered = [NSNumber numberWithInt:[stat.fumbles_recovered intValue] - 1];
-            [self yardStats:YES Text:@""];
+            [self yardStats:YES];
             game.lastplay = @"";
         }
         
@@ -684,15 +681,15 @@
     }
 }
 
-- (void)yardStats:(BOOL)hidden Text:(NSString *)textString {
-    _yardsLabel.text = textString;
-    
+- (void)yardStats:(BOOL)hidden {
     if (hidden) {
-        _yardsLabel.hidden = YES;
+        _yardsPluMinusSegmentedControl.hidden = YES;
+        _yardsPluMinusSegmentedControl.enabled = NO;
         _yardsTextField.hidden = YES;
         _yardsTextField.enabled = NO;
     } else {
-        _yardsLabel.hidden = NO;
+        _yardsPluMinusSegmentedControl.hidden = NO;
+        _yardsPluMinusSegmentedControl.enabled = YES;
         _yardsTextField.hidden = NO;
         _yardsTextField.enabled = YES;
     }
@@ -774,12 +771,10 @@
     _receiverTextField.hidden = YES;
     _receiverTextField.enabled = NO;
     _yardsTextField.hidden = YES;
-    _yardsLabel.hidden = YES;
-    _yardsLostLabel.hidden = YES;
-    _yardsLostTextField.hidden = YES;
     
     [self fumbleStats:YES];
     [self scoreStats:YES];
+    [self yardStats:YES];
     
     if ([position isEqualToString:@"Pass"]) {
         FootballPassingStat *stat = [athlete findFootballPassingStat:game.id];
@@ -1122,10 +1117,24 @@
         if (receiver) {
             recstat = [receiver findFootballReceivingStat:game.id];
             recstat.receptions = [NSNumber numberWithInt:[recstat.receptions intValue] + 1];
-            recstat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] + [recstat.yards intValue]];
-            passstat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] + [passstat.yards intValue]];
+            
+            if ([_buttonThree isSelected]) {
+                if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 1) {
+                    passstat.yards_lost = [NSNumber numberWithInt:[passstat.yards_lost intValue] + [_yardsTextField.text intValue]];
+                }
+                game.lastplay = [NSString stringWithFormat:@"%@ sacked for %d loss", athlete.logname, [_yardsTextField.text intValue]];
+            } else {
+                if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 0) {
+                    recstat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] + [recstat.yards intValue]];
+                    passstat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] + [passstat.yards intValue]];
+                } else if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 1) {
+                    recstat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] - [recstat.yards intValue]];
+                    passstat.yards = [NSNumber numberWithInt:[_yardsTextField.text intValue] - [passstat.yards intValue]];
+                }
+                game.lastplay = [NSString stringWithFormat:@"%@ pass to %@ for %@", athlete.logname, receiver.logname, _yardsTextField.text];
+            }
+        
             _statData4.text = [passstat.yards stringValue];
-            game.lastplay = [NSString stringWithFormat:@"%@ pass to %@ for %@", athlete.logname, receiver.logname, _yardsTextField.text];
             
             if (touchdown) {
                 recstat.td = [NSNumber numberWithInt:[recstat.td intValue] + 1];
@@ -1133,9 +1142,9 @@
                 recstat.twopointconv = [NSNumber numberWithInt:[recstat.twopointconv intValue] + 1];
             
             [recstat saveStats];
-        } else if (_yardsLostTextField.text.length > 0) {
-            passstat.yards_lost = [NSNumber numberWithInt:[passstat.yards_lost intValue] + [_yardsLostTextField.text intValue]];
-            game.lastplay = [NSString stringWithFormat:@"%@ sacked for %d loss", athlete.logname, [_yardsLostTextField.text intValue]];
+        } else if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 1) {
+            passstat.yards_lost = [NSNumber numberWithInt:[passstat.yards_lost intValue] + [_yardsTextField.text intValue]];
+            game.lastplay = [NSString stringWithFormat:@"%@ sacked for %d loss", athlete.logname, [_yardsTextField.text intValue]];
         }
         
         [passstat saveStats];
@@ -1152,7 +1161,14 @@
         receiver = nil;
     } else if ([position isEqualToString:@"Rush"]) {
         FootballRushingStat *stat = [athlete findFootballRushingStat:game.id];
-        stat.yards = [NSNumber numberWithInt:[stat.yards intValue] + [_yardsTextField.text intValue]];
+        
+        if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 0)
+            stat.yards = [NSNumber numberWithInt:[stat.yards intValue] + [_yardsTextField.text intValue]];
+        else
+            stat.yards = [NSNumber numberWithInt:[stat.yards intValue] - [_yardsTextField.text intValue]];
+        
+        _statData2.text = [stat.yards stringValue];
+        
         game.lastplay = [NSString stringWithFormat:@"%@ %@ yard run", athlete.logname, _yardsTextField.text];
         
         if ([_yardsTextField.text intValue] > [stat.longest intValue])
@@ -1172,9 +1188,15 @@
         FootballDefenseStats *stat = [athlete findFootballDefenseStat:game.id];
         
         if (_yardsTextField.text.length > 0) {
-            stat.int_yards = [NSNumber numberWithInt:[stat.int_yards intValue] + [_yardsTextField.text intValue]];
+            if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 0)
+                stat.int_yards = [NSNumber numberWithInt:[stat.int_yards intValue] + [_yardsTextField.text intValue]];
+            else
+                stat.int_yards = [NSNumber numberWithInt:[stat.int_yards intValue] - [_yardsTextField.text intValue]];
+            
             game.lastplay = [NSString stringWithFormat:@"%@ interception return for %@", athlete.logname, _yardsTextField.text];
         }
+        
+        _statData7.text = [stat.int_yards stringValue];
         
         [stat saveStats];
         
@@ -1224,13 +1246,29 @@
         
         if (_yardsTextField.text.length > 0) {
             if (koreturn) {
-                stat.koyards = [NSNumber numberWithInt:[stat.koyards intValue] + [_yardsTextField.text intValue]];
+                
+                if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 0)
+                    stat.koyards = [NSNumber numberWithInt:[stat.koyards intValue] + [_yardsTextField.text intValue]];
+                else
+                    stat.koyards = [NSNumber numberWithInt:[stat.koyards intValue] - [_yardsTextField.text intValue]];
+                
                 if ([_yardsTextField.text intValue] > [stat.kolong intValue])
                     stat.kolong = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
+                
+                _statData2.text = [stat.koyards stringValue];
+                _statData4.text = [stat.kolong stringValue];
             } else {
-                stat.punt_returnyards = [NSNumber numberWithInt:[stat.punt_returnyards intValue] + [_yardsTextField.text intValue]];
+                
+                if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 0)
+                    stat.punt_returnyards = [NSNumber numberWithInt:[stat.punt_returnyards intValue] + [_yardsTextField.text intValue]];
+                else
+                    stat.punt_returnyards = [NSNumber numberWithInt:[stat.punt_returnyards intValue] - [_yardsTextField.text intValue]];
+                
                 if ([_yardsTextField.text intValue] > [stat.punt_returnlong intValue])
                     stat.punt_returnlong = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
+                
+                _statData7.text = [stat.punt_returnyards stringValue];
+                _statData9.text = [stat.punt_returnlong stringValue];
             }
         }
         
@@ -1249,16 +1287,21 @@
         [stat saveStats];
     } else {
         FootballPunterStats *stat = [athlete findFootballPunterStat:game.id];
-        stat.punts_yards = [NSNumber numberWithInt:[stat.punts_yards intValue] + [_yardsTextField.text intValue]];
+        
+        if (_yardsPluMinusSegmentedControl.selectedSegmentIndex == 0)
+            stat.punts_yards = [NSNumber numberWithInt:[stat.punts_yards intValue] + [_yardsTextField.text intValue]];
+        else
+            stat.punts_yards = [NSNumber numberWithInt:[stat.punts_yards intValue] - [_yardsTextField.text intValue]];
         
         if ([stat.punts_long intValue] < [_yardsTextField.text intValue])
             stat.punts_long = [NSNumber numberWithInt:[_yardsTextField.text intValue]];
         
+        _statData2.text = [stat.punts_yards stringValue];
+        _statData4.text = [stat.punts_long stringValue];
+        
         [stat saveStats];
     }
     
-    _yardsTextField.text = @"";
-    _yardsLostTextField.text = @"";
     [self viewWillAppear:YES];
     touchdown = twopoint = fieldgoal = xpmade = puntreturn = koreturn = NO;
 }
@@ -1425,7 +1468,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     if ((textField == _minutesStatTextField) || (textField == _secondsStatTextField) || (textField == _quarterStatTextField) ||
-        (textField == _yardsTextField) ||  (textField == _yardsLostTextField)) {
+        (textField == _yardsTextField)) {
         NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
         NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
         BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
@@ -1438,7 +1481,7 @@
                 return (newLength > 2) ? NO : YES;
             } else if (textField == _quarterStatTextField) {
                 return (newLength > 1) ? NO : YES;
-            } else if ((textField == _yardsLostTextField) || (textField == _yardsTextField)) {
+            } else if (textField == _yardsTextField) {
                 return (newLength > 3 ? NO : YES);
             } else
                 return NO;
