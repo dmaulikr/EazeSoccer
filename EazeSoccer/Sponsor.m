@@ -30,6 +30,7 @@
 @synthesize fax;
 @synthesize adurl;
 @synthesize email;
+@synthesize tiny;
 @synthesize thumb;
 @synthesize medium;
 @synthesize large;
@@ -37,6 +38,7 @@
 @synthesize teamonly;
 @synthesize teamid;
 
+@synthesize tinyimage;
 @synthesize thumbimage;
 @synthesize mediumimage;
 @synthesize largeimage;
@@ -75,6 +77,11 @@
             thumb = [sponsorDictionary objectForKey:@"thumb"];
         else
             thumb = @"";
+        
+        if ((NSNull *)[sponsorDictionary objectForKey:@"tiny"] != [NSNull null])
+            tiny = [sponsorDictionary objectForKey:@"tiny"];
+        else
+            tiny = @"";
         
         [self loadImages];
         
@@ -238,6 +245,17 @@
 
 
 - (void)loadImages {
+    if (tiny.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:tiny]];
+            tinyimage = [UIImage imageWithData:image];
+        });
+    } else {
+        tinyimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
     if (thumb.length > 0) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg

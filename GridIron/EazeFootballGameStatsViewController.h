@@ -42,5 +42,6 @@
 - (IBAction)addButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *playerSelectContainer;
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIView *activityIndicator;
 
 @end

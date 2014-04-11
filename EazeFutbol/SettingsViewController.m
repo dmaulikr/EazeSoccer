@@ -279,10 +279,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id]))
         return 7;
-    else if (currentSettings.user.userid.length > 0)
-        return 6;
     else
-        return 5;
+        return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -396,6 +394,17 @@
             
         case 5:
             cell.backgroundColor = [UIColor whiteColor];
+            cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            cell.textLabel.text = @"Sponsors";
+            
+            if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id]))
+                cell.detailTextLabel.text = @"Manage my sponsors ....";
+            else
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ Sponsors", currentSettings.team.mascot];
+            break;
+            
+        default:
+            cell.backgroundColor = [UIColor whiteColor];
             cell.imageView.image = nil;
             if (currentSettings.user.admin) {
                 cell.textLabel.text = @"Manage My Site";
@@ -408,14 +417,7 @@
                 cell.detailTextLabel.text = @"Promote a program or player ...";
             }
             break;
-            
-        default:
-            cell.backgroundColor = [UIColor whiteColor];
-            cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
-            cell.textLabel.text = @"Sponsors";
-            cell.detailTextLabel.text = @"Manage my sponsors ....";
-            break;
-    }
+   }
     
     return cell;
 }
@@ -446,11 +448,11 @@
                 break;
                 
             case 5:
-                [self addSiteButtonClicked:self];
+                [self performSegueWithIdentifier:@"SponsorSegue" sender:self];
                 break;
                 
             default:
-                [self performSegueWithIdentifier:@"SponsorSegue" sender:self];
+                [self addSiteButtonClicked:self];
                 break;
         }
     }

@@ -62,6 +62,7 @@
 @property(nonatomic, assign) BOOL sitechanged;
 @property(nonatomic, assign) BOOL changesite;
 @property(nonatomic, assign) BOOL firstuse;
+@property (nonatomic, assign) BOOL photodeleted;
 
 @property (nonatomic, strong) User *newuser;
 
@@ -95,7 +96,7 @@
 
 - (BOOL)deleteCoach:(Coach *)acoach;
 
-- (Sport *)retrieveSport:(NSString *)sport;
+- (Sport *)retrieveSport:(NSString *)asport;
 
 - (int)teamFouls:(NSString *)gameid;
 - (int)teamTotalPoints:(NSString *)gameid;

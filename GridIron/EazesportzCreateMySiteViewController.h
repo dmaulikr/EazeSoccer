@@ -10,4 +10,5 @@
 
 @interface EazesportzCreateMySiteViewController : UIViewController
 
+- (IBAction)createMySiteButtonClicked:(id)sender;
 @end

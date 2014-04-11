@@ -12,6 +12,8 @@
 
 @interface GameSchedule : NSObject
 
+@property (nonatomic, assign) BOOL editHomeScore;
+
 @property(nonatomic, strong) NSString *opponent;
 @property(nonatomic, strong) NSString *opponentpic;
 @property(nonatomic, strong) NSDate *opponentpic_updated_at;

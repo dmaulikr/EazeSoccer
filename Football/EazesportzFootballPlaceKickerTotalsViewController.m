@@ -35,7 +35,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
     self.title = @"Place Kicker Totals";
     
     _fgattemptsTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -57,15 +56,10 @@
     [super viewWillAppear:animated];
     
     _playerImage.image = [currentSettings getRosterTinyImage:player];
-    _playerName.text = player.logname;
+    _playerName.text = player.numberLogname;
     _playerNumber.text = [player.number stringValue];
     
     stat = [player findFootballPlaceKickerStat:game.id];
-    
-    if (stat.football_place_kicker_id.length > 0)
-        originalstat = [stat copy];
-    else
-        originalstat = nil;
     
     _fgattemptsTextField.text = [stat.fgattempts stringValue];
     _fgmadeTextField.text = [stat.fgmade stringValue];
@@ -74,12 +68,7 @@
     _xpattemptsTextField.text = [stat.xpattempts stringValue];
     _xpmadeTextField.text = [stat.xpmade stringValue];
     _xpblockedTextField.text = [stat.xpblocked stringValue];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"Updating Place Kicker Stats using totals will break automatic live scoring. \n Update totals with care. You should use this only if you are not entering stats during the game." delegate:self
-                                          cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
+    _pointsTextField.text = [NSString stringWithFormat:@"%d", ([stat.fgmade intValue] * 3) + [stat.xpmade intValue]];
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
@@ -91,9 +80,10 @@
     stat.xpattempts = [NSNumber numberWithInt:[_xpattemptsTextField.text intValue]];
     stat.xpmade = [NSNumber numberWithInt:[_xpmadeTextField.text intValue]];
     
-    [player updateFootballPlaceKickerGameStats:stat];
+    [stat saveStats];
     
-    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Place Kicker Stats Updated" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
@@ -101,6 +91,9 @@
         [player updateFootballPlaceKickerGameStats:originalstat];
     
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -114,6 +107,19 @@
         return (newLength > 3) ? NO : YES;
     } else
         return  NO;
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

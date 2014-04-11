@@ -35,6 +35,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     _gameplayTextField.inputView = _gamelogContainer.inputView;
+    
+    if (![currentSettings.sport.name isEqualToString:@"Football"]) {
+        _gameplayTextField.hidden = YES;
+        _gameplayTextField.enabled = NO;
+    }
 }
 
 - (void)didReceiveMemoryWarning

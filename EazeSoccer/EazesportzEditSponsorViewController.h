@@ -16,8 +16,9 @@
 
 @property(nonatomic, strong) UIPopoverController *popover;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UITextField *countryTextField;
 
-@property (weak, nonatomic) IBOutlet UIPickerView *statePicker;
+@property (weak, nonatomic) IBOutlet UIPickerView *countryPicker;
 @property (weak, nonatomic) IBOutlet UIImageView *sponsorImage;
 @property (weak, nonatomic) IBOutlet UITextField *sponsorName;
 @property (weak, nonatomic) IBOutlet UITextField *streetNumber;

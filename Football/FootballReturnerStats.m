@@ -91,7 +91,7 @@
 - (void)saveStats {
     if (([punt_return intValue] > 0) || ([punt_returnlong intValue] > 0) || ([punt_returntd intValue] > 0) || ([punt_returnyards intValue] > 0) ||
         ([kolong intValue] > 0) || ([koreturn intValue] > 0) || ([kotd intValue] > 0) || ([koyards intValue] > 0)) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *aurl;
             NSBundle *mainBundle = [NSBundle mainBundle];
             
@@ -159,7 +159,7 @@
             } else {
                 httperror = [serverData objectForKey:@"error"];
             }
-        });
+//        });
     }
 }
 

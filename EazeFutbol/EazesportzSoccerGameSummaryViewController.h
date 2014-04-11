@@ -22,7 +22,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *homeshotsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *homeCkLabel;
 @property (weak, nonatomic) IBOutlet UILabel *homesavesLabel;
-
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
@@ -41,5 +40,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
 - (IBAction)saveBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *homeScoreTextField;
 
 @end

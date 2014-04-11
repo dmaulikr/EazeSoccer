@@ -54,6 +54,7 @@
 @synthesize sitechanged;
 @synthesize changesite;
 @synthesize firstuse;
+@synthesize photodeleted;
 
 @synthesize newuser;
 
@@ -70,6 +71,7 @@
         teamVideos = [[EazesportzRetrieveFeaturedVideosController alloc] init];
         
         newuser = nil;
+        photodeleted = NO;
         
         footballWR = [[NSMutableArray alloc] init];
         footballQB = [[NSMutableArray alloc] init];
@@ -368,9 +370,9 @@
             [footballRET addObject:player];
 }
 
-- (Sport *)retrieveSport:(NSString *)sport {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.json?auth_token=%@",
-                                       [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], sport, user.authtoken]];
+- (Sport *)retrieveSport:(NSString *)asport {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@.json?auth_token=%@",
+                                       [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], asport, user.authtoken]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSURLResponse* response;
     NSError *error = nil;

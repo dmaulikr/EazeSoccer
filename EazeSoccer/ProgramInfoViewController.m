@@ -31,6 +31,7 @@
     
     NSMutableArray *countryarray;
     NSString *country;
+    BOOL selectSport;
     
     EazesportzRetrieveTeams *getTeams;
 }
@@ -57,11 +58,10 @@
     
     _cameraRollButton.layer.cornerRadius = 4;
     _deleteButton.layer.cornerRadius = 4;
-//    _deleteButton.backgroundColor = [UIColor redColor];
     _activityIndicator.hidesWhenStopped = YES;
     _yearTextField.keyboardType = UIKeyboardTypeNumberPad;
     _zipcodeTextField.keyboardType = UIKeyboardTypeNumberPad;
-    
+    _sportTextField.inputView = _pickerView.inputView;
     _countryTextField.inputView = _pickerView.inputView;
     
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Countries" ofType:@"plist"];
@@ -83,6 +83,7 @@
     newmedia = NO;
     imageselected = NO;
     _pickerView.hidden = YES;
+    selectSport = NO;
     
     
     if (currentSettings.isSiteOwner) {
@@ -91,6 +92,8 @@
         _mascotTextField.text = sport.mascot;
         _yearTextField.text = sport.year;
         _zipcodeTextField.text = sport.zip;
+        _countryTextField.text = sport.country;
+        _sportTextField.text = sport.name;
         newsport = NO;
         _logoImage.image = [currentSettings.sport getImage:@"thumb"];
     } else if (sportid.length > 0) {
@@ -99,6 +102,8 @@
         _mascotTextField.text = sport.mascot;
         _yearTextField.text = sport.year;
         _zipcodeTextField.text = sport.zip;
+        _countryTextField.text = sport.country;
+        _sportTextField.text = sport.name;
         _logoImage.image = [sport getImage:@"thumb"];
         newsport = NO;
     } else {
@@ -188,15 +193,8 @@
     
     NSMutableDictionary *sportDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[_sitenameTextField text], @"sitename",
                                      [_mascotTextField text], @"mascot", _yearTextField.text, @"year", _zipcodeTextField.text, @"zip",
-                                      currentSettings.user.email, @"contactemail", @"Fall", @"season", _countryTextField.text, @"country", nil];
-    
-    NSBundle *mainBundle = [NSBundle mainBundle];
-
-    if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Soccer"]) {
-        [sportDict setValue:@"Soccer" forKey:@"name"];
-    } else if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Basketball"]) {
-        [sportDict setValue:@"Basketball" forKey:@"name"];
-    }
+                                      currentSettings.user.email, @"contactemail", @"Fall", @"season", _countryTextField.text, @"country",
+                                      _sportTextField.text, @"name", nil];
     
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:sportDict, @"sport", nil];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
@@ -234,7 +232,14 @@
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     if (textField == _countryTextField) {
         _pickerView.hidden = NO;
+        selectSport = NO;
         [textField resignFirstResponder];
+        [_pickerView reloadAllComponents];
+    } else if (textField == _sportTextField) {
+        _pickerView.hidden = NO;
+        selectSport = YES;
+        [textField resignFirstResponder];
+        [_pickerView reloadAllComponents];
     }
 }
 
@@ -293,31 +298,33 @@
         [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
     else {
         [currentSettings setUpSport:currentSettings.user.adminsite];
-                
-        UITabBarController *tabBarController = self.tabBarController;
         
-        for (UIViewController *viewController in tabBarController.viewControllers)
-        {
-            if ([viewController isKindOfClass:[UINavigationController class]])
-                [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+        if (newsport) {
+            [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
+        } else {
+            UITabBarController *tabBarController = self.tabBarController;
+            
+            for (UIViewController *viewController in tabBarController.viewControllers) {
+                if ([viewController isKindOfClass:[UINavigationController class]])
+                    [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+            }
+            
+            UIView * fromView = tabBarController.selectedViewController.view;
+            UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+            
+            if (fromView != toView) {
+                // Transition using a page curl.
+                [UIView transitionFromView:fromView toView:toView duration:0.5
+                                   options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                                completion:^(BOOL finished) {
+                                    if (finished) {
+                                        tabBarController.selectedIndex = 0;
+                                    }
+                                }];
+            } else
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            
         }
-        
-        UIView * fromView = tabBarController.selectedViewController.view;
-        UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
-        
-        if (fromView != toView) {
-            // Transition using a page curl.
-            [UIView transitionFromView:fromView
-                                toView:toView
-                              duration:0.5
-                               options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
-                            completion:^(BOOL finished) {
-                                if (finished) {
-                                    tabBarController.selectedIndex = 0;
-                                }
-                            }];
-        } else
-            [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 
@@ -429,19 +436,30 @@
 
 // Method to define the numberOfRows in a component using the array.
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
-    return countryarray.count;
+    if (selectSport)
+        return currentSettings.sport.supportedsports.count;
+    else
+        return countryarray.count;
 }
 
 // Method to show the title of row for a component.
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    NSDictionary *subDict = [countryarray objectAtIndex:row];
-    return [subDict objectForKey:@"name"];
+    if (selectSport ) {
+        return [currentSettings.sport.supportedsports objectAtIndex:row];
+    } else {
+        NSDictionary *subDict = [countryarray objectAtIndex:row];
+        return [subDict objectForKey:@"name"];
+    }
 }
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    NSDictionary *subDict = [countryarray objectAtIndex:row];
-    _countryTextField.text = [subDict objectForKey:@"name"];
-    country = [subDict objectForKey:@"name"];
+    if (selectSport) {
+        _sportTextField.text = [currentSettings.sport.supportedsports objectAtIndex:row];
+    } else {
+        NSDictionary *subDict = [countryarray objectAtIndex:row];
+        _countryTextField.text = [subDict objectForKey:@"name"];
+        country = [subDict objectForKey:@"name"];
+    }
     _pickerView.hidden = YES;
 }
 

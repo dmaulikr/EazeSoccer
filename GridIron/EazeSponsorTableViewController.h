@@ -9,5 +9,7 @@
 #import "EazesportzSponsorTableViewController.h"
 
 @interface EazeSponsorTableViewController : EazesportzSponsorTableViewController
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addBarButton;
+- (IBAction)addBarButtonClicked:(id)sender;
 
 @end

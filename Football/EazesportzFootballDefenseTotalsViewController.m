@@ -34,7 +34,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
     self.title = @"Defense Totals";
     
     _tacklesTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -60,15 +59,10 @@
     [super viewWillAppear:animated];
     
     _playerImage.image = [currentSettings getRosterTinyImage:player];
-    _playerName.text = player.logname;
+    _playerName.text = player.numberLogname;
     _playerNumber.text = [player.number stringValue];
     
     stat = [player findFootballDefenseStat:game.id];
-    
-    if (stat.football_defense_id.length > 0)
-        originalstat = [stat copy];
-    else
-        originalstat = nil;
     
     _tacklesTextField.text = [stat.tackles stringValue];
     _assistsTextField.text = [stat.assists stringValue];
@@ -81,12 +75,6 @@
     _longestReturnTextField.text = [stat.int_long stringValue];
     _fumblesRecoveredTextField.text = [stat.fumbles_recovered stringValue];
     _safetiesTextField.text = [stat.safety stringValue];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"Updating Defensive Stats using totals will break automatic live scoring. \n Update totals with care. You should use this only if you are not entering stats during the game." delegate:self
-                                          cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
@@ -102,9 +90,10 @@
     stat.fumbles_recovered = [NSNumber numberWithInt:[_fumblesRecoveredTextField.text intValue]];
     stat.safety = [NSNumber numberWithInt:[_safetiesTextField.text intValue]];
     
-    [player updateFootballDefenseGameStats:stat];
+    [stat saveStats];
     
-    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Defensive Stats Updated" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
@@ -112,6 +101,9 @@
         [player updateFootballDefenseGameStats:originalstat];
     
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -125,6 +117,19 @@
         return (newLength > 3) ? NO : YES;
     } else
         return  NO;
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

@@ -21,6 +21,8 @@
     BOOL deletegame;
 }
 
+@synthesize editHomeScore;
+
 @synthesize id;
 @synthesize startdate;
 @synthesize starttime;
@@ -86,6 +88,7 @@
 
 - (id)init {
     if (self = [super init]) {
+        editHomeScore = NO;
         startdate = @"";
         starttime = @"";
         location = @"";
@@ -141,6 +144,7 @@
 - (id)initWithDictionary:(NSDictionary *)gameScheduleDictionary {
     if ((self = [super init]) && (gameScheduleDictionary.count > 0)) {
         //    gamelogs = [[NSMutableArray alloc] init];
+        editHomeScore = [[gameScheduleDictionary objectForKey:@"editHomeScore"] boolValue];
         self.id = [gameScheduleDictionary objectForKey:@"id"];
         opponent = [gameScheduleDictionary objectForKey:@"opponent"];
         leaguegame = [[gameScheduleDictionary objectForKey:@"league"] boolValue];
@@ -294,7 +298,8 @@
                                      [time objectAtIndex:0], @"starttime(4i)", [time objectAtIndex:1], @"starttime(5i)",
                                      homeaway, @"homeaway", [homescore stringValue], @"homescore",
                                      [opponentscore stringValue], @"opponentscore", [[NSNumber numberWithBool:leaguegame] stringValue], @"league",
-                                     [[NSNumber numberWithBool:gameisfinal] stringValue], @"final", nil];
+                                     [[NSNumber numberWithBool:gameisfinal] stringValue], @"final", [[NSNumber numberWithBool:editHomeScore] stringValue],
+                                     @"EditHomeScore", nil];
     
     NSArray *timearray = [currentgametime componentsSeparatedByString:@":"];
     

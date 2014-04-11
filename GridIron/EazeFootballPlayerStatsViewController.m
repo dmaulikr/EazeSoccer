@@ -10,6 +10,15 @@
 #import "EazesportzAppDelegate.h"
 #import "EazesportzStatTableHeaderCell.h"
 
+#import "EazesportzFootballPassingTotalsViewController.h"
+#import "EazesportzFootballRushingTotalsViewController.h"
+#import "EazesportzFootballReceivingTotalsViewController.h"
+#import "EazesportzFootballDefenseTotalsViewController.h"
+#import "EazesportzFootballPlaceKickerTotalsViewController.h"
+#import "EazesportzFootballPunterTotalsViewController.h"
+#import "EazesportzFootballReturnerTotalsViewController.h"
+#import "EazesportzFootballKickerTotalsViewController.h"
+
 @interface EazeFootballPlayerStatsViewController ()
 
 @end
@@ -390,7 +399,7 @@
                 cell.label5.text = [stat.xpblocked stringValue];
                 cell.label6.text = [NSString stringWithFormat:@"%d", [stat.xpmade intValue]];
             }
-        } else if (indexPath.section == 2) {
+        } else if (indexPath.section == 3) {
             FootballPunterStats *stat;
             
             if (indexPath.row < currentSettings.gameList.count) {
@@ -422,12 +431,12 @@
                 cell.label6.text = [[NSNumber numberWithFloat:([stat.punts_yards floatValue]/[stat.punts floatValue])] stringValue];
             else
                 cell.label6.text = @"0.0";
-         } else {
+         } else if (indexPath.section == 2) {
             FootballKickerStats *stat;
             
             if (indexPath.row < currentSettings.gameList.count) {
                 stat = [player findFootballKickerStat:[[currentSettings.gameList objectAtIndex:indexPath.row] id]];
-                cell.playerLabel.text = [[currentSettings findAthlete:stat.athlete_id] logname];
+                cell.playerLabel.text = [[currentSettings.gameList objectAtIndex:indexPath.row] opponent_mascot];
             } else {
                 stat = [[FootballKickerStats alloc] init];
                 cell.playerLabel.text = @"Totals";
@@ -466,7 +475,7 @@
         
         if (indexPath.row < currentSettings.gameList.count) {
             stat = [player findFootballReturnerStat:[[currentSettings.gameList objectAtIndex:indexPath.row] id]];
-            cell.playerLabel.text = [[currentSettings findAthlete:stat.athlete_id] logname];
+            cell.playerLabel.text = [[currentSettings.gameList objectAtIndex:indexPath.row] opponent_mascot];
         } else {
             stat = [[FootballReturnerStats alloc] init];
             cell.playerLabel.text = @"Totals";
@@ -529,17 +538,39 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([currentSettings isSiteOwner]) {
+        if (indexPath.row < currentSettings.gameList.count) {
+            if ([visiblestats isEqualToString:@"Pass"])
+                [self performSegueWithIdentifier:@"PassingTotalsSegue" sender:self];
+            else if ([visiblestats isEqualToString:@"Rush"])
+                [self performSegueWithIdentifier:@"RushingTotalsSegue" sender:self];
+            else if ([visiblestats isEqualToString:@"Rec"])
+                [self performSegueWithIdentifier:@"ReceivingTotalsSegue" sender:self];
+            else if ([visiblestats isEqualToString:@"Def"])
+                [self performSegueWithIdentifier:@"DefensiveTotalsSegue" sender:self];
+            else if ([visiblestats isEqualToString:@"Kick"]) {
+                switch (indexPath.section) {
+                    case 0:
+                        [self performSegueWithIdentifier:@"PlaceKickerTotalsSegue" sender:self];
+                        break;
+                        
+                    case 1:
+                        [self performSegueWithIdentifier:@"PlaceKickerTotalsSegue" sender:self];
+                        break;
+                        
+                    case 2:
+                        [self performSegueWithIdentifier:@"KickerTotalsSegue" sender:self];
+                        break;
+                        
+                    default:
+                        [self performSegueWithIdentifier:@"PunterTotalsSegue" sender:self];
+                        break;
+                }
+            } else if ([visiblestats isEqualToString:@"Ret"])
+                [self performSegueWithIdentifier:@"ReturnerTotalsSegue" sender:self];
+        }
+    }
 }
-/*
- - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
- if ([visiblestats isEqualToString:@"Team"])
- return @"Team Stats";
- else if ([visiblestats isEqualToString:@"Pass"])
- return @"Passing Stats";
- else
- return @"Foo";
- }
- */
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UITableViewCell *headerView;
@@ -856,6 +887,44 @@
 
 - (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
     _bannerView.hidden = YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSIndexPath *indexPath = [_playerStatTableView indexPathForSelectedRow];
+    
+    if ([segue.identifier isEqualToString:@"PassingTotalsSegue"]) {
+        EazesportzFootballPassingTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"RushingTotalsSegue"]) {
+        EazesportzFootballPassingTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"ReceivingTotalsSegue"]) {
+        EazesportzFootballReceivingTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"DefensiveTotalsSegue"]) {
+        EazesportzFootballDefenseTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"PlaceKickerTotalsSegue"]) {
+        EazesportzFootballPlaceKickerTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"PunterTotalsSegue"]) {
+        EazesportzFootballPunterTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"ReturnerTotalsSegue"]) {
+        EazesportzFootballReturnerTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"KickerTotalsSegue"]) {
+        EazesportzFootballKickerTotalsViewController *destController = segue.destinationViewController;
+        destController.player = player;
+        destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    }
 }
 
 @end

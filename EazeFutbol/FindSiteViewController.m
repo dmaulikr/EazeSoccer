@@ -15,7 +15,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface FindSiteViewController () <CLLocationManagerDelegate>
+@interface FindSiteViewController ()
 
 @end
 
@@ -34,8 +34,6 @@
     Sport *sport;
     
     SelectStateViewController *selectStateController;
-    CLLocationManager *locationManager;
-    CLLocation *currentLocation;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -65,19 +63,12 @@
     plistPath = [[NSBundle mainBundle] pathForResource:@"USStateAbbreviations" ofType:@"plist"];
     stateDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
     NSArray * keys = [stateDictionary allKeys];
-    stateList = [keys sortedArrayUsingSelector:@selector(compare:)];
-    
-    // set up location manager
-    locationManager = [[CLLocationManager alloc] init];
-    [locationManager setDelegate:self];
-    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-    [locationManager startUpdatingLocation];
+    stateList = [keys sortedArrayUsingSelector:@selector(compare:)];    
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    CLLocation * userLocation = [locations lastObject];
-    NSLog(@"Detected Location : %f, %f", userLocation.coordinate.latitude, userLocation.coordinate.longitude);
-    CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
+- (void)updatedLocation:(NSNotification *)notification {
+    CLLocation *userLocation = [[notification userInfo] objectForKey:@"newLocationResult"];
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     
     [geocoder reverseGeocodeLocation:userLocation completionHandler:^(NSArray *placemarks, NSError *error) {
         if (error){
@@ -85,18 +76,13 @@
             return;
         }
         CLPlacemark *placemark = [placemarks objectAtIndex:0];
-        NSLog(@"placemark.ISOcountryCode %@",placemark.ISOcountryCode);
-        NSLog(@"placemark.country %@", placemark.country);
-        NSLog(@"placemark.city %@", placemark.subLocality);
-        NSLog(@"placemark.zipcode %@", placemark.postalCode);
-        NSLog(@"placemark.administrativeArea %@", placemark.administrativeArea);
         _countryTextField.text = placemark.country;
         _cityTextField.text = placemark.locality;
         _stateTextField.text = placemark.administrativeArea;
-//        _zipcodeTextfield.text = placemark.postalCode;
+        _zipcodeTextfield.text = placemark.postalCode;
     }];
     
-    [locationManager stopUpdatingLocation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NewLocationNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -120,6 +106,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatedLocation:) name:@"NewLocationNotification" object:nil];
     
     if ((currentSettings.changesite) && (currentSettings.sport.id.length == 0)) {
         self.navigationItem.hidesBackButton = YES;

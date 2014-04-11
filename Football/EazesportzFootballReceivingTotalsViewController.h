@@ -31,5 +31,6 @@
 
 - (IBAction)submitButtonClicked:(id)sender;
 - (IBAction)cancelButtonClicked:(id)sender;
+- (IBAction)saveBarButtonClicked:(id)sender;
 
 @end

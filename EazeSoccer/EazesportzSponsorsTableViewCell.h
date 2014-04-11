@@ -19,4 +19,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *zip;
 @property (weak, nonatomic) IBOutlet UILabel *phone;
 @property (weak, nonatomic) IBOutlet UILabel *sponsorLevel;
+@property (weak, nonatomic) IBOutlet UILabel *sponsorUrl;
 @end

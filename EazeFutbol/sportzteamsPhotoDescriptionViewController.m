@@ -49,6 +49,8 @@
     _gameTagLabel.layer.cornerRadius = 6;
     _playersTagLabel.layer.cornerRadius = 6;
 //    self.view.backgroundColor = [UIColor clearColor];
+    photoDescriptionText.layer.borderWidth = 1.0f;
+    photoDescriptionText.layer.borderColor = [[UIColor lightGrayColor] CGColor];
 }
 
 - (void)didReceiveMemoryWarning

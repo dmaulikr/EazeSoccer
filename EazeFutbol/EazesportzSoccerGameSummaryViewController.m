@@ -42,14 +42,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    [self textFieldConfiguration:_secondsTextField];
-    [self textFieldConfiguration:_minutesTextField];
-    [self textFieldConfiguration:_visitorScoreTextField];
-    [self textFieldConfiguration:_visitorCKTextField];
-    [self textFieldConfiguration:_visitorShotsTextField];
-    [self textFieldConfiguration:_visitorSavesTextField];
-    [self textFieldConfiguration:_periodsTextField];
-    
     _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
     _visitorScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -76,6 +68,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self textFieldConfiguration:_secondsTextField];
+    [self textFieldConfiguration:_minutesTextField];
+    [self textFieldConfiguration:_visitorScoreTextField];
+    [self textFieldConfiguration:_visitorCKTextField];
+    [self textFieldConfiguration:_visitorShotsTextField];
+    [self textFieldConfiguration:_visitorSavesTextField];
+    [self textFieldConfiguration:_periodsTextField];
+    [self textFieldConfiguration:_homeScoreTextField];
+    
     NSArray *gametime = [game.currentgametime componentsSeparatedByString:@":"];
     _minutesTextField.text = [gametime objectAtIndex:0];
     _secondsTextField.text = [gametime objectAtIndex:1];
@@ -89,7 +90,12 @@
     _homeimage.image = [currentSettings.team getImage:@"tiny"];
     _visitorteamLabel.text = game.opponent_mascot;
     _vsitorimage.image = [currentSettings getOpponentImage:game];
-    _homescoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+    
+    if (game.editHomeScore)
+        _homeScoreTextField.text = [game.homescore stringValue];
+    else
+        _homeScoreTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+    
     _homeCkLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeCK]];
     _homeshotsLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeShots]];
     _homesavesLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeSaves]];
@@ -375,9 +381,21 @@
 
 - (void)textFieldConfiguration:(UITextField *)textField {
     if (currentSettings.isSiteOwner) {
-        textField.enabled = YES;
-        textField.backgroundColor = [UIColor whiteColor];
-        textField.textColor = [UIColor blackColor];
+        if (textField == _homeScoreTextField) {
+            if (game.editHomeScore) {
+                textField.enabled = YES;
+                textField.backgroundColor = [UIColor whiteColor];
+                textField.textColor = [UIColor blackColor];
+            } else {
+                textField.enabled = NO;
+                textField.backgroundColor = [UIColor blackColor];
+                textField.textColor = [UIColor yellowColor];
+            }
+        } else {
+            textField.enabled = YES;
+            textField.backgroundColor = [UIColor whiteColor];
+            textField.textColor = [UIColor blackColor];
+        }
     } else {
         textField.enabled = NO;
         textField.backgroundColor = [UIColor blackColor];

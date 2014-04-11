@@ -28,8 +28,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *kickoffreturnlongTextField;
 @property (weak, nonatomic) IBOutlet UITextField *kickoffreturntdTextField;
 @property (weak, nonatomic) IBOutlet UITextField *kickoffreturnyardsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *kickoffReturnAverageTextField;
+@property (weak, nonatomic) IBOutlet UITextField *puntReturnAverageTextField;
 
 - (IBAction)submitButtonClicked:(id)sender;
 - (IBAction)cancelButtonClicked:(id)sender;
+- (IBAction)saveBarButtonClicked:(id)sender;
 
 @end

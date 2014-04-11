@@ -8,6 +8,8 @@
 
 #import "EazeSponsorTableViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzSponsorsTableViewCell.h"
+#import "EazesportzSponsorMapViewController.h"
 
 @interface EazeSponsorTableViewController ()
 
@@ -28,6 +30,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.navigationItem.rightBarButtonItem = self.addBarButton;
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,22 +54,41 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"SponsorsCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    // Configure the cell...
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-    }
-    
-    Sponsor *sponsor = [currentSettings.sponsors objectAtIndex:indexPath.row];
+    EazesportzSponsorsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     cell.tag = indexPath.row;
     
-    cell.imageView.image = sponsor.thumbimage;
-    cell.textLabel.text = sponsor.name;
-    cell.detailTextLabel.text = sponsor.sponsorlevel;
+    Sponsor *sponsor = [currentSettings.sponsors objectAtIndex:indexPath.row];
+    
+    if (sponsor.tinyimage == nil) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:sponsor.tiny]];
+            cell.sponsorImage.image = [UIImage imageWithData:image];
+        });
+    } else {
+        cell.sponsorImage.image = sponsor.tinyimage;
+    }
+    
+    cell.sponsorName.text = sponsor.name;
+    cell.addrnum.text = [sponsor.addrnum stringValue];
+    cell.street.text = sponsor.street;
+    cell.city.text = sponsor.city;
+    cell.state.text = sponsor.state;
+    cell.zip.text = sponsor.zip;
+    cell.phone.text = sponsor.phone;
+    cell.sponsorLevel.text = sponsor.sponsorlevel;
+    cell.sponsorUrl.text = sponsor.adurl;
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([currentSettings isSiteOwner])
+        [self performSegueWithIdentifier:@"EditSponsorSegue" sender:self];
+    else
+        [self performSegueWithIdentifier:@"SponsorMapSegue" sender:self];
 }
 
 -(BOOL)shouldAutorotate {
@@ -78,6 +102,21 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSIndexPath *indexPath = [self.sponsorTableView indexPathForSelectedRow];
+    
+    if (![segue.identifier isEqualToString:@"SponsorMapSegue"]) {
+        [super prepareForSegue:segue sender:sender];
+    } else {
+        EazesportzSponsorMapViewController *destController = segue.destinationViewController;
+        destController.sponsor = [currentSettings.sponsors objectAtIndex:indexPath.row];
+    }
+}
+
+- (IBAction)addBarButtonClicked:(id)sender {
+    [super addSponsor];
 }
 
 @end

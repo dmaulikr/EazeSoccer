@@ -34,7 +34,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
     self.title = @"Rushing Totals";
     
     _attemptsTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -57,15 +56,10 @@
     [super viewWillAppear:animated];
     
     _playerImage.image = [currentSettings getRosterTinyImage:player];
-    _playerName.text = player.logname;
-    _playerNumber.text = [player.number stringValue];
+    _playerName.text = player.numberLogname;
+//    _playerNumber.text = [player.number stringValue];
     
     stat = [player findFootballRushingStat:game.id];
-    
-    if (stat.football_rushing_id.length > 0)
-        originalstat = [stat copy];
-    else
-        originalstat = nil;
     
     _attemptsTextField.text = [stat.attempts stringValue];
     _fumblesTextField.text = [stat.fumbles stringValue];
@@ -76,11 +70,14 @@
     _tdTextField.text = [stat.td stringValue];
     _twopointconvTextField.text = [stat.twopointconv stringValue];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"Updating Rushing Stats using totals will break automatic live scoring. \n Update totals with care. You should use this only if you are NOT entering stats during the game." delegate:self
-                                          cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
+    if ([stat.attempts intValue] > 0)
+        _averageTextField.text = [NSString stringWithFormat:@"%.02f", [stat.yards floatValue] / [stat.attempts floatValue]];
+    else
+        _averageTextField.text = @"0.0";
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:sender];
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
@@ -93,9 +90,10 @@
     stat.td = [NSNumber numberWithInt:[_tdTextField.text intValue]];
     stat.twopointconv = [NSNumber numberWithInt:[_twopointconvTextField.text intValue]];
     
-    [player updateFootballRushingGameStats:stat];
+    [stat saveStats];
     
-    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Rushing Stats Updated" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
@@ -116,6 +114,19 @@
         return (newLength > 3) ? NO : YES;
     } else
         return  NO;
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

@@ -29,4 +29,8 @@
 - (IBAction)submitButtonClicked:(id)sender;
 - (IBAction)cancelButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *yardsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *interceptionsTextField;
+- (IBAction)saveBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *compPercentageTextField;
+@property (weak, nonatomic) IBOutlet UITextField *averageTextField;
 @end

@@ -42,6 +42,9 @@
 
 @synthesize streamingurl;
 @synthesize streamingbucket;
+@synthesize pricingurl;
+
+@synthesize supportedsports;
 
 @synthesize teamcount;
 
@@ -99,6 +102,8 @@
         teamcount = [sportDictionary objectForKey:@"teamcount"];
         streamingurl = [sportDictionary objectForKey:@"streamingurl"];
         streamingbucket = [sportDictionary objectForKey:@"streamingbucket"];
+        pricingurl = [sportDictionary objectForKey:@"pricingurl"];
+        supportedsports = [sportDictionary objectForKey:@"supportedsports"];
         
         if ([name isEqualToString:@"Soccer"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"soccer_positions"]];

@@ -34,7 +34,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
     self.title = @"Kicker Totals";
     
     _koattemptsTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -52,7 +51,7 @@
     [super viewWillAppear:animated];
     
     _playerImage.image = [currentSettings getRosterTinyImage:player];
-    _playerName.text = player.logname;
+    _playerName.text = player.numberLogname;
     _playerNumber.text = [player.number stringValue];
     
     stat = [player findFootballKickerStat:game.id];
@@ -84,6 +83,10 @@
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
 }
 
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:sender];
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
     NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
     NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
@@ -95,6 +98,19 @@
         return (newLength > 3) ? NO : YES;
     } else
         return  NO;
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

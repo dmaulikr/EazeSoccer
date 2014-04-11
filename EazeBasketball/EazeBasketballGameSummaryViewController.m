@@ -80,28 +80,24 @@
     
     self.navigationController.toolbarHidden = YES;
     
+    [self textFieldConfiguration:_secondsTextfield];
+    [self textFieldConfiguration:_minutesTextField];
+    [self textFieldConfiguration:_visitorScoreTextField];
+    [self textFieldConfiguration:_homeScoreTextField];
+    [self textFieldConfiguration:_visitorFoulsTextField];
+    [self textFieldConfiguration:_homeFoulsTextField];
+    [self textFieldConfiguration:_periodTextField];
+
     if (![currentSettings isSiteOwner]) {
-        _visitorFoulsTextField.enabled = NO;
-        _homeFoulsTextField.enabled = NO;
-        _minutesTextField.enabled = NO;
-        _secondsTextfield.enabled = NO;
         _homePossessionArrowButton.enabled = NO;
         _visitorPossessionArrowButton.enabled = NO;
-        _visitorScoreTextField.enabled = NO;
-        _periodTextField.enabled = NO;
         _homeBonusButton.enabled = NO;
         [_homeBonusButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _visitorBonusButton.enabled = NO;
         [_visitorBonusButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     } else {
-        _visitorFoulsTextField.enabled = YES;
-        _homeFoulsTextField.enabled = YES;
-        _minutesTextField.enabled = YES;
-        _secondsTextfield.enabled = YES;
         _homePossessionArrowButton.enabled = YES;
         _visitorPossessionArrowButton.enabled = YES;
-        _visitorScoreTextField.enabled = YES;
-        _periodTextField.enabled = YES;
         _homeBonusButton.enabled = YES;
         [_homeBonusButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         _visitorBonusButton.enabled = YES;
@@ -139,16 +135,31 @@
         _visitorBonusImage.hidden = NO;
     }
     
-    _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+    if (game.editHomeScore)
+        _homeScoreTextField.text = [game.homescore stringValue];
+    else
+        _homeScoreTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
     
     [_statTableView reloadData];
 }
 
 - (void)textFieldConfiguration:(UITextField *)textField {
     if (currentSettings.isSiteOwner) {
-        textField.enabled = YES;
-        textField.backgroundColor = [UIColor whiteColor];
-        textField.textColor = [UIColor blackColor];
+        if (textField == _homeScoreTextField) {
+            if (game.editHomeScore) {
+                textField.enabled = YES;
+                textField.backgroundColor = [UIColor whiteColor];
+                textField.textColor = [UIColor blackColor];
+            } else {
+                textField.enabled = NO;
+                textField.backgroundColor = [UIColor blackColor];
+                textField.textColor = [UIColor yellowColor];
+            }
+        } else {
+            textField.enabled = YES;
+            textField.backgroundColor = [UIColor whiteColor];
+            textField.textColor = [UIColor blackColor];
+        }
     } else {
         textField.enabled = NO;
         textField.backgroundColor = [UIColor blackColor];

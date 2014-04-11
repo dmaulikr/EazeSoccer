@@ -71,6 +71,8 @@
     _descriptionTextView.layer.cornerRadius = 4;
     _playerTableView.layer.borderWidth = 1.0f;
     _playerTableView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    _descriptionTextView.layer.borderWidth = 1.0f;
+    _descriptionTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
     _activityIndicator.hidesWhenStopped = YES;
     newPhoto = NO;
@@ -838,8 +840,12 @@
                 [currentSettings.teamPhotos removeFeaturedPhoto:photo];
                 [currentSettings.teamPhotos saveFeaturedPhotos];
             }
-            
-            [self.navigationController popViewControllerAnimated:YES];
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+                [self.navigationController popViewControllerAnimated:YES];
+            else {
+                currentSettings.photodeleted = YES;
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Photo"
                                                             message:[NSString stringWithFormat:@"%ld", (long)[httpResponse statusCode]]

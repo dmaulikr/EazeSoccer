@@ -34,7 +34,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
     self.title = @"Passing Totals";
     
     _attemptsTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -45,6 +44,10 @@
     _sacksTextField.keyboardType = UIKeyboardTypeNumberPad;
     _tdTextField.keyboardType = UIKeyboardTypeNumberPad;
     _twopointconvTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _interceptionsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    _compPercentageTextField.enabled = NO;
+    _averageTextField.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -62,11 +65,6 @@
     
     stat = [player findFootballPassingStat:game.id];
     
-    if (stat.football_passing_id.length > 0)
-        originalstat = [stat copy];
-    else
-        originalstat = nil;
-    
     _attemptsTextField.text = [stat.attempts stringValue];
     _completionsTextField.text = [stat.completions stringValue];
     _yardslostTextField.text = [stat.yards_lost stringValue];
@@ -75,12 +73,18 @@
     _sacksTextField.text = [stat.sacks stringValue];
     _tdTextField.text = [stat.td stringValue];
     _twopointconvTextField.text = [stat.twopointconv stringValue];
+    _interceptionsTextField.text = [stat.interceptions stringValue];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                         message:@"Updating Passing Stats using totals will break automatic live scoring. \n Update totals with care. You should use this only if you are not entering stats during the game." delegate:self
-                         cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
+    if ([stat.attempts intValue] > 0)
+        _compPercentageTextField.text = [NSString stringWithFormat:@"%.02f", [stat.completions floatValue] / [stat.attempts floatValue]];
+    else
+        _compPercentageTextField.text = @"0.0";
+    
+    if ([stat.completions intValue] > 0)
+        _averageTextField.text = [NSString stringWithFormat:@"%.02f", [stat.yards floatValue] / [stat.completions floatValue]];
+    else
+        _averageTextField.text = @"0.0";
+    
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
@@ -92,17 +96,17 @@
     stat.sacks = [NSNumber numberWithInt:[_sacksTextField.text intValue]];
     stat.td = [NSNumber numberWithInt:[_tdTextField.text intValue]];
     stat.twopointconv = [NSNumber numberWithInt:[_twopointconvTextField.text intValue]];
+    stat.interceptions = [NSNumber numberWithInt:[_interceptionsTextField.text intValue]];
     
-    [player updateFootballPassingGameStats:stat];
-    
-    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+    [stat saveStats];
+        
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Passing stats update successful" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
     if (originalstat != nil)
         [player updateFootballPassingGameStats:originalstat];
-    
-    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -116,6 +120,23 @@
         return (newLength > 3) ? NO : YES;
     } else
         return  NO;
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:self];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

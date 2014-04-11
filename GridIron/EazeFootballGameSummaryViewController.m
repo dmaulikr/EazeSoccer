@@ -21,6 +21,8 @@
 @implementation EazeFootballGameSummaryViewController {
     EazesportzGetGame *getGame;
     NSString *quarter;
+    
+    NSIndexPath *deleteIndexPath;
 }
 
 @synthesize game;
@@ -85,6 +87,7 @@
     [self textFieldConfiguration:_quarterTextField];
     [self textFieldConfiguration:_ballonTextField];
     [self textFieldConfiguration:_togoTextField];
+    [self textFieldConfiguration:_homeScoreTextField];
     
     NSArray *gametime = [game.currentgametime componentsSeparatedByString:@":"];
     _minutesTextField.text = [gametime objectAtIndex:0];
@@ -98,6 +101,11 @@
     _quarterTextField.text = [game.period stringValue];
     _homeImage.image = [currentSettings.team getImage:@"tiny"];
     _lastplayLabel.text = game.lastplay;
+    
+    if (game.editHomeScore)
+        _homeScoreTextField.text = [game.homescore stringValue];
+    else
+        _homeScoreTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
     
     if ([currentSettings getOpponentImage:game] == nil) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -116,7 +124,7 @@
 
     [_homeMascotButton setTitle:currentSettings.team.mascot forState:UIControlStateNormal];
     [_visitorMascotButton setTitle:game.opponent_mascot forState:UIControlStateNormal];
-    _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+//    _homeScoreLabel.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
     _sumhomeLabel.text = currentSettings.team.mascot;
     _sumvisitorLabel.text = game.opponent_mascot;
     _hq1Label.text = [game.homeq1 stringValue];
@@ -154,9 +162,21 @@
 
 - (void)textFieldConfiguration:(UITextField *)textField {
     if (currentSettings.isSiteOwner) {
-        textField.enabled = YES;
-        textField.backgroundColor = [UIColor whiteColor];
-        textField.textColor = [UIColor blackColor];
+        if (textField == _homeScoreTextField) {
+            if (game.editHomeScore) {
+                textField.enabled = YES;
+                textField.backgroundColor = [UIColor whiteColor];
+                textField.textColor = [UIColor blackColor];
+            } else {
+                textField.enabled = NO;
+                textField.backgroundColor = [UIColor blackColor];
+                textField.textColor = [UIColor yellowColor];
+            }
+        } else {
+            textField.enabled = YES;
+            textField.backgroundColor = [UIColor whiteColor];
+            textField.textColor = [UIColor blackColor];
+        }
     } else {
         textField.enabled = NO;
         textField.backgroundColor = [UIColor blackColor];
@@ -176,7 +196,10 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Score Log";
+    if ([currentSettings isSiteOwner])
+        return @"Score Log - Swipe to Delete";
+    else
+        return @"Score Log";
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -224,6 +247,20 @@
         [self performSegueWithIdentifier:@"GameVideoSegue" sender:self];
     } else if (log.hasphotos) {
         [self performSegueWithIdentifier:@"GamePhotoSegue" sender:self];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if ([currentSettings isSiteOwner]) {
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
+            deleteIndexPath = indexPath;
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+                                                            message:@"Stats will be automatically updated. Click Confirm to Proceed"
+                                                           delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     }
 }
 
@@ -351,6 +388,10 @@
     } else if ([title isEqualToString:@"Q4"]) {
         quarter = @"Q4";
         [self scoreType];
+    } else if ([title isEqualToString:@"Confirm"]) {
+        [[game.gamelogs objectAtIndex:deleteIndexPath.row] initDeleteGameLog];
+        [game.gamelogs removeObjectAtIndex:deleteIndexPath.row];
+        [self viewWillAppear:YES];
     }
 }
 

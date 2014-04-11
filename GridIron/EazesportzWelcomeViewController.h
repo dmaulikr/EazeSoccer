@@ -11,4 +11,5 @@
 @interface EazesportzWelcomeViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIButton *sponsorButton;
+
 @end

@@ -15,5 +15,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteBarButton;
 - (IBAction)deleteBarButonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *infoBarButton;
-- (IBAction)infoBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *globeBarButton;
+
 @end

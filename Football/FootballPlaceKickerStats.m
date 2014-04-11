@@ -87,9 +87,9 @@
 }
 
 - (void)saveStats {
-    if (([fgattempts intValue] > 0) || ([fgblocked intValue] > 0) || ([fglong intValue] > 0) || ([fgmade intValue] > 0) ||
-        ([xpmade intValue] > 0) || ([xpmissed intValue] > 0) || ([xpattempts intValue] > 0) || ([xpblocked intValue] > 0)) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    if (([fgattempts intValue] >= 0) || ([fgblocked intValue] >= 0) || ([fglong intValue] >= 0) || ([fgmade intValue] >= 0) ||
+        ([xpmade intValue] >= 0) || ([xpmissed intValue] >= 0) || ([xpattempts intValue] >= 0) || ([xpblocked intValue] >= 0)) {
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *aurl;
             NSBundle *mainBundle = [NSBundle mainBundle];
             
@@ -156,7 +156,7 @@
             } else {
                 httperror = [serverData objectForKey:@"error"];
             }
-        });
+//        });
     }
 }
 

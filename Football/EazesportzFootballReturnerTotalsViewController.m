@@ -35,7 +35,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor clearColor];
     self.title = @"Returner Totals";
     
     _puntreturnlongTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -58,30 +57,30 @@
     [super viewWillAppear:animated];
     
     _playerImage.image = [currentSettings getRosterTinyImage:player];
-    _playerName.text = player.logname;
+    _playerName.text = player.numberLogname;
     _playerNumber.text = [player.number stringValue];
     
     stat = [player findFootballReturnerStat:game.id];
-    
-    if (stat.football_returner_id.length > 0)
-        originalstat = [stat copy];
-    else
-        originalstat = nil;
     
     _puntreturnyardsTextField.text = [stat.punt_returnyards stringValue];
     _puntreturnTextField.text = [stat.punt_return stringValue];
     _puntreturntdTextField.text = [stat.punt_returntd stringValue];
     _puntreturnlongTextField.text = [stat.punt_returnlong stringValue];
+    
+    if ([stat.punt_return intValue] > 0)
+        _puntReturnAverageTextField.text = [NSString stringWithFormat:@"%.02f", [stat.punt_returnyards floatValue] / [stat.punt_return floatValue]];
+    else
+        _puntReturnAverageTextField.text = @"0.0";
+    
     _kickoffreturnyardsTextField.text = [stat.koyards stringValue];
     _kickoffreturnTextField.text = [stat.koreturn stringValue];
     _kickoffreturntdTextField.text = [stat.kotd stringValue];
     _kickoffreturnlongTextField.text = [stat.kolong stringValue];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"Updating Return Stats using totals will break automatic live scoring. \n Update totals with care. You should use this only if you are NOT entering stats during the game." delegate:self
-                                          cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
+    if ([stat.koreturn intValue] > 0)
+        _kickoffReturnAverageTextField.text = [NSString stringWithFormat:@"%.02f", [stat.koyards floatValue] / [stat.koreturn floatValue]];
+    else
+        _kickoffReturnAverageTextField.text = @"0.0";
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
@@ -94,9 +93,10 @@
     stat.kotd = [NSNumber numberWithInt:[_kickoffreturntdTextField.text intValue]];
     stat.koyards = [NSNumber numberWithInt:[_kickoffreturnyardsTextField.text intValue]];
     
-    [player updateFootballReturnerGameStats:stat];
+    [stat saveStats];
     
-    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Returner Stats Updated" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
@@ -104,6 +104,10 @@
         [player updateFootballReturnerGameStats:originalstat];
     
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:sender];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
@@ -117,6 +121,19 @@
         return (newLength > 3) ? NO : YES;
     } else
         return  NO;
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

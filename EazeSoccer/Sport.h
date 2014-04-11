@@ -40,6 +40,9 @@
 
 @property (nonatomic, strong) NSString *streamingurl;
 @property (nonatomic, strong) NSString *streamingbucket;
+@property (nonatomic, strong) NSString *pricingurl;
+
+@property (nonatomic, strong) NSMutableArray *supportedsports;
 
 @property(nonatomic, strong) NSNumber *teamcount;
 

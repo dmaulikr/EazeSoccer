@@ -27,8 +27,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *xpattemptsTextField;
 @property (weak, nonatomic) IBOutlet UITextField *xpblockedTextField;
 @property (weak, nonatomic) IBOutlet UITextField *xpmadeTextField;
+@property (weak, nonatomic) IBOutlet UITextField *pointsTextField;
 
 - (IBAction)submitButtonClicked:(id)sender;
 - (IBAction)cancelButtonClicked:(id)sender;
+- (IBAction)saveBarButtonClicked:(id)sender;
 
 @end

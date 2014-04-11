@@ -34,11 +34,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        self.view.backgroundColor = [UIColor clearColor];
-    else
-        self.view.backgroundColor = [UIColor whiteColor];
-    
     self.title = @"Receiving Totals";
     
     _attemptsTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -62,7 +57,7 @@
     
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
         _playerImage.image = [currentSettings getRosterTinyImage:player];
-        _playerName.text = player.logname;
+        _playerName.text = player.numberLogname;
         _playerNumber.text = [player.number stringValue];
     } else {
         _playerImage.image =[currentSettings getRosterThumbImage:player];
@@ -72,11 +67,6 @@
     
     stat = [player findFootballReceivingStat:game.id];
     
-    if (stat.football_receiving_id.length > 0)
-        originalstat = [stat copy];
-    else
-        originalstat = nil;
-    
     _attemptsTextField.text = [stat.receptions stringValue];
     _fumblesTextField.text = [stat.fumbles stringValue];
     _fumblesLostTextField.text = [stat.fumbles_lost stringValue];
@@ -85,12 +75,6 @@
     _longestTextField.text = [stat.longest stringValue];
     _tdTextField.text = [stat.td stringValue];
     _twopointconvTextField.text = [stat.twopointconv stringValue];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                          message:@"Updating Receiving Stats using totals will break automatic live scoring. \n Update totals with care. You should use this only if you are NOT entering stats during the game. \n Reciving totals are also automatically added when QB stats are entered if you use live stat updates." delegate:self
-                                          cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -110,7 +94,8 @@
     
     [player updateFootballReceivingGameStats:stat];
     
-    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Receiving Stats Updated" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
 }
 
 - (IBAction)cancelButtonClicked:(id)sender {
@@ -118,6 +103,10 @@
         [player updateFootballReceivingGameStats:originalstat];
     
     [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:1] animated:YES];
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:sender];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{

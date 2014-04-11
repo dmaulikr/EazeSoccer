@@ -57,19 +57,8 @@
         [alert show];
         return;
     } else {
-        if (playerSelectController) {
-            if (playerSelectController.player)
-                self.player = playerSelectController.player;
-        } else if (gameSelectController) {
-            if (gameSelectController.thegame)
-                self.game = gameSelectController.thegame;
-        } else if (usersSelectController) {
-            if (usersSelectController.user)
-                self.user = usersSelectController.user;
-        }
-        
         if (gamelogSelectController) {
-            if (gamelogSelectController.game) {
+            if (self.game) {
                 self.gamelog = gamelogSelectController.gamelog;
             }
         }
@@ -133,20 +122,15 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
-        playerSelectController = segue.destinationViewController;
-    } else if ([segue.identifier isEqualToString:@"GameSelectSegue"]) {
-        gameSelectController = segue.destinationViewController;
-    } else if ([segue.identifier isEqualToString:@"VideoPlaySegue"]) {
+    if ([segue.identifier isEqualToString:@"VideoPlaySegue"]) {
         NSIndexPath *indexPath = [[self.collectionView indexPathsForSelectedItems] objectAtIndex:0];
         sportzteamsMovieViewController *destViewController = segue.destinationViewController;
         destViewController.videoclip = [self.videos objectAtIndex:indexPath.row];
-    } else if ([segue.identifier isEqualToString:@"UserSelectSegue"]) {
-        usersSelectController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
         gamelogSelectController = segue.destinationViewController;
         gamelogSelectController.game = gameSelectController.thegame;
-    }
+    } else
+        [super prepareForSegue:segue sender:self];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -155,24 +139,18 @@
     if ([title isEqualToString:@"Player"]) {
         self.game = nil;
         self.user = nil;
-        gameSelectController = nil;
         gamelogSelectController.game = nil;
-        usersSelectController = nil;
-        [self performSegueWithIdentifier:@"PlayerSelectSegue" sender:self];
+        self.playerSelectContainer.hidden = NO;
     } else if ([title isEqualToString:@"Game"]) {
         self.player = nil;
         self.user = nil;
-        playerSelectController = nil;
         gamelogSelectController.game = nil;
-        usersSelectController = nil;
-        [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
+        self.gameSelectContainer.hidden = NO;
     } else if ([title isEqualToString:@"Play"]) {
         self.player = nil;
         self.user = nil;
-        playerSelectController = nil;
-        usersSelectController = nil;
         
-        if (gameSelectController.thegame)
+        if (self.game)
             [self performSegueWithIdentifier:@"GamePlaySelectSegue" sender:self];
         else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Game must be selected before searching by play"
@@ -185,15 +163,12 @@
         self.player = nil;
         self.game = nil;
         gamelogSelectController.game = nil;
-       [self performSegueWithIdentifier:@"UserSelectSegue" sender:self];
+        self.userSelectionContainer.hidden = NO;
     } else if ([title isEqualToString:@"All"]) {
         self.game = nil;
         self.user = nil;
         self.player = nil;
         gamelogSelectController = nil;
-        playerSelectController = nil;
-        gameSelectController = nil;
-        usersSelectController = nil;
         
         [super retrieveVideos];
     }

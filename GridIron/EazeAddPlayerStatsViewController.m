@@ -55,6 +55,8 @@
     _secondsStatTextField.keyboardType = UIKeyboardTypeNumberPad;
     
     _receiverTextField.inputView = playerSelectController.inputView;
+    
+    _activityIndicator.hidesWhenStopped = YES;
 }
 
 -(BOOL)shouldAutorotate {
@@ -621,10 +623,12 @@
         
         if (addstats) {
             stat.fumbles_recovered = [NSNumber numberWithInt:[stat.fumbles_recovered intValue] + 1];
+            fumblerecovered = YES;
             game.lastplay = [NSString stringWithFormat:@"%@ - Fumble Recovered", athlete.logname];
             [self yardStats:NO];
         } else if ([stat.fumbles_recovered intValue] > 0) {
             stat.fumbles_recovered = [NSNumber numberWithInt:[stat.fumbles_recovered intValue] - 1];
+            fumblerecovered = NO;
             [self yardStats:YES];
             game.lastplay = @"";
         }
@@ -643,7 +647,7 @@
                 touchdown = YES;
                 [self scoreStats:NO];
             }  else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"If you already saved a score you should delete the game log to adjust stats. Stats will be automatically updated! If not, continue." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"  message:@"Please select Interception or Fumble Recovered before adding defensive score." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert setAlertViewStyle:UIAlertViewStyleDefault];
                 [alert show];
             }
@@ -1110,6 +1114,7 @@
 }
 
 - (IBAction)savePlayerStatsButtonClicked:(id)sender {
+    [_activityIndicator startAnimating];
     if ([position isEqualToString:@"Pass"]) {
         FootballPassingStat *passstat = [athlete findFootballPassingStat:game.id];
         FootballReceivingStat *recstat;
@@ -1149,7 +1154,7 @@
         
         [passstat saveStats];
         
-        if ((touchdown) || (twopoint)) {
+        if (((touchdown) || (twopoint)) && (addstats)) {
             Gamelogs *gamelog = [self populateGameLogEntries];
             gamelog.football_passing_id = passstat.football_passing_id;
             gamelog.assistplayer = receiver.athleteid;
@@ -1176,7 +1181,7 @@
         
         [stat saveStats];
         
-        if ((touchdown) || (twopoint)) {
+        if (((touchdown) || (twopoint)) & (addstats)) {
             Gamelogs *gamelog = [self populateGameLogEntries];
             gamelog.logentry = @"yard run";
             gamelog.football_rushing_id = stat.football_rushing_id;
@@ -1200,7 +1205,7 @@
         
         [stat saveStats];
         
-        if ((touchdown) || (twopoint)) {
+        if (((touchdown) || (twopoint)) && (addstats)) {
             Gamelogs *gamelog = [self populateGameLogEntries];
             gamelog.football_defense_id = stat.football_defense_id;
             
@@ -1229,7 +1234,7 @@
         
         [stat saveStats];
         
-        if ((fieldgoal) || (xpmade)) {
+        if (((fieldgoal) || (xpmade)) && (addstats)) {
             Gamelogs *gamelog = [self populateGameLogEntries];
             gamelog.football_place_kicker_id = stat.football_place_kicker_id;
             
@@ -1274,7 +1279,7 @@
         
         [stat saveStats];
         
-        if (touchdown) {
+        if ((touchdown) && (addstats)) {
             Gamelogs *gamelog = [self populateGameLogEntries];
             gamelog.football_returner_id = stat.football_returner_id;
             gamelog.logentry = athlete.logname;
@@ -1304,6 +1309,7 @@
     
     [self viewWillAppear:YES];
     touchdown = twopoint = fieldgoal = xpmade = puntreturn = koreturn = NO;
+    [_activityIndicator stopAnimating];
 }
 
 - (Gamelogs *)populateGameLogEntries {
@@ -1363,12 +1369,12 @@
     
     if ([_minutesStatTextField.text intValue] < 10) {
         int minute = [_minutesStatTextField.text intValue];
-        _secondsStatTextField.text = [NSString stringWithFormat:@"0%d", minute];
+        _minutesStatTextField.text = [NSString stringWithFormat:@"%d", minute];
     }
     
     if ([_secondsStatTextField.text intValue] < 10) {
         int minute = [_secondsStatTextField.text intValue];
-        _minutesStatTextField.text = [NSString stringWithFormat:@"0%d", minute];
+        _secondsStatTextField.text = [NSString stringWithFormat:@"%d", minute];
     }
     
     gamelog.time = [NSString stringWithFormat:@"%@%@%@", _minutesStatTextField.text, @":", _secondsStatTextField.text];

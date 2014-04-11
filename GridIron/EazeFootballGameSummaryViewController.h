@@ -53,5 +53,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *homePossessionImage;
 @property (weak, nonatomic) IBOutlet UIButton *visitorMascotButton;
 - (IBAction)visitorMascotButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *homeScoreTextField;
 
 @end

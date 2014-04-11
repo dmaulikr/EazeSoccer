@@ -44,5 +44,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
 @property (weak, nonatomic) IBOutlet UIImageView *visitorBonusImage;
 @property (weak, nonatomic) IBOutlet UIImageView *homeBonusImage;
+@property (weak, nonatomic) IBOutlet UITextField *homeScoreTextField;
 
 @end

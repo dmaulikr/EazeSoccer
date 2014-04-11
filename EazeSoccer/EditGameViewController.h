@@ -49,5 +49,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *opponentImageButton;
 @property (weak, nonatomic) IBOutlet UISwitch *homeawaySwitch;
 @property (weak, nonatomic) IBOutlet UIPickerView *teamPicker;
+@property (weak, nonatomic) IBOutlet UISwitch *editHomeScoreSwitch;
+- (IBAction)homeScoreSwitchSelected:(id)sender;
 
 @end

@@ -91,7 +91,7 @@
 - (void)saveStats {
     if (([attempts intValue] > 0) || ([fumbles intValue] > 0) || ([fumbles_lost intValue] > 0) || ([longest intValue] > 0) ||
         ([td intValue] > 0) || ([yards intValue] > 0) || ([firstdowns intValue] > 0) || ([twopointconv intValue] > 0)) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *aurl;
             NSBundle *mainBundle = [NSBundle mainBundle];
             
@@ -164,7 +164,7 @@
             } else {
                 httperror = [serverData objectForKey:@"error"];
             }
-        });
+//        });
     }
 }
 

@@ -7,8 +7,9 @@
 //
 
 #import "EazeEditSponsorViewController.h"
+#import "EazesportzSponsorMapViewController.h"
 
-@interface EazeEditSponsorViewController ()
+@interface EazeEditSponsorViewController () <UIGestureRecognizerDelegate>
 
 @end
 
@@ -29,9 +30,12 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.navigationItem.rightBarButtonItems = [[NSArray alloc] initWithObjects:self.saveBarButton, self.deleteBarButton, self.infoBarButton, nil];
+    self.navigationItem.rightBarButtonItems = [[NSArray alloc] initWithObjects:self.saveBarButton, self.deleteBarButton, self.infoBarButton, self.globeBarButton, nil];
     self.navigationController.toolbarHidden = YES;
-}
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyBoard:)];
+    gestureRecognizer.delegate = self;
+    [_scrollView addGestureRecognizer:gestureRecognizer];}
 
 - (void)didReceiveMemoryWarning
 {
@@ -39,22 +43,24 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"SponsorMapSegue"]) {
+        EazesportzSponsorMapViewController *destController = segue.destinationViewController;
+        destController.sponsor = self.sponsor;
+    }
 }
-*/
+
 
 - (IBAction)saveBarButtonClicked:(id)sender {
+    [super submitButtonClicked:sender];
 }
+
 - (IBAction)deleteBarButonClicked:(id)sender {
-}
-- (IBAction)infoBarButtonClicked:(id)sender {
+    [super deleteButtonClicked:sender];
 }
 
 -(BOOL)shouldAutorotate {
@@ -65,9 +71,8 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+-(void) hideKeyBoard:(id)sender {
     [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
 }
 
 @end

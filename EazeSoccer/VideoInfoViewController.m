@@ -61,6 +61,8 @@
 	// Do any additional setup after loading the view.
     _gameTextField.inputView = gameController.inputView;
     _activityIndicator.hidesWhenStopped = YES;
+    _videoDescriptionTextView.layer.borderWidth = 1.0f;
+    _videoDescriptionTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
 
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, self.cameraBarButton,
@@ -95,7 +97,7 @@
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             _videoImageView.image = [UIImage imageWithData:imageData];
         } else {
-            _videoImageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
+            _videoImageView.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_processing.png"] scaledToSize:200];
         }
         
         _videoDescriptionTextView.text = video.description;
@@ -159,7 +161,7 @@
         _videoDescriptionTextView.text = @"";
         user = currentSettings.user;
         [_userButton setTitle:currentSettings.user.username forState:UIControlStateNormal];
-        _videoImageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"uploadmovie.png"], 1)];
+        _videoImageView.image = [currentSettings normalizedImage:[UIImage imageNamed:@"uploadmovie.png"] scaledToSize:200];
         _gameButton.enabled = NO;
         [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         video.userid = currentSettings.user.userid;
@@ -175,7 +177,8 @@
 - (IBAction)submitButtonClicked:(id)sender {
     if (newVideo) {
         // Upload photo before storing data
-        [self uploadImage:video];
+//        [self uploadImage:video];
+        [self fixVideoOrientation:video];
     } else {
         NSURL *aurl = [NSURL URLWithString:[sportzServerInit getVideo:video.videoid Token:currentSettings.user.authtoken]];
         
@@ -192,7 +195,7 @@
         NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:videoDict, @"videoclip", nil];
         
         NSError *jsonSerializationError = nil;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:nil error:&jsonSerializationError];
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
         
         if (!jsonSerializationError) {
             NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -510,6 +513,53 @@
     }
 }
 
+- (void)fixVideoOrientation:(Video *)avideo {
+    AVURLAsset *footageVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:moviePath] options:nil];
+    AVAssetTrack *footageVideoTrack = [footageVideo tracksWithMediaType:AVMediaTypeVideo][0];
+    AVMutableComposition *composition = [AVMutableComposition composition];
+    AVMutableCompositionTrack *videoCompositionTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo
+                                                                                preferredTrackID:kCMPersistentTrackID_Invalid];
+    [videoCompositionTrack insertTimeRange:footageVideoTrack.timeRange ofTrack: footageVideoTrack atTime:CMTimeMakeWithSeconds(0, NSEC_PER_SEC) error:NULL];
+    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:footageVideo];
+    
+    if ([compatiblePresets containsObject:AVAssetExportPresetMediumQuality]) {
+        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:composition presetName:AVAssetExportPresetMediumQuality];
+        // Implementation continues.
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        //make a file name to write the data to using the documents directory:
+        NSString *fileName = [NSString stringWithFormat:@"%@/tempfile.tmp", documentsDirectory];
+
+        NSURL *furl = [NSURL fileURLWithPath:fileName];
+        
+        exportSession.outputURL = furl;
+        //provide outputFileType acording to video format extension
+        exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+        exportSession.timeRange = footageVideoTrack.timeRange;
+        
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            
+            switch ([exportSession status]) {
+                case AVAssetExportSessionStatusFailed:
+                    NSLog(@"Export failed: %@", [[exportSession error] localizedDescription]);
+                    break;
+                case AVAssetExportSessionStatusCancelled:
+                    NSLog(@"Export canceled");
+                    break;
+                default:
+                    NSLog(@"Triming Completed");
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self uploadImage:avideo];
+                    });
+                    
+                    break;
+            }
+        }];
+        
+    }
+}
+
 - (BOOL)uploadImage:(Video *)avideo {
     if ((videoselected) && (_videoNameTextField.text.length > 0)) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -523,101 +573,6 @@
                      _videoNameTextField.text];
         S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:_videoNameTextField.text inBucket:selvideopath];
         por.contentType = @"video/mp4";
-        
- /*
-        //FIXING ORIENTATION//
-        NSURL *url = [NSURL fileURLWithPath:moviePath];
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-        AVMutableComposition *mixComposition = [[AVMutableComposition alloc] init];
-        
-        AVMutableCompositionTrack *track = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
-                                                preferredTrackID:kCMPersistentTrackID_Invalid];
-        [track insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration)
-                            ofTrack:[[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0] atTime:kCMTimeZero error:nil];
-                
-        AVMutableVideoCompositionInstruction *mainInstruction = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-        mainInstruction.timeRange = CMTimeRangeMake(kCMTimeZero, asset.duration);
-        
-        AVMutableVideoCompositionLayerInstruction *instruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:track];
-        AVAssetTrack *firstAssetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-        UIImageOrientation firstAssetOrientation_  = UIImageOrientationUp;
-        BOOL isFirstAssetPortrait_  = NO;
-        CGAffineTransform firstTransform = firstAssetTrack.preferredTransform;
-        if (firstTransform.a == 0 && firstTransform.b == 1.0 && firstTransform.c == -1.0 && firstTransform.d == 0) {
-            firstAssetOrientation_ = UIImageOrientationRight;
-            isFirstAssetPortrait_ = YES;
-        }
-        if (firstTransform.a == 0 && firstTransform.b == -1.0 && firstTransform.c == 1.0 && firstTransform.d == 0) {
-            firstAssetOrientation_ =  UIImageOrientationLeft;
-            isFirstAssetPortrait_ = YES;
-        }
-        if (firstTransform.a == 1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == 1.0) {
-            firstAssetOrientation_ =  UIImageOrientationUp;
-        }
-        if (firstTransform.a == -1.0 && firstTransform.b == 0 && firstTransform.c == 0 && firstTransform.d == -1.0) {
-            firstTransform.a = 1.0;
-            firstTransform.d = 1.0;
-            firstAssetOrientation_ = UIImageOrientationDown;
-        }
-//        [instruction setTransform:asset.preferredTransform atTime:kCMTimeZero];
-
-        CGFloat FirstAssetScaleToFitRatio = 640.0/firstAssetTrack.naturalSize.width;
-        
-        if (isFirstAssetPortrait_) {
-            FirstAssetScaleToFitRatio = 640.0/firstAssetTrack.naturalSize.height;
-            CGAffineTransform FirstAssetScaleFactor = CGAffineTransformMakeScale(FirstAssetScaleToFitRatio,FirstAssetScaleToFitRatio);
-            [instruction setTransform:CGAffineTransformConcat(firstAssetTrack.preferredTransform, FirstAssetScaleFactor) atTime:kCMTimeZero];
-        } else {
-            CGAffineTransform FirstAssetScaleFactor = CGAffineTransformMakeScale(FirstAssetScaleToFitRatio,FirstAssetScaleToFitRatio);
-            [instruction setTransform:CGAffineTransformConcat(CGAffineTransformConcat(firstTransform, FirstAssetScaleFactor),CGAffineTransformMakeTranslation(0, 160)) atTime:kCMTimeZero];
-        }
-//        [firstlayerInstruction setOpacity:0.0 atTime:asset.duration];
-        mainInstruction.layerInstructions = [NSArray arrayWithObjects:instruction, nil];
-        AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
-        mainCompositionInst.instructions = [NSArray arrayWithObject:mainInstruction];
-        mainCompositionInst.frameDuration = CMTimeMake(1, 30);
-        mainCompositionInst.renderSize = CGSizeMake(320.0, 480.0);
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *myPathDocs =  [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"mergeVideo-%d.mov",arc4random() % 1000]];
-        
-        NSURL *aurl = [NSURL fileURLWithPath:myPathDocs];
-        
-        CGSize naturalSizeFirst, naturalSizeSecond;
-        if(isFirstAssetPortrait_){
-            naturalSizeFirst = CGSizeMake(firstAssetTrack.naturalSize.height, firstAssetTrack.naturalSize.width);
-        } else {
-            naturalSizeFirst = firstAssetTrack.naturalSize;
-        }
-        
-        float renderWidth, renderHeight;
-        if(naturalSizeFirst.width > naturalSizeSecond.width) {
-            renderWidth = naturalSizeFirst.width;
-        } else {
-            renderWidth = naturalSizeSecond.width;
-        }
-        if(naturalSizeFirst.height > naturalSizeSecond.height) {
-            renderHeight = naturalSizeFirst.height;
-        } else {
-            renderHeight = naturalSizeSecond.height;
-        }
-        mainCompositionInst.renderSize = CGSizeMake(renderWidth, renderHeight); 
- 
-        // 5 - Create exporter
-        
-        AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mixComposition
-                                                                          presetName:AVAssetExportPresetHighestQuality];
-        exporter.outputURL=aurl;
-        exporter.outputFileType = AVFileTypeQuickTimeMovie;
-        exporter.shouldOptimizeForNetworkUse = YES;
-        exporter.videoComposition = mainCompositionInst;
-        [exporter exportAsynchronouslyWithCompletionHandler:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self exportDidFinish:exporter];
-            });
-        }];
-*/
         
         NSData *videoData = [NSData dataWithContentsOfFile:moviePath];
         por.data = videoData;
@@ -901,7 +856,10 @@
         NSMutableDictionary *photoDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
         NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)urlresponse;
         if ([httpResponse statusCode] == 200) {
-            [self.navigationController popViewControllerAnimated:YES];
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+                [self.navigationController popViewControllerAnimated:YES];
+            else
+                [self.navigationController popToRootViewControllerAnimated:YES];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error Deleting Video"
                                                             message:[photoDict objectForKey:@"error"]

@@ -12,12 +12,16 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface EazesportzEditSponsorViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate,
-                                                   UIAlertViewDelegate, AmazonServiceRequestDelegate>
+                                                   UIAlertViewDelegate, AmazonServiceRequestDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
 @end
 
 @implementation EazesportzEditSponsorViewController {
-    BOOL newmedia, imageselected;
+    NSDictionary *stateDictionary;
+    BOOL newmedia, imageselected, statePicker;
+    NSMutableArray *countryarray;
+    NSArray *stateList;
+    NSString *country, *stateabreviation;
 }
 
 @synthesize sponsor;
@@ -42,6 +46,18 @@
     _streetNumber.keyboardType = UIKeyboardTypeNumberPad;
     _zipcode.keyboardType = UIKeyboardTypeNumberPad;
     _sponsorEmail.keyboardType = UIKeyboardTypeEmailAddress;
+    _sponsorurl.keyboardType = UIKeyboardTypeURL;
+    _countryTextField.inputView = _countryPicker.inputView;
+    
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Countries" ofType:@"plist"];
+    NSArray *temparray = [[NSArray alloc] initWithContentsOfFile:plistPath];
+    countryarray = [[NSMutableArray alloc] init];
+    [countryarray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:@"United States", @"name", @"US", @"code", nil]];
+    [countryarray addObjectsFromArray:temparray];
+    plistPath = [[NSBundle mainBundle] pathForResource:@"USStateAbbreviations" ofType:@"plist"];
+    stateDictionary = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+    NSArray * keys = [stateDictionary allKeys];
+    stateList = [keys sortedArrayUsingSelector:@selector(compare:)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -61,13 +77,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sponsorDeleted:) name:@"SponsorDeletedNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sponsorSaved:) name:@"SponsorSavedNotification" object:nil];
     
+    _countryPicker.hidden = YES;
+    statePicker = NO;
+    
     if (sponsor) {
         if (sponsor.thumb.length > 0) {
             NSURL * imageURL = [NSURL URLWithString:sponsor.thumb];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-            _sponsorImage.image = [UIImage imageWithData:imageData];
+            _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageWithData:imageData] scaledToSize:100];
         } else {
-            _sponsorImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+            _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:100];
         }
         _sponsorName.text = sponsor.name;
         _streetNumber.text = [sponsor.addrnum stringValue];
@@ -82,13 +101,17 @@
         _sponsorurl.text = sponsor.adurl;
         
         if ([sponsor.sponsorlevel isEqualToString:@"Platinum"])
-            _sponsorLevel.selectedSegmentIndex = 1;
-        else if ([sponsor.sponsorlevel isEqualToString:@"Gold"])
             _sponsorLevel.selectedSegmentIndex = 2;
+        else if ([sponsor.sponsorlevel isEqualToString:@"Gold"])
+            _sponsorLevel.selectedSegmentIndex = 1;
         
     } else {
         _sponsorImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
     }
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome"
+                                                    message:[NSString stringWithFormat:@"Enter your information to advertise for the %@ \nYour ad will be seen by all fans that view content entered by the administrator of this site.", currentSettings.team.mascot] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
 }
 
 - (IBAction)cameraRollButtonClicked:(id)sender {
@@ -254,6 +277,8 @@
     if([title isEqualToString:@"Delete"]) {
         [_activityIndicator startAnimating];
         [sponsor deleteSponsor];
+    } else if ([title isEqualToString:@"Select"]) {
+        [self performSegueWithIdentifier:@"SelectSitesSegue" sender:self];
     }
 }
 
@@ -360,6 +385,55 @@
             return NO;
     } else
         return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if (textField == _countryTextField) {
+        _countryPicker.hidden = NO;
+        statePicker = NO;
+        [textField resignFirstResponder];
+        [_countryPicker reloadAllComponents];
+    } else if (textField == _state) {
+        _countryPicker.hidden = NO;
+        statePicker = YES;
+        [textField resignFirstResponder];
+        [_countryPicker reloadAllComponents];
+    }
+}
+
+//Method to define how many columns/dials to show
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+// Method to define the numberOfRows in a component using the array.
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
+    if (statePicker)
+        return stateList.count;
+    else
+        return countryarray.count;
+}
+
+// Method to show the title of row for a component.
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    if (statePicker) {
+        return [stateList objectAtIndex:row];
+    } else {
+        NSDictionary *subDict = [countryarray objectAtIndex:row];
+        return [subDict objectForKey:@"name"];
+    }
+}
+
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    if (statePicker) {
+        _state.text = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
+    } else {
+        NSDictionary *subDict = [countryarray objectAtIndex:row];
+        _countryTextField.text = [subDict objectForKey:@"name"];
+        country = [subDict objectForKey:@"name"];
+    }
+    
+    _countryPicker.hidden = YES;
 }
 
 @end

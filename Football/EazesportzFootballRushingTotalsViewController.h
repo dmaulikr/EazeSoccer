@@ -28,6 +28,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *fumblesLostTextField;
 @property (weak, nonatomic) IBOutlet UITextField *twopointconvTextField;
 @property (weak, nonatomic) IBOutlet UITextField *longestTextField;
+@property (weak, nonatomic) IBOutlet UITextField *averageTextField;
+- (IBAction)saveBarButtonClicked:(id)sender;
 
 - (IBAction)submitButtonClicked:(id)sender;
 - (IBAction)cancelButtonClicked:(id)sender;

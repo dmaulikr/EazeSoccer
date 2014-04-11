@@ -131,6 +131,12 @@
             if (game.eazesportzOpponent)
                 _opponentImageButton.enabled = NO;
         }
+        
+        if (game.editHomeScore)
+            [_editHomeScoreSwitch setOn:YES];
+        else
+            [_editHomeScoreSwitch setOn:NO];
+        
     } else {
         _homescoreLabel.text = @"0";
         _visitorscoreLabel.text = @"0";
@@ -143,6 +149,7 @@
         _opponentImageButton.enabled = YES;
         [_leagueSwitch setOn:NO];
         [_homeawaySwitch setOn:NO];
+        [_editHomeScoreSwitch setOn:NO];
         
         if (!game)
             game = [[GameSchedule alloc] init];
@@ -556,6 +563,16 @@
     game.opponent_team_id = [[opponentTeams objectAtIndex:row] teamid];
     _mascotTextField.text = [[opponentTeams objectAtIndex:row] mascot];
     _teamPicker.hidden = YES;
+}
+
+- (IBAction)homeScoreSwitchSelected:(id)sender {
+    if (_editHomeScoreSwitch.isOn) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"Setting this switch will disable comuptation of your teams score from stats. \n Use this only if you want to enter your teams score manually. \nExampe: Your game is complete or you do not plan on entering stats"
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+        game.editHomeScore = YES;
+    } else
+        game.editHomeScore = NO;
 }
 
 @end

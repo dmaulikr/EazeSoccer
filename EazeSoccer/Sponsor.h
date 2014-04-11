@@ -22,6 +22,7 @@
 @property(nonatomic, strong) NSString *fax;
 @property(nonatomic, strong) NSString *email;
 @property(nonatomic, strong) NSString *adurl;
+@property(nonatomic, strong) NSString *tiny;
 @property(nonatomic, strong) NSString *thumb;
 @property(nonatomic, strong) NSString *medium;
 @property(nonatomic, strong) NSString *large;
@@ -29,6 +30,7 @@
 @property(nonatomic, strong) NSNumber *teamonly;
 @property(nonatomic, strong) NSString *teamid;
 
+@property (nonatomic, strong) UIImage *tinyimage;
 @property (nonatomic, strong) UIImage *thumbimage;
 @property (nonatomic, strong) UIImage *mediumimage;
 @property (nonatomic, strong) UIImage *largeimage;

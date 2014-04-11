@@ -15,7 +15,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface PlayerSelectionViewController ()
+@interface PlayerSelectionViewController () <UIAlertViewDelegate>
 
 @end
 

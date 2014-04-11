@@ -73,14 +73,18 @@
     _userSelectContainer.hidden = YES;
     
     if (([currentSettings.sport isPackageEnabled]) || ([currentSettings isSiteOwner])) {
-//        if ((player) || (game) || (user))
-//            [self getPhotos];
-//        else if (!photos)
-//            [self teamButtonClicked:self];
         
 //        if (photos) {
 //            [_collectionView reloadData];
 //        }
+        if (currentSettings.photodeleted) {
+            if ((player) || (game) || (user))
+                [self getPhotos];
+            else if (!photos)
+                [self teamButtonClicked:self];
+            
+            currentSettings.photodeleted = NO;
+        }
     } else {
         [self displayUpgradeAlert];
     }
@@ -158,9 +162,9 @@
     Photo *photo = [photos objectAtIndex:indexPath.row];
     UIImage *image;
     
-//    if (photo.thumbimage) {
- //       cell.photoImage.image = photo.thumbimage;
-//    } else {
+    if (photo.thumbnail_url.length == 0)
+        cell.photoImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_processing.png"], 1)];
+    else {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
@@ -171,7 +175,7 @@
                 cell.photoImage.image = [UIImage imageWithData:image];
             });
         });
-//    }
+    }
     
     [cell.photoImage setImage:image];
     [cell.photoLabel setText:photo.displayname];

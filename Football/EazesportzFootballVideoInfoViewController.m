@@ -48,10 +48,15 @@
     
     _gameplayContainer.hidden = YES;
     
-    if (self.video.gamelog) {
-        _gameplayTextField.text = [[[currentSettings findGame:self.video.schedule] findGamelog:self.video.gamelog] logentrytext];
+    if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        if (self.video.gamelog) {
+            _gameplayTextField.text = [[[currentSettings findGame:self.video.schedule] findGamelog:self.video.gamelog] logentrytext];
+        } else {
+            _gameplayTextField.text = @"";
+        }
     } else {
-        _gameplayTextField.text = @"";
+        _gameplayTextField.enabled = NO;
+        _gameplayTextField.hidden = YES;
     }
 }
 
@@ -90,6 +95,19 @@
     if ([segue.identifier isEqualToString:@"GamelogSelectSegue"]) {
         gamelogController = segue.destinationViewController;
     }
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
+    [super touchesBegan:touches withEvent:event];
 }
 
 @end

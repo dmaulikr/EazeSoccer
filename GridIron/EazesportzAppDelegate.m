@@ -23,9 +23,17 @@
 #import "EazesportzRetrieveFeaturedVideosController.h"
 
 #import <AWSRuntime/AmazonErrorHandler.h>
+#import <CoreLocation/CoreLocation.h>
+
+
+@interface EazesportzAppDelegate () <CLLocationManagerDelegate>
+
+@end
 
 @implementation EazesportzAppDelegate {
     EazesportzRetrieveTeams *getTeams;
+    CLLocationManager *locationManager;
+    CLLocation *currentLocation;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -95,7 +103,20 @@
     } else
         currentSettings.firstuse = YES;
     
+    // set up location manager
+    locationManager = [[CLLocationManager alloc] init];
+    [locationManager setDelegate:self];
+    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+    [locationManager startUpdatingLocation];
+
     return YES;
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    CLLocation * newLocation = [locations lastObject];
+    // post notification that a new location has been found
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"NewLocationNotification" object:self
+                                                      userInfo:[NSDictionary dictionaryWithObject:newLocation forKey:@"newLocationResult"]];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

@@ -100,7 +100,7 @@
     if (([tackles intValue] > 0) || ([fumbles_recovered intValue] > 0) || ([int_long intValue] > 0) || ([int_yards intValue] > 0) ||
         ([interceptions intValue] > 0) || ([pass_defended intValue] > 0) || ([sacks intValue] > 0) || ([td intValue] > 0) ||
         ([assists intValue] > 0) || ([safety intValue] > 0) || ([sackassist intValue] > 0)) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSURL *aurl;
             NSBundle *mainBundle = [NSBundle mainBundle];
             
@@ -169,7 +169,7 @@
             } else {
                 httperror = [serverData objectForKey:@"error"];
             }
-        });
+//        });
     }
 }
 

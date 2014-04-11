@@ -26,6 +26,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *cameraRollButton;
 - (IBAction)cameraRollButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *sportTextField;
 
 - (IBAction)submitButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;

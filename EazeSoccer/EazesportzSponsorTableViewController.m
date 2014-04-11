@@ -60,14 +60,7 @@
 }
 
 - (void)gotSponsors:(NSNotification *)notification {
-    if (currentSettings.sponsors.count > 0)
-        [_sponsorTableView reloadData];
-    else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice!" message:@"No Sponors to display"
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
+    [_sponsorTableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -136,6 +129,17 @@
         [self performSegueWithIdentifier:@"UpgradeInfoSegue" sender:self];
     } else if ([title isEqualToString:@"Dismiss"]) {
         [self.navigationController popToRootViewControllerAnimated:YES];
+    } else if ([title isEqualToString:@"More Info"]) {
+        [self performSegueWithIdentifier:@"SponsorInfoSegue" sender:self];
+    }
+}
+
+- (void)addSponsor {
+    if (currentSettings.user.userid.length > 0)
+        [self performSegueWithIdentifier:@"NewSponsorSegue" sender:self];
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please create a login to become a sponsor" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"More Info", nil];
+        [alert show];
     }
 }
 

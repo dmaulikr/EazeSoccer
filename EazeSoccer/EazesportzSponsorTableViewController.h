@@ -11,4 +11,7 @@
 @interface EazesportzSponsorTableViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UITableView *sponsorTableView;
+
+- (void)addSponsor;
+
 @end
