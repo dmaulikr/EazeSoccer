@@ -34,7 +34,7 @@
     NSArray *serverData;
     NSMutableData *theData;
     int responseStatusCode;
-        
+    
     PlayerSelectionViewController *playerSelectionController;
     GameScheduleViewController *gameSelectionController;
     UsersViewController *userSelectController;
@@ -287,17 +287,20 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [activityIndicator stopAnimating];
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
-    NSLog(@"%@", serverData);
     
     if (responseStatusCode == 200) {
         photos = [[NSMutableArray alloc] init];
+        
         for (int i = 0; i < [serverData count]; i++) {
             Photo *photo = [[Photo alloc] initWithDirectory:[serverData objectAtIndex:i]];
-            [photo loadImagesInBackground];
-            [photos addObject:photo];
+            if ((!photo.pending) || ([currentSettings isSiteOwner])) {
+                [photo loadImagesInBackground];
+                [photos addObject:photo];
+            }
         }
-        [activityIndicator stopAnimating];
+        
         [_collectionView reloadData];
         
         if (photos.count == 0) {
@@ -471,6 +474,26 @@
 }
 
 - (IBAction)videoButtonClicked:(id)sender {
+}
+
+- (IBAction)pendingBarButtonClicked:(id)sender {
+    self.title = @"Pending";
+    
+    NSMutableArray *pending = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < photos.count; i++) {
+        if ([[photos objectAtIndex:i] pending])
+            [pending addObject:[photos objectAtIndex:i]];
+    }
+    
+    if (pending.count > 0) {
+        photos = pending;
+        [self viewWillAppear:YES];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No photos pending approval" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 @end

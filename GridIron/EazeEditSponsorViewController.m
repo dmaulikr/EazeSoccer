@@ -8,6 +8,7 @@
 
 #import "EazeEditSponsorViewController.h"
 #import "EazesportzSponsorMapViewController.h"
+#import "EazesportzCheckAdImageViewController.h"
 
 @interface EazeEditSponsorViewController () <UIGestureRecognizerDelegate>
 
@@ -50,6 +51,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"SponsorMapSegue"]) {
         EazesportzSponsorMapViewController *destController = segue.destinationViewController;
+        destController.sponsor = self.sponsor;
+    } else if ([segue.identifier isEqualToString:@"CheckImageSegue"]) {
+        EazesportzCheckAdImageViewController *destController = segue.destinationViewController;
         destController.sponsor = self.sponsor;
     }
 }

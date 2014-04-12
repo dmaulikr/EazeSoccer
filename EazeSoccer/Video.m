@@ -22,6 +22,7 @@
 @synthesize resolution;
 @synthesize userid;
 @synthesize gamelog;
+@synthesize pending;
 
 @synthesize athletes;
 @synthesize game;
@@ -30,6 +31,9 @@
     if (self = [super init]) {
         players = [[NSMutableArray alloc] init];
         athletes = [[NSMutableArray alloc] init];
+        teamid = @"";
+        userid = @"";
+        schedule = @"";
         return self;
     } else
         return nil;
@@ -57,6 +61,7 @@
         self.resolution = [items objectForKey:@"resolution"];
         self.duration = [items objectForKey:@"duration"];
         self.gamelog = [items objectForKey:@"gamelog"];
+        pending = [[items objectForKey:@"pending"] boolValue];
         
         return self;
     } else {

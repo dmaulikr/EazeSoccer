@@ -13,7 +13,6 @@
 #import "EazesportzRetrieveGames.h"
 #import "EazesportzRetrieveTeams.h"
 #import "EazesportzRetrievePlayers.h"
-#import "EazesportzRetrieveSponsors.h"
 #import "EazesportzRetrieveAlerts.h"
 #import "EazesportzRetrieveNews.h"
 #import "Newsfeed.h"
@@ -26,6 +25,7 @@
 #import "EazeFeaturedPhotosViewController.h"
 #import "EazeEventViewController.h"
 #import "EditTeamViewController.h"
+#import "EazesportzCheckAdImageViewController.h"
 
 @interface EazeHomeViewController () <UIAlertViewDelegate>
 
@@ -37,6 +37,7 @@
     Newsfeed *newsitem;
     GameSchedule *game;
     BOOL editTeam;
+    EazesportzCheckAdImageViewController *adController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -58,6 +59,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    _adContainer.hidden = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSponsors:) name:@"SponsorListChangedNotification" object:nil];
     
     if (currentSettings.isSiteOwner) {
         if (currentSettings.teams.count > 0)
@@ -123,6 +127,18 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)gotSponsors:(NSNotification *)notification {
+    if (currentSettings.sponsors.sponsors.count > 0) {
+        adController.sponsor = nil;
+        [adController viewWillAppear:YES];
+        _adContainer.hidden = NO;
+    }
+}
+
+- (void)closeAdSponsor:(UIStoryboardSegue *)segue {
+    _adContainer.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -316,6 +332,8 @@
             destController.team = currentSettings.team;
         else
             destController.team = nil;
+    } else if ([segue.identifier isEqualToString:@"AdSegue"] ) {
+        adController = segue.destinationViewController;
     }
 }
 
@@ -350,10 +368,10 @@
     
     currentSettings.opponentimages = [[NSMutableArray alloc] init];
     currentSettings.rosterimages = [[NSMutableArray alloc] init];
-    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+    [currentSettings.sponsors retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
     [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-    [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
     [currentSettings.teamVideos retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
     [currentSettings.teamPhotos retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
     

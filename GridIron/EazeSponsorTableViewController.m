@@ -58,7 +58,7 @@
     
     cell.tag = indexPath.row;
     
-    Sponsor *sponsor = [currentSettings.sponsors objectAtIndex:indexPath.row];
+    Sponsor *sponsor = [currentSettings.sponsors.sponsors objectAtIndex:indexPath.row];
     
     if (sponsor.tinyimage == nil) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -111,7 +111,7 @@
         [super prepareForSegue:segue sender:sender];
     } else {
         EazesportzSponsorMapViewController *destController = segue.destinationViewController;
-        destController.sponsor = [currentSettings.sponsors objectAtIndex:indexPath.row];
+        destController.sponsor = [currentSettings.sponsors.sponsors objectAtIndex:indexPath.row];
     }
 }
 

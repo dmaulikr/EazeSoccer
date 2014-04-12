@@ -35,6 +35,10 @@
 @synthesize approved;
 @synthesize hideAds;
 
+@synthesize review_media;
+@synthesize enable_user_pics;
+@synthesize enable_user_video;
+
 @synthesize package;
 @synthesize silverMedia;
 @synthesize goldMedia;
@@ -94,6 +98,10 @@
         beta = [[sportDictionary objectForKey:@"beta"] boolValue];
         approved = [[sportDictionary objectForKey:@"approved"] boolValue];
         hideAds = [[sportDictionary objectForKey:@"hideads"] boolValue];
+        
+        review_media = [[sportDictionary objectForKey:@"review_media"] boolValue];
+        enable_user_pics = [[sportDictionary objectForKey:@"enable_user_pics"] boolValue];
+        enable_user_video = [[sportDictionary objectForKey:@"enable_user_video"] boolValue];
         
         package = [sportDictionary objectForKey:@"package"];
         silverMedia = [[sportDictionary objectForKey:@"silverMedia"] intValue];

@@ -33,6 +33,10 @@
 @property(nonatomic, assign) BOOL approved;
 @property(nonatomic, assign) BOOL hideAds;
 
+@property (nonatomic, assign) BOOL review_media;
+@property (nonatomic, assign) BOOL enable_user_pics;
+@property (nonatomic, assign) BOOL enable_user_video;
+
 @property(nonatomic, strong) NSString *package;
 @property(nonatomic, assign) int silverMedia;
 @property(nonatomic, assign) int goldMedia;

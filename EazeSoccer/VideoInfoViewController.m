@@ -151,6 +151,26 @@
         else
             [_featuredSwitch setOn:NO];
         
+        if (currentSettings.sport.review_media) {
+            _featuredSwitch.hidden = NO;
+            _pendingLabel.hidden = NO;
+            
+            if ([currentSettings isSiteOwner])
+                _pendingSwitch.enabled = YES;
+            
+            if (video.pending) {
+                _pendingLabel.text = @"Pending";
+                [_pendingSwitch setOn:NO];
+            } else {
+                _pendingLabel.text = @"Approved";
+                [_pendingSwitch setOn:YES];
+            }
+        } else {
+            _pendingSwitch.hidden = YES;
+            _pendingLabel.hidden = YES;
+        }
+        
+        [_playerTableView reloadData];
     } else if (!newVideo) {
         video = [[Video alloc] init];
         newVideo = YES;
@@ -166,6 +186,9 @@
         [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         video.userid = currentSettings.user.userid;
         [_featuredSwitch setOn:NO];
+        _pendingSwitch.hidden = YES;
+        _pendingLabel.hidden = YES;
+
     }
     
     _teamTextField.text = currentSettings.team.team_name;
@@ -180,10 +203,16 @@
 //        [self uploadImage:video];
         [self fixVideoOrientation:video];
     } else {
+        if (_pendingSwitch.isOn)
+            video.pending = YES;
+        else
+            video.pending = NO;
+        
         NSURL *aurl = [NSURL URLWithString:[sportzServerInit getVideo:video.videoid Token:currentSettings.user.authtoken]];
         
         NSMutableDictionary *videoDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _videoNameTextField.text, @"displayname",
-                      _videoDescriptionTextView.text, @"description", currentSettings.team.teamid, @"team_id", nil];
+                                           _videoDescriptionTextView.text, @"description", currentSettings.team.teamid, @"team_id",
+                                           currentSettings.user.userid, @"user_id", [[NSNumber numberWithBool:video.pending] stringValue], @"pending", nil];
         
         if (video.schedule.length > 0)
             [videoDict setObject:video.schedule forKey:@"gameschedule_id"];
@@ -226,6 +255,16 @@
             if (removetags.count > 0) {
                 [self removeVideoTags:video];
             }
+
+            if (_featuredSwitch.isOn) {
+                [currentSettings.teamVideos addFeaturedVideo:video];
+                [currentSettings.teamVideos saveFeaturedVideos];
+                video.pending = false;
+            } else if ([currentSettings.teamVideos isFeaturedVideo:video]) {
+                [currentSettings.teamVideos removeFeaturedVideo:video];
+                [currentSettings.teamVideos saveFeaturedVideos];
+            }
+            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update sucessful!"
                                                             message:@"Video Clip updated"
                                                            delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -514,7 +553,10 @@
 }
 
 - (void)fixVideoOrientation:(Video *)avideo {
-    AVURLAsset *footageVideo = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:moviePath] options:nil];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [_activityIndicator startAnimating];
+
+    AVURLAsset *footageVideo = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:moviePath] options:nil];
     AVAssetTrack *footageVideoTrack = [footageVideo tracksWithMediaType:AVMediaTypeVideo][0];
     AVMutableComposition *composition = [AVMutableComposition composition];
     AVMutableCompositionTrack *videoCompositionTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo
@@ -562,9 +604,6 @@
 
 - (BOOL)uploadImage:(Video *)avideo {
     if ((videoselected) && (_videoNameTextField.text.length > 0)) {
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-        [_activityIndicator startAnimating];
-
         // Upload video.  Remember to set the content type.
         NSString *randomstr = [[ShuffleAlphabet alloc] shuffledAlphabet];
         NSString *selvideopath = [NSString stringWithFormat:@"%@%@%@%@%@", [[currentSettings getBucket] name], @"/uploads/videos/",
@@ -637,11 +676,18 @@
 {
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
+    if (_pendingSwitch.isOn)
+        video.pending = YES;
+    else
+        video.pending = NO;
+    
     NSURL *url = [NSURL URLWithString:[sportzServerInit newVideo:currentSettings.user.authtoken]];
     NSMutableDictionary *photoDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _videoNameTextField.text, @"filename",
                                        _videoNameTextField.text, @"displayname", videopath, @"filepath", @"image/mp4", @"filetype",
                                        [NSString stringWithFormat:@"%d", videosize], @"filesize", _videoDescriptionTextView.text, @"description",
-                                       currentSettings.team.teamid, @"team_id", currentSettings.user.userid, @"user_id", nil];
+                                       currentSettings.team.teamid, @"team_id", currentSettings.user.userid, @"user_id",
+                                       [[NSNumber numberWithBool:video.pending] stringValue], @"pending", nil];
     
     if (gameController.thegame) {
         [photoDict setObject:gameController.thegame.id forKey:@"gameschedule_id"];
@@ -686,6 +732,16 @@
         if (addtags.count > 0) {
             [self addVideoTags:video];
         }
+
+        if (_featuredSwitch.isOn) {
+            [currentSettings.teamVideos addFeaturedVideo:video];
+            [currentSettings.teamVideos saveFeaturedVideos];
+            video.pending = false;
+        } else if ([currentSettings.teamVideos isFeaturedVideo:video]) {
+            [currentSettings.teamVideos removeFeaturedVideo:video];
+            [currentSettings.teamVideos saveFeaturedVideos];
+        }
+        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload sucessful!"
                                                         message:@"Video uploaded"
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

@@ -16,7 +16,10 @@
     NSMutableData *theData;
     
     NSURLRequest *originalRequest;
+    int adcount, adindex;
 }
+
+@synthesize sponsors;
 
 - (void)retrieveSponsors:(NSString *)sportid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -55,10 +58,24 @@
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        currentSettings.sponsors = [[NSMutableArray alloc] init];
-        
-        for (int i = 0; i < [serverData count]; i++) {
-            [currentSettings.sponsors addObject:[[Sponsor alloc] initWithDirectory:[serverData objectAtIndex:i]]];
+        if (sponsors) {
+            NSMutableArray *sponsorlist = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < serverData.count; i++) {
+                Sponsor *sponsor = [[Sponsor alloc] initWithDirectory:[serverData objectAtIndex:i]];
+                [self replaceSponsorImages:sponsor];
+                [sponsorlist addObject:sponsor];
+            }
+            
+            [self cleanUpSponsorImageList:sponsorlist];
+        } else {
+            sponsors = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < serverData.count; i++) {
+                Sponsor *sponsor = [[Sponsor alloc] initWithDirectory:[serverData objectAtIndex:i]];
+                [sponsor loadImages];
+                [sponsors addObject:sponsor];
+            }
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorListChangedNotification" object:nil];
@@ -78,5 +95,98 @@
     }
 }
 
+- (void)replaceSponsorImages:(Sponsor *)sponsor {
+    BOOL found = NO;
+    
+    for (int i = 0; i < sponsors.count; i++) {
+        
+        if ([[[sponsors objectAtIndex:i] sponsorid] isEqualToString:sponsor.sponsorid]) {
+            found = YES;
+            break;
+        }
+    }
+    
+    if (!found) {
+        [sponsor loadImages];
+        [sponsors addObject:sponsor];
+    }
+}
+
+- (void)cleanUpSponsorImageList:(NSMutableArray *)sponsorlist {
+    
+    for (int i = 0; i < sponsors.count; i++) {
+        BOOL found = NO;
+        
+        for (int cnt = 0; cnt < sponsorlist.count; cnt++) {
+            if ([[[sponsors objectAtIndex:cnt] sponsorid] isEqualToString:[[sponsors objectAtIndex:i] sponsorid] ]) {
+                found = YES;
+                break;
+            }
+        }
+        
+        if (!found) {
+            [sponsors removeObjectAtIndex:i];
+        }
+    }
+}
+
+- (Sponsor *)getSponsorAd {
+    Sponsor *thead = nil;
+    
+    switch (adcount) {
+        case 0:
+            thead = [self findSponsorAd:@"Platinum"];
+            break;
+            
+        case 1:
+            thead = [self findSponsorAd:@"Gold"];
+            break;
+            
+        case 2:
+            thead = [self findSponsorAd:@"Platinum"];
+            break;
+            
+        case 3:
+            thead = [self findSponsorAd:@"Gold"];
+            break;
+            
+        case 4:
+            thead = [self findSponsorAd:@"Platinum"];
+            break;
+            
+        default:
+            thead = [self findSponsorAd:@"Silver"];
+            break;
+    }
+    
+    adcount++;
+    
+    if (adcount == 5)
+        adcount = 0;
+    
+    if (thead == nil)
+        thead = [self findSponsorAd:@"Platinum"];
+    
+    return thead;
+}
+
+- (Sponsor *)findSponsorAd:(NSString *)level {
+    Sponsor *foundad = nil;
+    int i;
+    
+    for (i = adindex; i < sponsors.count; i++) {
+        if ([[[sponsors objectAtIndex:i] sponsorlevel] isEqualToString:level]) {
+            foundad = [sponsors objectAtIndex:i];
+            break;
+        }
+    }
+    
+    adindex = i;
+    
+    if (adindex == sponsors.count)
+        adindex = 0;
+    
+    return foundad;
+}
 
 @end

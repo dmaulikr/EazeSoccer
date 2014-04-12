@@ -92,10 +92,15 @@
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
     }
     
+    if (videoclip.pending)
+        self.title = @"Pending Approval";
+    else
+        self.title = videoclip.displayName;
+    
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
     
-    if ([currentSettings isSiteOwner])
+    if (([currentSettings isSiteOwner]) || ([currentSettings.user.userid isEqualToString:videoclip.userid]))
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.playBarButton, self.editBarButton, nil];
     else
         self.navigationItem.rightBarButtonItem = self.playBarButton;
@@ -236,6 +241,14 @@
         destController.game = [currentSettings findGame:videoclip.schedule];
     } else if ([segue.identifier isEqualToString:@"EditVideoSegue"]) {
         EazesportzFootballVideoInfoViewController *destController = segue.destinationViewController;
+        videoclip.athletes = [[NSMutableArray alloc] init];
+        for (int cnt = 0; cnt < [currentSettings.roster count]; cnt++) {
+            for (int i = 0; i < [videoclip.players count]; i++) {
+                if ([[videoclip.players objectAtIndex:i] isEqualToString:[[currentSettings.roster objectAtIndex:cnt] athleteid]]) {
+                    [videoclip.athletes addObject:[currentSettings.roster objectAtIndex:cnt]];
+                }
+            }
+        }
         destController.video = videoclip;
     }
 }

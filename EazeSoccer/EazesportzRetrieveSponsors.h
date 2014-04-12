@@ -8,8 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Sponsor.h"
+
 @interface EazesportzRetrieveSponsors : NSObject
 
+@property (nonatomic, strong) NSMutableArray *sponsors;
+
 - (void)retrieveSponsors:(NSString *)sportid Token:(NSString *)authtoken;
+
+- (Sponsor *)getSponsorAd;
 
 @end

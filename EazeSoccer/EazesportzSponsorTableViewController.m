@@ -74,7 +74,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return currentSettings.sponsors.count;
+    return currentSettings.sponsors.sponsors.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -83,7 +83,7 @@
     EazesportzSponsorsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
-    Sponsor *sponsor = [currentSettings.sponsors objectAtIndex:indexPath.row];
+    Sponsor *sponsor = [currentSettings.sponsors.sponsors objectAtIndex:indexPath.row];
     
     if (sponsor.thumb.length > 0) {
         NSURL * imageURL = [NSURL URLWithString:sponsor.thumb];
@@ -118,7 +118,7 @@
     if ([segue.identifier isEqualToString:@"EditSponsorSegue"]) {
         NSIndexPath *indexPath = [_sponsorTableView indexPathForSelectedRow];
         EazesportzEditSponsorViewController *destController = segue.destinationViewController;
-        destController.sponsor = [currentSettings.sponsors objectAtIndex:indexPath.row];
+        destController.sponsor = [currentSettings.sponsors.sponsors objectAtIndex:indexPath.row];
     }
 }
 

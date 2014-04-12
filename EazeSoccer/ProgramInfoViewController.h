@@ -33,5 +33,12 @@
 - (IBAction)deleteButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UIPickerView *pickerView;
+- (IBAction)saveBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UISwitch *userPicsSwitch;
+- (IBAction)userPicsSwitchSelected:(id)sender;
+@property (weak, nonatomic) IBOutlet UISwitch *userVideosSwitch;
+- (IBAction)userVideosSwitchSelected:(id)sender;
+@property (weak, nonatomic) IBOutlet UISwitch *reviewMediaSwitch;
+- (IBAction)reviewMediaSwitchSelected:(id)sender;
 
 @end

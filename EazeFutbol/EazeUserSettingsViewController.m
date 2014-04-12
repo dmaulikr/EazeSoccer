@@ -13,8 +13,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-@interface EazeUserSettingsViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate,
-                                                    AmazonServiceRequestDelegate>
+@interface EazeUserSettingsViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, AmazonServiceRequestDelegate>
 
 @end
 
@@ -26,6 +25,7 @@
     NSString * imagepath;
     
     BOOL newmedia, imageselected;
+    User *user;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -136,6 +136,27 @@
  
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+}
+
+- (void)retrieveUser:(NSString *)auserid {
+    NSURL *url = [NSURL URLWithString:[sportzServerInit getUser:auserid Token:currentSettings.user.authtoken]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *error = nil;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    responseStatusCode = [(NSHTTPURLResponse*)response statusCode];
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *userdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if (responseStatusCode == 200) {
+        user = [[User alloc] initWithDictionary:userdata];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:[NSString stringWithFormat:@"%d", responseStatusCode]
+                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 - (void)didReceiveMemoryWarning

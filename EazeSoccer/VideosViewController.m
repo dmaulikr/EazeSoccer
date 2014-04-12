@@ -344,4 +344,24 @@
     }
 }
 
+- (IBAction)pendingBarButtonClicked:(id)sender {
+    self.title = @"Pending";
+    
+    NSMutableArray *pending = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < videos.count; i++) {
+        if ([[videos objectAtIndex:i] pending])
+            [pending addObject:[videos objectAtIndex:i]];
+    }
+    
+    if (pending.count > 0) {
+        videos = pending;
+        [self viewWillAppear:YES];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No videos pending approval" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
 @end

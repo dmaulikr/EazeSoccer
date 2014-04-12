@@ -56,46 +56,42 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     } else {
-//            if (playerSelectController) {
-//                if (playerSelectController.player)
-//                    self.player = playerSelectController.player;
-//            if (gameSelectController) {
-//                if (gameSelectController.thegame)
-//                    self.game = gameSelectController.thegame;
-//            if (usersSelectController) {
-//                if (usersSelectController.user)
-//                    self.user = usersSelectController.user;
-//            }
-            
-            if (gamelogSelectController) {
-                if (gamelogSelectController.game) {
-                    NSURL *url;
-                    
-                    if (currentSettings.user.authtoken)
-                        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@",
-                                                    [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                                    @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid,
-                                                    @"&gameschedule_id=", gameSelectController.thegame.id, @"&gamelog_id=",
-                                                    gamelogSelectController.gamelog.gamelogid, @"&auth_token=", currentSettings.user.authtoken]];
-                    else
-                        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
-                                                    [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                                    @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid,
-                                                    @"&gameschedule_id=", gameSelectController.thegame.id, @"&gamelog_id=",
-                                                    gamelogSelectController.gamelog.gamelogid]];
-                    
-                    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-                    [self.activityIndicator startAnimating];
-                    [[NSURLConnection alloc] initWithRequest:request delegate:self];
-                }
-            } else
-                [super viewWillAppear:animated];
+        
+        if (gamelogSelectController) {
+            if (gamelogSelectController.game) {
+                NSURL *url;
+                
+                if (currentSettings.user.authtoken)
+                    url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@",
+                                                [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                                @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid,
+                                                @"&gameschedule_id=", gameSelectController.thegame.id, @"&gamelog_id=",
+                                                gamelogSelectController.gamelog.gamelogid, @"&auth_token=", currentSettings.user.authtoken]];
+                else
+                    url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
+                                                [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                                @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid,
+                                                @"&gameschedule_id=", gameSelectController.thegame.id, @"&gamelog_id=",
+                                                gamelogSelectController.gamelog.gamelogid]];
+                
+                NSURLRequest *request = [NSURLRequest requestWithURL:url];
+                [self.activityIndicator startAnimating];
+                [[NSURLConnection alloc] initWithRequest:request delegate:self];
+            }
+        } else
+            [super viewWillAppear:animated];
     }
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
     
     if ([currentSettings isSiteOwner]) {
+        if (currentSettings.sport.review_media)
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton,
+                                                       self.pendingBarButton, nil];
+        else
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton, nil];
+    } else if (currentSettings.sport.enable_user_pics) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton, nil];
     } else {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, nil];
@@ -137,10 +133,6 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
-//        playerSelectController = segue.destinationViewController;
-//    if ([segue.identifier isEqualToString:@"GameSelectSegue"]) {
-//        gameSelectController = segue.destinationViewController;
     if ([segue.identifier isEqualToString:@"PhotoInfoSegue"]) {
         sportzteamsPhotoInfoViewController *destController = segue.destinationViewController;
         if ([[self.collectionView indexPathsForSelectedItems] count] > 0) {
@@ -165,8 +157,6 @@
         } else {
             destController.photo = nil;
         }
-//    } else if ([segue.identifier isEqualToString:@"UserSelectSegue"]) {
-//        usersSelectController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
         gamelogSelectController = segue.destinationViewController;
         gamelogSelectController.game = gameSelectController.thegame;
@@ -190,7 +180,6 @@
 
 - (void)getPhotos {
     [super getPhotos];
-    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -203,7 +192,6 @@
         gamelogSelectController.game = nil;
         usersSelectController = nil;
         self.playerContainer.hidden = NO;
-//        [self performSegueWithIdentifier:@"PlayerSelectSegue" sender:self];
     } else if ([title isEqualToString:@"Game"]) {
         self.player = nil;
         self.user = nil;
@@ -211,7 +199,6 @@
         gamelogSelectController = nil;
         usersSelectController = nil;
         self.gameContainer.hidden = NO;
-//        [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
     } else if ([title isEqualToString:@"Play"]) {
         self.player = nil;
         self.user = nil;
@@ -234,7 +221,6 @@
         gamelogSelectController.game = nil;
         playerSelectController = nil;
         self.userSelectContainer.hidden = NO;
-//        [self performSegueWithIdentifier:@"UserSelectSegue" sender:self];
     } else if ([title isEqualToString:@"All"]) {
         self.game = nil;
         self.user = nil;

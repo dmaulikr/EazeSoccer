@@ -460,7 +460,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
-    if([title isEqualToString:@"Confirm"]) {
+    if ([title isEqualToString:@"Confirm"]) {
         [player deleteAthlete];
     } else if ([title isEqualToString:@"Offense"]) {
         positionkeys = [currentSettings.sport.footballOffensePositions allKeys];

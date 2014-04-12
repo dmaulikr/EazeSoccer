@@ -15,6 +15,7 @@
 #import "sportzServerInit.h"
 #import "VideoCell.h"
 #import "EazesportzGameLogViewController.h"
+#import "EazeUserSettingsViewController.h"
 
 @interface EazesVideosViewController ()
 
@@ -65,7 +66,13 @@
         
         [super viewWillAppear:animated];
         
-        if ([currentSettings isSiteOwner])
+        if ([currentSettings isSiteOwner]) {
+            if (currentSettings.sport.review_media)
+                self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.addButton,
+                                                           self.pendingBarButton, nil];
+            else
+                self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.addButton, nil];
+        } else if (currentSettings.sport.enable_user_video)
             self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.addButton, nil];
         else
             self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, nil];

@@ -94,6 +94,7 @@
         _zipcodeTextField.text = sport.zip;
         _countryTextField.text = sport.country;
         _sportTextField.text = sport.name;
+        _sportTextField.enabled = NO;
         newsport = NO;
         _logoImage.image = [currentSettings.sport getImage:@"thumb"];
     } else if (sportid.length > 0) {
@@ -105,6 +106,7 @@
         _countryTextField.text = sport.country;
         _sportTextField.text = sport.name;
         _logoImage.image = [sport getImage:@"thumb"];
+        _sportTextField.enabled = NO;
         newsport = NO;
     } else {
         if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
@@ -112,9 +114,14 @@
         
         _deleteButton.hidden = YES;
         _deleteButton.enabled = NO;
+        _sportTextField.enabled = YES;
         newsport = YES;
         sport = [[Sport alloc] init];
     }
+    
+    [_userVideosSwitch setOn:sport.enable_user_video];
+    [_userPicsSwitch setOn:sport.enable_user_pics];
+    [_reviewMediaSwitch setOn:sport.review_media];
 }
 
 - (IBAction)cameraRollButtonClicked:(id)sender {
@@ -474,6 +481,40 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self submitButtonClicked:sender];
+}
+
+- (IBAction)userPicsSwitchSelected:(id)sender {
+    if ([_userPicsSwitch isOn]) {
+        sport.enable_user_pics = YES;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Setting this will allow your fans to upload photos." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else
+        sport.enable_user_pics = NO;
+}
+
+- (IBAction)userVideosSwitchSelected:(id)sender {
+    if ([_userVideosSwitch isOn]) {
+        sport.enable_user_video = YES;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Setting this will allow your fans to upload videos." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else
+        sport.enable_user_video = NO;
+}
+
+- (IBAction)reviewMediaSwitchSelected:(id)sender {
+    if ([_reviewMediaSwitch isOn]) {
+        sport.review_media = YES;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Media Review On" message:@"You will have to review and approve user photos and videos before they are posted for general viewing." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        sport.review_media = NO;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Media Review Off" message:@"User photos and videos will be posted immediately." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 @end

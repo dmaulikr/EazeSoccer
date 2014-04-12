@@ -44,4 +44,6 @@
 
 - (void)saveSponsor;
 
+- (void)loadImages;
+
 @end

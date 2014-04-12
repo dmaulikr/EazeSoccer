@@ -19,5 +19,8 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editTeamButton;
 - (IBAction)addTeamButtonClicked:(id)sender;
 - (IBAction)editTeamButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *adContainer;
+
+- (IBAction)closeAdSponsor:(UIStoryboardSegue *)segue;
 
 @end

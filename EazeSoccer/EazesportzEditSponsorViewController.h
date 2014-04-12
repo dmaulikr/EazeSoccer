@@ -36,4 +36,6 @@
 - (IBAction)submitButtonClicked:(id)sender;
 - (IBAction)deleteButtonClicked:(id)sender;
 - (IBAction)cameraButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *checkImageButton;
+
 @end

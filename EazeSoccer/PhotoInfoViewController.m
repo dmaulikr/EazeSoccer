@@ -166,10 +166,12 @@
             [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
         
-        if ([currentSettings.teamPhotos isFeaturedPhoto:photo])
-            [_featuredSwitch setOn:YES];
-        else
-            [_featuredSwitch setOn:NO];
+        if ([currentSettings isSiteOwner]) {
+            if ([currentSettings.teamPhotos isFeaturedPhoto:photo])
+                [_featuredSwitch setOn:YES];
+            else
+                [_featuredSwitch setOn:NO];
+        }
         
     } else if (!newPhoto) {
         photo = [[Photo alloc] init];
@@ -184,7 +186,28 @@
         user = currentSettings.user;
         photo.owner = currentSettings.user.userid;
         [_cameraButton setTitle:@"Camera" forState:UIControlStateNormal];
-        [_featuredSwitch setOn:NO];
+        
+        if ([currentSettings isSiteOwner])
+            [_featuredSwitch setOn:NO];
+    }
+    
+    if (currentSettings.sport.review_media) {
+        _featuredSwitch.hidden = NO;
+        _pendingLabel.hidden = NO;
+        
+        if ([currentSettings isSiteOwner])
+            _approvalSwitch.enabled = YES;
+        
+        if (photo.pending) {
+            _pendingLabel.text = @"Pending";
+            [_approvalSwitch setOn:NO];
+        } else {
+            _pendingLabel.text = @"Approved";
+            [_approvalSwitch setOn:YES];
+        }
+    } else {
+        _approvalSwitch.hidden = YES;
+        _pendingLabel.hidden = YES;
     }
     
     _teamTextField.text = currentSettings.team.team_name;
@@ -385,10 +408,16 @@
         // Upload photo before storing data
         [self uploadImage:photo];
     } else {
+        if (_approvalSwitch.isOn)
+            photo.pending = YES;
+        else
+            photo.pending = NO;
+        
         aurl = [NSURL URLWithString:[sportzServerInit getPhoto:photo.photoid Token:currentSettings.user.authtoken]];
 
-        photoDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _photonameTextField.text, @"displayname",
-                                           _descriptionTextView.text, @"description", currentSettings.team.teamid, @"team_id", nil];        
+        photoDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _photonameTextField.text, @"displayname", _descriptionTextView.text, @"description",
+                      currentSettings.team.teamid, @"team_id", currentSettings.user.userid, @"user_id",
+                      [[NSNumber numberWithBool:photo.pending] stringValue], @"pending", nil];
         
         if (photo.game.id.length > 0)
             [photoDict setObject:photo.game.id forKey:@"gameschedule_id"];
@@ -435,6 +464,16 @@
             if (removetags.count > 0) {
                 [self removePhotoTags:photo];
             }
+            
+            if (_featuredSwitch.isOn) {
+                [currentSettings.teamPhotos addFeaturedPhoto:photo];
+                [currentSettings.teamPhotos saveFeaturedPhotos];
+                photo.pending = false;
+            } else if ([currentSettings.teamPhotos isFeaturedPhoto:photo]) {
+                [currentSettings.teamPhotos removeFeaturedPhoto:photo];
+                [currentSettings.teamPhotos saveFeaturedPhotos];
+            }            
+
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Update sucessful!"
                                                             message:@"Photo updated"
                                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -683,11 +722,18 @@
 {
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    
+    if (_approvalSwitch.isOn)
+        photo.pending = YES;
+    else
+        photo.pending = NO;
+    
     NSURL *url = [NSURL URLWithString:[sportzServerInit newPhoto:currentSettings.user.authtoken]];
     NSMutableDictionary *photoDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _photonameTextField.text, @"filename",
                                        _photonameTextField.text, @"displayname", imagepath, @"filepath", @"image/jpeg", @"filetype",
                                        [NSString stringWithFormat:@"%d", imagesize], @"filesize", _descriptionTextView.text, @"description",
-                                       currentSettings.team.teamid, @"team_id", currentSettings.user.userid, @"user_id", nil];
+                                       currentSettings.team.teamid, @"team_id", currentSettings.user.userid, @"user_id",
+                                       [[NSNumber numberWithBool:photo.pending] stringValue], @"pending", nil];
     
     if (gameController.thegame) {
         [photoDict setObject:gameController.thegame.id forKey:@"gameschedule_id"];
@@ -736,6 +782,7 @@
         if (_featuredSwitch.isOn) {
             [currentSettings.teamPhotos addFeaturedPhoto:photo];
             [currentSettings.teamPhotos saveFeaturedPhotos];
+            photo.pending = false;
         } else if ([currentSettings.teamPhotos isFeaturedPhoto:photo]) {
             [currentSettings.teamPhotos removeFeaturedPhoto:photo];
             [currentSettings.teamPhotos saveFeaturedPhotos];

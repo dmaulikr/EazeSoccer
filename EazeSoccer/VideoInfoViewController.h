@@ -63,5 +63,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteBarButton;
 - (IBAction)deleteBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UISwitch *featuredSwitch;
+@property (weak, nonatomic) IBOutlet UILabel *pendingLabel;
+@property (weak, nonatomic) IBOutlet UISwitch *pendingSwitch;
 
 @end

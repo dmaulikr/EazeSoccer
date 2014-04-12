@@ -94,7 +94,12 @@
                 }
             }
         } else {
-        }    
+        }
+        
+        if (photo.pending)
+            self.title = @"Pending Approval";
+        else
+            self.title = photo.displayname;
     } else {
         
     }
@@ -102,7 +107,7 @@
     _playButton.hidden = YES;
     _playLabel.hidden = YES;
     
-    if ([currentSettings isSiteOwner]) {
+    if (([currentSettings isSiteOwner]) || ([currentSettings.user.userid isEqualToString:photo.user_id])) {
         self.navigationItem.rightBarButtonItem = self.editBarButton;
     }
     

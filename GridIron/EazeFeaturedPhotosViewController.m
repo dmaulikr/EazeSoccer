@@ -9,8 +9,9 @@
 #import "EazeFeaturedPhotosViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "Photo.h"
+#import "EazesportzCheckAdImageViewController.h"
 
-@interface EazeFeaturedPhotosViewController () <UIGestureRecognizerDelegate>
+@interface EazeFeaturedPhotosViewController () <UIGestureRecognizerDelegate, UIAlertViewDelegate>
 
 @property(nonatomic, strong) UIImageView *animage;
 
@@ -23,6 +24,8 @@
 @implementation EazeFeaturedPhotosViewController {
     int currentphoto;
     UIView *subview;
+    
+    EazesportzCheckAdImageViewController *adController;
 }
 
 @synthesize photos;
@@ -75,6 +78,7 @@
     [super viewWillAppear:animated];
     
     currentphoto = 0;
+    _adContainer.hidden = YES;
     
     if (photos.count > 0)
         [self displayPhoto:[photos objectAtIndex:0]];
@@ -201,7 +205,7 @@
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                         message:[NSString stringWithFormat:@"%@%@", @"No more photos to display for ", currentSettings.team.team_name]
-                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -214,9 +218,31 @@
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                                         message:[NSString stringWithFormat:@"%@%@", @"No more photos to display for ", currentSettings.team.team_name]
-                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
+    }
+}
+
+- (void)closeAdSponsor:(UIStoryboardSegue *)segue {
+    _adContainer.hidden = YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"AdSegue"]) {
+        adController = segue.destinationViewController;
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Ok"]) {
+        if (currentSettings.sponsors.sponsors.count > 0) {
+            _adContainer.hidden = NO;
+            adController.sponsor = nil;
+            [adController viewWillAppear:YES];
+        }
     }
 }
 

@@ -69,6 +69,7 @@
         
         teamPhotos = [[EazesportzRetrieveFeaturedPhotos alloc] init];
         teamVideos = [[EazesportzRetrieveFeaturedVideosController alloc] init];
+        sponsors = [[EazesportzRetrieveSponsors alloc] init];
         
         newuser = nil;
         photodeleted = NO;
@@ -812,12 +813,6 @@
         if ([getTeams retrieveTeamsSynchronous:sport.id Token:user.authtoken]) {
             teams = getTeams.teams;
             team = nil;
-            
-/*            if (teams.count > 1)
-                team = nil;
-            else
-                team = [teams objectAtIndex:0];
- */
         }
     }
 }

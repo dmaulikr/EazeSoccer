@@ -81,10 +81,8 @@
     statePicker = NO;
     
     if (sponsor) {
-        if (sponsor.thumb.length > 0) {
-            NSURL * imageURL = [NSURL URLWithString:sponsor.thumb];
-            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-            _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageWithData:imageData] scaledToSize:100];
+        if (sponsor.thumbimage) {
+            _sponsorImage.image = [currentSettings normalizedImage:sponsor.thumbimage scaledToSize:100];
         } else {
             _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:100];
         }
@@ -104,14 +102,21 @@
             _sponsorLevel.selectedSegmentIndex = 2;
         else if ([sponsor.sponsorlevel isEqualToString:@"Gold"])
             _sponsorLevel.selectedSegmentIndex = 1;
+        else
+            _sponsorLevel.selectedSegmentIndex = 0;
+        
+        _checkImageButton.enabled = YES;
+        _checkImageButton.hidden = NO;
         
     } else {
         _sponsorImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        _checkImageButton.enabled = NO;
+        _checkImageButton.hidden = YES;
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome"
+                                                        message:[NSString stringWithFormat:@"Enter your information to advertise for the %@ \nYour ad will be seen by all fans that view content entered by the administrator of this site.", currentSettings.team.mascot] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
     }
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome"
-                                                    message:[NSString stringWithFormat:@"Enter your information to advertise for the %@ \nYour ad will be seen by all fans that view content entered by the administrator of this site.", currentSettings.team.mascot] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-    [alert show];
 }
 
 - (IBAction)cameraRollButtonClicked:(id)sender {

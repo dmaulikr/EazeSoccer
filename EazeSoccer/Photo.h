@@ -22,9 +22,11 @@
 @property(nonatomic, strong) NSString *medium_url;
 @property(nonatomic, strong) NSString *large_url;
 @property(nonatomic, strong) NSString *gamelog;
+@property (nonatomic, assign) BOOL pending;
 
 @property(nonatomic, strong) NSString *sport_id;
 @property(nonatomic, strong) NSString *team_id;
+@property (nonatomic, strong) NSString *user_id;
 
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) NSMutableArray *athletes;

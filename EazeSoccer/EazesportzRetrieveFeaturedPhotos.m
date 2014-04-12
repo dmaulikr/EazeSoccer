@@ -174,7 +174,7 @@
     return found;
 }
 
- - (void)replaceFeaturedPhotoImages:(Photo *)photo {
+- (void)replaceFeaturedPhotoImages:(Photo *)photo {
      BOOL found = NO;
      
      for (int i = 0; i < featuredphotos.count; i++) {

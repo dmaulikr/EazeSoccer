@@ -15,6 +15,9 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UITapGestureRecognizer *tapGesture;
+@property (weak, nonatomic) IBOutlet UIView *adContainer;
+
+- (IBAction)closeAdSponsor:(UIStoryboardSegue *)segue;
 
 @property (nonatomic, strong) NSMutableArray *photos;
 @end

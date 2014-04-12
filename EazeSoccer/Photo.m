@@ -7,6 +7,7 @@
 //
 
 #import "Photo.h"
+#import "EazesportzAppDelegate.h"
 
 @implementation Photo {
     NSString *imagesize;
@@ -26,6 +27,7 @@
 @synthesize athletes;
 @synthesize game;
 @synthesize gamelog;
+@synthesize pending;
 
 @synthesize thumbimage;
 @synthesize mediumimage;
@@ -33,6 +35,7 @@
 
 @synthesize sport_id;
 @synthesize team_id;
+@synthesize user_id;
 
 - (id)init {
     if (self = [super init]) {
@@ -41,6 +44,9 @@
         largeimage = nil;
         players = [[NSMutableArray alloc] init];
         athletes = [[NSMutableArray alloc] init];
+        user_id = @"";
+        schedule = @"";
+        team_id = @"";
         return self;
     } else
         return nil;
@@ -64,15 +70,16 @@
         } else
             self.thumbnail_url = @"";
         
-//        [self loadImages];
         self.description = [items objectForKey:@"description"];
         self.displayname = [items objectForKey:@"displayname"];
         self.teamid = [items objectForKey:@"teamid"];
+        user_id = [items objectForKey:@"user"];
         self.schedule = [items objectForKey:@"gameschedule"];
         self.photoid = [items objectForKey:@"id"];
         self.owner = [items objectForKey:@"user"];
         self.players = [items objectForKey:@"players"];
         self.gamelog = [items objectForKey:@"gamelog"];
+        pending = [[items objectForKey:@"pending"] boolValue];
         
         self.sport_id = [items objectForKey:@"sport_id"];
         self.team_id = [items objectForKey:@"team_id"];
@@ -130,41 +137,6 @@
     return image;
 }
 
-- (void)loadImages {
-    if (thumbnail_url.length > 0) {
-        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        //this will start the image loading in bg
-        dispatch_async(concurrentQueue, ^{
-            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:thumbnail_url]];
-            thumbimage = [UIImage imageWithData:image];
-        });
-    } else {
-        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-    }
-
-    if (medium_url.length > 0) {
-        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        //this will start the image loading in bg
-        dispatch_async(concurrentQueue, ^{
-            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:medium_url]];
-            mediumimage = [UIImage imageWithData:image];
-        });
-    } else {
-        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-    }
-
-    if (large_url.length > 0) {
-        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        //this will start the image loading in bg
-        dispatch_async(concurrentQueue, ^{
-            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:large_url]];
-            largeimage = [UIImage imageWithData:image];
-        });
-    } else {
-        largeimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-    }
-}
-
 - (BOOL)saveImagesToDocuments:(UIImage *)image Size:(NSString *)imageSize {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -179,7 +151,38 @@
 }
 
 - (void)loadImagesInBackground {
-    [self loadImages];
+    if (thumbnail_url.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:thumbnail_url]];
+            thumbimage = [UIImage imageWithData:image];
+        });
+    } else {
+        thumbimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (medium_url.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:medium_url]];
+            mediumimage = [UIImage imageWithData:image];
+        });
+    } else {
+        mediumimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+    
+    if (large_url.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:large_url]];
+            largeimage = [UIImage imageWithData:image];
+        });
+    } else {
+        largeimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
 }
 
 @end
