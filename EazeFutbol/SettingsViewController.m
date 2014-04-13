@@ -278,7 +278,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id]))
-        return 7;
+        return 8;
     else
         return 6;
 }
@@ -403,7 +403,7 @@
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ Sponsors", currentSettings.team.mascot];
             break;
             
-        default:
+        case 6:
             cell.backgroundColor = [UIColor whiteColor];
             cell.imageView.image = nil;
             if (currentSettings.user.admin) {
@@ -416,6 +416,13 @@
                 cell.textLabel.text = @"Create a site";
                 cell.detailTextLabel.text = @"Promote a program or player ...";
             }
+            break;
+            
+        default:
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.imageView.image = nil;
+            cell.textLabel.text = @"Eazesportz Information";
+            cell.detailTextLabel.text = @"Package and info";
             break;
    }
     
@@ -451,8 +458,12 @@
                 [self performSegueWithIdentifier:@"SponsorSegue" sender:self];
                 break;
                 
-            default:
+            case 6:
                 [self addSiteButtonClicked:self];
+                break;
+                
+            default:
+                [self performSegueWithIdentifier:@"PackageSegue" sender:self];
                 break;
         }
     }

@@ -16,6 +16,7 @@
 #import "EazeFootballGameSummaryViewController.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "EazesportzFootballVideoInfoViewController.h"
+#import "EazesportzCheckAdImageViewController.h"
 
 @interface sportzteamsMovieViewController ()
 
@@ -25,6 +26,8 @@
     NSDictionary *serverData;
     NSMutableData *theData;
     int responseStatusCode;
+
+    EazesportzCheckAdImageViewController *adController;
 }
 
 @synthesize videoclip;
@@ -58,6 +61,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    _adContainer.hidden = YES;
     
     if (videoid == nil) {
         NSURL * imageURL = [NSURL URLWithString:videoclip.poster_url];
@@ -178,10 +183,19 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                           name:MPMoviePlayerPlaybackDidFinishNotification object:player];
     
-    if ([player respondsToSelector:@selector(setFullscreen:animated:)])
-    {
+    if ([player respondsToSelector:@selector(setFullscreen:animated:)]) {
         [player.view removeFromSuperview];
     }
+    
+    if (currentSettings.sponsors.sponsors.count > 0) {
+        _adContainer.hidden = NO;
+        adController.sponsor = nil;
+        [adController viewWillAppear:YES];
+    }
+}
+
+- (void)closeAdSponsor:(UIStoryboardSegue *)segue {
+    _adContainer.hidden = YES;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -250,6 +264,8 @@
             }
         }
         destController.video = videoclip;
+    } else if ([segue.identifier isEqualToString:@"AdSegue"]) {
+        adController = segue.destinationViewController;
     }
 }
 

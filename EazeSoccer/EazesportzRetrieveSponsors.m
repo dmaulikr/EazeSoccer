@@ -78,6 +78,9 @@
             }
         }
         
+        if (sponsors.count > 0)
+            currentSettings.sport.hideAds = YES;
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorListChangedNotification" object:nil];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorListChangedNotification" object:nil

@@ -11,6 +11,7 @@
 #import "sportzServerInit.h"
 #import "EazesportzAppDelegate.h"
 #import "sportzCurrentSettings.h"
+#import "EazesportzCheckAdImageViewController.h"
 
 @interface sportzteamsPhotoInfoViewController () <UIScrollViewDelegate>
 
@@ -26,7 +27,9 @@
     NSMutableData *theData;
     int responseStatusCode;
     UIView *subview;
-    int currentphoto;
+    int currentphoto, adcount;
+    
+    EazesportzCheckAdImageViewController *adController;
 }
 
 @synthesize photo;
@@ -73,6 +76,8 @@
 }
 
 - (void)nextPhoto {
+    adcount++;
+    
     if (currentphoto < photos.count - 1) {
         currentphoto++;
         [self displayPhoto:[photos objectAtIndex:currentphoto]];
@@ -83,9 +88,18 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+    
+    if ((adcount == 5) && (currentSettings.sponsors.sponsors.count > 0)) {
+        _adContainer.hidden = NO;
+        adController.sponsor = nil;
+        [adController viewWillAppear:YES];
+        adcount = 0;
+    }
 }
 
 - (void)backPhoto {
+    adcount++;
+    
     if (currentphoto > 0) {
         currentphoto--;
         [self displayPhoto:[photos objectAtIndex:currentphoto]];
@@ -96,6 +110,17 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
+    
+    if ((adcount == 5) && (currentSettings.sponsors.sponsors.count > 0)) {
+        _adContainer.hidden = NO;
+        adController.sponsor = nil;
+        [adController viewWillAppear:YES];
+        adcount = 0;
+    }
+}
+
+- (IBAction)closeAdSponsor:(UIStoryboardSegue *)segue {
+    _adContainer.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -108,6 +133,8 @@
     [super viewWillAppear:animated];
     
     currentphoto = photoindex;
+    _adContainer.hidden = YES;
+    adcount = 0;
     
     if (photoid == nil) {
         if (subview)
@@ -232,6 +259,8 @@
     if ([segue.identifier isEqualToString:@"PhotoDetailSegue"]) {
         sportzteamsPhotoDescriptionViewController *destViewController = segue.destinationViewController;
         destViewController.photo = [photos objectAtIndex:currentphoto];
+    } else if ([segue.identifier isEqualToString:@"AdSegue"]) {
+        adController = segue.destinationViewController;
     }
 }
 
@@ -257,7 +286,7 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:nil error:nil];
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
     if (responseStatusCode == 200) {
         Photo *aphoto = [[Photo alloc] init];

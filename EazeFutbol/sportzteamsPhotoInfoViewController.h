@@ -18,8 +18,11 @@
 @property(nonatomic, strong) NSString *photoid;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIView *adContainer;
 
 @property (nonatomic, strong) NSMutableArray *photos;
 @property (nonatomic, assign) int photoindex;
+
+- (IBAction)closeAdSponsor:(UIStoryboardSegue *)segue;
 
 @end

@@ -27,4 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editBarButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *playBarButton;
 
+- (IBAction)closeAdSponsor:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIView *adContainer;
+
 @end
