@@ -195,13 +195,15 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        deleteIndexPath = [_blogTableView indexPathForSelectedRow];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confrim"
-                                                        message:@"Delete Blog Entry"
-                                                       delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
+    if ([currentSettings isSiteOwner]) {
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
+            deleteIndexPath = [_blogTableView indexPathForSelectedRow];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confrim"
+                                                            message:@"Delete Blog Entry"
+                                                           delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+        }
     }
 }
 

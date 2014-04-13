@@ -211,29 +211,6 @@
         currentSettings.changesite = NO;
         self.tabBarController.tabBar.hidden = NO;
     }
-/*
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    //make a file name to write the data to using the documents directory:
-    NSString *fileName = [NSString stringWithFormat:@"%@/currentsite.txt",
-                          documentsDirectory];
-    NSString *sportFile = [NSString stringWithFormat:@"%@/currentsport.txt",
-                          documentsDirectory];
-    //create content - four lines of text
-    NSString *content = currentSettings.sport.id;
-    //save content to the documents directory
-    [content writeToFile:fileName atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
-    [currentSettings.sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
-    
-    if ([[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:content Token:currentSettings.user.authtoken]) {
-        getTeams = [[EazesportzRetrieveTeams alloc] init];
-        if ([getTeams retrieveTeamsSynchronous:content Token:currentSettings.user.authtoken]) {
-            currentSettings.teams = getTeams.teams;
-            currentSettings.team = nil;
-        }
-    }
-*/
     
     UIImageView *myGraphic;
     
@@ -259,15 +236,6 @@
     
     [self.navigationController popToRootViewControllerAnimated:NO];
     
-    /* Transition using a page curl.
-    [UIView transitionFromView:fromView toView:toView duration:0.5
-                       options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
-                    completion:^(BOOL finished) {
-                        if (finished) {
-                            tabBarController.selectedIndex = 0;
-                        }
-                    }]; 
-     */
 }
 
 @end

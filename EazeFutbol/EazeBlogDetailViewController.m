@@ -139,6 +139,11 @@
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+
+    if (currentSettings.isSiteOwner)
+        self.navigationItem.rightBarButtonItem = _deleteBarButton;;
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)textViewShouldBeginEditing:(UITextView *)textView {
@@ -293,4 +298,14 @@
     else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
         [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
 }
+
+- (IBAction)deleteBarButtonClicked:(id)sender {
+    if ([blog initDeleteBlog]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Blog entry deleted!"
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
+}
+
 @end

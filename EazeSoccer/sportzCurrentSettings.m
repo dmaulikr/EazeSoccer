@@ -812,6 +812,7 @@
         getTeams = [[EazesportzRetrieveTeams alloc] init];
         if ([getTeams retrieveTeamsSynchronous:sport.id Token:user.authtoken]) {
             teams = getTeams.teams;
+            sponsors = nil;
             team = nil;
         }
     }
