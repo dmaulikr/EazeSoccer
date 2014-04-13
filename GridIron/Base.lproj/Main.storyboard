@@ -2920,8 +2920,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="85" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="XZA-eg-ZVO">
-                                <rect key="frame" x="0.0" y="64" width="320" height="414"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="85" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="XZA-eg-ZVO">
+                                <rect key="frame" x="0.0" y="64" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -2981,7 +2981,7 @@
                                 </constraints>
                             </adBannerView>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Wt9-qw-fhW" firstAttribute="top" secondItem="eIh-sk-eQJ" secondAttribute="bottom" constant="210" id="1m6-KW-obX"/>
                             <constraint firstItem="zx6-zw-veo" firstAttribute="leading" secondItem="Ubm-Fb-XlB" secondAttribute="leading" id="9xT-G3-XqR"/>
@@ -5173,7 +5173,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RosterTableCell" id="bqN-xp-mQv" customClass="RosterTableCell">
-                                        <rect key="frame" x="0.0" y="86" width="320" height="60"/>
+                                        <rect key="frame" x="0.0" y="22" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bqN-xp-mQv" id="4JU-0g-Aqq">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
@@ -5270,7 +5270,7 @@
                                     <outlet property="delegate" destination="A4F-jN-gzS" id="ckp-TS-WJ9"/>
                                 </connections>
                             </tableView>
-                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XIF-At-Zqh">
+                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XIF-At-Zqh">
                                 <rect key="frame" x="60" y="100" width="200" height="200"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -5336,7 +5336,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GameScheduleTableCell" id="Cez-FZ-4Cd" customClass="GameScheduleTableViewCell">
-                                        <rect key="frame" x="0.0" y="86" width="320" height="110"/>
+                                        <rect key="frame" x="0.0" y="22" width="320" height="110"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Cez-FZ-4Cd" id="X4X-MB-pNN">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="109"/>
@@ -5557,7 +5557,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CoachTableCell" rowHeight="60" id="T2z-OM-e5S" customClass="CoachTableCell">
-                                        <rect key="frame" x="0.0" y="86" width="320" height="60"/>
+                                        <rect key="frame" x="0.0" y="22" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="T2z-OM-e5S" id="NCp-qW-dZA">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
@@ -11625,10 +11625,13 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kcr-Ui-c5W">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kcr-Ui-c5W">
                                 <rect key="frame" x="90" y="177" width="140" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="Ps7-S2-FGk"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Get Started!">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -11637,19 +11640,13 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <segue destination="qae-Uj-N2a" kind="push" id="bnC-ts-glg"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gMQ-og-38U">
-                                <rect key="frame" x="105" y="339" width="110" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <state key="normal" title="Sponsors">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B57-K9-PQZ">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B57-K9-PQZ">
                                 <rect key="frame" x="38" y="297" width="245" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="hAs-FA-4PE"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Find a Sport or Player!">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -11658,23 +11655,29 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <segue destination="eNr-ti-6oB" kind="push" id="w3q-Z0-640"/>
                                 </connections>
                             </button>
-                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Create a Team Site." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="EVO-uD-9KA">
+                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a Team Site." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="EVO-uD-9KA">
                                 <rect key="frame" x="20" y="81" width="280" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Hsl-3w-dYq"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="24"/>
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Create a Personal Site" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="0cq-Pr-Irs">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create a Personal Site" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="0cq-Pr-Irs">
                                 <rect key="frame" x="20" y="129" width="280" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="lYd-A2-oi8"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="24"/>
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Search for Existing Sports or Players" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="jsG-T9-afg">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search for Existing Sports or Players" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="jsG-T9-afg">
                                 <rect key="frame" x="20" y="219" width="280" height="70"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -11685,18 +11688,25 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="EVO-uD-9KA" firstAttribute="top" secondItem="jah-3T-xWg" secondAttribute="top" constant="81" id="0Mt-mx-XIR"/>
-                            <constraint firstItem="jsG-T9-afg" firstAttribute="top" secondItem="Kcr-Ui-c5W" secondAttribute="bottom" constant="8" id="Djm-8c-Unm"/>
-                            <constraint firstItem="0cq-Pr-Irs" firstAttribute="top" secondItem="EVO-uD-9KA" secondAttribute="bottom" constant="8" id="WUi-Tb-M8Y"/>
-                            <constraint firstItem="Kcr-Ui-c5W" firstAttribute="top" secondItem="0cq-Pr-Irs" secondAttribute="bottom" constant="8" id="bfr-gG-G00"/>
-                            <constraint firstItem="B57-K9-PQZ" firstAttribute="top" secondItem="jsG-T9-afg" secondAttribute="bottom" constant="8" id="bxh-7f-9Fe"/>
-                            <constraint firstItem="gMQ-og-38U" firstAttribute="top" secondItem="B57-K9-PQZ" secondAttribute="bottom" constant="8" id="zWo-Rb-nLi"/>
+                            <constraint firstItem="Kcr-Ui-c5W" firstAttribute="leading" secondItem="jah-3T-xWg" secondAttribute="leading" constant="90" id="2Ey-kF-0jH"/>
+                            <constraint firstItem="B57-K9-PQZ" firstAttribute="top" secondItem="jsG-T9-afg" secondAttribute="bottom" constant="8" symbolic="YES" id="2hw-nI-cqf"/>
+                            <constraint firstItem="Kcr-Ui-c5W" firstAttribute="centerX" secondItem="0cq-Pr-Irs" secondAttribute="centerX" id="2sX-1p-XGz"/>
+                            <constraint firstItem="0cq-Pr-Irs" firstAttribute="leading" secondItem="jsG-T9-afg" secondAttribute="leading" id="3Ks-Ni-ASE"/>
+                            <constraint firstItem="B57-K9-PQZ" firstAttribute="centerX" secondItem="Kcr-Ui-c5W" secondAttribute="centerX" id="8TX-fc-N7L"/>
+                            <constraint firstItem="jsG-T9-afg" firstAttribute="top" secondItem="Kcr-Ui-c5W" secondAttribute="bottom" constant="8" symbolic="YES" id="Iiz-V5-nsD"/>
+                            <constraint firstItem="EVO-uD-9KA" firstAttribute="trailing" secondItem="0cq-Pr-Irs" secondAttribute="trailing" id="NJd-Lb-28b"/>
+                            <constraint firstAttribute="trailing" secondItem="EVO-uD-9KA" secondAttribute="trailing" constant="20" symbolic="YES" id="PIQ-AE-bcb"/>
+                            <constraint firstItem="EVO-uD-9KA" firstAttribute="leading" secondItem="jah-3T-xWg" secondAttribute="leading" constant="20" symbolic="YES" id="UFG-gw-Kop"/>
+                            <constraint firstItem="EVO-uD-9KA" firstAttribute="leading" secondItem="0cq-Pr-Irs" secondAttribute="leading" id="Y2s-C6-dmi"/>
+                            <constraint firstItem="SMg-cF-vxh" firstAttribute="top" secondItem="B57-K9-PQZ" secondAttribute="bottom" constant="193" id="a0T-h7-5Ru"/>
+                            <constraint firstItem="0cq-Pr-Irs" firstAttribute="top" secondItem="EVO-uD-9KA" secondAttribute="bottom" constant="8" symbolic="YES" id="cNM-Gf-4Xx"/>
+                            <constraint firstItem="B57-K9-PQZ" firstAttribute="leading" secondItem="jah-3T-xWg" secondAttribute="leading" constant="38" id="cdH-RJ-dq8"/>
+                            <constraint firstItem="EVO-uD-9KA" firstAttribute="top" secondItem="N0V-aO-qMz" secondAttribute="bottom" constant="17" id="iFS-yL-mwk"/>
+                            <constraint firstItem="Kcr-Ui-c5W" firstAttribute="top" secondItem="0cq-Pr-Irs" secondAttribute="bottom" constant="8" symbolic="YES" id="swe-25-69b"/>
+                            <constraint firstItem="jsG-T9-afg" firstAttribute="trailing" secondItem="0cq-Pr-Irs" secondAttribute="trailing" id="wp7-g4-P5K"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Welcome" id="Qwd-Rn-bZC"/>
-                    <connections>
-                        <outlet property="sponsorButton" destination="gMQ-og-38U" id="dtL-za-4RI"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bFF-zZ-PyR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -14778,19 +14788,25 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="hOO-yh-Ok6"/>
         <segue reference="jFc-qm-vrP"/>
+        <segue reference="qds-Ri-E1R"/>
+        <segue reference="cCB-MS-fWa"/>
+        <segue reference="3bq-Mz-dho"/>
         <segue reference="aBh-30-yW2"/>
-        <segue reference="QV6-Qu-Q2P"/>
+        <segue reference="Xqe-LA-FSD"/>
+        <segue reference="l0o-qp-Q5j"/>
+        <segue reference="EFm-8G-Iz2"/>
+        <segue reference="KkR-sC-GkG"/>
         <segue reference="ZZ8-Ky-AuB"/>
         <segue reference="9Hs-6c-Dak"/>
         <segue reference="TmN-1Y-yYB"/>
         <segue reference="3XL-Pa-d9L"/>
         <segue reference="iH4-dc-Wcj"/>
         <segue reference="VA8-5D-DUf"/>
-        <segue reference="lhU-fA-ckU"/>
         <segue reference="p8Z-bt-8th"/>
-        <segue reference="aFJ-Pd-qe9"/>
-        <segue reference="Xoi-s8-XjM"/>
+        <segue reference="pWF-kf-ySH"/>
+        <segue reference="3oO-Ap-W9E"/>
         <segue reference="uke-b0-p5o"/>
         <segue reference="9OM-cK-yEQ"/>
         <segue reference="46Q-GN-s2A"/>
@@ -14799,6 +14815,8 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <segue reference="56m-3M-lXr"/>
         <segue reference="GnN-TQ-PIa"/>
         <segue reference="IqI-4f-gxK"/>
+        <segue reference="w3q-Z0-640"/>
+        <segue reference="bnC-ts-glg"/>
         <segue reference="c7J-WS-lIL"/>
         <segue reference="rsC-24-oJr"/>
         <segue reference="zMa-Xv-kuL"/>
@@ -14808,16 +14826,8 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <segue reference="vuM-Lv-gjj"/>
         <segue reference="L8v-h7-nBc"/>
         <segue reference="dhB-Aj-2qv"/>
-        <segue reference="On2-NM-G6j"/>
         <segue reference="S5e-hG-4ah"/>
         <segue reference="mZy-NY-xVG"/>
-        <segue reference="O6L-Q9-5nR"/>
-        <segue reference="VTd-yV-URD"/>
-        <segue reference="KkR-sC-GkG"/>
-        <segue reference="Xqe-LA-FSD"/>
-        <segue reference="l0o-qp-Q5j"/>
-        <segue reference="EFm-8G-Iz2"/>
-        <segue reference="3bq-Mz-dho"/>
         <segue reference="0I6-xc-weE"/>
     </inferredMetricsTieBreakers>
 </document>
