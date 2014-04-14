@@ -47,6 +47,7 @@
 @synthesize streamingurl;
 @synthesize streamingbucket;
 @synthesize pricingurl;
+@synthesize enablelive;
 
 @synthesize supportedsports;
 
@@ -111,6 +112,7 @@
         streamingurl = [sportDictionary objectForKey:@"streamingurl"];
         streamingbucket = [sportDictionary objectForKey:@"streamingbucket"];
         pricingurl = [sportDictionary objectForKey:@"pricingurl"];
+        enablelive = [sportDictionary objectForKey:@"enablelive"];
         supportedsports = [sportDictionary objectForKey:@"supportedsports"];
         
         if ([name isEqualToString:@"Soccer"]) {

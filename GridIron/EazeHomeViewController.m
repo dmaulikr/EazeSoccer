@@ -162,7 +162,7 @@
     // Return the number of rows in the section.
 //    if (currentSettings.team.teamid.length == 0)
   //      return 0;
-    if ([currentSettings.sport isPlatinumPackage])
+    if (([currentSettings.sport isPlatinumPackage]) && (currentSettings.sport.enablelive))
         return 6;
     else
         return 5;

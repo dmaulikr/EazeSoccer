@@ -30,7 +30,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItem = self.addBarButton;
+    if ([currentSettings isSiteOwner])
+        self.navigationItem.rightBarButtonItem = self.addBarButton;
     
     self.navigationController.toolbarHidden = YES;
 }

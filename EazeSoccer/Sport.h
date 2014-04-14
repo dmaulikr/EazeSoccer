@@ -45,6 +45,7 @@
 @property (nonatomic, strong) NSString *streamingurl;
 @property (nonatomic, strong) NSString *streamingbucket;
 @property (nonatomic, strong) NSString *pricingurl;
+@property (nonatomic, assign) BOOL enablelive;
 
 @property (nonatomic, strong) NSMutableArray *supportedsports;
 
