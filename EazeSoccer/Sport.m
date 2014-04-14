@@ -112,7 +112,7 @@
         streamingurl = [sportDictionary objectForKey:@"streamingurl"];
         streamingbucket = [sportDictionary objectForKey:@"streamingbucket"];
         pricingurl = [sportDictionary objectForKey:@"pricingurl"];
-        enablelive = [sportDictionary objectForKey:@"enablelive"];
+        enablelive = [[sportDictionary objectForKey:@"enablelive"] boolValue];
         supportedsports = [sportDictionary objectForKey:@"supportedsports"];
         
         if ([name isEqualToString:@"Soccer"]) {
