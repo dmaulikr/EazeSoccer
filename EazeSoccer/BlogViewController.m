@@ -200,7 +200,7 @@
             deleteIndexPath = [_blogTableView indexPathForSelectedRow];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confrim"
                                                             message:@"Delete Blog Entry"
-                                                           delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+                                                           delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Confirm", nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }

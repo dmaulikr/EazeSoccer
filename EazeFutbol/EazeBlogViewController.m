@@ -142,7 +142,8 @@
         self.tabBarController.selectedIndex = 0;
     } else if ([title isEqualToString:@"Select Site"]) {
         self.tabBarController.selectedIndex = 0;
-    }
+    } else
+        [super alertView:alertView clickedButtonAtIndex:buttonIndex];
 }
 
 - (IBAction)searchButtonClicked:(id)sender {

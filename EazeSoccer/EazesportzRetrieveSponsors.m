@@ -11,7 +11,7 @@
 #import "sportzServerInit.h"
 
 @implementation EazesportzRetrieveSponsors {
-    int responseStatusCode;
+    long responseStatusCode;
     NSMutableArray *serverData;
     NSMutableData *theData;
     

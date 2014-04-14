@@ -166,6 +166,7 @@
 - (void)gotTotals:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         visiblestats = @"Team";
+        _addButton.enabled = NO;
         [_statTableView reloadData];
     }
 }
@@ -173,6 +174,7 @@
 - (void)gotPassing:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _passButton.enabled = YES;
+        _addButton.enabled = YES;
         passlist = getPassing.passing;
     }
 }
@@ -180,6 +182,7 @@
 - (void)gotRushing:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _rushButton.enabled = YES;
+        _addButton.enabled = YES;
         rushlist = getRushing.rushing;
     }
 }
@@ -187,6 +190,7 @@
 - (void)gotReceiving:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _receiverButton.enabled = YES;
+        _addButton.enabled = YES;
         receiverlist = getReceiving.receiving;
     }
 }
@@ -194,6 +198,7 @@
 - (void)gotDefense:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _defenseButton.enabled = YES;
+        _addButton.enabled = YES;
         defenselist = getDefense.defense;
     }
 }
@@ -201,6 +206,7 @@
 - (void)gotKicker:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _kickerButton.enabled = YES;
+        _addButton.enabled = YES;
         kickerlist = getKicker.kicker;
         punterlist = getKicker.punter;
     }
@@ -209,6 +215,7 @@
 - (void)gotReturner:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         _returnerButton.enabled = YES;
+        _addButton.enabled = YES;
         returnerlist = getReturner.returner;
     }
 }
@@ -536,7 +543,7 @@
             if ([stat.punt_returnyards intValue] > 0)
                 cell.label5.text = [NSString stringWithFormat:@"%.02f", [stat.punt_returnyards floatValue]/[stat.punt_return intValue]];
             else
-                cell.label5.text = @"";
+                cell.label5.text = @"0.0";
             
             cell.label6.text = [stat.punt_returntd stringValue];
             
@@ -560,7 +567,7 @@
             if ([stat.koyards intValue] > 0)
                 cell.label5.text = [NSString stringWithFormat:@"%.02f", [stat.koyards floatValue]/[stat.koreturn intValue]];
             else
-                cell.label5.text = @"";
+                cell.label5.text = @"0.0";
             
             cell.label6.text = [stat.kotd stringValue];
             

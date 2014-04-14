@@ -201,7 +201,9 @@
     NSMutableDictionary *sportDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[_sitenameTextField text], @"sitename",
                                      [_mascotTextField text], @"mascot", _yearTextField.text, @"year", _zipcodeTextField.text, @"zip",
                                       currentSettings.user.email, @"contactemail", @"Fall", @"season", _countryTextField.text, @"country",
-                                      _sportTextField.text, @"name", nil];
+                                      _sportTextField.text, @"name", [[NSNumber numberWithBool:sport.enable_user_pics] stringValue], @"enable_user_pics",
+                                      [[NSNumber numberWithBool:sport.enable_user_video] stringValue], @"enable_user_video",
+                                      [[NSNumber numberWithBool:sport.review_media] stringValue], @"review_media", nil];
     
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:sportDict, @"sport", nil];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
@@ -311,11 +313,6 @@
         } else {
             UITabBarController *tabBarController = self.tabBarController;
             
-            for (UIViewController *viewController in tabBarController.viewControllers) {
-                if ([viewController isKindOfClass:[UINavigationController class]])
-                    [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
-            }
-            
             UIView * fromView = tabBarController.selectedViewController.view;
             UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
             
@@ -325,6 +322,13 @@
                                    options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
                                 completion:^(BOOL finished) {
                                     if (finished) {
+                                        [self.navigationController popToRootViewControllerAnimated:NO];
+                                        
+                                        for (UIViewController *viewController in tabBarController.viewControllers) {
+                                            if ([viewController isKindOfClass:[UINavigationController class]])
+                                                [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
+                                        }
+                                        
                                         tabBarController.selectedIndex = 0;
                                     }
                                 }];

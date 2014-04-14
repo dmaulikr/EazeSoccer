@@ -271,6 +271,7 @@
     } else if ([segue.identifier isEqualToString:@"GamePhotoSegue"]) {
         EazePhotosViewController *destController = segue.destinationViewController;
         destController.game = game;
+        currentSettings.photodeleted = YES;
     } else if ([segue.identifier isEqualToString:@"GameVideoSegue"]) {
         EazesVideosViewController *destController = segue.destinationViewController;
         destController.game = game;
@@ -392,7 +393,10 @@
         [[game.gamelogs objectAtIndex:deleteIndexPath.row] initDeleteGameLog];
         [game.gamelogs removeObjectAtIndex:deleteIndexPath.row];
         [self viewWillAppear:YES];
-    }
+    } else if ([title isEqualToString:@"Photos"])
+        [self performSegueWithIdentifier:@"GamePhotoSegue" sender:self];
+    else if ([title isEqualToString:@"Videos"])
+        [self performSegueWithIdentifier:@"GameVideoSegue" sender:self];
 }
 
 - (void)scoreType {

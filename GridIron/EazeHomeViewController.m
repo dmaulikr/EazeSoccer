@@ -89,6 +89,10 @@
     } else if (currentSettings.sport.id.length > 0) {
         if (currentSettings.teams.count > 1) {
             _teamPicker.hidden = NO;
+            [[[[self.tabBarController tabBar]items]objectAtIndex:1]setEnabled:NO];
+            [[[[self.tabBarController tabBar]items]objectAtIndex:2]setEnabled:NO];
+            [[[[self.tabBarController tabBar]items]objectAtIndex:3]setEnabled:NO];
+            [[[[self.tabBarController tabBar]items]objectAtIndex:4]setEnabled:NO];
             _changeTeamButton.enabled = YES;
             [_teamPicker reloadAllComponents];
         } else if (currentSettings.teams.count == 1) {
@@ -380,6 +384,11 @@
                                                           Token:currentSettings.user.authtoken];
     }
     
+    [[[[self.tabBarController tabBar]items]objectAtIndex:1]setEnabled:YES];
+    [[[[self.tabBarController tabBar]items]objectAtIndex:2]setEnabled:YES];
+    [[[[self.tabBarController tabBar]items]objectAtIndex:3]setEnabled:YES];
+    [[[[self.tabBarController tabBar]items]objectAtIndex:4]setEnabled:YES];
+
     [self viewWillAppear:YES];
 }
 

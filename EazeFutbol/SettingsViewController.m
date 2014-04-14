@@ -279,6 +279,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id]))
         return 8;
+    else if (currentSettings.user.userid.length > 0)
+        return 7;
     else
         return 6;
 }
@@ -403,7 +405,7 @@
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ Sponsors", currentSettings.team.mascot];
             break;
             
-        case 6:
+       case 6:
             cell.backgroundColor = [UIColor whiteColor];
             cell.imageView.image = nil;
             if (currentSettings.user.admin) {
@@ -424,6 +426,7 @@
             cell.textLabel.text = @"Eazesportz Information";
             cell.detailTextLabel.text = @"Package and info";
             break;
+            
    }
     
     return cell;

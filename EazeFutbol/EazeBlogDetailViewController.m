@@ -173,7 +173,7 @@
         NSURL *url = [NSURL URLWithString:[sportzServerInit newBlog:currentSettings.user.authtoken]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         NSMutableDictionary *blogData = [[NSMutableDictionary alloc] initWithObjectsAndKeys:blog.blogtitle, @"title", blog.entry, @"entry",
-                                        blog.user, @"user_id", blog.teamid, @"team_id", nil];
+                                        currentSettings.user.userid, @"user_id", blog.teamid, @"team_id", nil];
         
         if (blog.gameschedule.length > 0)
             [blogData setValue:blog.gameschedule forKey:@"gameschedule_id"];
