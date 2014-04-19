@@ -73,8 +73,12 @@
     
     if (newsitem.videoclip_id.length > 0) {
         _imageButton.enabled = YES;
-        [_imageButton setBackgroundImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125] forState:UIControlStateNormal];
-        _imageView.image = [currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            [_imageButton setBackgroundImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:512] forState:UIControlStateNormal];
+//            _imageView.image = [currentSettings normalizedImage:newsitem.videoPoster scaledToSize:512];
+        else
+            [_imageButton setBackgroundImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125] forState:UIControlStateNormal];
+//            _imageView.image = [currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125];
     } else if ((newsitem.tinyurl.length > 0) || (newsitem.thumburl.length > 0)) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
@@ -89,18 +93,28 @@
         });
     } else if (newsitem.athlete.length > 0) {
         _imageButton.enabled = YES;
-        [_imageButton setBackgroundImage:[currentSettings normalizedImage:
-                                          [currentSettings getRosterThumbImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:125]
-                      forState:UIControlStateNormal];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+                                          [currentSettings getRosterMediumImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:512] forState:UIControlStateNormal];
+        else
+            [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+                                              [currentSettings getRosterThumbImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:125] forState:UIControlStateNormal];
     } else if (newsitem.game.length > 0) {
         _imageButton.enabled = YES;
-        [_imageButton setBackgroundImage:[currentSettings normalizedImage:
-                                          [currentSettings getOpponentImage:[currentSettings findGame:newsitem.game]] scaledToSize:50]
-                      forState:UIControlStateNormal];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+                                          [currentSettings getOpponentImage:[currentSettings findGame:newsitem.game]] scaledToSize:512] forState:UIControlStateNormal];
+        else
+            [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+                                              [currentSettings getOpponentImage:[currentSettings findGame:newsitem.game]] scaledToSize:50] forState:UIControlStateNormal];
     } else if (newsitem.coach.length > 0) {
         _imageButton.enabled = YES;
-        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"thumb"] scaledToSize:125]
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"medium"] scaledToSize:512]
                       forState:UIControlStateNormal];
+        else
+            [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"thumb"] scaledToSize:125]
+                                    forState:UIControlStateNormal];
     } else if (newsitem.team.length > 0) {
         [_imageButton setBackgroundImage:[currentSettings normalizedImage:[currentSettings.team getImage:@"thumb"] scaledToSize:125]
                                 forState:UIControlStateNormal];

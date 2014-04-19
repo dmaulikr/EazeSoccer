@@ -9,23 +9,17 @@
 #import "EazesVideosViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "EazeUsersSelectViewController.h"
-#import "EazePlayerSelectViewController.h"
-#import "EazeGameSelectionViewController.h"
 #import "sportzteamsMovieViewController.h"
 #import "sportzServerInit.h"
 #import "VideoCell.h"
 #import "EazesportzGameLogViewController.h"
-#import "EazeUserSettingsViewController.h"
 
 @interface EazesVideosViewController ()
 
 @end
 
 @implementation EazesVideosViewController {
-    PlayerSelectionViewController *playerSelectController;
-    EazeGameSelectionViewController *gameSelectController;
-    EazeUsersSelectViewController *usersSelectController;
-    EazesportzGameLogViewController *gamelogSelectController;
+    EazesportzGameLogViewController *gamelogController;
  }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -50,6 +44,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    _gamlogContainer.hidden = YES;
+    
     if (currentSettings.sport.id.length == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please select a site before continuing"
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -58,30 +54,27 @@
         [alert show];
         return;
     } else {
-        if (gamelogSelectController) {
-            if (self.game) {
-                self.gamelog = gamelogSelectController.gamelog;
-            }
-        }
-        
         [super viewWillAppear:animated];
         
-        if ([currentSettings isSiteOwner]) {
-            if (currentSettings.sport.review_media)
-                self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.addButton,
-                                                           self.pendingBarButton, nil];
-            else
-                self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.addButton, nil];
-        } else if (currentSettings.sport.enable_user_video)
+        if ([currentSettings isSiteOwner])
             self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.addButton, nil];
         else
             self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, nil];
         
         self.navigationController.toolbarHidden = YES;
-    }
+}
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
+}
+
+- (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
+    _gamlogContainer.hidden = YES;
+    
+    if (gamelogController.gamelog) {
+        self.gamelog = gamelogController.gamelog;
+        [self retrieveVideos];
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -89,6 +82,14 @@
     cell.layer.cornerRadius = 6;
     cell.backgroundColor = [UIColor whiteColor];
     Video *video = [self.videos objectAtIndex:indexPath.row];
+    
+    if ((currentSettings.sport.review_media) && ([currentSettings isSiteOwner]) && (video.pending)) {
+        cell.approvalLabel.hidden = NO;
+        cell.approvalLabel.backgroundColor = [UIColor whiteColor];
+    } else {
+        cell.approvalLabel.hidden = YES;
+        cell.approvalLabel.backgroundColor = [UIColor clearColor];
+    }
     
     dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     //this will start the image loading in bg
@@ -134,8 +135,7 @@
         sportzteamsMovieViewController *destViewController = segue.destinationViewController;
         destViewController.videoclip = [self.videos objectAtIndex:indexPath.row];
     } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
-        gamelogSelectController = segue.destinationViewController;
-        gamelogSelectController.game = gameSelectController.thegame;
+        gamelogController = segue.destinationViewController;
     } else
         [super prepareForSegue:segue sender:self];
 }
@@ -146,20 +146,21 @@
     if ([title isEqualToString:@"Player"]) {
         self.game = nil;
         self.user = nil;
-        gamelogSelectController.game = nil;
         self.playerSelectContainer.hidden = NO;
     } else if ([title isEqualToString:@"Game"]) {
         self.player = nil;
         self.user = nil;
-        gamelogSelectController.game = nil;
         self.gameSelectContainer.hidden = NO;
     } else if ([title isEqualToString:@"Play"]) {
         self.player = nil;
         self.user = nil;
         
-        if (self.game)
-            [self performSegueWithIdentifier:@"GamePlaySelectSegue" sender:self];
-        else {
+        if (self.game) {
+            _gamlogContainer.hidden = NO;
+            gamelogController.game = self.game;
+            gamelogController.gamelog = nil;
+            [gamelogController viewWillAppear:YES];
+        } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Game must be selected before searching by play"
                                                            delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             
@@ -169,13 +170,11 @@
     } else if ([title isEqualToString:@"User"]) {
         self.player = nil;
         self.game = nil;
-        gamelogSelectController.game = nil;
         self.userSelectionContainer.hidden = NO;
     } else if ([title isEqualToString:@"All"]) {
         self.game = nil;
         self.user = nil;
         self.player = nil;
-        gamelogSelectController = nil;
         
         [super retrieveVideos];
     }

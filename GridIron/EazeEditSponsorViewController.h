@@ -17,5 +17,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *infoBarButton;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *globeBarButton;
+@property (weak, nonatomic) IBOutlet UIButton *catalogButton;
 
 @end

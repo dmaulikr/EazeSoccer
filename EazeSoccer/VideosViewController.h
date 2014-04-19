@@ -44,7 +44,5 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *featuredButton;
 
 - (void)retrieveVideos;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *pendingBarButton;
-- (IBAction)pendingBarButtonClicked:(id)sender;
 
 @end

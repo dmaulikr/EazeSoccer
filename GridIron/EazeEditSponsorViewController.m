@@ -36,7 +36,11 @@
     
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyBoard:)];
     gestureRecognizer.delegate = self;
-    [_scrollView addGestureRecognizer:gestureRecognizer];}
+    [_scrollView addGestureRecognizer:gestureRecognizer];
+    
+    _catalogButton.hidden = YES;
+    _catalogButton.enabled = NO;
+}
 
 - (void)didReceiveMemoryWarning
 {

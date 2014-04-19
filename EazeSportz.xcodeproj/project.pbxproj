@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B0BB168190327C000CED98A /* EazesportzManageUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B0BB167190327C000CED98A /* EazesportzManageUsersViewController.m */; };
 		2B13E48D18F8852700CAEC99 /* processing.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B13E48C18F8852700CAEC99 /* processing.png */; };
 		2B171DD818E74D06006A9503 /* EazesportzImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B171DD718E74D06006A9503 /* EazesportzImage.m */; };
 		2B171DD918E74D06006A9503 /* EazesportzImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B171DD718E74D06006A9503 /* EazesportzImage.m */; };
@@ -15,15 +16,131 @@
 		2B18D1EF18E87A88008B122D /* EazesportzWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B18D1EE18E87A88008B122D /* EazesportzWelcomeViewController.m */; };
 		2B205E0E18EDA73D00653B79 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = B4E3024D183FDD4A0083802A /* Icon-76.png */; };
 		2B2C4C6018EEFDE900CFB36C /* EazeSponsorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C4C5F18EEFDE900CFB36C /* EazeSponsorTableViewController.m */; };
+		2B2D5C7318FF31320047F6D6 /* Countries.plist in Resources */ = {isa = PBXBuildFile; fileRef = B46BFF1E18A2EC680086CCD5 /* Countries.plist */; };
+		2B2D5C7418FF32AD0047F6D6 /* Gymfloor.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EF7CBA182C56E300DBD278 /* Gymfloor.png */; };
+		2B2D5C7518FF32C00047F6D6 /* soccer.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F9886E18208BD00093EF7E /* soccer.png */; };
+		2B2D5C7618FF34A40047F6D6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B478717318D0AC4D000AC45D /* CoreLocation.framework */; };
+		2B2D5C7718FF34DC0047F6D6 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4911BDA18331C3C00E1D7DB /* iAd.framework */; };
+		2B2D5C7818FF34E70047F6D6 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD3350518F5E26800FB6783 /* MapKit.framework */; };
+		2B2D5C7918FF3A720047F6D6 /* camera-icon-md.png in Resources */ = {isa = PBXBuildFile; fileRef = B4AD734118DCC196009891CF /* camera-icon-md.png */; };
+		2B2D5C7A18FF3B300047F6D6 /* EazeRosterViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A87AFE1832F72300E492D0 /* EazeRosterViewController.h */; };
+		2B2D5C7B18FF3B300047F6D6 /* EazeRosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A87AFF1832F72300E492D0 /* EazeRosterViewController.m */; };
+		2B2D5C7C18FF3B980047F6D6 /* PlayerInfoViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A87AF81832F4AA00E492D0 /* PlayerInfoViewController.h */; };
+		2B2D5C7D18FF3B980047F6D6 /* PlayerInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A87AF91832F4AA00E492D0 /* PlayerInfoViewController.m */; };
+		2B2D5C7E18FF3C7F0047F6D6 /* emergency.png in Resources */ = {isa = PBXBuildFile; fileRef = B4A87B011832FD4D00E492D0 /* emergency.png */; };
+		2B2D5C7F18FF3D960047F6D6 /* EazeFeaturedPhotosViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B46D7BA318877E8000A9728C /* EazeFeaturedPhotosViewController.h */; };
+		2B2D5C8018FF3D960047F6D6 /* EazeFeaturedPhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46D7BA418877E8000A9728C /* EazeFeaturedPhotosViewController.m */; };
+		2B2D5C8118FF3D960047F6D6 /* EazeNewsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B43B5D0F1889BA910072248F /* EazeNewsViewController.h */; };
+		2B2D5C8218FF3D960047F6D6 /* EazeNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B43B5D101889BA910072248F /* EazeNewsViewController.m */; };
+		2B2D5C8318FF3D960047F6D6 /* EazeFeaturedVideosViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B411045D188AE53D00ED4FB5 /* EazeFeaturedVideosViewController.h */; };
+		2B2D5C8418FF3D960047F6D6 /* EazeFeaturedVideosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B411045E188AE53D00ED4FB5 /* EazeFeaturedVideosViewController.m */; };
+		2B2D5C8518FF3D960047F6D6 /* EazesportzScheduleViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4136E15188AF23200191928 /* EazesportzScheduleViewController.h */; };
+		2B2D5C8618FF3D960047F6D6 /* EazesportzScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4136E16188AF23200191928 /* EazesportzScheduleViewController.m */; };
+		2B2D5C8718FF3D960047F6D6 /* EazeFootballGameSummaryViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4136E18188B15C000191928 /* EazeFootballGameSummaryViewController.h */; };
+		2B2D5C8818FF3D960047F6D6 /* EazeFootballGameSummaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4136E19188B15C000191928 /* EazeFootballGameSummaryViewController.m */; };
+		2B2D5C8918FF3D960047F6D6 /* EazeFootballGameStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4EF7C73188B26F800001010 /* EazeFootballGameStatsViewController.h */; };
+		2B2D5C8A18FF3D960047F6D6 /* EazeFootballGameStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4EF7C74188B26F800001010 /* EazeFootballGameStatsViewController.m */; };
+		2B2D5C8B18FF3D960047F6D6 /* FootballStatTotals.h in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CB3188BA25D001D647E /* FootballStatTotals.h */; };
+		2B2D5C8C18FF3D960047F6D6 /* FootballStatTotals.m in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CB4188BA25D001D647E /* FootballStatTotals.m */; };
+		2B2D5C8D18FF3D960047F6D6 /* EazesportzRetrieveFootballStatTotals.h in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CAD188B904B001D647E /* EazesportzRetrieveFootballStatTotals.h */; };
+		2B2D5C8E18FF3D960047F6D6 /* EazesportzRetrieveFootballStatTotals.m in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CAE188B904B001D647E /* EazesportzRetrieveFootballStatTotals.m */; };
+		2B2D5C8F18FF3D960047F6D6 /* EazesportzRetrievePassingGameStats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CB0188B9EA4001D647E /* EazesportzRetrievePassingGameStats.h */; };
+		2B2D5C9018FF3D960047F6D6 /* EazesportzRetrievePassingGameStats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CB1188B9EA4001D647E /* EazesportzRetrievePassingGameStats.m */; };
+		2B2D5C9118FF3D960047F6D6 /* EazesportzRetrieveFootballRushingGameStats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CB6188BA4DB001D647E /* EazesportzRetrieveFootballRushingGameStats.h */; };
+		2B2D5C9218FF3D960047F6D6 /* EazesportzRetrieveFootballRushingGameStats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CB7188BA4DB001D647E /* EazesportzRetrieveFootballRushingGameStats.m */; };
+		2B2D5C9318FF3D960047F6D6 /* EazesportzRetrieveFootballReceivingStats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CB9188BA5E9001D647E /* EazesportzRetrieveFootballReceivingStats.h */; };
+		2B2D5C9418FF3D960047F6D6 /* EazesportzRetrieveFootballReceivingStats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4DB7CBA188BA5E9001D647E /* EazesportzRetrieveFootballReceivingStats.m */; };
+		2B2D5C9518FF3D960047F6D6 /* EazesportzRetrieveFootballDefenseGameStats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4BC41AE188C338A00E1FC5E /* EazesportzRetrieveFootballDefenseGameStats.h */; };
+		2B2D5C9618FF3D960047F6D6 /* EazesportzRetrieveFootballDefenseGameStats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4BC41AF188C338A00E1FC5E /* EazesportzRetrieveFootballDefenseGameStats.m */; };
+		2B2D5C9718FF3D960047F6D6 /* EazesportzRetrieveFootballKickerStats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4BC41B1188C343000E1FC5E /* EazesportzRetrieveFootballKickerStats.h */; };
+		2B2D5C9818FF3D960047F6D6 /* EazesportzRetrieveFootballKickerStats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4BC41B2188C343000E1FC5E /* EazesportzRetrieveFootballKickerStats.m */; };
+		2B2D5C9918FF3D960047F6D6 /* EazesportzRetrieveFootballReturnerGameStats.h in Sources */ = {isa = PBXBuildFile; fileRef = B4BC41B4188C34F600E1FC5E /* EazesportzRetrieveFootballReturnerGameStats.h */; };
+		2B2D5C9A18FF3D960047F6D6 /* EazesportzRetrieveFootballReturnerGameStats.m in Sources */ = {isa = PBXBuildFile; fileRef = B4BC41B5188C34F600E1FC5E /* EazesportzRetrieveFootballReturnerGameStats.m */; };
+		2B2D5C9B18FF3D960047F6D6 /* EazesportzFootballStatTotalsTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B474F7AB188C3CAB0080ECA4 /* EazesportzFootballStatTotalsTableCell.h */; };
+		2B2D5C9C18FF3D960047F6D6 /* EazesportzFootballStatTotalsTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F7AC188C3CAB0080ECA4 /* EazesportzFootballStatTotalsTableCell.m */; };
+		2B2D5C9D18FF3D960047F6D6 /* EazesportzStatTableHeaderCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B474F7AE188C7EBA0080ECA4 /* EazesportzStatTableHeaderCell.h */; };
+		2B2D5C9E18FF3D960047F6D6 /* EazesportzStatTableHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B474F7AF188C7EBA0080ECA4 /* EazesportzStatTableHeaderCell.m */; };
+		2B2D5C9F18FF3D960047F6D6 /* EazeFootballPlayerStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A22284188F8F1600B538D1 /* EazeFootballPlayerStatsViewController.h */; };
+		2B2D5CA018FF3D960047F6D6 /* EazeFootballPlayerStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A22285188F8F1600B538D1 /* EazeFootballPlayerStatsViewController.m */; };
+		2B2D5CA118FF3D960047F6D6 /* EazeBballPlayerStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B44309B918902BB000D77395 /* EazeBballPlayerStatsViewController.h */; };
+		2B2D5CA218FF3D960047F6D6 /* EazeBballPlayerStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44309BA18902BB000D77395 /* EazeBballPlayerStatsViewController.m */; };
+		2B2D5CA318FF3D960047F6D6 /* EazeBasketballScoringTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4B87EEA189035600028E4D4 /* EazeBasketballScoringTableCell.h */; };
+		2B2D5CA418FF3D960047F6D6 /* EazeBasketballScoringTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B87EEB189035600028E4D4 /* EazeBasketballScoringTableCell.m */; };
+		2B2D5CA518FF3D960047F6D6 /* EazeLoginViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B47BFD091890B527004D4FB9 /* EazeLoginViewController.h */; };
+		2B2D5CA618FF3D960047F6D6 /* EazeLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B47BFD0A1890B527004D4FB9 /* EazeLoginViewController.m */; };
+		2B2D5CA718FF3D960047F6D6 /* EazePlayerBioViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B47EF62C18D171270023862D /* EazePlayerBioViewController.h */; };
+		2B2D5CA818FF3D960047F6D6 /* EazePlayerBioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B47EF62D18D171270023862D /* EazePlayerBioViewController.m */; };
+		2B2D5CA918FF3D960047F6D6 /* EazeWebViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4DFC17C18D26E3C00352D4E /* EazeWebViewController.h */; };
+		2B2D5CAA18FF3D960047F6D6 /* EazeWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4DFC17D18D26E3C00352D4E /* EazeWebViewController.m */; };
+		2B2D5CAB18FF3D960047F6D6 /* EazeEventViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B47C7F4018D28D8000873DCE /* EazeEventViewController.h */; };
+		2B2D5CAC18FF3D960047F6D6 /* EazeEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B47C7F4118D28D8000873DCE /* EazeEventViewController.m */; };
+		2B2D5CAD18FF3D960047F6D6 /* EazeEventTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B47C7F4B18D2947900873DCE /* EazeEventTableCell.h */; };
+		2B2D5CAE18FF3D960047F6D6 /* EazeEventTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B47C7F4C18D2947900873DCE /* EazeEventTableCell.m */; };
+		2B2D5CAF18FF3D960047F6D6 /* EazeEventGameTableCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B47C7F4E18D294CD00873DCE /* EazeEventGameTableCell.h */; };
+		2B2D5CB018FF3D960047F6D6 /* EazeEventGameTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B47C7F4F18D294CD00873DCE /* EazeEventGameTableCell.m */; };
+		2B2D5CB118FF3D960047F6D6 /* EazeStartEndDateViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B459499818D343B60076C2D2 /* EazeStartEndDateViewController.h */; };
+		2B2D5CB218FF3D960047F6D6 /* EazeStartEndDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B459499918D343B60076C2D2 /* EazeStartEndDateViewController.m */; };
+		2B2D5CB318FF3D960047F6D6 /* EazeAddPlayerStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B89047E18E5FD6000A91A09 /* EazeAddPlayerStatsViewController.h */; };
+		2B2D5CB418FF3D960047F6D6 /* EazeAddPlayerStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B89047F18E5FD6000A91A09 /* EazeAddPlayerStatsViewController.m */; };
+		2B2D5CB518FF3D960047F6D6 /* EazesportzCreateMySiteViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B8ED4A018EA686F00E0C242 /* EazesportzCreateMySiteViewController.h */; };
+		2B2D5CB618FF3D960047F6D6 /* EazesportzCreateMySiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B8ED4A118EA686F00E0C242 /* EazesportzCreateMySiteViewController.m */; };
+		2B2D5CB718FF3D960047F6D6 /* EazeBasketballScoringStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2BEE6AAE18F058E700C1DA0F /* EazeBasketballScoringStatsViewController.h */; };
+		2B2D5CB818FF3D960047F6D6 /* EazeBasketballScoringStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BEE6AAF18F058E700C1DA0F /* EazeBasketballScoringStatsViewController.m */; };
+		2B2D5CB918FF3D960047F6D6 /* EazeBasketballOtherStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B8602A918F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.h */; };
+		2B2D5CBA18FF3D960047F6D6 /* EazeBasketballOtherStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B8602AA18F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.m */; };
+		2B2D5CBB18FF3D960047F6D6 /* EazesportzProgramCreatedViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2BA2266F18F5C6C00028B716 /* EazesportzProgramCreatedViewController.h */; };
+		2B2D5CBC18FF3D960047F6D6 /* EazesportzProgramCreatedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BA2267018F5C6C00028B716 /* EazesportzProgramCreatedViewController.m */; };
+		2B2D5CBD18FF3DAA0047F6D6 /* EazesportzCheckAdImageViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B6FFB8018F8358D0028FEB9 /* EazesportzCheckAdImageViewController.h */; };
+		2B2D5CBE18FF3DAA0047F6D6 /* EazesportzCheckAdImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B6FFB8118F8358D0028FEB9 /* EazesportzCheckAdImageViewController.m */; };
+		2B2D5CBF18FF3DAA0047F6D6 /* EazesportzSponsorInfoViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B7D69BC18F7764100AD56E0 /* EazesportzSponsorInfoViewController.h */; };
+		2B2D5CC018FF3DAA0047F6D6 /* EazesportzSponsorInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7D69BD18F7764100AD56E0 /* EazesportzSponsorInfoViewController.m */; };
+		2B2D5CC118FF3DAA0047F6D6 /* EazesportzSponsorMapViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B8E8C2918F72E6000937BDA /* EazesportzSponsorMapViewController.h */; };
+		2B2D5CC218FF3DAA0047F6D6 /* EazesportzSponsorMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B8E8C2A18F72E6100937BDA /* EazesportzSponsorMapViewController.m */; };
+		2B2D5CC318FF3DAA0047F6D6 /* EazesportzPlacemark.h in Sources */ = {isa = PBXBuildFile; fileRef = 2BA1634818F74C0900455D59 /* EazesportzPlacemark.h */; };
+		2B2D5CC418FF3DAA0047F6D6 /* EazesportzPlacemark.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BA1634918F74C0900455D59 /* EazesportzPlacemark.m */; };
+		2B2D5CC518FF3DAA0047F6D6 /* EazeSponsorTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C4C5E18EEFDE900CFB36C /* EazeSponsorTableViewController.h */; };
+		2B2D5CC618FF3DAA0047F6D6 /* EazeSponsorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C4C5F18EEFDE900CFB36C /* EazeSponsorTableViewController.m */; };
+		2B2D5CC718FF3DAA0047F6D6 /* EazeEditSponsorViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B2F717C18EF3DDC00D6A576 /* EazeEditSponsorViewController.h */; };
+		2B2D5CC818FF3DAA0047F6D6 /* EazeEditSponsorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2F717D18EF3DDC00D6A576 /* EazeEditSponsorViewController.m */; };
+		2B2D5CC918FF3DAA0047F6D6 /* EazesportzSponsorProductsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B7F40A918FDFCB90040077C /* EazesportzSponsorProductsViewController.h */; };
+		2B2D5CCA18FF3DAA0047F6D6 /* EazesportzSponsorProductsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7F40AA18FDFCB90040077C /* EazesportzSponsorProductsViewController.m */; };
+		2B2D5CCB18FF3EC80047F6D6 /* EazeNewsFeedInfoViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A87AF51832F30E00E492D0 /* EazeNewsFeedInfoViewController.h */; };
+		2B2D5CCC18FF3EC80047F6D6 /* EazeNewsFeedInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A87AF61832F30E00E492D0 /* EazeNewsFeedInfoViewController.m */; };
 		2B2F717E18EF3DDC00D6A576 /* EazeEditSponsorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2F717D18EF3DDC00D6A576 /* EazeEditSponsorViewController.m */; };
+		2B3EC3F418FD7A6100CA2755 /* Gymfloor-iPhone-Background.png in Resources */ = {isa = PBXBuildFile; fileRef = B49E2A49183860A3003A989D /* Gymfloor-iPhone-Background.png */; };
+		2B3EC3F518FD7A8400CA2755 /* SocceriPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B49E29FF1838381B003A989D /* SocceriPhone@2x.png */; };
+		2B3EC3F618FD7AEB00CA2755 /* sports-highlights.png in Resources */ = {isa = PBXBuildFile; fileRef = B4AD733F18DCB676009891CF /* sports-highlights.png */; };
+		2B3EC3F718FD7B0100CA2755 /* Gymfloor-iPhone-Background.png in Resources */ = {isa = PBXBuildFile; fileRef = B49E2A49183860A3003A989D /* Gymfloor-iPhone-Background.png */; };
+		2B3EC3F818FD7B0F00CA2755 /* SocceriPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B49E29FF1838381B003A989D /* SocceriPhone@2x.png */; };
 		2B63B24218F8715900957566 /* PENDING_Stamp.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B63B24118F8715900957566 /* PENDING_Stamp.png */; };
 		2B66E54D18EB03800092E752 /* soccer.png in Resources */ = {isa = PBXBuildFile; fileRef = B4F9886E18208BD00093EF7E /* soccer.png */; };
 		2B66E54E18EB038C0092E752 /* basketball.png in Resources */ = {isa = PBXBuildFile; fileRef = B4EF7CBC182C578300DBD278 /* basketball.png */; };
+		2B6779F918FC7F48002F1C0A /* EazeHomeTableViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = B4CCFDF918CEA8880039BCE1 /* EazeHomeTableViewCell.h */; };
+		2B6779FA18FC7F48002F1C0A /* EazeHomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B4CCFDFA18CEA8880039BCE1 /* EazeHomeTableViewCell.m */; };
+		2B6779FB18FC7F48002F1C0A /* EazeHomeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4CCFDF618CEA4350039BCE1 /* EazeHomeViewController.h */; };
+		2B6779FC18FC7F48002F1C0A /* EazeHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4CCFDF718CEA4360039BCE1 /* EazeHomeViewController.m */; };
+		2B6779FD18FC8A57002F1C0A /* EazesportzAppDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = B4EDBB3918919B9E007CA214 /* EazesportzAppDelegate.h */; };
+		2B6779FE18FC8A57002F1C0A /* EazesportzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B4EDBB3A18919B9E007CA214 /* EazesportzAppDelegate.m */; };
+		2B6779FF18FC8AD7002F1C0A /* video_camera.png in Resources */ = {isa = PBXBuildFile; fileRef = B4842F1F18D000C800083FAC /* video_camera.png */; };
+		2B677A0018FC8AD7002F1C0A /* Terrible-football-play.png in Resources */ = {isa = PBXBuildFile; fileRef = B431759718CF8704002927D1 /* Terrible-football-play.png */; };
+		2B677A0118FC8AD7002F1C0A /* Football-Ball-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B431759518CF8539002927D1 /* Football-Ball-icon.png */; };
+		2B677A0218FC8AD7002F1C0A /* videoicon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B44F882918CF5A0000B60852 /* videoicon.jpg */; };
+		2B677A0318FC8AD7002F1C0A /* news_icon.JPG in Resources */ = {isa = PBXBuildFile; fileRef = B4FD778918CEBEF900FFBD20 /* news_icon.JPG */; };
+		2B677A0418FC8C9F002F1C0A /* EazeWelcomeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B44EEF0318878D6900B78D1A /* EazeWelcomeViewController.h */; };
+		2B677A0518FC8C9F002F1C0A /* EazeWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B44EEF0418878D6900B78D1A /* EazeWelcomeViewController.m */; };
+		2B677A0618FC904A002F1C0A /* EazesportzWelcomeViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 2B18D1ED18E87A88008B122D /* EazesportzWelcomeViewController.h */; };
+		2B677A0718FC904A002F1C0A /* EazesportzWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B18D1EE18E87A88008B122D /* EazesportzWelcomeViewController.m */; };
+		2B677A0818FC97B5002F1C0A /* FindSiteViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4B449B71836058A00121667 /* FindSiteViewController.h */; };
+		2B677A0918FC97B5002F1C0A /* FindSiteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B449B81836058A00121667 /* FindSiteViewController.m */; };
+		2B677A0A18FC97B5002F1C0A /* SelectSiteTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4B449BD183606CC00121667 /* SelectSiteTableViewController.h */; };
+		2B677A0B18FC97B5002F1C0A /* SelectSiteTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4B449BE183606CC00121667 /* SelectSiteTableViewController.m */; };
 		2B6FFB8218F8358D0028FEB9 /* EazesportzCheckAdImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B6FFB8118F8358D0028FEB9 /* EazesportzCheckAdImageViewController.m */; };
 		2B7D69B718F7593000AD56E0 /* silver-png.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B7D69B618F7593000AD56E0 /* silver-png.png */; };
 		2B7D69B918F7594600AD56E0 /* golden_icon.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2B7D69B818F7594600AD56E0 /* golden_icon.gif */; };
 		2B7D69BB18F7595200AD56E0 /* platinum.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B7D69BA18F7595200AD56E0 /* platinum.png */; };
 		2B7D69BE18F7764100AD56E0 /* EazesportzSponsorInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7D69BD18F7764100AD56E0 /* EazesportzSponsorInfoViewController.m */; };
+		2B7F40A318FDFBF50040077C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7F40A218FDFBF50040077C /* StoreKit.framework */; };
+		2B7F40AB18FDFCB90040077C /* EazesportzSponsorProductsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7F40AA18FDFCB90040077C /* EazesportzSponsorProductsViewController.m */; };
 		2B81665C18F11FC400B6EEA4 /* BasketballTotalStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B46544F6182D92F500E1C08A /* BasketballTotalStatsViewController.h */; };
 		2B81665D18F11FC400B6EEA4 /* BasketballTotalStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46544F7182D92F500E1C08A /* BasketballTotalStatsViewController.m */; };
 		2B8602AB18F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B8602AA18F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.m */; };
@@ -53,6 +170,8 @@
 		2BB0D29918E3636D00018638 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB0D29318E3636D00018638 /* AWSS3.framework */; };
 		2BB0D29A18E3636D00018638 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB0D29318E3636D00018638 /* AWSS3.framework */; };
 		2BB0D29B18E3636D00018638 /* AWSS3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB0D29318E3636D00018638 /* AWSS3.framework */; };
+		2BB14D3F19016983009E7FF8 /* EazesVideosViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B46A3C0B18352446004B35BA /* EazesVideosViewController.h */; };
+		2BB14D4019016983009E7FF8 /* EazesVideosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46A3C0C18352446004B35BA /* EazesVideosViewController.m */; };
 		2BB9F27418F4CAA200D70955 /* EazesportzFootballDefenseTotalsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4AEED99184D448600BA617F /* EazesportzFootballDefenseTotalsViewController.h */; };
 		2BB9F27518F4CAA200D70955 /* EazesportzFootballDefenseTotalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4AEED9A184D448600BA617F /* EazesportzFootballDefenseTotalsViewController.m */; };
 		2BB9F27618F4CAA200D70955 /* EazesportzFootballKickerTotalsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4182266184E59CE00AFA239 /* EazesportzFootballKickerTotalsViewController.h */; };
@@ -67,6 +186,16 @@
 		2BB9F27F18F4CAA200D70955 /* EazesportzFootballRushingTotalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4AEED97184D3B2200BA617F /* EazesportzFootballRushingTotalsViewController.m */; };
 		2BB9F28018F4CAA200D70955 /* EazesportzFootballReturnerTotalsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B46ED072184E2DC6008B65E8 /* EazesportzFootballReturnerTotalsViewController.h */; };
 		2BB9F28118F4CAA200D70955 /* EazesportzFootballReturnerTotalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46ED073184E2DC6008B65E8 /* EazesportzFootballReturnerTotalsViewController.m */; };
+		2BBB8B0A190069E100E2A918 /* EazePhotosViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B43F6D5B183430830090BD2F /* EazePhotosViewController.h */; };
+		2BBB8B0B190069E100E2A918 /* EazePhotosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B43F6D5C183430830090BD2F /* EazePhotosViewController.m */; };
+		2BCAE5F219008C9F003E8D55 /* sportzteamsMovieViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4FBD2481833DDAF004EE52B /* sportzteamsMovieViewController.h */; };
+		2BCAE5F319008C9F003E8D55 /* sportzteamsMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FBD2491833DDAF004EE52B /* sportzteamsMovieViewController.m */; };
+		2BCAE5F419008C9F003E8D55 /* sportzteamsPhotoDescriptionViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4FBD2421833DCF7004EE52B /* sportzteamsPhotoDescriptionViewController.h */; };
+		2BCAE5F519008C9F003E8D55 /* sportzteamsPhotoDescriptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FBD2431833DCF7004EE52B /* sportzteamsPhotoDescriptionViewController.m */; };
+		2BCAE5F619008C9F003E8D55 /* sportzteamsPhotoInfoViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4FBD23F1833DCC4004EE52B /* sportzteamsPhotoInfoViewController.h */; };
+		2BCAE5F719008C9F003E8D55 /* sportzteamsPhotoInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4FBD2401833DCC4004EE52B /* sportzteamsPhotoInfoViewController.m */; };
+		2BCAE5F81900A4AB003E8D55 /* SettingsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B414324B1835FB800081ED15 /* SettingsViewController.h */; };
+		2BCAE5F91900A4AB003E8D55 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B414324C1835FB800081ED15 /* SettingsViewController.m */; };
 		2BD3350618F5E26800FB6783 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD3350518F5E26800FB6783 /* MapKit.framework */; };
 		2BD3350818F5E3D600FB6783 /* line-globe.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD3350718F5E3D600FB6783 /* line-globe.png */; };
 		2BEE6AAA18F0568400C1DA0F /* LiveBasketballStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B46544F9182D930900E1C08A /* LiveBasketballStatsViewController.h */; };
@@ -1016,8 +1145,6 @@
 		B4D0F248183D9CA600D2FA5C /* ContactTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B48558CE1827E6E700DE3AE6 /* ContactTableViewController.m */; };
 		B4D0F249183D9CA600D2FA5C /* ContactViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C01823FE94003E2A10 /* ContactViewController.h */; };
 		B4D0F24A183D9CA600D2FA5C /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C11823FE94003E2A10 /* ContactViewController.m */; };
-		B4D0F24B183D9CA600D2FA5C /* EazesportzAppDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = B4F9883F18208AC70093EF7E /* EazesportzAppDelegate.h */; };
-		B4D0F24C183D9CA600D2FA5C /* EazesportzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F9884018208AC70093EF7E /* EazesportzAppDelegate.m */; };
 		B4D0F24D183D9CA600D2FA5C /* EditCoachViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C71823FEB9003E2A10 /* EditCoachViewController.h */; };
 		B4D0F24E183D9CA600D2FA5C /* EditCoachViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C81823FEB9003E2A10 /* EditCoachViewController.m */; };
 		B4D0F24F183D9CA600D2FA5C /* EditContactViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B4A515C91823FEB9003E2A10 /* EditContactViewController.h */; };
@@ -1717,6 +1844,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2B0BB166190327C000CED98A /* EazesportzManageUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzManageUsersViewController.h; sourceTree = "<group>"; };
+		2B0BB167190327C000CED98A /* EazesportzManageUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzManageUsersViewController.m; sourceTree = "<group>"; };
 		2B13E48C18F8852700CAEC99 /* processing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = processing.png; sourceTree = "<group>"; };
 		2B171DD618E74D06006A9503 /* EazesportzImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzImage.h; sourceTree = "<group>"; };
 		2B171DD718E74D06006A9503 /* EazesportzImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzImage.m; sourceTree = "<group>"; };
@@ -1734,6 +1863,9 @@
 		2B7D69BA18F7595200AD56E0 /* platinum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = platinum.png; sourceTree = "<group>"; };
 		2B7D69BC18F7764100AD56E0 /* EazesportzSponsorInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzSponsorInfoViewController.h; sourceTree = "<group>"; };
 		2B7D69BD18F7764100AD56E0 /* EazesportzSponsorInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzSponsorInfoViewController.m; sourceTree = "<group>"; };
+		2B7F40A218FDFBF50040077C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		2B7F40A918FDFCB90040077C /* EazesportzSponsorProductsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzSponsorProductsViewController.h; sourceTree = "<group>"; };
+		2B7F40AA18FDFCB90040077C /* EazesportzSponsorProductsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzSponsorProductsViewController.m; sourceTree = "<group>"; };
 		2B8602A918F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazeBasketballOtherStatsViewController.h; sourceTree = "<group>"; };
 		2B8602AA18F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazeBasketballOtherStatsViewController.m; sourceTree = "<group>"; };
 		2B89047E18E5FD6000A91A09 /* EazeAddPlayerStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazeAddPlayerStatsViewController.h; sourceTree = "<group>"; };
@@ -2343,6 +2475,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B7F40A318FDFBF50040077C /* StoreKit.framework in Frameworks */,
 				2BD3350618F5E26800FB6783 /* MapKit.framework in Frameworks */,
 				B478717418D0AC4D000AC45D /* CoreLocation.framework in Frameworks */,
 				B482E34E185B61D000CEFF0A /* iAd.framework in Frameworks */,
@@ -2400,6 +2533,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B2D5C7818FF34E70047F6D6 /* MapKit.framework in Frameworks */,
+				2B2D5C7718FF34DC0047F6D6 /* iAd.framework in Frameworks */,
+				2B2D5C7618FF34A40047F6D6 /* CoreLocation.framework in Frameworks */,
 				B4D0F2C8183D9D0D00D2FA5C /* CoreMedia.framework in Frameworks */,
 				B4D0F2C7183D9CFE00D2FA5C /* Security.framework in Frameworks */,
 				B4D0F2C6183D9CF600D2FA5C /* MobileCoreServices.framework in Frameworks */,
@@ -2573,6 +2709,8 @@
 				2B2C4C5F18EEFDE900CFB36C /* EazeSponsorTableViewController.m */,
 				2B2F717C18EF3DDC00D6A576 /* EazeEditSponsorViewController.h */,
 				2B2F717D18EF3DDC00D6A576 /* EazeEditSponsorViewController.m */,
+				2B7F40A918FDFCB90040077C /* EazesportzSponsorProductsViewController.h */,
+				2B7F40AA18FDFCB90040077C /* EazesportzSponsorProductsViewController.m */,
 			);
 			name = "Ad Sponsor";
 			sourceTree = "<group>";
@@ -2697,6 +2835,8 @@
 				2B8602AA18F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.m */,
 				2BA2266F18F5C6C00028B716 /* EazesportzProgramCreatedViewController.h */,
 				2BA2267018F5C6C00028B716 /* EazesportzProgramCreatedViewController.m */,
+				2B0BB166190327C000CED98A /* EazesportzManageUsersViewController.h */,
+				2B0BB167190327C000CED98A /* EazesportzManageUsersViewController.m */,
 				2B6FFB8318F836120028FEB9 /* Ad Sponsor */,
 			);
 			path = GridIron;
@@ -3164,6 +3304,7 @@
 		B4F9882F18208AC70093EF7E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2B7F40A218FDFBF50040077C /* StoreKit.framework */,
 				2BD3350518F5E26800FB6783 /* MapKit.framework */,
 				2BB0D29218E3636D00018638 /* AWSRuntime.framework */,
 				2BB0D29318E3636D00018638 /* AWSS3.framework */,
@@ -3343,8 +3484,8 @@
 				B4F9884218208AC70093EF7E /* Main.storyboard */,
 				B4F9884B18208AC70093EF7E /* Images.xcassets */,
 				2B171DD518E74C41006A9503 /* Models */,
-				B4F9883718208AC70093EF7E /* Supporting Files */,
 				B4CCFDFC18CEABAA0039BCE1 /* RetrieveEazesportz */,
+				B4F9883718208AC70093EF7E /* Supporting Files */,
 			);
 			name = EazeSportz;
 			path = EazeSoccer;
@@ -3676,6 +3817,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B3EC3F518FD7A8400CA2755 /* SocceriPhone@2x.png in Resources */,
+				2B3EC3F418FD7A6100CA2755 /* Gymfloor-iPhone-Background.png in Resources */,
 				2BD3350818F5E3D600FB6783 /* line-globe.png in Resources */,
 				2B205E0E18EDA73D00653B79 /* Icon-76.png in Resources */,
 				2B66E54E18EB038C0092E752 /* basketball.png in Resources */,
@@ -3811,6 +3954,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B2D5C7E18FF3C7F0047F6D6 /* emergency.png in Resources */,
+				2B2D5C7918FF3A720047F6D6 /* camera-icon-md.png in Resources */,
+				2B2D5C7518FF32C00047F6D6 /* soccer.png in Resources */,
+				2B2D5C7418FF32AD0047F6D6 /* Gymfloor.png in Resources */,
+				2B2D5C7318FF31320047F6D6 /* Countries.plist in Resources */,
+				2B3EC3F818FD7B0F00CA2755 /* SocceriPhone@2x.png in Resources */,
+				2B3EC3F718FD7B0100CA2755 /* Gymfloor-iPhone-Background.png in Resources */,
+				2B3EC3F618FD7AEB00CA2755 /* sports-highlights.png in Resources */,
+				2B6779FF18FC8AD7002F1C0A /* video_camera.png in Resources */,
+				2B677A0018FC8AD7002F1C0A /* Terrible-football-play.png in Resources */,
+				2B677A0118FC8AD7002F1C0A /* Football-Ball-icon.png in Resources */,
+				2B677A0218FC8AD7002F1C0A /* videoicon.jpg in Resources */,
+				2B677A0318FC8AD7002F1C0A /* news_icon.JPG in Resources */,
 				2B9470DA18E72B0E00AA53FC /* footballpossessionimage.png in Resources */,
 				B4D0F2E5183DAE7F00D2FA5C /* USStateAbbreviations.plist in Resources */,
 				B4D0F2CD183D9E0600D2FA5C /* calendar.png in Resources */,
@@ -3998,6 +4154,7 @@
 			files = (
 				2BB9F27418F4CAA200D70955 /* EazesportzFootballDefenseTotalsViewController.h in Sources */,
 				2BB9F27518F4CAA200D70955 /* EazesportzFootballDefenseTotalsViewController.m in Sources */,
+				2B7F40AB18FDFCB90040077C /* EazesportzSponsorProductsViewController.m in Sources */,
 				2BB9F27618F4CAA200D70955 /* EazesportzFootballKickerTotalsViewController.h in Sources */,
 				2BB9F27718F4CAA200D70955 /* EazesportzFootballKickerTotalsViewController.m in Sources */,
 				2BB9F27818F4CAA200D70955 /* EazesportzFootballPassingTotalsViewController.h in Sources */,
@@ -4197,6 +4354,7 @@
 				B482E284185B605E00CEFF0A /* ContactViewController.h in Sources */,
 				B482E285185B605E00CEFF0A /* ContactViewController.m in Sources */,
 				B482E288185B605E00CEFF0A /* EditCoachViewController.h in Sources */,
+				2B0BB168190327C000CED98A /* EazesportzManageUsersViewController.m in Sources */,
 				B482E289185B605E00CEFF0A /* EditCoachViewController.m in Sources */,
 				B482E28A185B605E00CEFF0A /* EditContactViewController.h in Sources */,
 				B482E28B185B605E00CEFF0A /* EditContactViewController.m in Sources */,
@@ -4581,6 +4739,114 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BB14D3F19016983009E7FF8 /* EazesVideosViewController.h in Sources */,
+				2BB14D4019016983009E7FF8 /* EazesVideosViewController.m in Sources */,
+				2BCAE5F81900A4AB003E8D55 /* SettingsViewController.h in Sources */,
+				2BCAE5F91900A4AB003E8D55 /* SettingsViewController.m in Sources */,
+				2BCAE5F219008C9F003E8D55 /* sportzteamsMovieViewController.h in Sources */,
+				2BCAE5F319008C9F003E8D55 /* sportzteamsMovieViewController.m in Sources */,
+				2BCAE5F419008C9F003E8D55 /* sportzteamsPhotoDescriptionViewController.h in Sources */,
+				2BCAE5F519008C9F003E8D55 /* sportzteamsPhotoDescriptionViewController.m in Sources */,
+				2BCAE5F619008C9F003E8D55 /* sportzteamsPhotoInfoViewController.h in Sources */,
+				2BCAE5F719008C9F003E8D55 /* sportzteamsPhotoInfoViewController.m in Sources */,
+				2BBB8B0A190069E100E2A918 /* EazePhotosViewController.h in Sources */,
+				2BBB8B0B190069E100E2A918 /* EazePhotosViewController.m in Sources */,
+				2B2D5CCB18FF3EC80047F6D6 /* EazeNewsFeedInfoViewController.h in Sources */,
+				2B2D5CCC18FF3EC80047F6D6 /* EazeNewsFeedInfoViewController.m in Sources */,
+				2B2D5CBD18FF3DAA0047F6D6 /* EazesportzCheckAdImageViewController.h in Sources */,
+				2B2D5CBE18FF3DAA0047F6D6 /* EazesportzCheckAdImageViewController.m in Sources */,
+				2B2D5CBF18FF3DAA0047F6D6 /* EazesportzSponsorInfoViewController.h in Sources */,
+				2B2D5CC018FF3DAA0047F6D6 /* EazesportzSponsorInfoViewController.m in Sources */,
+				2B2D5CC118FF3DAA0047F6D6 /* EazesportzSponsorMapViewController.h in Sources */,
+				2B2D5CC218FF3DAA0047F6D6 /* EazesportzSponsorMapViewController.m in Sources */,
+				2B2D5CC318FF3DAA0047F6D6 /* EazesportzPlacemark.h in Sources */,
+				2B2D5CC418FF3DAA0047F6D6 /* EazesportzPlacemark.m in Sources */,
+				2B2D5CC518FF3DAA0047F6D6 /* EazeSponsorTableViewController.h in Sources */,
+				2B2D5CC618FF3DAA0047F6D6 /* EazeSponsorTableViewController.m in Sources */,
+				2B2D5CC718FF3DAA0047F6D6 /* EazeEditSponsorViewController.h in Sources */,
+				2B2D5CC818FF3DAA0047F6D6 /* EazeEditSponsorViewController.m in Sources */,
+				2B2D5CC918FF3DAA0047F6D6 /* EazesportzSponsorProductsViewController.h in Sources */,
+				2B2D5CCA18FF3DAA0047F6D6 /* EazesportzSponsorProductsViewController.m in Sources */,
+				2B2D5C7F18FF3D960047F6D6 /* EazeFeaturedPhotosViewController.h in Sources */,
+				2B2D5C8018FF3D960047F6D6 /* EazeFeaturedPhotosViewController.m in Sources */,
+				2B2D5C8118FF3D960047F6D6 /* EazeNewsViewController.h in Sources */,
+				2B2D5C8218FF3D960047F6D6 /* EazeNewsViewController.m in Sources */,
+				2B2D5C8318FF3D960047F6D6 /* EazeFeaturedVideosViewController.h in Sources */,
+				2B2D5C8418FF3D960047F6D6 /* EazeFeaturedVideosViewController.m in Sources */,
+				2B2D5C8518FF3D960047F6D6 /* EazesportzScheduleViewController.h in Sources */,
+				2B2D5C8618FF3D960047F6D6 /* EazesportzScheduleViewController.m in Sources */,
+				2B2D5C8718FF3D960047F6D6 /* EazeFootballGameSummaryViewController.h in Sources */,
+				2B2D5C8818FF3D960047F6D6 /* EazeFootballGameSummaryViewController.m in Sources */,
+				2B2D5C8918FF3D960047F6D6 /* EazeFootballGameStatsViewController.h in Sources */,
+				2B2D5C8A18FF3D960047F6D6 /* EazeFootballGameStatsViewController.m in Sources */,
+				2B2D5C8B18FF3D960047F6D6 /* FootballStatTotals.h in Sources */,
+				2B2D5C8C18FF3D960047F6D6 /* FootballStatTotals.m in Sources */,
+				2B2D5C8D18FF3D960047F6D6 /* EazesportzRetrieveFootballStatTotals.h in Sources */,
+				2B2D5C8E18FF3D960047F6D6 /* EazesportzRetrieveFootballStatTotals.m in Sources */,
+				2B2D5C8F18FF3D960047F6D6 /* EazesportzRetrievePassingGameStats.h in Sources */,
+				2B2D5C9018FF3D960047F6D6 /* EazesportzRetrievePassingGameStats.m in Sources */,
+				2B2D5C9118FF3D960047F6D6 /* EazesportzRetrieveFootballRushingGameStats.h in Sources */,
+				2B2D5C9218FF3D960047F6D6 /* EazesportzRetrieveFootballRushingGameStats.m in Sources */,
+				2B2D5C9318FF3D960047F6D6 /* EazesportzRetrieveFootballReceivingStats.h in Sources */,
+				2B2D5C9418FF3D960047F6D6 /* EazesportzRetrieveFootballReceivingStats.m in Sources */,
+				2B2D5C9518FF3D960047F6D6 /* EazesportzRetrieveFootballDefenseGameStats.h in Sources */,
+				2B2D5C9618FF3D960047F6D6 /* EazesportzRetrieveFootballDefenseGameStats.m in Sources */,
+				2B2D5C9718FF3D960047F6D6 /* EazesportzRetrieveFootballKickerStats.h in Sources */,
+				2B2D5C9818FF3D960047F6D6 /* EazesportzRetrieveFootballKickerStats.m in Sources */,
+				2B2D5C9918FF3D960047F6D6 /* EazesportzRetrieveFootballReturnerGameStats.h in Sources */,
+				2B2D5C9A18FF3D960047F6D6 /* EazesportzRetrieveFootballReturnerGameStats.m in Sources */,
+				2B2D5C9B18FF3D960047F6D6 /* EazesportzFootballStatTotalsTableCell.h in Sources */,
+				2B2D5C9C18FF3D960047F6D6 /* EazesportzFootballStatTotalsTableCell.m in Sources */,
+				2B2D5C9D18FF3D960047F6D6 /* EazesportzStatTableHeaderCell.h in Sources */,
+				2B2D5C9E18FF3D960047F6D6 /* EazesportzStatTableHeaderCell.m in Sources */,
+				2B2D5C9F18FF3D960047F6D6 /* EazeFootballPlayerStatsViewController.h in Sources */,
+				2B2D5CA018FF3D960047F6D6 /* EazeFootballPlayerStatsViewController.m in Sources */,
+				2B2D5CA118FF3D960047F6D6 /* EazeBballPlayerStatsViewController.h in Sources */,
+				2B2D5CA218FF3D960047F6D6 /* EazeBballPlayerStatsViewController.m in Sources */,
+				2B2D5CA318FF3D960047F6D6 /* EazeBasketballScoringTableCell.h in Sources */,
+				2B2D5CA418FF3D960047F6D6 /* EazeBasketballScoringTableCell.m in Sources */,
+				2B2D5CA518FF3D960047F6D6 /* EazeLoginViewController.h in Sources */,
+				2B2D5CA618FF3D960047F6D6 /* EazeLoginViewController.m in Sources */,
+				2B2D5CA718FF3D960047F6D6 /* EazePlayerBioViewController.h in Sources */,
+				2B2D5CA818FF3D960047F6D6 /* EazePlayerBioViewController.m in Sources */,
+				2B2D5CA918FF3D960047F6D6 /* EazeWebViewController.h in Sources */,
+				2B2D5CAA18FF3D960047F6D6 /* EazeWebViewController.m in Sources */,
+				2B2D5CAB18FF3D960047F6D6 /* EazeEventViewController.h in Sources */,
+				2B2D5CAC18FF3D960047F6D6 /* EazeEventViewController.m in Sources */,
+				2B2D5CAD18FF3D960047F6D6 /* EazeEventTableCell.h in Sources */,
+				2B2D5CAE18FF3D960047F6D6 /* EazeEventTableCell.m in Sources */,
+				2B2D5CAF18FF3D960047F6D6 /* EazeEventGameTableCell.h in Sources */,
+				2B2D5CB018FF3D960047F6D6 /* EazeEventGameTableCell.m in Sources */,
+				2B2D5CB118FF3D960047F6D6 /* EazeStartEndDateViewController.h in Sources */,
+				2B2D5CB218FF3D960047F6D6 /* EazeStartEndDateViewController.m in Sources */,
+				2B2D5CB318FF3D960047F6D6 /* EazeAddPlayerStatsViewController.h in Sources */,
+				2B2D5CB418FF3D960047F6D6 /* EazeAddPlayerStatsViewController.m in Sources */,
+				2B2D5CB518FF3D960047F6D6 /* EazesportzCreateMySiteViewController.h in Sources */,
+				2B2D5CB618FF3D960047F6D6 /* EazesportzCreateMySiteViewController.m in Sources */,
+				2B2D5CB718FF3D960047F6D6 /* EazeBasketballScoringStatsViewController.h in Sources */,
+				2B2D5CB818FF3D960047F6D6 /* EazeBasketballScoringStatsViewController.m in Sources */,
+				2B2D5CB918FF3D960047F6D6 /* EazeBasketballOtherStatsViewController.h in Sources */,
+				2B2D5CBA18FF3D960047F6D6 /* EazeBasketballOtherStatsViewController.m in Sources */,
+				2B2D5CBB18FF3D960047F6D6 /* EazesportzProgramCreatedViewController.h in Sources */,
+				2B2D5CBC18FF3D960047F6D6 /* EazesportzProgramCreatedViewController.m in Sources */,
+				2B2D5C7C18FF3B980047F6D6 /* PlayerInfoViewController.h in Sources */,
+				2B2D5C7D18FF3B980047F6D6 /* PlayerInfoViewController.m in Sources */,
+				2B2D5C7A18FF3B300047F6D6 /* EazeRosterViewController.h in Sources */,
+				2B2D5C7B18FF3B300047F6D6 /* EazeRosterViewController.m in Sources */,
+				2B677A0818FC97B5002F1C0A /* FindSiteViewController.h in Sources */,
+				2B677A0918FC97B5002F1C0A /* FindSiteViewController.m in Sources */,
+				2B677A0A18FC97B5002F1C0A /* SelectSiteTableViewController.h in Sources */,
+				2B677A0B18FC97B5002F1C0A /* SelectSiteTableViewController.m in Sources */,
+				2B677A0618FC904A002F1C0A /* EazesportzWelcomeViewController.h in Sources */,
+				2B677A0718FC904A002F1C0A /* EazesportzWelcomeViewController.m in Sources */,
+				2B677A0418FC8C9F002F1C0A /* EazeWelcomeViewController.h in Sources */,
+				2B677A0518FC8C9F002F1C0A /* EazeWelcomeViewController.m in Sources */,
+				2B6779FD18FC8A57002F1C0A /* EazesportzAppDelegate.h in Sources */,
+				2B6779FE18FC8A57002F1C0A /* EazesportzAppDelegate.m in Sources */,
+				2B6779F918FC7F48002F1C0A /* EazeHomeTableViewCell.h in Sources */,
+				2B6779FA18FC7F48002F1C0A /* EazeHomeTableViewCell.m in Sources */,
+				2B6779FB18FC7F48002F1C0A /* EazeHomeViewController.h in Sources */,
+				2B6779FC18FC7F48002F1C0A /* EazeHomeViewController.m in Sources */,
 				2B93F9A418E111BA00D15D08 /* EazesCustomTabBarController.h in Sources */,
 				2B93F9A518E111BA00D15D08 /* EazesCustomTabBarController.m in Sources */,
 				2B93F9A218E111AB00D15D08 /* EazesportzCustomNavigationController.h in Sources */,
@@ -4734,8 +5000,6 @@
 				B4D0F249183D9CA600D2FA5C /* ContactViewController.h in Sources */,
 				B4D0F24A183D9CA600D2FA5C /* ContactViewController.m in Sources */,
 				2BA8E3C118E27E9700FA16B7 /* EazesportzFootballTotalsViewController.m in Sources */,
-				B4D0F24B183D9CA600D2FA5C /* EazesportzAppDelegate.h in Sources */,
-				B4D0F24C183D9CA600D2FA5C /* EazesportzAppDelegate.m in Sources */,
 				B4D0F24D183D9CA600D2FA5C /* EditCoachViewController.h in Sources */,
 				B4D0F24E183D9CA600D2FA5C /* EditCoachViewController.m in Sources */,
 				B4D0F24F183D9CA600D2FA5C /* EditContactViewController.h in Sources */,

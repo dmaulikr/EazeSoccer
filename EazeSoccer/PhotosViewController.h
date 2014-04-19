@@ -51,7 +51,6 @@
 - (IBAction)videoButtonClicked:(id)sender;
 
 - (void)displayUpgradeAlert;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *pendingBarButton;
-- (IBAction)pendingBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *videosBarButton;
 
 @end

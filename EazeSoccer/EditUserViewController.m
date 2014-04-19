@@ -270,15 +270,21 @@
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
         imagePicker.allowsEditing = NO;
-        imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
-        UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
-        apopover.delegate = self;
         
-        // set contentsize
-        [apopover setPopoverContentSize:CGSizeMake(220,300)];
-        
-        [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        self.popover = apopover;
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+            imagePicker.modalPresentationStyle = UIModalPresentationCurrentContext;
+            UIPopoverController *apopover = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+            apopover.delegate = self;
+            
+            // set contentsize
+            [apopover setPopoverContentSize:CGSizeMake(220,300)];
+            
+            [apopover presentPopoverFromRect:CGRectMake(700,1000,10,10) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            self.popover = apopover;
+        } else {
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            newmedia = NO;
+        }
     }
 }
 
@@ -412,6 +418,14 @@
     [alert show];
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+}
+
+-(BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

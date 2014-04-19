@@ -65,5 +65,6 @@
 @property (weak, nonatomic) IBOutlet UISwitch *featuredSwitch;
 @property (weak, nonatomic) IBOutlet UILabel *pendingLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *pendingSwitch;
+@property (weak, nonatomic) IBOutlet UILabel *featuredLabel;
 
 @end

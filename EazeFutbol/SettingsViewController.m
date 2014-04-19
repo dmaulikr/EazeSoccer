@@ -277,7 +277,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id]))
+    if ([currentSettings isSiteOwner])
         return 8;
     else if (currentSettings.user.userid.length > 0)
         return 7;
@@ -420,11 +420,18 @@
             }
             break;
             
-        default:
+        case 7:
             cell.backgroundColor = [UIColor whiteColor];
             cell.imageView.image = nil;
             cell.textLabel.text = @"Eazesportz Information";
             cell.detailTextLabel.text = @"Package and info";
+            break;
+            
+        default:
+            cell.backgroundColor = [UIColor whiteColor];
+            cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            cell.textLabel.text = @"Manage Users";
+            cell.detailTextLabel.text = @"Manage your sites users ....";
             break;
             
    }
@@ -465,8 +472,12 @@
                 [self addSiteButtonClicked:self];
                 break;
                 
-            default:
+            case 7:
                 [self performSegueWithIdentifier:@"PackageSegue" sender:self];
+                break;
+                
+            default:
+                [self performSegueWithIdentifier:@"ManageUsersSegue" sender:self];
                 break;
         }
     }

@@ -237,7 +237,7 @@
     pickerDate = [_datePicker date];
     //    NSString *selectionString = [[NSString alloc] initWithFormat:@"%@", [pickerDate descriptionWithLocale:usLocale]];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MM-dd-yyyy HH:mm:ss a"];
+    [formatter setDateFormat:@"MM-dd-yyyy hh:mm a"];
     NSArray *datetime = [[formatter stringFromDate:pickerDate] componentsSeparatedByString:@" "];
     _gameDateTextField.text = [datetime objectAtIndex:0];
     _gameTimeTextField.text = [datetime objectAtIndex:1];
@@ -265,7 +265,7 @@
         NSArray *datetime = [[formatter stringFromDate:pickerDate] componentsSeparatedByString:@" "];
 //        NSArray *time = [[datetime objectAtIndex:1] componentsSeparatedByString:@":"];
 //        [formatter setDateFormat:@"yyyy-MM-dd"];
-        [formatter setDateFormat:@"HH:mm"];
+        [formatter setDateFormat:@"hh:mma"];
         NSString *timedata = [formatter stringFromDate:pickerDate];
 
         game.startdate = datetime[0];

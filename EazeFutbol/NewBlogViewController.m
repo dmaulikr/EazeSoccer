@@ -83,6 +83,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    _playerSelectContainer.hidden = YES;
+    _gameSelectContainer.hidden = YES;
+    _coachSelectContainer.hidden = YES;
+    
     _entryTextView.text = @"";
     
     if (currentSettings.user.userid.length == 0) {
@@ -92,51 +96,33 @@
         [alert show];
     } else {
     
-        if (playerController) {
-            if (playerController.player) {
-                player = playerController.player;
-                _playerButton.enabled = YES;
-                _playerTextField.text = player.logname;
-                [_playerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            } else {
-                _playerButton.enabled = NO;
-                _playerTextField.text = @"";
-                [_playerButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-            }
+        if (player) {
+            player = playerController.player;
+            _playerButton.enabled = YES;
+            _playerTextField.text = player.logname;
+            [_playerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         } else {
             _playerButton.enabled = NO;
             _playerTextField.text = @"";
             [_playerButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
         
-        if (gameController) {
-            if (gameController.thegame) {
-                game = gameController.thegame;
-                _gameTextField.text = [NSString stringWithFormat:@"%@%@", @"vs ", game.opponent];
-                _gameButton.enabled = YES;
-                [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            } else {
-                _gameTextField.text = @"";
-                _gameButton.enabled = NO;
-                [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-            }
+        if (game) {
+            game = gameController.thegame;
+            _gameTextField.text = [NSString stringWithFormat:@"%@%@", @"vs ", game.opponent];
+            _gameButton.enabled = YES;
+            [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         } else {
             _gameTextField.text = @"";
             _gameButton.enabled = NO;
             [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
         
-        if (coachController) {
-            if (coachController.coach) {
-                coach = coachController.coach;
-                _coachTextField.text = coach.fullname;
-                _coachButton.enabled = YES;
-                [_coachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            } else {
-                _coachTextField.text = @"";
-                _coachButton.enabled = NO;
-                [_coachButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-            }
+        if (coach) {
+            coach = coachController.coach;
+            _coachTextField.text = coach.fullname;
+            _coachButton.enabled = YES;
+            [_coachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         } else {
             _coachTextField.text = @"";
             _coachButton.enabled = NO;
@@ -179,17 +165,20 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     if (textField == _playerTextField) {
+        _playerSelectContainer.hidden = NO;
         playerController.player = nil;
+        [playerController viewWillAppear:YES];
         _playerTextField.text = @"";
-        [self performSegueWithIdentifier:@"PlayerSelectSegue" sender:self];
     } else if (textField == _gameTextField) {
+        _gameSelectContainer.hidden = NO;
         gameController.thegame = nil;
+        [gameController viewWillAppear:YES];
         _gameTextField.text = @"";
-        [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
     } else if (textField == _coachTextField) {
+        _coachSelectContainer.hidden = NO;
         coachController.coach = nil;
+        [coachController viewWillAppear:YES];
         _coachTextField.text = @"";
-        [self performSegueWithIdentifier:@"CoachSelectSegue" sender:self];
     }
     [textField resignFirstResponder];
 }
@@ -376,6 +365,39 @@
     } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
         EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = game;
+    }
+}
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
+    _playerSelectContainer.hidden = YES;
+    
+    if (playerController.player) {
+        _playerTextField.text = playerController.player.numberLogname;
+        player = playerController.player;
+        _playerButton.enabled = YES;
+        [_playerButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    }
+}
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
+    _gameSelectContainer.hidden = YES;
+    
+    if (gameController.thegame) {
+        _gameTextField.text = gameController.thegame.vsOpponent;
+        game = gameController.thegame;
+        _gameButton.enabled = YES;
+        [_gameButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    }
+}
+
+- (IBAction)coachSelected:(UIStoryboardSegue *)segue {
+    _coachSelectContainer.hidden = YES;
+    
+    if (coachController.coach) {
+        _coachTextField.text = coachController.coach.fullname;
+        coach = coachController.coach;
+        _coachButton.enabled = YES;
+        [_coachButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     }
 }
 

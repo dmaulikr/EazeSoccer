@@ -11,5 +11,6 @@
 @interface PhotoCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *photoImage;
 @property (weak, nonatomic) IBOutlet UILabel *photoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *approvalLabel;
 
 @end

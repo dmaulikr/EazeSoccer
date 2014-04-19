@@ -63,14 +63,6 @@
     _activityIndicator.hidesWhenStopped = YES;
     _videoDescriptionTextView.layer.borderWidth = 1.0f;
     _videoDescriptionTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-
-    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, self.cameraBarButton,
-                                                   self.cameraRollBarButton, nil];
-        self.view.backgroundColor = [UIColor whiteColor];
-    } else {
-        self.view.backgroundColor = [UIColor clearColor];
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,6 +74,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    if (currentSettings.sport.review_media)
+        [_pendingSwitch setOn:YES];
+    else
+        [_pendingSwitch setOn:NO];
+    
     addtags = [[NSMutableArray alloc] init];
     removetags = [[NSMutableArray alloc] init];
     
@@ -151,25 +148,24 @@
         else
             [_featuredSwitch setOn:NO];
         
-        if (currentSettings.sport.review_media) {
-            _featuredSwitch.hidden = NO;
+        if (video.pending) {
+            _pendingLabel.text = @"Pending";
+            [_pendingSwitch setOn:NO];
+        } else {
+            _pendingLabel.text = @"Approved";
+            [_pendingSwitch setOn:YES];
+        }
+        
+        if (([currentSettings isSiteOwner]) && (currentSettings.sport.review_media)) {
             _pendingLabel.hidden = NO;
-            
-            if ([currentSettings isSiteOwner])
-                _pendingSwitch.enabled = YES;
-            
-            if (video.pending) {
-                _pendingLabel.text = @"Pending";
-                [_pendingSwitch setOn:NO];
-            } else {
-                _pendingLabel.text = @"Approved";
-                [_pendingSwitch setOn:YES];
-            }
+            _pendingSwitch.hidden = NO;
+            _pendingSwitch.enabled = YES;
         } else {
             _pendingSwitch.hidden = YES;
             _pendingLabel.hidden = YES;
+            _pendingSwitch.enabled = NO;
         }
-        
+
         [_playerTableView reloadData];
     } else if (!newVideo) {
         video = [[Video alloc] init];
@@ -188,13 +184,32 @@
         [_featuredSwitch setOn:NO];
         _pendingSwitch.hidden = YES;
         _pendingLabel.hidden = YES;
-
+        _pendingSwitch.enabled = NO;
+    }
+    
+    if ([currentSettings isSiteOwner]) {
+        _featuredSwitch.enabled = YES;
+        _featuredLabel.hidden = NO;
+        _featuredSwitch.hidden = NO;
+    } else {
+        _featuredSwitch.enabled = NO;
+        _featuredSwitch.hidden = YES;
+        _featuredLabel.hidden = YES;
+        
+        if ((currentSettings.user.userid.length > 0) && (currentSettings.sport.review_media)) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Your video will not be available until the administrator approves the photo." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+        }
     }
     
     _teamTextField.text = currentSettings.team.team_name;
     
     _gameSelectContainer.hidden = YES;
     _playerSelectContainer.hidden = YES;
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, self.cameraBarButton,
+                                               self.cameraRollBarButton, nil];
+    self.view.backgroundColor = [UIColor whiteColor];
 }
 
 - (IBAction)submitButtonClicked:(id)sender {

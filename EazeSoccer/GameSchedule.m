@@ -289,8 +289,13 @@
     }
 
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    
-    NSArray *time = [starttime componentsSeparatedByString:@":"];
+
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"hh:mma"];
+    NSDate *datetime = [formatter dateFromString:starttime];
+    [formatter setDateFormat:@"HH:mm"];
+    NSString *timedata = [formatter stringFromDate:datetime];
+    NSArray *time = [timedata componentsSeparatedByString:@":"];
     
     NSMutableDictionary *gamedict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:opponent, @"opponent",
                                      opponent_mascot, @"opponent_mascot", location, @"location", opponent_team_id, @"opponent_team_id",

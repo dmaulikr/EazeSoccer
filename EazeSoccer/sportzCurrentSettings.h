@@ -121,5 +121,7 @@
 
 - (void)setUpSport:(NSString *)sportid;
 
+- (NSURL *)addAuthenticationToken:(NSString *)urlstring;
+
 @end
 

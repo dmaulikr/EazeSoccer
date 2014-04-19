@@ -14,5 +14,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *videoDuration;
 @property (weak, nonatomic) IBOutlet UILabel *gametagLabel;
 @property (weak, nonatomic) IBOutlet UITableView *playerTagTableView;
+@property (weak, nonatomic) IBOutlet UILabel *approvalLabel;
 
 @end

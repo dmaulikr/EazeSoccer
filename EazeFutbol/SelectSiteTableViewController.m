@@ -155,7 +155,11 @@
     cell.textLabel.font = [UIFont fontWithName: @"Arial" size: 14.0 ];
     cell.textLabel.text = asport.sitename;
 
-    cell.imageView.image = [asport getImage:@"tiny"];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        cell.imageView.image = [asport getImage:@"thumb"];
+    else
+        cell.imageView.image = [asport getImage:@"tiny"];
+    
     cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:12.0];
     cell.detailTextLabel.numberOfLines = 0;
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", asport.mascot, @"   ", asport.city, @" ",
@@ -215,7 +219,10 @@
     UIImageView *myGraphic;
     
     if ([currentSettings.sport.name isEqualToString:@"Football"]) {
-        myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg-640x1136.png"]];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg-640x1136.png"]];
+        else
+            myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Footballbkg.png"]];
     } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
         myGraphic = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Gymfloor-640x1136.png"]];
     } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <iAd/iAd.h>
 
 #import "Photo.h"
 
@@ -25,5 +26,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *playLabel;
 @property (weak, nonatomic) IBOutlet UIButton *playButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editBarButton;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 
 @end

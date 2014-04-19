@@ -172,6 +172,14 @@
     cell.backgroundColor = [UIColor whiteColor];
     Video *video = [videos objectAtIndex:indexPath.row];
 
+    if ((currentSettings.sport.review_media) && ([currentSettings isSiteOwner]) && (video.pending)) {
+        cell.approvalLabel.hidden = NO;
+        cell.approvalLabel.backgroundColor = [UIColor whiteColor];
+    } else {
+        cell.approvalLabel.hidden = YES;
+        cell.approvalLabel.backgroundColor = [UIColor clearColor];
+    }
+    
     dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     //this will start the image loading in bg
     dispatch_async(concurrentQueue, ^{
@@ -341,26 +349,6 @@
         game = nil;
         user = nil;
         [self retrieveVideos];
-    }
-}
-
-- (IBAction)pendingBarButtonClicked:(id)sender {
-    self.title = @"Pending";
-    
-    NSMutableArray *pending = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < videos.count; i++) {
-        if ([[videos objectAtIndex:i] pending])
-            [pending addObject:[videos objectAtIndex:i]];
-    }
-    
-    if (pending.count > 0) {
-        videos = pending;
-        [self viewWillAppear:YES];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No videos pending approval" delegate:nil cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-        [alert show];
     }
 }
 

@@ -16,5 +16,8 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;
 - (IBAction)searchButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIView *gamlogContainer;
+
+- (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue;
 
 @end

@@ -88,6 +88,7 @@
     } else {
         [self displayUpgradeAlert];
     }
+    
     [_collectionView reloadData];
 }
 
@@ -115,15 +116,13 @@
     game = nil;
     user = nil;
     player = nil;
-    NSURL *url;
+    NSString *urlstring = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid]];
     
-    if (currentSettings.user.authtoken)
-        url = [NSURL URLWithString:[sportzServerInit getTeamPhotos:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
-    else
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                    @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid]];
+    if ([currentSettings isSiteOwner])
+        urlstring = [urlstring stringByAppendingFormat:@"&auth_token=%@", currentSettings.user.authtoken];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlstring]];
     [activityIndicator startAnimating];
     [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
@@ -160,6 +159,15 @@
     cell.layer.cornerRadius = 6;
     cell.backgroundColor = [UIColor whiteColor];
     Photo *photo = [photos objectAtIndex:indexPath.row];
+    
+    if ((currentSettings.sport.review_media) && ([currentSettings isSiteOwner]) && (photo.pending)) {
+        cell.approvalLabel.hidden = NO;
+        cell.approvalLabel.backgroundColor = [UIColor whiteColor];
+    } else {
+        cell.approvalLabel.hidden = YES;
+        cell.approvalLabel.backgroundColor = [UIColor clearColor];
+    }
+    
     UIImage *image;
     
     if (photo.thumbnail_url.length == 0)
@@ -367,15 +375,15 @@
     NSURL *url;
     
     if (player) {
-        if (currentSettings.user.authtoken)
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
-                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
-                                        currentSettings.team.teamid, @"&athlete_id=", player.athleteid, @"&auth_token=", currentSettings.user.authtoken]];
-        else
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                                                                      @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
-                                                                                      currentSettings.team.teamid, @"&athlete_id=", player.athleteid]];
+        if (currentSettings.user.authtoken) {
+            NSString *urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                  @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid, @"&athlete_id=",
+                                    player.athleteid];
+            if ([currentSettings isSiteOwner])
+                urlstring = [urlstring stringByAppendingFormat:@"&auth_token=%@", urlstring];
+            
+            url = [NSURL URLWithString:urlstring];
+        }
     } else if (game) {
         if (currentSettings.user.authtoken)
             url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
@@ -474,26 +482,6 @@
 }
 
 - (IBAction)videoButtonClicked:(id)sender {
-}
-
-- (IBAction)pendingBarButtonClicked:(id)sender {
-    self.title = @"Pending";
-    
-    NSMutableArray *pending = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < photos.count; i++) {
-        if ([[photos objectAtIndex:i] pending])
-            [pending addObject:[photos objectAtIndex:i]];
-    }
-    
-    if (pending.count > 0) {
-        photos = pending;
-        [self viewWillAppear:YES];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No photos pending approval" delegate:nil cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }
 }
 
 @end

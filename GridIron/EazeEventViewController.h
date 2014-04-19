@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *dateContainer;
+@property (weak, nonatomic) IBOutlet UIView *gameSelectContainer;
 
 @property (nonatomic, strong) Sport *sport;
 @property (nonatomic, strong) Team *team;
@@ -30,6 +31,7 @@
 
 - (IBAction)datesSelected:(UIStoryboardSegue *)segue;
 - (IBAction)datesSelectCanceled:(UIStoryboardSegue *)segue;
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
 

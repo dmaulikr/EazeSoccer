@@ -818,5 +818,13 @@
     }
 }
 
+- (NSURL *)addAuthenticationToken:(NSString *)urlstring {
+    if ([self isSiteOwner])
+        return [NSURL URLWithString:[NSString stringWithFormat:@"%@?auth_token=%@", urlstring, user.authtoken]];
+    else
+        return [NSURL URLWithString:urlstring];
+
+}
+
 @end
 

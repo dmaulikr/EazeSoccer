@@ -65,16 +65,7 @@
     [super viewWillAppear:animated];
     
     _dateContainer.hidden = YES;
-    
-    if (gameController) {
-        if (gameController.thegame) {
-            [self retrieveEvents];
-        }
-    } else if (searchname.length > 0) {
-        [self retrieveEvents];
-    } else {
-        [self retrieveEvents];
-    }
+    _gameSelectContainer.hidden = YES;
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
@@ -90,6 +81,14 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue {
+    _gameSelectContainer.hidden = YES;
+    
+    if (gameController.thegame) {
+        [self retrieveEvents];
+    }
 }
 
 - (IBAction)searchButtonClicked:(id)sender {
@@ -309,7 +308,9 @@
         alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
         [alertView show];
     } else if ([title isEqualToString:@"Game"]) {
-        [self performSegueWithIdentifier:@"GameSelectSegue" sender:self];
+        _gameSelectContainer.hidden = NO;
+        gameController.thegame = nil;
+        [gameController viewWillAppear:YES];
     } else if ([title isEqualToString:@"Refresh"]) {
         [self retrieveEvents];
     }

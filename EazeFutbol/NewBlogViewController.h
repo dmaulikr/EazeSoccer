@@ -24,6 +24,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *playerTextField;
 @property (weak, nonatomic) IBOutlet UITextField *gameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *coachTextField;
+@property (weak, nonatomic) IBOutlet UIView *playerSelectContainer;
+@property (weak, nonatomic) IBOutlet UIView *gameSelectContainer;
+@property (weak, nonatomic) IBOutlet UIView *coachSelectContainer;
 
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+- (IBAction)gameSelected:(UIStoryboardSegue *)segue;
+- (IBAction)coachSelected:(UIStoryboardSegue *)segue;
 
 @end

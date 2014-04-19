@@ -194,14 +194,13 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     if (textField == _stateTextField) {
         if ([_countryTextField.text isEqualToString:@"United States"]) {
-//            _stateTextField.inputView = selectStateController.inputView;
-//            _stateListContainer.hidden = NO;
-//            selectStateController.state = nil;
             _stateTextField.text = @"";
-//            [selectStateController viewWillAppear:YES];
-            [_stateTextField resignFirstResponder];
             _statePicker.hidden = NO;
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please select a country first" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
         }
+        [_stateTextField resignFirstResponder];
     } else if (textField == _sportTextField) {
         [_sportTextField resignFirstResponder];
         _sportPicker.hidden = NO;

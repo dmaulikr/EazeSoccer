@@ -157,6 +157,7 @@
     } else if ([segue.identifier isEqualToString:@"PlayerPhotosSegue"] ) {
         EazePhotosViewController *destController = segue.destinationViewController;
         destController.player = player;
+        currentSettings.photodeleted = YES;
     } else if ([segue.identifier isEqualToString:@"PlayerVideosSegue"]) {
         EazesVideosViewController *destController = segue.destinationViewController;
         destController.player = player;

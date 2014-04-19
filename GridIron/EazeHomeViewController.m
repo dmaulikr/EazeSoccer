@@ -55,6 +55,7 @@
 	// Do any additional setup after loading the view.
     getTeams = [[EazesportzRetrieveTeams alloc] init];
     getNews = [[EazesportzRetrieveNews alloc] init];
+    _activityIndicator.hidesWhenStopped = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -360,7 +361,6 @@
 }
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-//    [_activityIndicator startAnimating];
     currentSettings.team = [currentSettings.teams objectAtIndex:row];
     [self teamSelected];
 }

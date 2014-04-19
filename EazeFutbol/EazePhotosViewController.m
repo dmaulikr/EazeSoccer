@@ -8,23 +8,17 @@
 
 #import "EazePhotosViewController.h"
 #import "EazesportzAppDelegate.h"
-#import "PlayerSelectionViewController.h"
 #import "sportzServerInit.h"
-#import "EazeGameSelectionViewController.h"
 #import "sportzteamsPhotoInfoViewController.h"
-#import "EazeUsersSelectViewController.h"
-#import "EazesportzGameLogViewController.h"
 #import "EazesVideosViewController.h"
+#import "EazesportzGameLogViewController.h"
 
 @interface EazePhotosViewController () <UIAlertViewDelegate>
 
 @end
 
 @implementation EazePhotosViewController {
-    PlayerSelectionViewController *playerSelectController;
-    EazeGameSelectionViewController *gameSelectController;
-    EazeUsersSelectViewController *usersSelectController;
-    EazesportzGameLogViewController *gamelogSelectController;
+    EazesportzGameLogViewController *gamelogController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -49,6 +43,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    _gamelogContainer.hidden = YES;
+    
     if (currentSettings.sport.id.length == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please select a site before continuing"
                                                        delegate:nil cancelButtonTitle:@"Select Site" otherButtonTitles:nil, nil];
@@ -56,42 +52,13 @@
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     } else {
-        
-        if (gamelogSelectController) {
-            if (gamelogSelectController.game) {
-                NSURL *url;
-                
-                if (currentSettings.user.authtoken)
-                    url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@%@",
-                                                [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                                @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid,
-                                                @"&gameschedule_id=", gameSelectController.thegame.id, @"&gamelog_id=",
-                                                gamelogSelectController.gamelog.gamelogid, @"&auth_token=", currentSettings.user.authtoken]];
-                else
-                    url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
-                                                [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                                @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid,
-                                                @"&gameschedule_id=", gameSelectController.thegame.id, @"&gamelog_id=",
-                                                gamelogSelectController.gamelog.gamelogid]];
-                
-                NSURLRequest *request = [NSURLRequest requestWithURL:url];
-                [self.activityIndicator startAnimating];
-                [[NSURLConnection alloc] initWithRequest:request delegate:self];
-            }
-        } else
-            [super viewWillAppear:animated];
+        [super viewWillAppear:animated];
     }
     
     if (currentSettings.sport.hideAds)
         _bannerView.hidden = YES;
     
-    if ([currentSettings isSiteOwner]) {
-        if (currentSettings.sport.review_media)
-            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton,
-                                                       self.pendingBarButton, nil];
-        else
-            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton, nil];
-    } else if (currentSettings.sport.enable_user_pics) {
+    if (([currentSettings isSiteOwner]) || (currentSettings.sport.enable_user_pics)) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton, nil];
     } else {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, nil];
@@ -102,11 +69,23 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+}
+
+- (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
+    _gamelogContainer.hidden = YES;
     
-    playerSelectController = nil;
-    gamelogSelectController = nil;
-    gameSelectController = nil;
-    usersSelectController = nil;
+    if (gamelogController.gamelog) {
+        NSString *urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                              @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid, @"&gameschedule_id=",
+                               self.game.id, @"&gamelog_id=", gamelogController.gamelog.gamelogid];
+        
+        if ([currentSettings isSiteOwner])
+            urlstring = [urlstring stringByAppendingFormat:@"&auth_token=%@", currentSettings.user.authtoken];
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlstring]];
+        [self.activityIndicator startAnimating];
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }
 }
 
 - (void)displayUpgradeAlert {
@@ -157,23 +136,22 @@
         } else {
             destController.photo = nil;
         }
-    } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
-        gamelogSelectController = segue.destinationViewController;
-        gamelogSelectController.game = gameSelectController.thegame;
     } else if ([segue.identifier isEqualToString:@"VideoCollectionSegue"]) {
         EazesVideosViewController *destController = segue.destinationViewController;
-        if (playerSelectController.player)
-            destController.player = playerSelectController.player;
-        else if (gameSelectController.thegame)
-            destController.game = gameSelectController.thegame;
-        else if (usersSelectController.user)
-            destController.user = usersSelectController.user;
+        if (self.player)
+            destController.player = self.player;
+        else if (self.game)
+            destController.game = self.game;
+        else if (self.user)
+            destController.user = self.user;
         else if (self.player)
             destController.player =self.player;
         else if (self.game)
             destController.game = self.game;
         else if (self.user)
             destController.user = self.user;
+    } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
+        gamelogController = segue.destinationViewController;
     } else
         [super prepareForSegue:segue sender:self];
 }
@@ -188,25 +166,20 @@
     if ([title isEqualToString:@"Player"]) {
         self.game = nil;
         self.user = nil;
-        gameSelectController = nil;
-        gamelogSelectController.game = nil;
-        usersSelectController = nil;
         self.playerContainer.hidden = NO;
     } else if ([title isEqualToString:@"Game"]) {
         self.player = nil;
         self.user = nil;
-        playerSelectController = nil;
-        gamelogSelectController = nil;
-        usersSelectController = nil;
         self.gameContainer.hidden = NO;
     } else if ([title isEqualToString:@"Play"]) {
         self.player = nil;
         self.user = nil;
-        playerSelectController = nil;
-        usersSelectController = nil;
         
-        if (gameSelectController.thegame) {
-            [self performSegueWithIdentifier:@"GamePlaySelectSegue" sender:self];
+        if (self.game) {
+            _gamelogContainer.hidden = NO;
+            gamelogController.game = self.game;
+            gamelogController.gamelog = nil;
+            [gamelogController viewWillAppear:YES];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Game must be selected before searching by play"
                                                   delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
@@ -218,29 +191,19 @@
     } else if ([title isEqualToString:@"User"]) {
         self.player = nil;
         self.game = nil;
-        gamelogSelectController.game = nil;
-        playerSelectController = nil;
         self.userSelectContainer.hidden = NO;
     } else if ([title isEqualToString:@"All"]) {
         self.game = nil;
         self.user = nil;
         self.player = nil;
-        gamelogSelectController = nil;
-        playerSelectController = nil;
-        gameSelectController = nil;
-        usersSelectController = nil;
         
-        NSURL *url;
+        NSString * urlstring = [NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports/",
+                                currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid];
         
-        if (currentSettings.user.authtoken)
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid, @"&auth_token=",
-                                        currentSettings.user.authtoken]];
-        else
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid]];
+        if ([currentSettings isSiteOwner])
+            urlstring = [urlstring stringByAppendingFormat:@"&auth_token=%@", currentSettings.user.authtoken];
         
-        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlstring]];
         [self.activityIndicator startAnimating];
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
     } else if ([title isEqualToString:@"Dismiss"]) {

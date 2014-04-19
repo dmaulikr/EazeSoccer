@@ -47,6 +47,7 @@
         user_id = @"";
         schedule = @"";
         team_id = @"";
+        pending = NO;
         return self;
     } else
         return nil;

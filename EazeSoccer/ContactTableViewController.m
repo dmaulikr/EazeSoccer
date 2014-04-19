@@ -183,7 +183,8 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self performSegueWithIdentifier:@"ContactInfoSegue" sender:self];
+    if ([currentSettings isSiteOwner])
+        [self performSegueWithIdentifier:@"ContactInfoSegue" sender:self];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

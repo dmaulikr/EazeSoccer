@@ -51,6 +51,9 @@
 //    self.view.backgroundColor = [UIColor clearColor];
     photoDescriptionText.layer.borderWidth = 1.0f;
     photoDescriptionText.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -183,6 +186,25 @@
     else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
         [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
     }
+}
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
+    _bannerView.hidden = NO;
+}
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
+{
+    return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner
+{
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    _bannerView.hidden = YES;
 }
 
 @end

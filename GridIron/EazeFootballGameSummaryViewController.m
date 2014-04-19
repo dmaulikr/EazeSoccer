@@ -222,9 +222,15 @@
     // Configure the cell...
     
     Gamelogs *log = [[game gamelogs] objectAtIndex:indexPath.row];
-    cell.textLabel.font = [UIFont systemFontOfSize:10];
+    
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        cell.textLabel.font = [UIFont systemFontOfSize:14];
+    else
+        cell.textLabel.font = [UIFont systemFontOfSize:10];
+    
     cell.textLabel.text = [log logentrytext];
     cell.textLabel.textColor = [UIColor whiteColor];
+    cell.backgroundColor = [UIColor darkGrayColor];
     
     if ((log.hasphotos) || (log.hasvideos)) {
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

@@ -98,6 +98,12 @@
     removetags = [[NSMutableArray alloc] init];
     
     if ((photo) && (!newPhoto)) {
+        if (currentSettings.sport.review_media) {
+            [_approvalSwitch setOn:photo.pending];
+            _approvalSwitch.hidden = NO;
+            _approvalSwitch.enabled = YES;
+        }
+        
         newPhoto = NO;
         _cameraRollButton.hidden = YES;
         _cameraRollButton.enabled = NO;
@@ -166,13 +172,30 @@
             [_gameButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         }
         
-        if ([currentSettings isSiteOwner]) {
-            if ([currentSettings.teamPhotos isFeaturedPhoto:photo])
-                [_featuredSwitch setOn:YES];
-            else
-                [_featuredSwitch setOn:NO];
+        if ([currentSettings.teamPhotos isFeaturedPhoto:photo])
+            [_featuredSwitch setOn:YES];
+        else
+            [_featuredSwitch setOn:NO];
+        
+        if (photo.pending) {
+            _pendingLabel.text = @"Pending";
+            [_approvalSwitch setOn:NO];
+        } else {
+            _pendingLabel.text = @"Approved";
+            [_approvalSwitch setOn:YES];
         }
         
+        if (([currentSettings isSiteOwner]) && (currentSettings.sport.review_media)) {
+            _pendingLabel.hidden = NO;
+            _approvalSwitch.hidden = NO;
+            _approvalSwitch.enabled = YES;
+        } else {
+            _approvalSwitch.hidden = YES;
+            _pendingLabel.hidden = YES;
+            _approvalSwitch.enabled = NO;
+        }
+        
+        _teamTextField.text = currentSettings.team.team_name;
     } else if (!newPhoto) {
         photo = [[Photo alloc] init];
         newPhoto = YES;
@@ -186,31 +209,26 @@
         user = currentSettings.user;
         photo.owner = currentSettings.user.userid;
         [_cameraButton setTitle:@"Camera" forState:UIControlStateNormal];
-        
-        if ([currentSettings isSiteOwner])
-            [_featuredSwitch setOn:NO];
-    }
-    
-    if (currentSettings.sport.review_media) {
-        _featuredSwitch.hidden = NO;
-        _pendingLabel.hidden = NO;
-        
-        if ([currentSettings isSiteOwner])
-            _approvalSwitch.enabled = YES;
-        
-        if (photo.pending) {
-            _pendingLabel.text = @"Pending";
-            [_approvalSwitch setOn:NO];
-        } else {
-            _pendingLabel.text = @"Approved";
-            [_approvalSwitch setOn:YES];
-        }
-    } else {
-        _approvalSwitch.hidden = YES;
+        [_featuredSwitch setOn:NO];
         _pendingLabel.hidden = YES;
+        _approvalSwitch.hidden = YES;
+        _approvalSwitch.enabled = NO;
     }
     
-    _teamTextField.text = currentSettings.team.team_name;
+    if ([currentSettings isSiteOwner]) {
+        _featuredSwitch.enabled = YES;
+        _featuredSwitch.hidden = NO;
+        _featuredLabel.hidden = NO;
+    } else {
+        _featuredSwitch.enabled = NO;
+        _featuredSwitch.hidden = YES;
+        _featuredLabel.hidden = YES;
+        
+        if ((currentSettings.user.userid.length > 0) && (currentSettings.sport.review_media)) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Your photo will not be available until the administrator approves the photo." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+        }
+    }
     
     if (user)
         [_userButton setTitle:user.username forState:UIControlStateNormal];
@@ -409,9 +427,9 @@
         [self uploadImage:photo];
     } else {
         if (_approvalSwitch.isOn)
-            photo.pending = YES;
-        else
             photo.pending = NO;
+        else
+            photo.pending = YES;
         
         aurl = [NSURL URLWithString:[sportzServerInit getPhoto:photo.photoid Token:currentSettings.user.authtoken]];
 
@@ -723,11 +741,6 @@
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
-    if (_approvalSwitch.isOn)
-        photo.pending = YES;
-    else
-        photo.pending = NO;
-    
     NSURL *url = [NSURL URLWithString:[sportzServerInit newPhoto:currentSettings.user.authtoken]];
     NSMutableDictionary *photoDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _photonameTextField.text, @"filename",
                                        _photonameTextField.text, @"displayname", imagepath, @"filepath", @"image/jpeg", @"filetype",
@@ -887,10 +900,12 @@
                 [currentSettings.teamPhotos removeFeaturedPhoto:photo];
                 [currentSettings.teamPhotos saveFeaturedPhotos];
             }
+            
+            currentSettings.photodeleted = YES;
+            
             if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
                 [self.navigationController popViewControllerAnimated:YES];
             else {
-                currentSettings.photodeleted = YES;
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
         } else {
