@@ -28,7 +28,6 @@
 
 @synthesize roster;
 @synthesize gameList;
-@synthesize coaches;
 @synthesize teams;
 @synthesize sponsors;
 @synthesize alerts;
@@ -60,6 +59,8 @@
 
 @synthesize teamPhotos;
 @synthesize teamVideos;
+@synthesize inventorylist;
+@synthesize coaches;
 
 - (id)init {
     if (self = [super init]) {
@@ -70,6 +71,8 @@
         teamPhotos = [[EazesportzRetrieveFeaturedPhotos alloc] init];
         teamVideos = [[EazesportzRetrieveFeaturedVideosController alloc] init];
         sponsors = [[EazesportzRetrieveSponsors alloc] init];
+        inventorylist = [[EazesportzRetrieveSportadinv alloc] init];
+        coaches = [[EazesportzRetrieveCoaches alloc] init];
         
         newuser = nil;
         photodeleted = NO;
@@ -173,9 +176,9 @@
 
 - (Coach *)findCoach:(NSString *)coachid {
     Coach *result = nil;
-    for (int count = 0; count < [coaches count]; count++) {
-        if ([[[coaches objectAtIndex:count] coachid] isEqualToString:coachid]) {
-            result =  [coaches objectAtIndex:count];
+    for (int count = 0; count < [coaches.coaches count]; count++) {
+        if ([[[coaches.coaches objectAtIndex:count] coachid] isEqualToString:coachid]) {
+            result =  [coaches.coaches objectAtIndex:count];
         }
     }
     return result;

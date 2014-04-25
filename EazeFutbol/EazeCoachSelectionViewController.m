@@ -42,7 +42,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    self.coach = [currentSettings.coaches objectAtIndex:indexPath.row];
+    self.coach = [currentSettings.coaches.coaches objectAtIndex:indexPath.row];
     [self.navigationController popViewControllerAnimated:YES];    
 }
 

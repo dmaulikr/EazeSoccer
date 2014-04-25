@@ -20,6 +20,8 @@
 #import "EazesportzRetrieveFeaturedPhotos.h"
 #import "EazesportzRetrieveFeaturedVideosController.h"
 #import "EazesportzRetrieveSponsors.h"
+#import "EazesportzRetrieveSportadinv.h"
+#import "EazesportzRetrieveCoaches.h"
 
 #import <AWSRuntime/AWSRuntime.h>
 #import <AWSS3/AWSS3.h>
@@ -37,7 +39,6 @@
 
 @property(nonatomic, strong) NSMutableArray *roster;
 @property(nonatomic, strong) NSMutableArray *gameList;
-@property(nonatomic, strong) NSMutableArray *coaches;
 @property(nonatomic, strong) NSMutableArray *teams;
 @property(nonatomic, strong) NSMutableArray *alerts;
 
@@ -69,6 +70,8 @@
 @property (nonatomic, strong) EazesportzRetrieveFeaturedPhotos *teamPhotos;
 @property (nonatomic, strong) EazesportzRetrieveFeaturedVideosController *teamVideos;
 @property (nonatomic, strong) EazesportzRetrieveSponsors *sponsors;
+@property (nonatomic, strong) EazesportzRetrieveSportadinv *inventorylist;
+@property (nonatomic, strong) EazesportzRetrieveCoaches *coaches;
 
 - (UIImage *)getBannerImage;
 

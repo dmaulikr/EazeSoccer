@@ -37,6 +37,12 @@
 @synthesize sponsorlevel;
 @synthesize teamonly;
 @synthesize teamid;
+@synthesize sportadinv_id;
+
+@synthesize price;
+@synthesize forsale;
+@synthesize adsponsorlevel;
+@synthesize playerad;
 
 @synthesize tinyimage;
 @synthesize thumbimage;
@@ -62,6 +68,12 @@
         email = [sponsorDictionary objectForKey:@"contactemail"];
         sponsorlevel = [sponsorDictionary objectForKey:@"sponsorlevel"];
         teamid = [sponsorDictionary objectForKey:@"teamid"];
+        sportadinv_id = [sponsorDictionary objectForKey:@"sportadinv_id"];
+        
+        price = [[sponsorDictionary objectForKey:@"price"] floatValue];
+        forsale = [[sponsorDictionary objectForKey:@"forsale"] boolValue];
+        adsponsorlevel = [sponsorDictionary objectForKey:@"adsponsorlevel"];
+        playerad = [[sponsorDictionary objectForKey:@"playerad"] boolValue];
 
         if ((NSNull *)[sponsorDictionary objectForKey:@"large"] != [NSNull null])
             large = [sponsorDictionary objectForKey:@"large"];

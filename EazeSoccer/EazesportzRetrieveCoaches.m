@@ -18,6 +18,16 @@
     NSURLRequest *originalRequest;
 }
 
+@synthesize coaches;
+
+- (id)init {
+    if (self = [super init]) {
+        coaches = [[NSMutableArray alloc] init];
+        return self;
+    } else
+        return nil;
+}
+
 - (void)retrieveCoaches:(NSString *)sportid Team:(NSString *)teamid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSURL *url;
@@ -54,9 +64,24 @@
     
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     if (responseStatusCode == 200) {
-        currentSettings.coaches = [[NSMutableArray alloc] init];
-        for (int i = 0; i < [serverData count]; i++ ) {
-            [currentSettings.coaches addObject:[[Coach alloc] initWithDictionary:[serverData objectAtIndex:i]]];
+        if (coaches) {
+            NSMutableArray *coachList = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < serverData.count; i++) {
+                Coach *coach = [[Coach alloc] initWithDictionary:[serverData objectAtIndex:i]];
+                [self replaceCoachImages:coach];
+                [coachList addObject:coach];
+            }
+            
+            [self cleanUpCoachImageList:coachList];
+        } else {
+            coaches = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < serverData.count; i++) {
+                Coach *coach = [[Coach alloc] initWithDictionary:[serverData objectAtIndex:i]];
+                [coach loadImages];
+                [coaches addObject:coach];
+            }
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"CoachListChangedNotification" object:nil];
     } else {
@@ -72,6 +97,41 @@
         return  newrequest;
     } else {
         return request;
+    }
+}
+
+- (void)replaceCoachImages:(Coach *)coach {
+    BOOL found = NO;
+    
+    for (int i = 0; i < coaches.count; i++) {
+        
+        if ([[[coaches objectAtIndex:i] coachid] isEqualToString:coach.coachid]) {
+            found = YES;
+            break;
+        }
+    }
+    
+    if (!found) {
+        [coach loadImages];
+        [coaches addObject:coach];
+    }
+}
+
+- (void)cleanUpCoachImageList:(NSMutableArray *)coachList {
+    
+    for (int i = 0; i < coaches.count; i++) {
+        BOOL found = NO;
+        
+        for (int cnt = 0; cnt < coachList.count; cnt++) {
+            if ([[[coaches objectAtIndex:cnt] coachid] isEqualToString:[[coaches objectAtIndex:i] coachid] ]) {
+                found = YES;
+                break;
+            }
+        }
+        
+        if (!found) {
+            [coaches removeObjectAtIndex:i];
+        }
     }
 }
 

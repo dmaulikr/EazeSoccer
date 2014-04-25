@@ -375,15 +375,13 @@
     NSURL *url;
     
     if (player) {
-        if (currentSettings.user.authtoken) {
-            NSString *urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                  @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid, @"&athlete_id=",
-                                    player.athleteid];
-            if ([currentSettings isSiteOwner])
-                urlstring = [urlstring stringByAppendingFormat:@"&auth_token=%@", urlstring];
-            
-            url = [NSURL URLWithString:urlstring];
-        }
+        NSString *urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                              @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=", currentSettings.team.teamid, @"&athlete_id=",
+                                player.athleteid];
+        if ([currentSettings isSiteOwner])
+            urlstring = [urlstring stringByAppendingFormat:@"&auth_token=%@", urlstring];
+        
+        url = [NSURL URLWithString:urlstring];
     } else if (game) {
         if (currentSettings.user.authtoken)
             url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],

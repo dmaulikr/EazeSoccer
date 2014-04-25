@@ -10,6 +10,8 @@
 
 @interface EazesportzRetrieveCoaches : NSObject
 
+@property (nonatomic, strong) NSMutableArray *coaches;
+
 - (void)retrieveCoaches:(NSString *)sportid Team:(NSString *)teamid Token:(NSString *)authtoken;
 
 @end

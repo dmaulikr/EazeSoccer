@@ -187,10 +187,11 @@
 
 - (void)getAllSportData {
     if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid.length > 0)) {
+        [currentSettings.inventorylist retrieveSportadinv:currentSettings.sport User:currentSettings.user];
         [currentSettings.sponsors retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
         [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
         [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-        [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+        [currentSettings.coaches retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
         [[currentSettings teamPhotos] retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
         [[currentSettings teamVideos] retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
         

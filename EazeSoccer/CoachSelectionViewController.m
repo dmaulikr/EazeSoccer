@@ -64,7 +64,7 @@
 }
 
 - (void)gotCoaches:(NSNotificationCenter *)notification {
-    if (currentSettings.coaches.count == 0) {
+    if (currentSettings.coaches.coaches.count == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Coaches"
                                                         message:@"Program administrator has not entered any coaches"
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -86,7 +86,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return currentSettings.coaches.count;
+    return currentSettings.coaches.coaches.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -99,7 +99,7 @@
         cell = [[CoachTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    Coach *acoach = [currentSettings.coaches objectAtIndex:indexPath.row];
+    Coach *acoach = [currentSettings.coaches.coaches objectAtIndex:indexPath.row];
     cell.coachImage.image = [acoach tinyimage];
     cell.coachnameLabel.text = acoach.fullname;
     cell.responsibilityLabel.text = acoach.speciality;
@@ -119,7 +119,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"EditCoachSegue"]) {
         NSIndexPath *indexPath = [_coachTableView indexPathForSelectedRow];
-        coach = [currentSettings.coaches objectAtIndex:indexPath.row];
+        coach = [currentSettings.coaches.coaches objectAtIndex:indexPath.row];
         EditCoachViewController *editDestViewController = segue.destinationViewController;
         editDestViewController.coach = coach;
     } else if ([segue.identifier isEqualToString:@"NewCoachSegue"]) {
@@ -128,7 +128,7 @@
     } else {
         NSIndexPath *indexPath = [_coachTableView indexPathForSelectedRow];
         if ([indexPath length] > 0) {
-            coach = [currentSettings.coaches objectAtIndex:indexPath.row];
+            coach = [currentSettings.coaches.coaches objectAtIndex:indexPath.row];
         }
     }
 }

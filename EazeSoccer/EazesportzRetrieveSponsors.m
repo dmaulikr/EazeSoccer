@@ -13,20 +13,31 @@
 @implementation EazesportzRetrieveSponsors {
     long responseStatusCode;
     NSMutableArray *serverData;
+    NSMutableArray *pricearray, *levelsarray, *playerads;
     NSMutableData *theData;
     
     NSURLRequest *originalRequest;
-    int adcount, adindex;
+    long adcount, adindex, adlevel;
 }
 
 @synthesize sponsors;
+
+- (id)init {
+    if (self = [super init]) {
+        adindex = adlevel = 0;
+        pricearray = [[NSMutableArray alloc] init];
+        return self;
+    } else
+        return nil;
+}
 
 - (void)retrieveSponsors:(NSString *)sportid Token:(NSString *)authtoken {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSURL *url;
     
     if (authtoken)
-        url = [NSURL URLWithString:[sportzServerInit getSponsors:currentSettings.user.authtoken]];
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports/",
+                                    sportid, @"/sponsors.json?auth_token=", authtoken]];
     else
         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports/",
                                     sportid, @"/sponsors.json"]];
@@ -78,13 +89,53 @@
             }
         }
         
-        if (sponsors.count > 0)
+        if (sponsors.count > 0) {
             currentSettings.sport.hideAds = YES;
+            pricearray = [[NSMutableArray alloc] init];
+            playerads = [[NSMutableArray alloc] init];
+            
+            NSMutableArray *adlist = [[NSMutableArray alloc] init];
+            float oldprice = 0.0;
+            
+            for (int i = 0; i < sponsors.count; i++) {
+                
+                if (oldprice > [[sponsors objectAtIndex:i] price]) {
+                    if ([[sponsors objectAtIndex:i] playerad]) {
+                        [playerads addObject:[sponsors objectAtIndex:i]];
+                    } else if (adlist.count > 0) {
+                        [pricearray addObject:adlist];
+                    }
+                    adlist = [[NSMutableArray alloc] init];
+                }
+                
+                [adlist addObject:[sponsors objectAtIndex:i]];
+                oldprice = [[sponsors objectAtIndex:i] price];
+            }
+            
+            if (adlist.count > 0)
+                [pricearray addObject:adlist];
+            
+            [self resetLevelsArray];
+        }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorListChangedNotification" object:nil];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorListChangedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error Retreving Sponsors", @"Result", nil]];
+    }
+}
+
+- (void)resetLevelsArray {
+    adlevel = pricearray.count - 1;
+    adindex = 0;
+    
+    if (pricearray.count == 1) {
+        levelsarray = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < pricearray.count; i++)
+            [levelsarray addObject:[NSNumber numberWithInt:0]];
+    } else {
+        levelsarray = nil;
     }
 }
 
@@ -134,62 +185,47 @@
 }
 
 - (Sponsor *)getSponsorAd {
-    Sponsor *thead = nil;
-    
-    switch (adcount) {
-        case 0:
-            thead = [self findSponsorAd:@"Platinum"];
-            break;
+/*
+    for (int i = 0; i < pricearray.count; i++) {
+        if ([[levelsarray objectAtIndex:i] intValue] == [[pricearray objectAtIndex:i] count]) {
+            [self resetLevelsArray];
+            [self getSponsorAd];
+        } else {
             
-        case 1:
-            thead = [self findSponsorAd:@"Gold"];
-            break;
-            
-        case 2:
-            thead = [self findSponsorAd:@"Platinum"];
-            break;
-            
-        case 3:
-            thead = [self findSponsorAd:@"Gold"];
-            break;
-            
-        case 4:
-            thead = [self findSponsorAd:@"Platinum"];
-            break;
-            
-        default:
-            thead = [self findSponsorAd:@"Silver"];
-            break;
-    }
-    
-    adcount++;
-    
-    if (adcount == 5)
-        adcount = 0;
-    
-    if (thead == nil)
-        thead = [self findSponsorAd:@"Platinum"];
-    
-    return thead;
-}
-
-- (Sponsor *)findSponsorAd:(NSString *)level {
-    Sponsor *foundad = nil;
-    int i;
-    
-    for (i = adindex; i < sponsors.count; i++) {
-        if ([[[sponsors objectAtIndex:i] sponsorlevel] isEqualToString:level]) {
-            foundad = [sponsors objectAtIndex:i];
-            break;
         }
+            
     }
     
-    adindex = i;
+    if (levelsarray) {
+        if ((adlevel == 0) && (adindex == [[levelsarray objectAtIndex:adlevel] intValue])) {
+            [self resetLevelsArray];
+            [self getSponsorAd];
+        } else if (adindex >= [[levelsarray objectAtIndex:adlevel] intValue]) {
+            [self getSponsorAd];
+            adlevel--;
+        } else {
+            int numadsdisplayed = [[levelsarray objectAtIndex:adlevel] intValue];
+            numadsdisplayed++;
+            [levelsarray replaceObjectAtIndex:adlevel withObject:[NSNumber numberWithInt:numadsdisplayed]];
+            NSUInteger randomIndex = arc4random() % [[pricearray objectAtIndex:adlevel] count];
+            Sponsor *thead = [[pricearray objectAtIndex:adlevel] objectAtIndex:randomIndex];
+            adlevel--;
+            adindex++;
+            
+            return thead;
+        }
+    } else if (pricearray.count > 0) {
+        NSUInteger randomIndex = arc4random() % [[pricearray objectAtIndex:0] count];
+        return [[pricearray objectAtIndex:adlevel] objectAtIndex:randomIndex];
+    }
     
-    if (adindex == sponsors.count)
-        adindex = 0;
-    
-    return foundad;
+    return nil;
+ */
+    if (sponsors.count > 0) {
+        NSUInteger randomIndex = arc4random() % sponsors.count;
+        return [sponsors objectAtIndex:randomIndex];
+    } else
+        return nil;
 }
 
 @end

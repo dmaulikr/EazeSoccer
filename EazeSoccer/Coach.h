@@ -36,4 +36,6 @@
 - (id)initWithDictionary:(NSDictionary *)coachDictionary;
 - (id)initDeleteCoach;
 
+- (void)loadImages;
+
 @end

@@ -30,6 +30,13 @@
 @property(nonatomic, strong) NSNumber *teamonly;
 @property(nonatomic, strong) NSString *teamid;
 
+@property (nonatomic, strong) NSString *sportadinv_id;
+
+@property (nonatomic, assign) float price;
+@property (nonatomic, assign) BOOL forsale;
+@property (nonatomic, strong) NSString *adsponsorlevel;
+@property (nonatomic, assign) BOOL playerad;
+
 @property (nonatomic, strong) UIImage *tinyimage;
 @property (nonatomic, strong) UIImage *thumbimage;
 @property (nonatomic, strong) UIImage *mediumimage;

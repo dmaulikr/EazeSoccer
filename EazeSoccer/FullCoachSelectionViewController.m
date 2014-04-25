@@ -61,7 +61,7 @@
         cell = [[CoachTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    Coach *acoach = [currentSettings.coaches objectAtIndex:indexPath.row];
+    Coach *acoach = [currentSettings.coaches.coaches objectAtIndex:indexPath.row];
     cell.coachImage.image = [acoach getImage:@"thumb"];
     cell.coachnameLabel.text = acoach.fullname;
     cell.responsibilityLabel.text = acoach.speciality;
@@ -88,13 +88,13 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if([title isEqualToString:@"Confirm"]) {
-        if (![[currentSettings.coaches objectAtIndex:deleteIndexPath.row] initDeleteCoach]) {
-            [currentSettings.coaches removeObjectAtIndex:deleteIndexPath.row];
+        if (![[currentSettings.coaches.coaches objectAtIndex:deleteIndexPath.row] initDeleteCoach]) {
+            [currentSettings.coaches.coaches removeObjectAtIndex:deleteIndexPath.row];
             [self.coachTableView reloadData];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                            message:[[currentSettings.coaches objectAtIndex:deleteIndexPath.row] httperror]
-                                                           delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
+                                                    message:[[currentSettings.coaches.coaches objectAtIndex:deleteIndexPath.row] httperror]
+                                                    delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
