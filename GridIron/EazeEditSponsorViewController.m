@@ -9,6 +9,7 @@
 #import "EazeEditSponsorViewController.h"
 #import "EazesportzSponsorMapViewController.h"
 #import "EazesportzCheckAdImageViewController.h"
+#import "EazesportzAppDelegate.h"
 
 @interface EazeEditSponsorViewController () <UIGestureRecognizerDelegate>
 
@@ -31,15 +32,12 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.navigationItem.rightBarButtonItems = [[NSArray alloc] initWithObjects:self.saveBarButton, self.deleteBarButton, self.infoBarButton, self.globeBarButton, nil];
+    self.navigationItem.rightBarButtonItems = [[NSArray alloc] initWithObjects:self.saveBarButton, self.deleteBarButton, self.globeBarButton, nil];
     self.navigationController.toolbarHidden = YES;
     
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyBoard:)];
     gestureRecognizer.delegate = self;
     [_scrollView addGestureRecognizer:gestureRecognizer];
-    
-    _catalogButton.hidden = YES;
-    _catalogButton.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -48,6 +46,17 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if ([currentSettings isSiteOwner]) {
+        _catalogButton.hidden = NO;
+        _catalogButton.enabled = YES;
+    } else {
+        _catalogButton.hidden = YES;
+        _catalogButton.enabled = NO;
+    }
+}
 
 #pragma mark - Navigation
 

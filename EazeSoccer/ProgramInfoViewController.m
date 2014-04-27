@@ -69,7 +69,15 @@
     countryarray = [[NSMutableArray alloc] init];
     [countryarray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:@"United States", @"name", @"US", @"code", nil]];
     [countryarray addObjectsFromArray:temparray];
+
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyBoard:)];
+    [_scrollView addGestureRecognizer:gestureRecognizer];
 }
+
+-(void) hideKeyBoard:(id)sender {
+    [self.view endEditing:YES];
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -203,7 +211,8 @@
                                       currentSettings.user.email, @"contactemail", @"Fall", @"season", _countryTextField.text, @"country",
                                       _sportTextField.text, @"name", [[NSNumber numberWithBool:sport.enable_user_pics] stringValue], @"enable_user_pics",
                                       [[NSNumber numberWithBool:sport.enable_user_video] stringValue], @"enable_user_video",
-                                      [[NSNumber numberWithBool:sport.review_media] stringValue], @"review_media", nil];
+                                      [[NSNumber numberWithBool:sport.review_media] stringValue], @"review_media",
+                                      _paypalEmailTextField.text, @"paypal_email", nil];
     
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:sportDict, @"sport", nil];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];

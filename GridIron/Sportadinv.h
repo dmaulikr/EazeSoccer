@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Sport.h"
+#import "User.h"
 
 @interface Sportadinv : NSObject
 
@@ -17,6 +19,15 @@
 @property (nonatomic, assign) BOOL forsale;
 @property (nonatomic, strong) NSDate *expiration;
 
+@property (nonatomic, strong) NSString *httperror;
+
 - (id)initWithDirectory:(NSDictionary *)sponsorDictionary;
+- (id)initDelete;
+
+- (BOOL)deleteSportadinv:(User *)user;
+
+- (BOOL)saveSportadinv:(Sport *)sport User:(User *)user ;
+
+- (NSString *)adnameprice;
 
 @end

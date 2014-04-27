@@ -31,7 +31,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     if ([currentSettings isSiteOwner])
-        self.navigationItem.rightBarButtonItem = self.addBarButton;
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBarButton, self.infoButton, nil];
+    else
+        self.navigationItem.rightBarButtonItem = self.infoButton;
     
     self.navigationController.toolbarHidden = YES;
 }
@@ -41,17 +43,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"SponsorsCell";
@@ -118,6 +109,13 @@
 
 - (IBAction)addBarButtonClicked:(id)sender {
     [super addSponsor];
+}
+
+- (IBAction)infoButtonClicked:(id)sender {
+    if ([currentSettings isSiteOwner])
+        [self performSegueWithIdentifier:@"AdminAdInformationSegue" sender:self];
+    else
+        [self performSegueWithIdentifier:@"UserAdInformationSegue" sender:self];
 }
 
 @end

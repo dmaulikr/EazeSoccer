@@ -67,4 +67,17 @@
     }
 }
 
+- (Sportadinv *)findAdInventory:(NSString *)sportadinv_id {
+    Sportadinv *sportadinv = nil;
+    
+    for (int i = 0; i < inventorylist.count; i++) {
+        if ([[[inventorylist objectAtIndex:i] sportadinvid] isEqualToString:sportadinv_id]) {
+            sportadinv = [inventorylist objectAtIndex:i];
+            break;
+        }
+    }
+    
+    return sportadinv;
+}
+
 @end

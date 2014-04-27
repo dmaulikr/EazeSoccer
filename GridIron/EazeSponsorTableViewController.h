@@ -11,5 +11,7 @@
 @interface EazeSponsorTableViewController : EazesportzSponsorTableViewController
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addBarButton;
 - (IBAction)addBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *infoButton;
+- (IBAction)infoButtonClicked:(id)sender;
 
 @end

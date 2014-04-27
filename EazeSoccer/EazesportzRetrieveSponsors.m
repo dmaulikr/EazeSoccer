@@ -95,7 +95,7 @@
             playerads = [[NSMutableArray alloc] init];
             
             NSMutableArray *adlist = [[NSMutableArray alloc] init];
-            float oldprice = 0.0;
+            float oldprice = 100000000.0;
             
             for (int i = 0; i < sponsors.count; i++) {
                 
@@ -115,7 +115,13 @@
             if (adlist.count > 0)
                 [pricearray addObject:adlist];
             
-            [self resetLevelsArray];
+            levelsarray = [[NSMutableArray alloc] init];
+            double cnt = (double)pricearray.count;
+            
+            for (int i = 0; i < pricearray.count; i++) {
+                [levelsarray addObject:[NSNumber numberWithDouble:pow(2, cnt)]];
+                cnt -= 1.0;
+            }
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorListChangedNotification" object:nil];
@@ -185,47 +191,30 @@
 }
 
 - (Sponsor *)getSponsorAd {
-/*
-    for (int i = 0; i < pricearray.count; i++) {
-        if ([[levelsarray objectAtIndex:i] intValue] == [[pricearray objectAtIndex:i] count]) {
-            [self resetLevelsArray];
-            [self getSponsorAd];
-        } else {
-            
-        }
-            
-    }
     
-    if (levelsarray) {
-        if ((adlevel == 0) && (adindex == [[levelsarray objectAtIndex:adlevel] intValue])) {
-            [self resetLevelsArray];
-            [self getSponsorAd];
-        } else if (adindex >= [[levelsarray objectAtIndex:adlevel] intValue]) {
-            [self getSponsorAd];
-            adlevel--;
-        } else {
-            int numadsdisplayed = [[levelsarray objectAtIndex:adlevel] intValue];
-            numadsdisplayed++;
-            [levelsarray replaceObjectAtIndex:adlevel withObject:[NSNumber numberWithInt:numadsdisplayed]];
-            NSUInteger randomIndex = arc4random() % [[pricearray objectAtIndex:adlevel] count];
-            Sponsor *thead = [[pricearray objectAtIndex:adlevel] objectAtIndex:randomIndex];
-            adlevel--;
-            adindex++;
-            
-            return thead;
-        }
-    } else if (pricearray.count > 0) {
-        NSUInteger randomIndex = arc4random() % [[pricearray objectAtIndex:0] count];
-        return [[pricearray objectAtIndex:adlevel] objectAtIndex:randomIndex];
-    }
-    
-    return nil;
- */
     if (sponsors.count > 0) {
-        NSUInteger randomIndex = arc4random() % sponsors.count;
-        return [sponsors objectAtIndex:randomIndex];
+        int numbers = (int)pow((double)pricearray.count, 2);
+        float randomNumber = arc4random_uniform(numbers) + (float)arc4random_uniform(numbers + 1)/numbers;
+        NSUInteger n=0;
+        float totalPercentage= 0.0;
+        
+        for (NSUInteger i = 0; i < levelsarray.count; i++)  {
+            totalPercentage += [levelsarray[i] floatValue];
+            
+            if( totalPercentage >= randomNumber)  // This case we don't care about
+                // the comparison precision
+            {
+                break;
+            }
+            
+            n++;
+        }
+        
+        NSUInteger randomIndex = arc4random() % [[pricearray objectAtIndex:n] count];
+        return [[pricearray objectAtIndex:n] objectAtIndex:randomIndex];
     } else
         return nil;
+      
 }
 
 @end

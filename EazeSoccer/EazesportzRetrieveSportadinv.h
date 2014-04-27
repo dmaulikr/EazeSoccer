@@ -18,4 +18,6 @@
 
 - (void)retrieveSportadinv:(Sport *)sport User:(User *)user;
 
+- (Sportadinv *)findAdInventory:(NSString *)sportadinv_id;
+
 @end

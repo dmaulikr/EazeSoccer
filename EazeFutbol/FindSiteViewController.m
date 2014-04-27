@@ -141,7 +141,7 @@
             [sportsvalue addObject:[sportlist objectAtIndex:1]];
         }
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Retrieving Sports List" delegate:nil
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Initializing app. Are you connected to the Internet?" delegate:nil
                                               cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         
         [alert setAlertViewStyle:UIAlertViewStyleDefault];

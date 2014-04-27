@@ -45,18 +45,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    if ([currentSettings.sport isPackageEnabled])
-        [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
-    else {
-        if (!nosponsormessage) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade" message:@"Upgrade for Sponsor Support!"
-                                                        delegate:self cancelButtonTitle:@"Info" otherButtonTitles:@"Dismiss", nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-            nosponsormessage = YES;
-        }
-    }
 }
 
 - (void)gotSponsors:(NSNotification *)notification {

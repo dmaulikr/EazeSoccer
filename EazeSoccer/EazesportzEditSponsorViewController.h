@@ -37,5 +37,6 @@
 - (IBAction)deleteButtonClicked:(id)sender;
 - (IBAction)cameraButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *checkImageButton;
+@property (weak, nonatomic) IBOutlet UITextField *adInventoryTextField;
 
 @end

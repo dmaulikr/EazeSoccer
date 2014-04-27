@@ -18,10 +18,12 @@
 
 @implementation EazesportzEditSponsorViewController {
     NSDictionary *stateDictionary;
-    BOOL newmedia, imageselected, statePicker;
+    BOOL newmedia, imageselected, statePicker, adInventoryPicker, countryPick;
     NSMutableArray *countryarray;
     NSArray *stateList;
     NSString *country, *stateabreviation;
+    
+    Sportadinv *adinventory;
 }
 
 @synthesize sponsor;
@@ -48,6 +50,7 @@
     _sponsorEmail.keyboardType = UIKeyboardTypeEmailAddress;
     _sponsorurl.keyboardType = UIKeyboardTypeURL;
     _countryTextField.inputView = _countryPicker.inputView;
+    _adInventoryTextField.inputView = _countryPicker.inputView;
     
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Countries" ofType:@"plist"];
     NSArray *temparray = [[NSArray alloc] initWithContentsOfFile:plistPath];
@@ -79,6 +82,8 @@
     
     _countryPicker.hidden = YES;
     statePicker = NO;
+    countryPick = YES;
+    adInventoryPicker = NO;
     
     if (sponsor) {
         if (sponsor.thumbimage) {
@@ -97,14 +102,7 @@
         _faxnumber.text = sponsor.fax;
         _sponsorEmail.text = sponsor.email;
         _sponsorurl.text = sponsor.adurl;
-        
-        if ([sponsor.sponsorlevel isEqualToString:@"Platinum"])
-            _sponsorLevel.selectedSegmentIndex = 2;
-        else if ([sponsor.sponsorlevel isEqualToString:@"Gold"])
-            _sponsorLevel.selectedSegmentIndex = 1;
-        else
-            _sponsorLevel.selectedSegmentIndex = 0;
-        
+        _adInventoryTextField.text = [[currentSettings.inventorylist findAdInventory:sponsor.sportadinv_id] adnameprice];
         _checkImageButton.enabled = YES;
         _checkImageButton.hidden = NO;
         
@@ -242,6 +240,14 @@
         return;
     }
     
+    if (_adInventoryTextField.text.length == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Ad inventory field is blank!"
+                                                       delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+        return;
+    }
+    
     if (!sponsor) {
         sponsor = [[Sponsor alloc] init];
     }
@@ -258,13 +264,7 @@
     sponsor.fax = _faxnumber.text;
     sponsor.adurl = _sponsorurl.text;
     sponsor.email = _sponsorEmail.text;
-    
-    if (_sponsorLevel.selectedSegmentIndex == 0)
-        sponsor.sponsorlevel = @"Platinum";
-    else if (_sponsorLevel.selectedSegmentIndex == 1)
-        sponsor.sponsorlevel = @"Gold";
-    else
-        sponsor.sponsorlevel = @"Platinum";
+    sponsor.sportadinv_id = adinventory.sportadinvid;
     
     [sponsor saveSponsor];
 }
@@ -395,12 +395,23 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     if (textField == _countryTextField) {
         _countryPicker.hidden = NO;
+        countryPick = YES;
         statePicker = NO;
+        _adInventoryTextField = NO;
         [textField resignFirstResponder];
         [_countryPicker reloadAllComponents];
     } else if (textField == _state) {
         _countryPicker.hidden = NO;
         statePicker = YES;
+        countryPick = NO;
+        adInventoryPicker = NO;
+        [textField resignFirstResponder];
+        [_countryPicker reloadAllComponents];
+    } else if (textField == _adInventoryTextField) {
+        _countryPicker.hidden = NO;
+        adInventoryPicker = YES;
+        statePicker = NO;
+        countryPick = NO;
         [textField resignFirstResponder];
         [_countryPicker reloadAllComponents];
     }
@@ -415,6 +426,8 @@
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
     if (statePicker)
         return stateList.count;
+    else if (adInventoryPicker)
+        return currentSettings.inventorylist.inventorylist.count;
     else
         return countryarray.count;
 }
@@ -423,6 +436,10 @@
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     if (statePicker) {
         return [stateList objectAtIndex:row];
+    } else if (adInventoryPicker) {
+        return [NSString stringWithFormat:@"%@ - $%.02f",
+                [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adlevelname],
+                [[currentSettings.inventorylist.inventorylist objectAtIndex:row] price]];
     } else {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
         return [subDict objectForKey:@"name"];
@@ -432,6 +449,11 @@
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     if (statePicker) {
         _state.text = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
+    } else if (adInventoryPicker) {
+        _adInventoryTextField.text = [NSString stringWithFormat:@"%@ - $%.02f",
+                                      [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adlevelname],
+                                      [[currentSettings.inventorylist.inventorylist objectAtIndex:row] price]];
+        adinventory = [currentSettings.inventorylist.inventorylist objectAtIndex:row];
     } else {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
         _countryTextField.text = [subDict objectForKey:@"name"];
