@@ -12,4 +12,5 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *createLoginButton;
 @property (weak, nonatomic) IBOutlet UILabel *loginMessageLabel;
+- (IBAction)learnMoreButtonClicked:(id)sender;
 @end

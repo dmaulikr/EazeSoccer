@@ -101,8 +101,7 @@
         [_teamTableView reloadData];
         
         if (!sport) {
-            if ([sport isGoldPackage])
-                [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
+            [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
             
             if (teamList.count == 0) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No teams entered yet!"

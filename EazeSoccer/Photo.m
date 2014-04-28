@@ -32,6 +32,7 @@
 @synthesize thumbimage;
 @synthesize mediumimage;
 @synthesize largeimage;
+@synthesize updated_at;
 
 @synthesize sport_id;
 @synthesize team_id;
@@ -81,6 +82,7 @@
         self.players = [items objectForKey:@"players"];
         self.gamelog = [items objectForKey:@"gamelog"];
         pending = [[items objectForKey:@"pending"] boolValue];
+        updated_at = [items objectForKey:@"updated_at"];
         
         self.sport_id = [items objectForKey:@"sport_id"];
         self.team_id = [items objectForKey:@"team_id"];

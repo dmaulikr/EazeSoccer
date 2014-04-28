@@ -20,5 +20,6 @@
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
+@property (weak, nonatomic) IBOutlet UIView *bannerContainer;
 
 @end

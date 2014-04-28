@@ -17,12 +17,15 @@
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "EazeFootballGameSummaryViewController.h"
 #import "PhotoInfoViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface sportzteamsPhotoDescriptionViewController ()
 
 @end
 
-@implementation sportzteamsPhotoDescriptionViewController
+@implementation sportzteamsPhotoDescriptionViewController {
+    EazesportzDisplayAdBannerViewController *adBannerController;
+}
 
 @synthesize photo;
 @synthesize photoDescriptionText;
@@ -52,8 +55,13 @@
     photoDescriptionText.layer.borderWidth = 1.0f;
     photoDescriptionText.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -175,6 +183,8 @@
     } else if ([segue.identifier isEqualToString:@"EditPhotoSegue"]) {
         PhotoInfoViewController *destController = segue.destinationViewController;
         destController.photo = photo;
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

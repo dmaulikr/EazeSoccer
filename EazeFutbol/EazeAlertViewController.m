@@ -21,6 +21,7 @@
 #import "sportzteamsMovieViewController.h"
 //#import "sportzteamsAlertsJSON.h"
 #import "EazesportzRetrieveAlerts.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazeAlertViewController () <UIAlertViewDelegate>
 @end
@@ -35,6 +36,8 @@
     BOOL getalerts;
     BOOL clearalerts;
     NSString *displayed_alerts;
+    
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 @synthesize player;
@@ -68,8 +71,13 @@
     [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
                                                       Token:currentSettings.user.authtoken];
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 - (void)gotAlerts:(NSNotification *)notification {
@@ -128,6 +136,8 @@
         EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game =
            [currentSettings findGame:[player getBasketballStatGameId:[[alerts objectAtIndex:indexPath.row] basketball_stat_id]]];
+    } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

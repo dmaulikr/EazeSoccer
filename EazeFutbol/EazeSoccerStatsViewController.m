@@ -11,12 +11,15 @@
 #import "EazesportzAppDelegate.h"
 #import "EazeSoccerPlayerStatsViewController.h"
 #import "EazesportzRetrievePlayers.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazeSoccerStatsViewController ()
 
 @end
 
-@implementation EazeSoccerStatsViewController
+@implementation EazeSoccerStatsViewController {
+    EazesportzDisplayAdBannerViewController *adBannerController;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,8 +41,13 @@
     
     self.title = self.athlete.full_name;
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -238,6 +246,8 @@
             destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];            
             destController.player = self.athlete;
         }
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

@@ -9,6 +9,7 @@
 #import "EazeUserSettingsViewController.h"
 #import "sportzServerInit.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -26,6 +27,8 @@
     
     BOOL newmedia, imageselected;
     User *user;
+    
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -134,8 +137,13 @@
     else
         [_mediaSwitch setOn:NO];
  
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 - (void)retrieveUser:(NSString *)auserid {
@@ -430,6 +438,12 @@
     [alert show];
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
+    }
 }
 
 @end

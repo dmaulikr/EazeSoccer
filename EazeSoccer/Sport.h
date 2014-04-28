@@ -46,6 +46,7 @@
 @property (nonatomic, strong) NSString *streamingbucket;
 @property (nonatomic, strong) NSString *pricingurl;
 @property (nonatomic, assign) BOOL enablelive;
+@property (nonatomic, strong) NSString *adurl;
 
 @property (nonatomic, strong) NSMutableArray *supportedsports;
 
@@ -62,9 +63,5 @@
 - (UIImage *)getImage:(NSString *)size;
 
 - (id)initWithDictionary:(NSDictionary *)sportDictionary;
-
-- (BOOL)isPackageEnabled;
-- (BOOL)isGoldPackage;
-- (BOOL)isPlatinumPackage;
 
 @end

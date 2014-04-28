@@ -9,6 +9,7 @@
 #import "CoachesInfoViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "EditCoachViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -17,7 +18,9 @@
 
 @end
 
-@implementation CoachesInfoViewController
+@implementation CoachesInfoViewController {
+    EazesportzDisplayAdBannerViewController *adBannerController;
+}
 
 @synthesize coach;
 @synthesize years;
@@ -65,8 +68,13 @@
     [staffPosition setText:coach.speciality];
     coachImage.image = [coach mediumimage];
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 
     if (currentSettings.isSiteOwner) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.editButton,  nil];
@@ -104,6 +112,8 @@
     if ([segue.identifier isEqualToString:@"EditCoachSegue"]) {
         EditCoachViewController *destController = segue.destinationViewController;
         destController.coach = coach;
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

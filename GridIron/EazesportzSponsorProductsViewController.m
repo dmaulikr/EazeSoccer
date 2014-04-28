@@ -8,11 +8,15 @@
 
 #import "EazesportzSponsorProductsViewController.h"
 
+#import "EazesportzAppDelegate.h"
+
 @interface EazesportzSponsorProductsViewController ()
 
 @end
 
-@implementation EazesportzSponsorProductsViewController
+@implementation EazesportzSponsorProductsViewController {
+    BOOL showBanner;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,6 +39,12 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    showBanner = NO;
+    _bannerImage.hidden = YES;
+}
 /*
 #pragma mark - Navigation
 
@@ -55,4 +65,23 @@
 }
 
 
+- (IBAction)bannerAdExampleButtonClicked:(id)sender {
+    if (showBanner) {
+        _bannerImage.hidden = YES;
+        showBanner = NO;
+    } else {
+        _bannerImage.hidden = NO;
+        showBanner = YES;
+        
+        _bannerText.text = [NSString stringWithFormat:@"%@ - proud sponsor", currentSettings.sport.sitename];
+        
+        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            [_bannerImage setImage:[UIImage imageNamed:@"football-field.png"]];
+        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+            [_bannerImage setImage:[UIImage imageNamed:@"bballongymfloor.png"]];
+        } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+            [_bannerImage setImage:[UIImage imageNamed:@"Soccerbanner.png"]];
+        }
+    }
+}
 @end

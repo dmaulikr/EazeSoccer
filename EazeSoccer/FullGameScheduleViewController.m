@@ -71,23 +71,15 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    if ([currentSettings.sport isPackageEnabled]) {
-        NSBundle *mainBundle = [NSBundle mainBundle];
+    NSBundle *mainBundle = [NSBundle mainBundle];
 
-        if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Football"])
-            [self performSegueWithIdentifier:@"FootballStatsSegue" sender:self];
-        else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
-            [self performSegueWithIdentifier:@"SoccerGameStatsSegue" sender:self];
-        else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
-            [self performSegueWithIdentifier:@"BasketballGameStatsSegue" sender:self];
+    if ([[mainBundle objectForInfoDictionaryKey:@"sportzteams"] isEqualToString:@"Football"])
+        [self performSegueWithIdentifier:@"FootballStatsSegue" sender:self];
+    else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
+        [self performSegueWithIdentifier:@"SoccerGameStatsSegue" sender:self];
+    else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
+        [self performSegueWithIdentifier:@"BasketballGameStatsSegue" sender:self];
         
-/*    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
-                                            message:[NSString stringWithFormat:@"%@%@", @"Stat support not available for ", currentSettings.team.team_name]
-                                            delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"Info", @"Edit Game", nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    } */
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {

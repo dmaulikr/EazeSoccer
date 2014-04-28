@@ -25,6 +25,7 @@
 @property(nonatomic, strong) NSString *userid;
 @property(nonatomic, strong) NSString *gamelog;
 @property (nonatomic, assign) BOOL pending;
+@property (nonatomic, strong) NSDate *updated_at;
 
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) NSMutableArray *athletes;

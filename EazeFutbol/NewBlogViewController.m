@@ -17,6 +17,7 @@
 #import "EazeCoachSelectionViewController.h"
 #import "CoachesInfoViewController.h"
 #import "EazeBasketballGameSummaryViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -39,6 +40,8 @@
     PlayerSelectionViewController *playerController;
     GameScheduleViewController *gameController;
     CoachSelectionViewController *coachController;
+    
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -137,8 +140,13 @@
         selectplay = NO;
     }
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -365,6 +373,8 @@
     } else if ([segue.identifier isEqualToString:@"BasketballGameInfoSegue"]) {
         EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

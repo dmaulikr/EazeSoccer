@@ -32,6 +32,7 @@
 @synthesize thumbimage;
 @synthesize tinyimage;
 @synthesize mediumimage;
+@synthesize coachpic_updated_at;
 
 @synthesize httperror;
 
@@ -57,6 +58,7 @@
         thumb = [coachDictionary objectForKey:@"thumb"];
         tiny = [coachDictionary objectForKey:@"tiny"];
         medium = [coachDictionary objectForKey:@"medium"];
+        coachpic_updated_at = [coachDictionary objectForKey:@"coachpic_updated_at"];
         processing = [[coachDictionary objectForKey:@"processing"] boolValue];
         
         [self loadImages];

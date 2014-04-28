@@ -9,6 +9,7 @@
 #import "EazesportzRetrieveSponsors.h"
 #import "EazesportzAppDelegate.h"
 #import "sportzServerInit.h"
+#import "EazesportzImage.h"
 
 @implementation EazesportzRetrieveSponsors {
     long responseStatusCode;
@@ -160,7 +161,8 @@
     
     for (int i = 0; i < sponsors.count; i++) {
         
-        if ([[[sponsors objectAtIndex:i] sponsorid] isEqualToString:sponsor.sponsorid]) {
+        if (([[[sponsors objectAtIndex:i] sponsorid] isEqualToString:sponsor.sponsorid]) &&
+           ([[[sponsors objectAtIndex:i] sponsorpic_updated_at] compare:sponsor.sponsorpic_updated_at] == NSOrderedSame)) {
             found = YES;
             break;
         }

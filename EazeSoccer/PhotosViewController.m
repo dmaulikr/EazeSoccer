@@ -72,23 +72,15 @@
     _gameContainer.hidden = YES;
     _userSelectContainer.hidden = YES;
     
-    if (([currentSettings.sport isPackageEnabled]) || ([currentSettings isSiteOwner])) {
+    if (currentSettings.photodeleted) {
+        if ((player) || (game) || (user))
+            [self getPhotos];
+        else if (!photos)
+            [self teamButtonClicked:self];
         
-//        if (photos) {
-//            [_collectionView reloadData];
-//        }
-        if (currentSettings.photodeleted) {
-            if ((player) || (game) || (user))
-                [self getPhotos];
-            else if (!photos)
-                [self teamButtonClicked:self];
-            
-            currentSettings.photodeleted = NO;
-        }
-    } else {
-        [self displayUpgradeAlert];
+        currentSettings.photodeleted = NO;
     }
-    
+
     [_collectionView reloadData];
 }
 

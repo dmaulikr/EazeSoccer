@@ -23,5 +23,6 @@
 - (IBAction)returnerButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *playerStatTableView;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end

@@ -19,4 +19,5 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *statSelector;
 - (IBAction)statSelectorButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 @end

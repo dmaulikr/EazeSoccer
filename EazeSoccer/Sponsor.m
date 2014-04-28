@@ -48,6 +48,13 @@
 @synthesize thumbimage;
 @synthesize mediumimage;
 @synthesize largeimage;
+@synthesize sponsorpic_updated_at;
+
+@synthesize portraitbanner;
+@synthesize landscapebanner;
+@synthesize portraitBannerImage;
+@synthesize landscapeBannerImage;
+@synthesize adbanner_updated_at;
 
 @synthesize httperror;
 
@@ -95,7 +102,10 @@
         else
             tiny = @"";
         
-        [self loadImages];
+        portraitbanner = [sponsorDictionary objectForKey:@"portraitbanner"];
+        landscapebanner = [sponsorDictionary objectForKey:@"landscapebanner"];
+        sponsorpic_updated_at = [sponsorDictionary objectForKey:@"sponsorpic_updated_at"];
+        adbanner_updated_at = [sponsorDictionary objectForKey:@"adbanner_updated_at"];
         
         return self;
     } else {
@@ -299,6 +309,54 @@
         });
     } else {
         largeimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+    }
+
+    if (portraitbanner.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:portraitbanner]];
+            portraitBannerImage = [UIImage imageWithData:image];
+        });
+    } else {
+        portraitBannerImage = nil;
+    }
+    
+    if (landscapebanner.length > 0) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:landscapebanner]];
+            landscapeBannerImage = [UIImage imageWithData:image];
+        });
+    } else {
+        landscapeBannerImage = nil;
+    }
+}
+
+- (UIImage *)getPortraitBanner {
+    if (portraitBannerImage != nil)
+        return portraitBannerImage;
+    else
+        return nil;
+}
+
+- (UIImage *)bannerImage {
+    
+    if (self.tiny.length == 0) {
+/*
+        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+            return [UIImage imageNamed:@"football-field.png"];
+        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+            return [UIImage imageNamed:@"bballongymfloor.png"];
+        } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+            return [UIImage imageNamed:@"Soccerbanner.png"];
+        } else
+            return  nil; 
+ */
+        return [currentSettings.team getImage:@"tiny"];
+    } else {
+        return self.tinyimage;
     }
 }
 

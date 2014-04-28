@@ -18,6 +18,7 @@
 @property (nonatomic, assign) float price;
 @property (nonatomic, assign) BOOL forsale;
 @property (nonatomic, strong) NSDate *expiration;
+@property (nonatomic, strong) NSString *athlete_id;
 
 @property (nonatomic, strong) NSString *httperror;
 

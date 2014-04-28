@@ -10,4 +10,7 @@
 
 @interface EazesportzSponsorProductsViewController : UIViewController
 
+- (IBAction)bannerAdExampleButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIImageView *bannerImage;
+@property (weak, nonatomic) IBOutlet UILabel *bannerText;
 @end

@@ -12,6 +12,7 @@
 #import "sportzteamsPhotoInfoViewController.h"
 #import "EazesVideosViewController.h"
 #import "EazesportzGameLogViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazePhotosViewController () <UIAlertViewDelegate>
 
@@ -19,6 +20,7 @@
 
 @implementation EazePhotosViewController {
     EazesportzGameLogViewController *gamelogController;
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -55,8 +57,13 @@
         [super viewWillAppear:animated];
     }
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
     
     if (([currentSettings isSiteOwner]) || (currentSettings.sport.enable_user_pics)) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton, nil];
@@ -152,6 +159,8 @@
             destController.user = self.user;
     } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
         gamelogController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     } else
         [super prepareForSegue:segue sender:self];
 }

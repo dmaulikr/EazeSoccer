@@ -31,5 +31,6 @@
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 - (IBAction)coachSelected:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end

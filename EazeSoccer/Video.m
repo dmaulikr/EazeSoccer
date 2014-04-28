@@ -23,6 +23,7 @@
 @synthesize userid;
 @synthesize gamelog;
 @synthesize pending;
+@synthesize updated_at;
 
 @synthesize athletes;
 @synthesize game;
@@ -62,6 +63,7 @@
         self.duration = [items objectForKey:@"duration"];
         self.gamelog = [items objectForKey:@"gamelog"];
         pending = [[items objectForKey:@"pending"] boolValue];
+        updated_at = [items objectForKey:@"updated_at"];
         
         return self;
     } else {

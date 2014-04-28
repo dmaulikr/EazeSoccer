@@ -62,7 +62,14 @@
     [super viewWillAppear:animated];
     
     _adContainer.hidden = YES;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSponsors:) name:@"SponsorListChangedNotification" object:nil];
+    [_activityIndicator stopAnimating];
+    
+    if (currentSettings.sponsors.sponsors.count == 0)
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSponsors:) name:@"SponsorListChangedNotification" object:nil];
+    else {
+        _adContainer.hidden = NO;
+        [adController viewWillAppear:YES];
+    }
     
     if (currentSettings.isSiteOwner) {
         if (currentSettings.teams.count > 0)
@@ -163,7 +170,7 @@
     // Return the number of rows in the section.
 //    if (currentSettings.team.teamid.length == 0)
   //      return 0;
-    if (([currentSettings.sport isPlatinumPackage]) && (currentSettings.sport.enablelive))
+    if (currentSettings.sport.enablelive)
         return 6;
     else
         return 5;
@@ -266,7 +273,8 @@
                 break;
                 
             case 1:
-                [self performSegueWithIdentifier:@"NewsInfoSegue" sender:self];
+                if (currentSettings.gameList.count > 0)
+                    [self performSegueWithIdentifier:@"NewsInfoSegue" sender:self];
                 break;
                 
             case 2:
@@ -291,7 +299,7 @@
                 break;
                 
             default:
-                if ((([currentSettings.sport isGoldPackage]) || ([currentSettings.sport isPlatinumPackage])) && (currentSettings.user.userid.length > 0))
+                if ((currentSettings.sport.enablelive) && (currentSettings.user.userid.length > 0))
                     [self performSegueWithIdentifier:@"BroadcastEventsSegue" sender:self];
                 else if (currentSettings.user.userid.length == 0) {
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"You must log in to view live events." delegate:nil

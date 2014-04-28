@@ -105,7 +105,8 @@
     
     for (int i = 0; i < coaches.count; i++) {
         
-        if ([[[coaches objectAtIndex:i] coachid] isEqualToString:coach.coachid]) {
+        if (([[[coaches objectAtIndex:i] coachid] isEqualToString:coach.coachid]) &&
+            ([[[coaches objectAtIndex:i] coachpic_updated_at] compare:coach.coachpic_updated_at] == NSOrderedSame)) {
             found = YES;
             break;
         }

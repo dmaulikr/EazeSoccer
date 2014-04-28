@@ -19,5 +19,6 @@
 @property (weak, nonatomic) IBOutlet UIView *gamlogContainer;
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end

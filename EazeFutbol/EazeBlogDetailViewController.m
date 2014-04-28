@@ -16,6 +16,7 @@
 #import "CoachesInfoViewController.h"
 #import "EazeBasketballGameSummaryViewController.h"
 #import "EazeFootballGameSummaryViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazeBlogDetailViewController () <UIAlertViewDelegate>
 
@@ -25,6 +26,8 @@
     NSDictionary *serverData;
     NSMutableData *theData;
     int responseStatusCode;
+    
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 @synthesize blog;
@@ -137,8 +140,13 @@
         [alert show];
     }
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 
     if (currentSettings.isSiteOwner)
         self.navigationItem.rightBarButtonItem = _deleteBarButton;;
@@ -260,6 +268,8 @@
     } else if ([segue.identifier isEqualToString:@"FootballGameInfoSegue"]) {
         EazeFootballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = [currentSettings findGame:blog.gameschedule];
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

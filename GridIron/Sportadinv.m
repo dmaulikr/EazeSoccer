@@ -17,6 +17,7 @@
 @synthesize price;
 @synthesize forsale;
 @synthesize expiration;
+@synthesize athlete_id;
 
 @synthesize httperror;
 
@@ -29,6 +30,7 @@
         price = [[sportadinvDictionary objectForKey:@"price"] floatValue];
         forsale = [[sportadinvDictionary objectForKey:@"active"] boolValue];
         expiration = [sportadinvDictionary objectForKey:@"expiration"];
+        athlete_id = [sportadinvDictionary objectForKey:@"athlete_id"];
         
         return self;
     } else
@@ -60,7 +62,8 @@
     
     NSMutableDictionary *statDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: adlevelname, @"adlevelname",
                                      [dateFormatter stringFromDate:expiration], @"expiration", [NSString stringWithFormat:@"%.02f", price], @"price",
-                                     [NSString stringWithFormat:@"%d", forsale], @"active", sportid, @"sport_id", nil];
+                                     [NSString stringWithFormat:@"%d", forsale], @"active", sportid, @"sport_id",
+                                     athlete_id, @"athlete_id", nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:statDict, @"sportadinv", nil];

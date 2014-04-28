@@ -25,6 +25,9 @@
 - (IBAction)saveBarButtonClicked:(id)sender;
 - (IBAction)selectDateButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *selectDateButton;
-@property (weak, nonatomic) IBOutlet UISwitch *playerAdSwitch;
+@property (weak, nonatomic) IBOutlet UITextField *playerTextField;
+@property (weak, nonatomic) IBOutlet UIView *playerContainer;
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 
 @end

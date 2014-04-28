@@ -34,6 +34,7 @@
 @property(nonatomic, strong) UIImage *mediumimage;
 @property(nonatomic, strong) UIImage *thumbimage;
 @property(nonatomic, strong) UIImage *largeimage;
+@property (nonatomic, strong) NSDate *updated_at;
 
 - (id)initWithDirectory:(NSDictionary *)items;
 

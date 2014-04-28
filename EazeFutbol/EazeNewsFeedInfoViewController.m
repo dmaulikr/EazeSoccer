@@ -18,6 +18,7 @@
 #import "EazeFootballGameSummaryViewController.h"
 #import "sportzteamsMovieViewController.h"
 #import "NewsFeedEditViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -25,7 +26,9 @@
 
 @end
 
-@implementation EazeNewsFeedInfoViewController
+@implementation EazeNewsFeedInfoViewController {
+    EazesportzDisplayAdBannerViewController *adbannerController;
+}
 
 @synthesize newsitem;
 
@@ -152,6 +155,11 @@
     }
     
     self.navigationController.toolbarHidden = YES;
+    
+    if (currentSettings.sponsors.sponsors.count > 0)
+        _bannerContainer.hidden = NO;
+    else
+        _bannerContainer.hidden = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -176,6 +184,8 @@
     } else if ([segue.identifier isEqualToString:@"EditNewsitemSegue"]) {
         NewsFeedEditViewController *destController = segue.destinationViewController;
         destController.newsitem = newsitem;
+    } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
+        adbannerController = segue.destinationViewController;
     }
 }
 

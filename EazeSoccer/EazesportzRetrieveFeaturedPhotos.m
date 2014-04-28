@@ -179,7 +179,8 @@
      
      for (int i = 0; i < featuredphotos.count; i++) {
      
-         if ([[[featuredphotos objectAtIndex:i] photoid] isEqualToString:photo.photoid]) {
+         if (([[[featuredphotos objectAtIndex:i] photoid] isEqualToString:photo.photoid]) &&
+             ([[[featuredphotos objectAtIndex:i] updated_at] compare:photo.updated_at] == NSOrderedSame)) {
              found = YES;
              break;
          }

@@ -162,26 +162,14 @@
         EazesVideosViewController *destController = segue.destinationViewController;
         destController.player = player;
     } else if ([segue.identifier isEqualToString:@"BasketballPlayerStatsSegue"]) {
-        if ([currentSettings.sport isPackageEnabled]) {
-            EazeBballPlayerStatsViewController *destController = segue.destinationViewController;
-            destController.player = player;
-        } else {
-            [self displayUpgradeAlert];
-        }
+        EazeBballPlayerStatsViewController *destController = segue.destinationViewController;
+        destController.player = player;
     } else if ([segue.identifier isEqualToString:@"FootballPlayerStatsSegue"]) {
-        if ([currentSettings.sport isPackageEnabled]) {
-            EazeFootballPlayerStatsViewController *destController = segue.destinationViewController;
-            destController.player = player;
-        } else {
-            [self displayUpgradeAlert];
-        }
+        EazeFootballPlayerStatsViewController *destController = segue.destinationViewController;
+        destController.player = player;
     } else if ([segue.identifier isEqualToString:@"SoccerPlayerStatsSegue"]) {
-        if ([currentSettings.sport isPackageEnabled]) {
-            EazeSoccerPlayerStatsViewController *destController = segue.destinationViewController;
-            destController.player = player;
-        } else {
-            [self displayUpgradeAlert];
-        }
+        EazeSoccerPlayerStatsViewController *destController = segue.destinationViewController;
+        destController.player = player;
     } else if ([segue.identifier isEqualToString:@"PlayerBioSegue"]) {
         EazePlayerBioViewController *destController = segue.destinationViewController;
         destController.player = player;
@@ -301,16 +289,12 @@
 }
 
 - (IBAction)statButtonClicked:(id)sender {
-    if ([currentSettings.sport isPackageEnabled]) {
-        if ([currentSettings.sport.name isEqualToString:@"Football"]) {
-            [self performSegueWithIdentifier:@"FootballPlayerStatsSegue" sender:self];
-        } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
-            [self performSegueWithIdentifier:@"BasketballPlayerStatsSegue" sender:self];
-        } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
-            [self performSegueWithIdentifier:@"SoccerPlayerStatsSegue" sender:self];
-        }
-    } else {
-        [self displayUpgradeAlert];
+    if ([currentSettings.sport.name isEqualToString:@"Football"]) {
+        [self performSegueWithIdentifier:@"FootballPlayerStatsSegue" sender:self];
+    } else if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
+        [self performSegueWithIdentifier:@"BasketballPlayerStatsSegue" sender:self];
+    } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+        [self performSegueWithIdentifier:@"SoccerPlayerStatsSegue" sender:self];
     }
 }
 

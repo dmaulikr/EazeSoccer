@@ -31,5 +31,6 @@
 - (IBAction)gameButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteBarButton;
 - (IBAction)deleteBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end

@@ -94,11 +94,7 @@
     _userContainer.hidden = YES;
     refresh = NO;
     
-    if ([currentSettings.sport isPackageEnabled])
-        [self getBlogs:nil];
-    else {
-        [self displayUpgradeAlert];
-    }
+    [self getBlogs:nil];
 }
 
 - (void)displayUpgradeAlert {

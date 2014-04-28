@@ -47,7 +47,7 @@
     }
     
     self.title = sponsor.name;
-    _adLabel.text = [NSString stringWithFormat:@"%@ - proud sponsor", currentSettings.team.mascot];
+    [_AdLabelButton setTitle:[NSString stringWithFormat:@"%@ %@ sponsor", sponsor.name, currentSettings.team.mascot] forState:UIControlStateNormal];
     
     if (sponsor.mediumimage == nil) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -59,6 +59,8 @@
                 _sponsorAdImage.image = [UIImage imageWithData:image];
             });
         });
+    } else if (sponsor.medium.length == 0) {
+        _sponsorAdImage.image = [currentSettings.team getImage:@"thumb"];
     } else
         _sponsorAdImage.image = sponsor.mediumimage;
 }
@@ -74,6 +76,9 @@
 }
 */
 
-
+- (IBAction)adLabelButtonClicked:(id)sender {
+    if (sponsor.adurl.length > 0)
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:sponsor.adurl]];
+}
 
 @end

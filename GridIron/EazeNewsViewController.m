@@ -14,6 +14,7 @@
 #import "EazesportzRetrieveNews.h"
 #import "EazeWebViewController.h"
 #import "EazesportzRetrieveVideos.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -24,6 +25,8 @@
 @implementation EazeNewsViewController {
     EazesportzRetrieveNews *getNews;
     UIRefreshControl *refreshControl;
+    
+    EazesportzDisplayAdBannerViewController *adbannerController;
 }
 
 @synthesize news;
@@ -64,8 +67,12 @@
         [self startRefresh];
     }
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        [adbannerController viewWillAppear:YES];
+        _bannerContainer.hidden = NO;
+    } else
+        _bannerContainer.hidden = YES;
     
     if ([currentSettings isSiteOwner]) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.refreshButton, nil];
@@ -74,6 +81,7 @@
     }
     
     self.navigationController.toolbarHidden = YES;
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -222,6 +230,8 @@
     } else if ([segue.identifier isEqualToString:@"NewsExternalUrlSegue"]) {
         EazeWebViewController *destController = segue.destinationViewController;
         destController.external_url = [NSURL URLWithString:[[getNews.news objectAtIndex:indexPath.row] external_url]];
+    } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
+        adbannerController = segue.destinationViewController;
     }
 }
 

@@ -28,6 +28,7 @@
 @property(nonatomic, strong) UIImage *thumbimage;
 @property(nonatomic, strong) UIImage *tinyimage;
 @property(nonatomic, strong) UIImage *mediumimage;
+@property (nonatomic, strong) NSDate *coachpic_updated_at;
 
 @property(nonatomic, strong) NSString *httperror;
 

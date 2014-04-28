@@ -10,12 +10,15 @@
 #import "PlayerInfoViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "RosterTableCell.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazeRosterViewController ()
 
 @end
 
-@implementation EazeRosterViewController
+@implementation EazeRosterViewController {
+    EazesportzDisplayAdBannerViewController *adBannerController;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,8 +44,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
     
     if ([currentSettings isSiteOwner]) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.coachesButton, self.addButton, nil];
@@ -66,7 +74,8 @@
     if ([segue.identifier isEqualToString:@"PlayerInfoSegue"]) {
         PlayerInfoViewController *destController = segue.destinationViewController;
         destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
-    }
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"])
+        adBannerController = segue.destinationViewController;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

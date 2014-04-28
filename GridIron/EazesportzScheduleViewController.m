@@ -12,6 +12,7 @@
 #import "EazeBasketballGameSummaryViewController.h"
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "EditGameViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazesportzScheduleViewController () <UIAlertViewDelegate>
 
@@ -19,6 +20,8 @@
 
 @implementation EazesportzScheduleViewController {
     BOOL editgame, addgame;
+    
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -70,8 +73,13 @@
         }
     }
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -90,6 +98,8 @@
         } else if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
             EditGameViewController *destController = segue.destinationViewController;
             destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
+            adBannerController = segue.destinationViewController;
         }
     }
 }

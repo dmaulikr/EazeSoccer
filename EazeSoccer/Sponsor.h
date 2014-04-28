@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EazesportzPhotoImage.h"
 
 @interface Sponsor : NSObject
 
@@ -37,10 +38,21 @@
 @property (nonatomic, strong) NSString *adsponsorlevel;
 @property (nonatomic, assign) BOOL playerad;
 
+//@property (nonatomic, strong) EazesportzPhotoImage *tinyimage;
+//@property (nonatomic, strong) EazesportzPhotoImage *thumbimage;
+//@property (nonatomic, strong) EazesportzPhotoImage *mediumimage;
+//@property (nonatomic, strong) EazesportzPhotoImage *largeimage;
 @property (nonatomic, strong) UIImage *tinyimage;
 @property (nonatomic, strong) UIImage *thumbimage;
 @property (nonatomic, strong) UIImage *mediumimage;
 @property (nonatomic, strong) UIImage *largeimage;
+@property (nonatomic, strong) NSDate *sponsorpic_updated_at;
+
+@property (nonatomic, strong) NSString *portraitbanner;
+@property (nonatomic, strong) NSString *landscapebanner;
+@property (nonatomic, strong) UIImage *portraitBannerImage;
+@property (nonatomic, strong) UIImage *landscapeBannerImage;
+@property (nonatomic, strong) NSDate *adbanner_updated_at;
 
 @property(nonatomic, strong) NSString *httperror;
 
@@ -52,5 +64,7 @@
 - (void)saveSponsor;
 
 - (void)loadImages;
+- (UIImage *)bannerImage;
+- (UIImage *)getPortraitBanner;
 
 @end

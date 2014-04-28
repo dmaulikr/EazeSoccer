@@ -48,6 +48,7 @@
 @synthesize streamingbucket;
 @synthesize pricingurl;
 @synthesize enablelive;
+@synthesize adurl;
 
 @synthesize supportedsports;
 
@@ -114,6 +115,7 @@
         pricingurl = [sportDictionary objectForKey:@"pricingurl"];
         enablelive = [[sportDictionary objectForKey:@"enablelive"] boolValue];
         supportedsports = [sportDictionary objectForKey:@"supportedsports"];
+        adurl = [sportDictionary objectForKey:@"adurl"];
         
         if ([name isEqualToString:@"Soccer"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"soccer_positions"]];
@@ -172,28 +174,6 @@
     }
     
     return image;
-}
-
-- (BOOL)isPackageEnabled {
-    if (([self.package isEqualToString:@"Silver"]) || ([self.package isEqualToString:@"Gold"]) || ([self.package isEqualToString:@"Platinum"])) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
-- (BOOL)isGoldPackage {
-    if ([package isEqualToString:@"Gold"])
-        return YES;
-    else
-        return NO;
-}
-
-- (BOOL)isPlatinumPackage {
-    if ([package isEqualToString:@"Platinum"])
-        return YES;
-    else
-        return NO;
 }
 
 @end

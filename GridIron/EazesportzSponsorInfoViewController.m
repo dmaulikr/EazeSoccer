@@ -71,4 +71,9 @@
     return UIInterfaceOrientationMaskPortrait;
 }
 
+- (IBAction)learnMoreButtonClicked:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
+                                        currentSettings.sport.adurl]]];
+}
 @end

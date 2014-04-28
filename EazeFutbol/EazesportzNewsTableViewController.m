@@ -75,10 +75,6 @@
         [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
     }
     
-    if ([currentSettings.sport isPackageEnabled]) {
-        
-    }
-    
     _teamPicker.hidden = YES;
 }
 

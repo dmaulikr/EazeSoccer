@@ -32,5 +32,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *camerabutton;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end

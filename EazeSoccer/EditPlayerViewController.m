@@ -606,20 +606,12 @@
 }
 
 - (IBAction)statButtonClicked:(id)sender {
-    if ([currentSettings.sport isPackageEnabled]) {
-        if ([currentSettings.sport.name isEqualToString:@"Soccer"])
-            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
-        else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
-            [self performSegueWithIdentifier:@"BasketballStatsPlayerSegue" sender:self];
-        else if ([currentSettings.sport.name isEqualToString:@"Football"])
-            [self performSegueWithIdentifier:@"FootballPlayerStatsSegue" sender:self];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upgrade Required"
-                                                        message:[NSString stringWithFormat:@"%@%@", @"Stat support not available for ", player.logname]
-                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:@"Info", nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
+    if ([currentSettings.sport.name isEqualToString:@"Soccer"])
+        [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
+    else if ([currentSettings.sport.name isEqualToString:@"Basketball"])
+        [self performSegueWithIdentifier:@"BasketballStatsPlayerSegue" sender:self];
+    else if ([currentSettings.sport.name isEqualToString:@"Football"])
+        [self performSegueWithIdentifier:@"FootballPlayerStatsSegue" sender:self];
 }
 
 -(BOOL)shouldAutorotate {

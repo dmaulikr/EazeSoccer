@@ -15,5 +15,6 @@
 @property (nonatomic, strong) Sponsor *sponsor;
 
 @property (weak, nonatomic) IBOutlet UIImageView *sponsorAdImage;
-@property (weak, nonatomic) IBOutlet UILabel *adLabel;
+@property (weak, nonatomic) IBOutlet UIButton *AdLabelButton;
+- (IBAction)adLabelButtonClicked:(id)sender;
 @end

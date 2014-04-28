@@ -429,15 +429,7 @@
 }
 
 - (IBAction)statsButtonClicked:(id)sender {
-//    if ([currentSettings.sport isPackageEnabled]) {
-        [self performSegueWithIdentifier:@"FootballGameStatsSegue" sender:self];
-//    } else {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
-//                                                        message:[NSString stringWithFormat:@"%@%@", @"No stats for ", currentSettings.team.team_name]
-//                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-//        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-//        [alert show];
-//    }
+    [self performSegueWithIdentifier:@"FootballGameStatsSegue" sender:self];
 }
 
 - (IBAction)saveGameButtonClicked:(id)sender {

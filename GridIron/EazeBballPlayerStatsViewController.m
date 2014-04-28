@@ -11,6 +11,7 @@
 #import "EazesportzStatTableHeaderCell.h"
 #import "EazeBasketballScoringTableCell.h"
 #import "BasketballTotalStatsViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazeBballPlayerStatsViewController ()
 
@@ -18,6 +19,7 @@
 
 @implementation EazeBballPlayerStatsViewController {
     NSString *visiblestats;
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 @synthesize player;
@@ -60,8 +62,13 @@
         
     [_playerStatsTableView reloadData];
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 #pragma mark - Table view data source
@@ -232,6 +239,8 @@
         BasketballTotalStatsViewController *destController = segue.destinationViewController;
         destController.player = player;
         destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

@@ -13,6 +13,7 @@
 #import "sportzServerInit.h"
 #import "VideoCell.h"
 #import "EazesportzGameLogViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazesVideosViewController ()
 
@@ -20,6 +21,7 @@
 
 @implementation EazesVideosViewController {
     EazesportzGameLogViewController *gamelogController;
+    EazesportzDisplayAdBannerViewController *adBannerController;
  }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -64,8 +66,13 @@
         self.navigationController.toolbarHidden = YES;
 }
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController viewWillAppear:YES];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
@@ -136,6 +143,8 @@
         destViewController.videoclip = [self.videos objectAtIndex:indexPath.row];
     } else if ([segue.identifier isEqualToString:@"GamePlaySelectSegue"]) {
         gamelogController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     } else
         [super prepareForSegue:segue sender:self];
 }

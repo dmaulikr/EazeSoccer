@@ -8,12 +8,15 @@
 
 #import "EazesportzEditAdInventoryViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "PlayerSelectionViewController.h"
 
 @interface EazesportzEditAdInventoryViewController ()
 
 @end
 
-@implementation EazesportzEditAdInventoryViewController
+@implementation EazesportzEditAdInventoryViewController {
+    PlayerSelectionViewController *playerController;
+}
 
 @synthesize adInventory;
 
@@ -63,6 +66,12 @@
         _expirationDatePicker.hidden = NO;
         _selectDateButton.hidden = NO;
         _selectDateButton.enabled = YES;
+    } else if (textField == _playerTextField) {
+        [textField resignFirstResponder];
+        _playerContainer.hidden = NO;
+        playerController.player = nil;
+        textField.text = @"";
+        [playerController viewWillAppear:YES];
     }
 }
 
@@ -120,6 +129,21 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+}
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
+    _playerContainer.hidden = YES;
+    
+    if (playerController.player) {
+        _playerTextField.text = playerController.player.numberLogname;
+        adInventory.athlete_id = playerController.player.athleteid;
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
+        playerController = segue.destinationViewController;
+    }
 }
 
 @end

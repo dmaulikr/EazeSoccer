@@ -148,16 +148,8 @@
 }
 
 - (IBAction)playerstatsButtonClicked:(id)sender {
-    if ([currentSettings.sport isPackageEnabled]) {
-        visiblestats = @"Player";
-        [_statTableView reloadData];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
-                            message:[NSString stringWithFormat:@"%@%@", @"No stats available for ", currentSettings.team.team_name]
-                                                       delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-    }
+    visiblestats = @"Player";
+    [_statTableView reloadData];
 }
 
 #pragma mark - Table view data source

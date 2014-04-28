@@ -30,5 +30,6 @@
 - (IBAction)coachButtonClicked:(id)sender;
 - (IBAction)gameButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
+@property (weak, nonatomic) IBOutlet UIView *bannerContainer;
 
 @end

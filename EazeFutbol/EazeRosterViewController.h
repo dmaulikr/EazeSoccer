@@ -15,5 +15,6 @@
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *coachesButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end
