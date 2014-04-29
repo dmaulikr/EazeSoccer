@@ -37,5 +37,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *followPlayerLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bioLabel;
 @property (weak, nonatomic) IBOutlet UIButton *editButton;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "Sponsor.h"
+#import "Athlete.h"
 
 @interface EazesportzDisplayAdBannerViewController : UIViewController
 
@@ -18,5 +19,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *teamButton;
 - (IBAction)ateamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIImageView *fullBannerImageView;
+
+- (void)displayPlayerAd:(Athlete *)player;
+- (void)displayAd;
 
 @end

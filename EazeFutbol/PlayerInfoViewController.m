@@ -22,6 +22,7 @@
 #import "EazeSoccerPlayerStatsViewController.h"
 #import "EazePlayerBioViewController.h"
 #import "EditPlayerViewController.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface PlayerInfoViewController () <UIAlertViewDelegate>
 @end
@@ -33,6 +34,8 @@
     
     BOOL follow;
     BOOL unfollow;
+    
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 
@@ -131,8 +134,13 @@
         _videoButton.enabled = NO;
     }
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayPlayerAd:player];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
     
     if ([currentSettings isSiteOwner]) {
         _editButton.enabled = YES;
@@ -176,6 +184,8 @@
     } else if ([segue.identifier isEqualToString:@"EditPlayerSegue"]) {
         EditPlayerViewController *destController = segue.destinationViewController;
         destController.player = player;
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

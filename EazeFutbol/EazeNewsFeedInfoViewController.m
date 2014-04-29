@@ -147,8 +147,13 @@
     [_newsTextView setText:newsitem.news];
     [_titleLabel setText:newsitem.title];
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        [adbannerController displayAd];
+        _bannerContainer.hidden = NO;
+    } else {
+        _bannerContainer.hidden = YES;
+    }
     
     if ([currentSettings isSiteOwner]) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.editButton, nil];
@@ -184,7 +189,7 @@
     } else if ([segue.identifier isEqualToString:@"EditNewsitemSegue"]) {
         NewsFeedEditViewController *destController = segue.destinationViewController;
         destController.newsitem = newsitem;
-    } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
         adbannerController = segue.destinationViewController;
     }
 }

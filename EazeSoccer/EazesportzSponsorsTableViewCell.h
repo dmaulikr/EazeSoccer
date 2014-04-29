@@ -20,4 +20,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *phone;
 @property (weak, nonatomic) IBOutlet UILabel *sponsorLevel;
 @property (weak, nonatomic) IBOutlet UILabel *sponsorUrl;
+@property (weak, nonatomic) IBOutlet UILabel *playerAdLabel;
 @end

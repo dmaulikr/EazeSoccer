@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "Sponsor.h"
+#import "Athlete.h"
 
 @interface EazesportzRetrieveSponsors : NSObject
 
@@ -17,5 +18,6 @@
 - (void)retrieveSponsors:(NSString *)sportid Token:(NSString *)authtoken;
 
 - (Sponsor *)getSponsorAd;
+- (Sponsor *)getPlayerAd:(Athlete *)ahtlete;
 
 @end

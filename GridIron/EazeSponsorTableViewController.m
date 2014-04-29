@@ -73,14 +73,23 @@
     cell.sponsorLevel.text = sponsor.sponsorlevel;
     cell.sponsorUrl.text = sponsor.adurl;
     
+    if (sponsor.athlete_id.length > 0)
+        cell.playerAdLabel.hidden = NO;
+    else
+        cell.playerAdLabel.hidden = YES;
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([currentSettings isSiteOwner])
-        [self performSegueWithIdentifier:@"EditSponsorSegue" sender:self];
-    else
+    if (currentSettings.user.userid.length > 0) {
+        if (([[[currentSettings.sponsors.sponsors objectAtIndex:indexPath.row] user_id] isEqualToString:currentSettings.user.userid]) ||
+            ([currentSettings isSiteOwner])) {
+            [self performSegueWithIdentifier:@"EditSponsorSegue" sender:self];
+        }
+    } else if (![[currentSettings.sponsors.sponsors objectAtIndex:indexPath.row] playerad]) {
         [self performSegueWithIdentifier:@"SponsorMapSegue" sender:self];
+    }
 }
 
 -(BOOL)shouldAutorotate {

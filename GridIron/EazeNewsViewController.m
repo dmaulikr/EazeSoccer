@@ -69,7 +69,7 @@
     
     if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
-        [adbannerController viewWillAppear:YES];
+        [adbannerController displayAd];
         _bannerContainer.hidden = NO;
     } else
         _bannerContainer.hidden = YES;

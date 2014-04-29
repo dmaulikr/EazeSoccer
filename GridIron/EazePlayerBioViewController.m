@@ -8,12 +8,15 @@
 
 #import "EazePlayerBioViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 @interface EazePlayerBioViewController ()
 
 @end
 
-@implementation EazePlayerBioViewController
+@implementation EazePlayerBioViewController {
+    EazesportzDisplayAdBannerViewController *adBannerController;
+}
 
 @synthesize player;
 
@@ -43,8 +46,13 @@
     _playerImageView.image = [currentSettings getRosterMediumImage:player];
     _playerBioTextView.text = player.bio;
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayPlayerAd:player];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
     
     if (currentSettings.isSiteOwner) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, nil];
@@ -103,6 +111,12 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
+    }
 }
 
 @end

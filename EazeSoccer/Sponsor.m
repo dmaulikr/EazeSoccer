@@ -37,6 +37,9 @@
 @synthesize sponsorlevel;
 @synthesize teamonly;
 @synthesize teamid;
+
+@synthesize user_id;
+@synthesize athlete_id;
 @synthesize sportadinv_id;
 
 @synthesize price;
@@ -76,6 +79,9 @@
         sponsorlevel = [sponsorDictionary objectForKey:@"sponsorlevel"];
         teamid = [sponsorDictionary objectForKey:@"teamid"];
         sportadinv_id = [sponsorDictionary objectForKey:@"sportadinv_id"];
+        
+        user_id = [sponsorDictionary objectForKey:@"user_id"];
+        athlete_id = [sponsorDictionary objectForKey:@"athlete_id"];
         
         price = [[sponsorDictionary objectForKey:@"price"] floatValue];
         forsale = [[sponsorDictionary objectForKey:@"forsale"] boolValue];
@@ -132,7 +138,8 @@
     
     NSMutableDictionary *sponsordict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:name, @"name", [addrnum stringValue], @"addrnum",
                                         street, @"street", zip, @"zip", phone, @"phone", fax, @"fax", mobile, @"mobile",
-                                        email, @"contactemail", adurl, @"adurl", sponsorlevel, @"sponsorlevel", currentSettings.team.teamid, @"team_id", nil];
+                                        email, @"contactemail", adurl, @"adurl", sponsorlevel, @"sponsorlevel", currentSettings.team.teamid, @"team_id",
+                                        user_id, @"user_id", athlete_id, @"athlete_id", nil];
 
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
     [jsonDict setValue:sponsordict forKey:@"sponsor"];

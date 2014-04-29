@@ -219,4 +219,20 @@
       
 }
 
+- (Sponsor *)getPlayerAd:(Athlete *)athlete {
+    NSMutableArray *adlist = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < playerads.count; i++) {
+        if ([[[playerads objectAtIndex:i] athlete_id] isEqualToString:athlete.athleteid]) {
+            [adlist addObject:[playerads objectAtIndex:i]];
+        }
+    }
+    
+    if (adlist.count > 0) {
+        NSUInteger randomIndex = arc4random() % [adlist count];
+        return [adlist objectAtIndex:randomIndex];
+    } else
+        return nil;
+}
+
 @end

@@ -34,5 +34,6 @@
 - (IBAction)gameSelected:(UIStoryboardSegue *)segue;
 
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end

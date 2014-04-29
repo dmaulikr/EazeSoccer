@@ -14,6 +14,7 @@
 #import "EazeStartEndDateViewController.h"
 #import "EazeGameSelectionViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 #import <AWSS3/AWSS3.h>
 
@@ -30,6 +31,8 @@
     EazeGameSelectionViewController *gameController;
     NSString *searchname;
     BOOL initialload;
+    
+    EazesportzDisplayAdBannerViewController *adBannerController;
 }
 
 @synthesize sport;
@@ -67,8 +70,13 @@
     _dateContainer.hidden = YES;
     _gameSelectContainer.hidden = YES;
     
-    if (currentSettings.sport.hideAds)
+    if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayAd];
+    } else {
+        _adBannerContainer.hidden = YES;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -204,6 +212,8 @@
         
     } else if ([segue.identifier isEqualToString:@"GameSelectSegue"]) {
         gameController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adBannerController = segue.destinationViewController;
     }
 }
 

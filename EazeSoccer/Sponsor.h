@@ -31,6 +31,8 @@
 @property(nonatomic, strong) NSNumber *teamonly;
 @property(nonatomic, strong) NSString *teamid;
 
+@property (nonatomic, strong) NSString *user_id;
+@property (nonatomic, strong) NSString *athlete_id;
 @property (nonatomic, strong) NSString *sportadinv_id;
 
 @property (nonatomic, assign) float price;
@@ -38,10 +40,6 @@
 @property (nonatomic, strong) NSString *adsponsorlevel;
 @property (nonatomic, assign) BOOL playerad;
 
-//@property (nonatomic, strong) EazesportzPhotoImage *tinyimage;
-//@property (nonatomic, strong) EazesportzPhotoImage *thumbimage;
-//@property (nonatomic, strong) EazesportzPhotoImage *mediumimage;
-//@property (nonatomic, strong) EazesportzPhotoImage *largeimage;
 @property (nonatomic, strong) UIImage *tinyimage;
 @property (nonatomic, strong) UIImage *thumbimage;
 @property (nonatomic, strong) UIImage *mediumimage;

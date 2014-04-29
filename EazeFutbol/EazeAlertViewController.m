@@ -74,7 +74,7 @@
     if (currentSettings.sport.hideAds) {
         _bannerView.hidden = YES;
         _adBannerContainer.hidden = NO;
-        [adBannerController viewWillAppear:YES];
+        [adBannerController displayPlayerAd:player];
     } else {
         _adBannerContainer.hidden = YES;
     }
@@ -136,7 +136,7 @@
         EazeBasketballGameSummaryViewController *destController = segue.destinationViewController;
         destController.game =
            [currentSettings findGame:[player getBasketballStatGameId:[[alerts objectAtIndex:indexPath.row] basketball_stat_id]]];
-    } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
         adBannerController = segue.destinationViewController;
     }
 }
