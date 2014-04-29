@@ -38,5 +38,9 @@
 - (IBAction)cameraButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *checkImageButton;
 @property (weak, nonatomic) IBOutlet UITextField *adInventoryTextField;
+@property (weak, nonatomic) IBOutlet UITextField *playerTextField;
+@property (weak, nonatomic) IBOutlet UIView *playerContainer;
+
+- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 
 @end

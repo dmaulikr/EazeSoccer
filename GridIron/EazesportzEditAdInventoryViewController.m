@@ -8,15 +8,12 @@
 
 #import "EazesportzEditAdInventoryViewController.h"
 #import "EazesportzAppDelegate.h"
-#import "PlayerSelectionViewController.h"
 
 @interface EazesportzEditAdInventoryViewController ()
 
 @end
 
-@implementation EazesportzEditAdInventoryViewController {
-    PlayerSelectionViewController *playerController;
-}
+@implementation EazesportzEditAdInventoryViewController
 
 @synthesize adInventory;
 
@@ -48,16 +45,21 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _adlevelnameTextField.text = adInventory.adlevelname;
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"MM-dd-yyyy"];
-    _expirationTextField.text = [dateFormat stringFromDate:adInventory.expiration];
-    _priceTextField.text = [NSString stringWithFormat:@"$%.02f", adInventory.price];
-    [_forsaleSwitch setOn:adInventory.forsale];
-    _expirationDatePicker.hidden = YES;
-    _expirationDatePicker.enabled = NO;
-    _selectDateButton.enabled = NO;
-    _selectDateButton.hidden = YES;
+    if (adInventory) {
+        _adlevelnameTextField.text = adInventory.adlevelname;
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setDateFormat:@"MM-dd-yyyy"];
+        _expirationTextField.text = [dateFormat stringFromDate:adInventory.expiration];
+        _priceTextField.text = [NSString stringWithFormat:@"$%.02f", adInventory.price];
+        [_forsaleSwitch setOn:adInventory.forsale];
+        _expirationDatePicker.hidden = YES;
+        _expirationDatePicker.enabled = NO;
+        _selectDateButton.enabled = NO;
+        _selectDateButton.hidden = YES;
+        _changePriceLabel.hidden = NO;
+    } else {
+        _changePriceLabel.hidden = YES;
+    }
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -66,12 +68,6 @@
         _expirationDatePicker.hidden = NO;
         _selectDateButton.hidden = NO;
         _selectDateButton.enabled = YES;
-    } else if (textField == _playerTextField) {
-        [textField resignFirstResponder];
-        _playerContainer.hidden = NO;
-        playerController.player = nil;
-        textField.text = @"";
-        [playerController viewWillAppear:YES];
     }
 }
 
@@ -129,21 +125,6 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
-}
-
-- (IBAction)playerSelected:(UIStoryboardSegue *)segue {
-    _playerContainer.hidden = YES;
-    
-    if (playerController.player) {
-        _playerTextField.text = playerController.player.numberLogname;
-        adInventory.athlete_id = playerController.player.athleteid;
-    }
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
-        playerController = segue.destinationViewController;
-    }
 }
 
 @end

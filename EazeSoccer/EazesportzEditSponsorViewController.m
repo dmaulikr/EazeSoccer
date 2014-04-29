@@ -8,6 +8,7 @@
 
 #import "EazesportzEditSponsorViewController.h"
 #import "EazesportzAppDelegate.h"
+#import "PlayerSelectionViewController.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -22,6 +23,9 @@
     NSMutableArray *countryarray;
     NSArray *stateList;
     NSString *country, *stateabreviation;
+    
+    Athlete *player;
+    PlayerSelectionViewController *playerController;
     
     Sportadinv *adinventory;
 }
@@ -77,6 +81,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    _playerContainer.hidden = YES;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sponsorDeleted:) name:@"SponsorDeletedNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sponsorSaved:) name:@"SponsorSavedNotification" object:nil];
     
@@ -103,16 +109,27 @@
         _sponsorEmail.text = sponsor.email;
         _sponsorurl.text = sponsor.adurl;
         _adInventoryTextField.text = [[currentSettings.inventorylist findAdInventory:sponsor.sportadinv_id] adnameprice];
+        _adInventoryTextField.enabled = NO;
         _checkImageButton.enabled = YES;
         _checkImageButton.hidden = NO;
+        
+        if (sponsor.athlete_id.length > 0) {
+            _playerTextField.text = [[currentSettings findAthlete:sponsor.athlete_id] numberLogname];
+            _playerTextField.hidden = NO;
+            _playerTextField.enabled = YES;
+        } else {
+            _playerTextField.hidden = YES;
+            _playerTextField.enabled = NO;
+        }
         
     } else {
         _sponsorImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         _checkImageButton.enabled = NO;
         _checkImageButton.hidden = YES;
+        _adInventoryTextField.enabled = YES;
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome"
-                                                        message:[NSString stringWithFormat:@"Enter your information to advertise for the %@ \nYour ad will be seen by all fans that view content entered by the administrator of this site.", currentSettings.team.mascot] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                                                        message:[NSString stringWithFormat:@"As an administrator you can edit and create new ad sponsors for the %@. General advertisers will have to use the web site to purchase ad space on your site.", currentSettings.team.mascot] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
     }
 }
@@ -181,7 +198,7 @@
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
         NSData *imgData=UIImageJPEGRepresentation([info objectForKey:@"UIImagePickerControllerOriginalImage"], 1.0);
-        NSLog(@"%d", [imgData length]);
+        NSLog(@"%lu", (unsigned long)[imgData length]);
         UIImage *image = [[UIImage alloc] initWithData:imgData];
         
         if (newmedia)
@@ -265,6 +282,14 @@
     sponsor.adurl = _sponsorurl.text;
     sponsor.email = _sponsorEmail.text;
     sponsor.sportadinv_id = adinventory.sportadinvid;
+    
+    if (player) {
+        sponsor.athlete_id = player.athleteid;
+        sponsor.playerad = YES;
+    } else {
+        sponsor.athlete_id = @"";
+        sponsor.playerad = NO;
+    }
     
     [sponsor saveSponsor];
 }
@@ -351,7 +376,7 @@
     //    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:athDict options:0 error:&error];
     [urlrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlrequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [urlrequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [urlrequest setHTTPMethod:@"PUT"];
     [urlrequest setHTTPBody:jsonData];
     NSData* result = [NSURLConnection sendSynchronousRequest:urlrequest  returningResponse:&urlresponse error:&error];
@@ -414,6 +439,12 @@
         countryPick = NO;
         [textField resignFirstResponder];
         [_countryPicker reloadAllComponents];
+    } else if (textField == _playerTextField) {
+        _playerContainer.hidden = NO;
+        playerController.player = nil;
+        [playerController viewWillAppear:YES];
+        _playerTextField.text = @"";
+        [textField resignFirstResponder];
     }
 }
 
@@ -461,6 +492,22 @@
     }
     
     _countryPicker.hidden = YES;
+}
+
+- (void)playerSelected:(UIStoryboardSegue *)segue {
+    player = playerController.player;
+    
+    if (player) {
+        _playerTextField.text = player.numberLogname;
+    }
+    
+    _playerContainer.hidden = NO;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
+        playerController = segue.destinationViewController;
+    }
 }
 
 @end

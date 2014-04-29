@@ -68,7 +68,8 @@
     } else if ([segue.identifier isEqualToString:@"CheckImageSegue"]) {
         EazesportzCheckAdImageViewController *destController = segue.destinationViewController;
         destController.sponsor = self.sponsor;
-    }
+    } else
+        [super prepareForSegue:segue sender:self];
 }
 
 

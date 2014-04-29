@@ -230,7 +230,7 @@
     } else if ([segue.identifier isEqualToString:@"NewsExternalUrlSegue"]) {
         EazeWebViewController *destController = segue.destinationViewController;
         destController.external_url = [NSURL URLWithString:[[getNews.news objectAtIndex:indexPath.row] external_url]];
-    } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
         adbannerController = segue.destinationViewController;
     }
 }

@@ -47,9 +47,9 @@
     }
     
     self.title = sponsor.name;
-    [_AdLabelButton setTitle:[NSString stringWithFormat:@"%@ %@ sponsor", sponsor.name, currentSettings.team.mascot] forState:UIControlStateNormal];
+    [_AdLabelButton setTitle:sponsor.name forState:UIControlStateNormal];
     
-    if (sponsor.mediumimage == nil) {
+    if ((sponsor.mediumimage == nil) && (sponsor.medium.length > 0)) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
