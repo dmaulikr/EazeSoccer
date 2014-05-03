@@ -43,7 +43,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        self.view.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
     else
         self.view.backgroundColor = [UIColor whiteColor];
     
@@ -65,7 +65,12 @@
         _bioTextView.text = coach.bio;
         _yearsOnStaffTextField.text = [NSString stringWithFormat:@"%d", coach.years.intValue];
         _responsibilityTextField.text = coach.speciality;
-        image = [coach getImage:@"thumb"];
+        
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            image = coach.mediumimage;
+        else
+            image = [coach getImage:@"thumb"];
+        
     } else {
         _deleteButton.enabled = NO;
         _deleteButton.hidden = YES;

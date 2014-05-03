@@ -13,14 +13,14 @@
 
 @interface EazesportzDisplayAdBannerViewController : UIViewController
 
-- (IBAction)sponsorButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIImageView *bannerImage;
-@property (weak, nonatomic) IBOutlet UIButton *sponsorButton;
-@property (weak, nonatomic) IBOutlet UIButton *teamButton;
-- (IBAction)ateamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIImageView *fullBannerImageView;
 
 - (void)displayPlayerAd:(Athlete *)player;
 - (void)displayAd;
+@property (weak, nonatomic) IBOutlet UIButton *fullBanerButton;
+- (IBAction)fullBannerButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *sponsorLabel;
+@property (weak, nonatomic) IBOutlet UILabel *teamLabel;
 
 @end

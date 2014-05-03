@@ -21,6 +21,7 @@
 @property(nonatomic, strong) NSString *updated_at;
 @property(nonatomic, strong) NSString *tinyurl;
 @property(nonatomic, strong) NSString *thumburl;
+@property (nonatomic, strong) NSString *mediumurl;
 @property(nonatomic, strong) NSString *videoclip_id;
 
 @property(nonatomic, strong) NSString *httperror;

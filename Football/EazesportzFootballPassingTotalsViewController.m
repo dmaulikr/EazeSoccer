@@ -46,6 +46,8 @@
     _twopointconvTextField.keyboardType = UIKeyboardTypeNumberPad;
     _interceptionsTextField.keyboardType = UIKeyboardTypeNumberPad;
     
+    [_playerImage setClipsToBounds:YES];
+    
     _compPercentageTextField.enabled = NO;
     _averageTextField.enabled = NO;
 }
@@ -59,9 +61,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _playerImage.image = [currentSettings getRosterTinyImage:player];
-    _playerName.text = player.logname;
-    _playerNumber.text = [player.number stringValue];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        _playerImage.image = [currentSettings getRosterTinyImage:player];
+        _playerName.text = player.numberLogname;
+    } else {
+        _playerImage.image = [currentSettings getRosterMediumImage:player];
+        _playerName.text = [NSString stringWithFormat:@"%@ vs %@", player.numberLogname, game.opponent_mascot];
+        _playerNumber.text = [player.number stringValue];
+    }
     
     stat = [player findFootballPassingStat:game.id];
     

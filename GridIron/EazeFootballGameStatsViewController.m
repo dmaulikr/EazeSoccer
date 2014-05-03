@@ -131,7 +131,11 @@
     
     visiblestats = @"Team";
     
-    _homeImage.image = [currentSettings.team getImage:@"tiny"];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        _homeImage.image = [currentSettings.team getImage:@"tiny"];
+    else
+        _homeImage.image = [currentSettings.team getImage:@"thumb"];
+    
     _visitorImage.image = [game opponentImage];
     _homeLabel.text = currentSettings.team.mascot;
     _visitorLabel.text = game.opponent_mascot;
@@ -289,6 +293,8 @@
             cell = [[EazesportzFootballStatTotalsTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         switch (indexPath.row) {
             case 0:
                 cell.statTitleLabel.text = @"First Downs";
@@ -331,6 +337,8 @@
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         FootballPassingStat *stat;
         
         if (indexPath.row < passlist.count) {
@@ -366,6 +374,8 @@
         if (cell == nil) {
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
+        
+        cell.backgroundColor = [UIColor darkGrayColor];
         
         FootballRushingStat *stat;
         
@@ -403,6 +413,8 @@
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         FootballReceivingStat *stat;
         
         if (indexPath.row < receiverlist.count) {
@@ -439,6 +451,8 @@
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         FootballDefenseStats *stat;
         
         if (indexPath.row < defenselist.count) {
@@ -469,6 +483,8 @@
         if (cell == nil) {
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
+        
+        cell.backgroundColor = [UIColor darkGrayColor];
         
         if (indexPath.section == 0) {
             FootballPlaceKickerStats *stat;
@@ -523,6 +539,8 @@
         if (cell == nil) {
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
+        
+        cell.backgroundColor = [UIColor darkGrayColor];
         
         if (indexPath.section == 0) {
             FootballReturnerStats *stat;
@@ -823,7 +841,10 @@
  }
  
  - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-     return 30.0;
+     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+         return 30.0;
+     else
+         return 44.0;
  }
 
 - (IBAction)refreshButtonClicked:(id)sender {
@@ -899,6 +920,34 @@
         [punterlist addObject:[playerSelectController.player findFootballPunterStat:game.id]];
     }
     [_statTableView reloadData];
+}
+
+- (IBAction)teamBarButtonClicked:(id)sender {
+    [self teamButtonClicked:sender];
+}
+
+- (IBAction)passBarButtonClicked:(id)sender {
+    [self passButtonClicked:sender];
+}
+
+- (IBAction)rushBarButtonClicked:(id)sender {
+    [self rushingButtonClicked:sender];
+}
+
+- (IBAction)defBarButtonClicked:(id)sender {
+    [self defenseButtonClicked:sender];
+}
+
+- (IBAction)recBarButtonClicked:(id)sender {
+    [self receiverButtonClicked:sender];
+}
+
+- (IBAction)kickBarButtonClicked:(id)sender {
+    [self kickerButtonClicked:sender];
+}
+
+- (IBAction)retBarButtonClicked:(id)sender {
+    [self returnerButtonClicked:sender];
 }
 
 @end

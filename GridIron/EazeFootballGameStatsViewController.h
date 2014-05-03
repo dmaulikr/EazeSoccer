@@ -44,4 +44,11 @@
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UIView *activityIndicator;
 
+- (IBAction)teamBarButtonClicked:(id)sender;
+- (IBAction)passBarButtonClicked:(id)sender;
+- (IBAction)rushBarButtonClicked:(id)sender;
+- (IBAction)defBarButtonClicked:(id)sender;
+- (IBAction)recBarButtonClicked:(id)sender;
+- (IBAction)kickBarButtonClicked:(id)sender;
+- (IBAction)retBarButtonClicked:(id)sender;
 @end

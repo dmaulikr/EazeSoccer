@@ -123,6 +123,8 @@
         
         FootballPassingStat *stat;
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         if (indexPath.row < currentSettings.gameList.count) {
             stat = [player findFootballPassingStat:[[currentSettings.gameList objectAtIndex:indexPath.row] id]];
             cell.playerLabel.text = [[currentSettings.gameList objectAtIndex:indexPath.row] opponent_mascot];
@@ -181,6 +183,8 @@
         }
         
         FootballRushingStat *stat;
+        
+        cell.backgroundColor = [UIColor darkGrayColor];
         
         if (indexPath.row < currentSettings.gameList.count) {
             stat = [player findFootballRushingStat:[[currentSettings.gameList objectAtIndex:indexPath.row] id]];
@@ -243,6 +247,8 @@
         
         FootballReceivingStat *stat;
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         if (indexPath.row < currentSettings.gameList.count) {
             stat = [player findFootballReceivingStat:[[currentSettings.gameList objectAtIndex:indexPath.row] id]];
             cell.playerLabel.text = [[currentSettings.gameList objectAtIndex:indexPath.row] opponent_mascot];
@@ -303,6 +309,8 @@
         }
         
         FootballDefenseStats *stat;
+        
+        cell.backgroundColor = [UIColor darkGrayColor];
         
         if (indexPath.row < currentSettings.gameList.count) {
             stat = [player findFootballDefenseStat:[[currentSettings.gameList objectAtIndex:indexPath.row] id]];
@@ -365,6 +373,8 @@
         if (cell == nil) {
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
+        
+        cell.backgroundColor = [UIColor darkGrayColor];
         
         if ((indexPath.section == 0) || (indexPath.section == 1)) {
             FootballPlaceKickerStats *stat;
@@ -480,6 +490,8 @@
         
         FootballReturnerStats *stat;
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         if (indexPath.row < currentSettings.gameList.count) {
             stat = [player findFootballReturnerStat:[[currentSettings.gameList objectAtIndex:indexPath.row] id]];
             cell.playerLabel.text = [[currentSettings.gameList objectAtIndex:indexPath.row] opponent_mascot];
@@ -587,6 +599,7 @@
         
         if (section == 0) {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor blueColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -603,6 +616,7 @@
             label.text = @"Game";
         } else {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor blueColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -624,6 +638,7 @@
         
         if (section == 0) {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor blueColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -640,6 +655,7 @@
             label.text = @"Game";
         } else {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor blueColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -661,6 +677,7 @@
         
         if (section == 0) {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor blueColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -677,6 +694,7 @@
             label.text = @"Game";
         } else {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor blueColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -698,6 +716,7 @@
         
         if (section == 0) {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor blueColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"TKL";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -714,6 +733,7 @@
             label.text = @"Game";
         } else {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor blueColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"INT";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -735,6 +755,8 @@
         
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
+        headerView.backgroundColor = [UIColor blueColor];
+
         if (section == 0) {
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
@@ -802,6 +824,8 @@
         
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
+        headerView.backgroundColor = [UIColor blueColor];
+
         if (section == 0) {
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
@@ -838,6 +862,7 @@
         static NSString *CellIdentifier = @"TotalsHeaderCell";
         
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        headerView.backgroundColor = [UIColor blueColor];
     }
     
     if (headerView == nil){
@@ -848,7 +873,10 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 30.0;
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        return 30.0;
+    else
+        return 44.0;
 }
 
 - (IBAction)passButtonClicked:(id)sender {
@@ -931,9 +959,32 @@
         EazesportzFootballKickerTotalsViewController *destController = segue.destinationViewController;
         destController.player = player;
         destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
-    } else if ([segue.identifier isEqualToString:@"ADBannerSegue"]) {
+    } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
         adBannerController = segue.destinationViewController;
     }
 }
 
+- (IBAction)passBarButtonClicked:(id)sender {
+    [self passButtonClicked:sender];
+}
+
+- (IBAction)rushBarButtonClicked:(id)sender {
+    [self rushButtonClicked:sender];
+}
+
+- (IBAction)recBarButtonClicked:(id)sender {
+    [self receiverButtonClicked:sender];
+}
+
+- (IBAction)defBarButtonClicked:(id)sender {
+    [self defenseButtonClicked:sender];
+}
+
+- (IBAction)retBarButtonClicked:(id)sender {
+    [self returnerButtonClicked:sender];
+}
+
+- (IBAction)kickBarButtonClicked:(id)sender {
+    [self kickerButtonClicked:sender];
+}
 @end

@@ -54,7 +54,7 @@
 	// Do any additional setup after loading the view.
     _activityIndicator.hidesWhenStopped = YES;
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        self.view.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
     else
         self.view.backgroundColor = [UIColor whiteColor];
     
@@ -120,8 +120,12 @@
         // Add image
                 
         if (newsitem.videoclip_id.length > 0) {
-            [_newsFeedImageView setImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125]];
-        } else if (newsitem.tinyurl.length > 0) {
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+                [_newsFeedImageView setImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125]];
+            else
+                [_newsFeedImageView setImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:512]];
+        } else if ((newsitem.tinyurl.length > 0) &&
+                   ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])) {
             dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             //this will start the image loading in bg
             dispatch_async(concurrentQueue, ^{
@@ -132,13 +136,31 @@
                     [_newsFeedImageView setImage:[UIImage imageWithData:image]];
                 });
             });
+        } else if ((newsitem.tinyurl.length > 0) &&
+                   ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:newsitem.mediumurl]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_newsFeedImageView setImage:[UIImage imageWithData:image]];
+                });
+            });
         } else if (newsitem.athlete.length > 0) {
-            [_newsFeedImageView setImage:[currentSettings normalizedImage:[currentSettings getRosterThumbImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:125]];
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+                [_newsFeedImageView setImage:[currentSettings normalizedImage:[currentSettings getRosterThumbImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:125]];
+            else
+                [_newsFeedImageView setImage:[currentSettings normalizedImage:[currentSettings getRosterMediumImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:512]];
         } else if (newsitem.game.length > 0) {
            [_newsFeedImageView setImage:[currentSettings normalizedImage:[currentSettings getOpponentImage:
                                                                           [currentSettings findGame:newsitem.game]] scaledToSize:125]];
         } else if (newsitem.coach.length > 0) {
-            [_newsFeedImageView setImage:[[currentSettings findCoach:newsitem.coach] thumbimage]];
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+                [_newsFeedImageView setImage:[[currentSettings findCoach:newsitem.coach] thumbimage]];
+            else
+                [_newsFeedImageView setImage:[[currentSettings findCoach:newsitem.coach] mediumimage]];
         } else {
             [_newsFeedImageView setImage:[currentSettings.team getImage:@"thumb"]];
         }

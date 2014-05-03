@@ -44,6 +44,8 @@
     _fumblesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _tdTextField.keyboardType = UIKeyboardTypeNumberPad;
     _twopointconvTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    [_playerImage setClipsToBounds:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,15 +57,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
         _playerImage.image = [currentSettings getRosterTinyImage:player];
         _playerName.text = player.numberLogname;
-        _playerNumber.text = [player.number stringValue];
     } else {
-        _playerImage.image =[currentSettings getRosterThumbImage:player];
-        _playerName.text = player.numberLogname;
+        _playerImage.image = [currentSettings getRosterMediumImage:player];
+        _playerName.text = [NSString stringWithFormat:@"%@ vs %@", player.numberLogname, game.opponent_mascot];
+        _playerNumber.text = [player.number stringValue];
     }
-    
     
     stat = [player findFootballReceivingStat:game.id];
     

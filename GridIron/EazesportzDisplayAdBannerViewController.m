@@ -55,16 +55,6 @@
 }
 */
 
-- (IBAction)sponsorButtonClicked:(id)sender {
-    if (sponsor.adurl.length > 0)
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:sponsor.adurl]];
-}
-
-- (IBAction)ateamButtonClicked:(id)sender {
-    if (sponsor.adurl.length > 0)
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:sponsor.adurl]];
-}
-
 - (void)displayAd {
     sponsor = [currentSettings.sponsors getSponsorAd];
     [self displayAdSponsor];
@@ -72,7 +62,13 @@
 
 - (void)displayPlayerAd:(Athlete *)player {
     sponsor = [currentSettings.sponsors getPlayerAd:player];
-    [self displayAdSponsor];
+    
+    if (sponsor)
+        [self displayAdSponsor];
+    else {
+        sponsor = [currentSettings.sponsors getSponsorAd];
+        [self displayAdSponsor];
+    }
 }
 
 -(void)displayAdSponsor {
@@ -82,22 +78,23 @@
         if (image != nil) {
             _fullBannerImageView.image = image;
             _bannerImage.hidden = YES;
-            _teamButton.hidden = YES;
-            _teamButton.enabled = NO;
-            _sponsorButton.hidden = YES;
-            _sponsorButton.enabled = NO;
         } else {
             _fullBannerImageView.hidden = YES;
             _bannerImage.image = [sponsor bannerImage];
-            [_teamButton setTitle:[NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot] forState:UIControlStateNormal];
-            [_sponsorButton setTitle:[NSString stringWithFormat:@"%@", sponsor.name] forState:UIControlStateNormal];
+            _teamLabel.text = [NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot];
+            _sponsorLabel.text = [NSString stringWithFormat:@"%@", sponsor.name];
         }
     } else {
         _fullBannerImageView.hidden = YES;
         _bannerImage.image = [sponsor bannerImage];
-        [_teamButton setTitle:[NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot] forState:UIControlStateNormal];
-        [_sponsorButton setTitle:[NSString stringWithFormat:@"%@", sponsor.name] forState:UIControlStateNormal];
+        _teamLabel.text = [NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot];
+        _sponsorLabel.text = [NSString stringWithFormat:@"%@", sponsor.name];
     }
+}
+
+- (IBAction)fullBannerButtonClicked:(id)sender {
+    if (sponsor.adurl.length > 0)
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:sponsor.adurl]];
 }
 
 @end

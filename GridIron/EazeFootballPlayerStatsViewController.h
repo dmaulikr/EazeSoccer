@@ -25,4 +25,11 @@
 @property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
 @property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
+- (IBAction)passBarButtonClicked:(id)sender;
+- (IBAction)rushBarButtonClicked:(id)sender;
+- (IBAction)recBarButtonClicked:(id)sender;
+- (IBAction)defBarButtonClicked:(id)sender;
+- (IBAction)retBarButtonClicked:(id)sender;
+
+- (IBAction)kickBarButtonClicked:(id)sender;
 @end

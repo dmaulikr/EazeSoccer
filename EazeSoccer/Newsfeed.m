@@ -23,6 +23,7 @@
 @synthesize updated_at;
 @synthesize tinyurl;
 @synthesize thumburl;
+@synthesize mediumurl;
 @synthesize videoclip_id;
 
 @synthesize videoPoster;
@@ -55,6 +56,7 @@
         updated_at = [newsDict objectForKey:@"updated_at"];
         tinyurl = [newsDict objectForKey:@"tinyurl"];
         thumburl = [newsDict objectForKey:@"thumburl"];
+        mediumurl = [newsDict objectForKey:@"mediumurl"];
         videoclip_id = [newsDict objectForKey:@"videoclip_id"];
         
         if (videoclip_id.length > 0) {

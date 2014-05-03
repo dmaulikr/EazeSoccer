@@ -82,11 +82,25 @@
         else
             [_imageButton setBackgroundImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125] forState:UIControlStateNormal];
 //            _imageView.image = [currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125];
-    } else if ((newsitem.tinyurl.length > 0) || (newsitem.thumburl.length > 0)) {
+    } else if (((newsitem.tinyurl.length > 0) || (newsitem.thumburl.length > 0)) &&
+               ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])) {
         dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         //this will start the image loading in bg
         dispatch_async(concurrentQueue, ^{
             NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:newsitem.thumburl]];
+            
+            //this will set the image when loading is finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_imageButton setImage:[UIImage imageWithData:image] forState:UIControlStateNormal];
+                _imageView.image = [UIImage imageWithData:image];
+            });
+        });
+    } else if ((newsitem.mediumurl.length > 0) ||
+               ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
+        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //this will start the image loading in bg
+        dispatch_async(concurrentQueue, ^{
+            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:newsitem.mediumurl]];
             
             //this will set the image when loading is finished
             dispatch_async(dispatch_get_main_queue(), ^{

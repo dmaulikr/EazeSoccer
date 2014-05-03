@@ -494,4 +494,12 @@
         return YES;
 }
 
+- (IBAction)teamstatsBarButtonClicked:(id)sender {
+    [self teamstatsButtonClicked:sender];
+}
+
+- (IBAction)playerstatsBarButtonClicked:(id)sender {
+    [self playerstatsButtonClicked:sender];
+}
+
 @end

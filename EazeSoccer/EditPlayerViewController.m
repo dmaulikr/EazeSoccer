@@ -59,7 +59,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        self.view.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
     else
         self.view.backgroundColor = [UIColor whiteColor];
     
@@ -74,7 +74,7 @@
     
     height = [[NSMutableArray alloc] initWithObjects:@"3", @"4", @"5", @"6", @"7", @"8", nil];
     inches = [[NSMutableArray alloc] initWithObjects:@"0", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", nil];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.statsButton, self.doneButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, nil];
     
     self.navigationController.toolbarHidden = YES;
     
@@ -126,7 +126,10 @@
         _seasonTextField.text = player.season;
         _bioTextView.text = player.bio;
         
-        _playerImage.image = [currentSettings getRosterThumbImage:player];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+            _playerImage.image = [currentSettings getRosterMediumImage:player];
+        else
+            _playerImage.image = [currentSettings getRosterThumbImage:player];
 
         _positionTextField.text = player.position;
         
@@ -625,6 +628,14 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self saveButtonClicked:sender];
+}
+
+- (IBAction)deleteBarButtonClicked:(id)sender {
+    [self warningDeleteButtonClicked:sender];
 }
 
 @end

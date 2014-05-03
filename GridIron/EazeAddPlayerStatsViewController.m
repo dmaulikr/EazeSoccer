@@ -76,7 +76,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _playerImageView.image = [currentSettings getRosterThumbImage:athlete];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        _playerImageView.image = [currentSettings getRosterThumbImage:athlete];
+    else
+        _playerImageView.image = [currentSettings getRosterMediumImage:athlete];
+    
     _playerSelectContainer.hidden = YES;
     addstats = YES;
     NSString *pos;
@@ -758,19 +762,35 @@
     _toggleButton.hidden = NO;
     _toggleButton.enabled = YES;
     
-    if ([currentSettings getRosterThumbImage:athlete] == nil) {
-        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        //this will start the image loading in bg
-        dispatch_async(concurrentQueue, ^{
-            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:athlete.thumb]];
-            
-            //this will set the image when loading is finished
-            dispatch_async(dispatch_get_main_queue(), ^{
-                _playerImageView.image = [UIImage imageWithData:image];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        if ([currentSettings getRosterThumbImage:athlete] == nil) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:athlete.thumb]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    _playerImageView.image = [UIImage imageWithData:image];
+                });
             });
-        });
-    } else
-        _playerImageView.image = [currentSettings getRosterThumbImage:athlete];
+        } else
+            _playerImageView.image = [currentSettings getRosterThumbImage:athlete];
+    } else {
+        if ([currentSettings getRosterMediumImage:athlete] == nil) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:athlete.mediumpic]];
+                
+                //this will set the image when loading is finished
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    _playerImageView.image = [UIImage imageWithData:image];
+                });
+            });
+        } else
+            _playerImageView.image = [currentSettings getRosterMediumImage:athlete];
+    }
     
     _receiverTextField.hidden = YES;
     _receiverTextField.enabled = NO;

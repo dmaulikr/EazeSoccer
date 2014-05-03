@@ -47,5 +47,9 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
 - (IBAction)saveButtonClicked:(id)sender;
 - (IBAction)statButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
+- (IBAction)saveBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteBarButton;
+- (IBAction)deleteBarButtonClicked:(id)sender;
 
 @end

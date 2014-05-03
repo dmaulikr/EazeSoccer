@@ -45,5 +45,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *visitorBonusImage;
 @property (weak, nonatomic) IBOutlet UIImageView *homeBonusImage;
 @property (weak, nonatomic) IBOutlet UITextField *homeScoreTextField;
+- (IBAction)teamstatsBarButtonClicked:(id)sender;
+- (IBAction)playerstatsBarButtonClicked:(id)sender;
 
 @end

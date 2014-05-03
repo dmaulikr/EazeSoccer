@@ -47,6 +47,8 @@
     _longestReturnTextField.keyboardType = UIKeyboardTypeNumberPad;
     _fumblesRecoveredTextField.keyboardType = UIKeyboardTypeNumberPad;
     _safetiesTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    [_playerImage setClipsToBounds:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,9 +60,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _playerImage.image = [currentSettings getRosterTinyImage:player];
-    _playerName.text = player.numberLogname;
-    _playerNumber.text = [player.number stringValue];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        _playerImage.image = [currentSettings getRosterTinyImage:player];
+        _playerName.text = player.numberLogname;
+    } else {
+        _playerImage.image = [currentSettings getRosterMediumImage:player];
+        _playerName.text = [NSString stringWithFormat:@"%@ vs %@", player.numberLogname, game.opponent_mascot];
+        _playerNumber.text = [player.number stringValue];
+    }
     
     stat = [player findFootballDefenseStat:game.id];
     
