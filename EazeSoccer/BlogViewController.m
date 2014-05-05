@@ -135,15 +135,27 @@
     
     UIImage *image;
     
-    if (blog.tinyavatar.length == 0) {
-        image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
-    } else if ((blog.tinyimage.CIImage == nil) && (blog.tinyimage.CGImage == nil)) {
-        NSURL * imageURL = [NSURL URLWithString:blog.tinyavatar];
-        NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-        image = [UIImage imageWithData:imageData];
-        blog.tinyimage = image;
-    } else
-        image = blog.tinyimage;
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        if (blog.tinyavatar.length == 0) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        } else if ((blog.tinyimage.CIImage == nil) && (blog.tinyimage.CGImage == nil)) {
+            NSURL * imageURL = [NSURL URLWithString:blog.tinyavatar];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            image = [UIImage imageWithData:imageData];
+            blog.tinyimage = image;
+        } else
+            image = blog.tinyimage;
+    } else {
+        if (blog.avatar.length == 0) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        } else if ((blog.thumbimage.CIImage == nil) && (blog.thumbimage.CGImage == nil)) {
+            NSURL * imageURL = [NSURL URLWithString:blog.avatar];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            image = [UIImage imageWithData:imageData];
+            blog.thumbimage = image;
+        } else
+            image = blog.thumbimage;
+    }
     
     [cell.bloggerImage setImage:image];
     cell.blogEntryTextView.text = blog.entry;

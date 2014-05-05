@@ -41,5 +41,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
 - (IBAction)saveBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *homeScoreTextField;
+- (IBAction)teamstatsBarButtonClicked:(id)sender;
+- (IBAction)playerstatsBarButtonClicked:(id)sender;
 
 @end

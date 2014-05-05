@@ -63,6 +63,8 @@
     else
         self.view.backgroundColor = [UIColor whiteColor];
     
+    [_playerImage setClipsToBounds:YES];
+    
     _activityIndicator.hidesWhenStopped = YES;
 
     _bioTextView.layer.cornerRadius = 4;

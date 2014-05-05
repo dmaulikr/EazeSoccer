@@ -84,6 +84,7 @@
     _visitorSavesTextField.text = [game.socceroppsaves stringValue];
     _visitorCKTextField.text = [game.socceroppck stringValue];
     _visitorShotsTextField.text = [game.socceroppsog stringValue];
+    _visitorScoreTextField.text = [game.opponentscore stringValue];
     
     visiblestats = @"Team";
     _hometeamLabel.text = currentSettings.team.mascot;
@@ -199,6 +200,8 @@
             cell = [[EazesportzFootballStatTotalsTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         if (indexPath.section == 0) {
             int goals = 0, shots = 0, assists = 0, steals = 0, cornerkicks = 0;
             
@@ -271,6 +274,8 @@
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         Soccer *stats;
         
         if (indexPath.section == 0) {
@@ -324,6 +329,7 @@
         
         if (section == 0) {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor cyanColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"G";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -338,6 +344,7 @@
             label.text = @"PTS";
         } else {
             headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            headerView.backgroundColor = [UIColor cyanColor];
             UILabel *label = (UILabel *)[headerView viewWithTag:1];
             label.text = @"";
             label = (UILabel *)[headerView viewWithTag:2];
@@ -358,6 +365,7 @@
         static NSString *CellIdentifier = @"TotalsHeaderCell";
         
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        headerView.backgroundColor = [UIColor cyanColor];
     }
     
     if (headerView == nil){
@@ -368,7 +376,10 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 30.0;
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        return 30.0;
+    else
+        return 44.0;
 }
 
 - (void)textFieldConfiguration:(UITextField *)textField {
@@ -423,6 +434,14 @@
     game.period = [NSNumber numberWithInt:[_periodsTextField.text intValue]];
     game.opponentscore = [NSNumber numberWithInt:[_visitorScoreTextField.text intValue]];
     [game saveGameschedule];
+}
+
+- (IBAction)teamstatsBarButtonClicked:(id)sender {
+    [self teamstatsButtonClicked:sender];
+}
+
+- (IBAction)playerstatsBarButtonClicked:(id)sender {
+    [self playerstatsButtonClicked:sender];
 }
 
 @end

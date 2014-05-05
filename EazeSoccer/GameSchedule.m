@@ -12,7 +12,7 @@
 #import "EazesportzRetrieveGames.h"
 
 @implementation GameSchedule {
-    UIImage *opponentImage;
+    UIImage *opponentImage, *opponentThumbImage;
     
     int responseStatusCode;
     NSMutableData *theData;
@@ -34,6 +34,7 @@
 @synthesize opponent_name;
 @synthesize opponent_mascot;
 @synthesize opponentpic;
+@synthesize opponentpicthumb;
 @synthesize opponentpic_updated_at;
 @synthesize eazesportzOpponent;
 @synthesize opponent_sport_id;
@@ -99,6 +100,7 @@
         opponent_name = @"";
         opponent_mascot = @"";
         opponentImage = nil;
+        opponentThumbImage = nil;
         eazesportzOpponent = NO;
         opponent_team_id = @"";
         opponent_sport_id = @"";
@@ -151,6 +153,7 @@
         opponent_name = [gameScheduleDictionary objectForKey:@"opponent_name"];
         opponent_mascot = [gameScheduleDictionary objectForKey:@"opponent_mascot"];
         opponentpic = [gameScheduleDictionary objectForKey:@"opponentpic"];
+        opponentpicthumb = [gameScheduleDictionary objectForKey:@"opponentpicthumb"];
         opponentpic_updated_at = [gameScheduleDictionary objectForKey:@"opponentpic_updated_at"];
 /*
         if ((![opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) && (![opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
@@ -476,12 +479,12 @@
     return self;
 }
 
-- (UIImage *)opponentImage {
+- (UIImage *)opponentImage:(NSString *)size {
     UIImage *image;
     
-    if (opponentImage) {
+    if (([size isEqualToString:@"tiny"]) && (opponentImage)) {
         return opponentImage;
-    } else {
+    } else if ([size isEqualToString:@"tiny"]) {
         if (([opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) || ([opponentpic isEqualToString:@"/opponentpics/tiny/missing.png"])) {
             image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         } else {
@@ -491,6 +494,20 @@
         }
         
         opponentImage = image;
+        
+        return image;
+    } else if (([size isEqualToString:@"thumb"]) && (opponentThumbImage)) {
+        return opponentThumbImage;
+    } else {
+        if (([opponentpic isEqualToString:@"/opponentpics/original/missing.png"]) || ([opponentpic isEqualToString:@"/opponentpics/thumb/missing.png"])) {
+            image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+        } else {
+            NSURL * imageURL = [NSURL URLWithString:opponentpicthumb];
+            NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
+            image = [UIImage imageWithData:imageData];
+        }
+        
+        opponentThumbImage = image;
         
         return image;
     }

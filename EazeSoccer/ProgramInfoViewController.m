@@ -54,7 +54,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        self.view.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
     
     _cameraRollButton.layer.cornerRadius = 4;
     _deleteButton.layer.cornerRadius = 4;

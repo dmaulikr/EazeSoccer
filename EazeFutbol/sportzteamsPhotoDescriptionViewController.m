@@ -111,6 +111,8 @@
             self.title = @"Pending Approval";
         else
             self.title = photo.displayname;
+        
+        [_playerTableView reloadData];
     } else {
         
     }
@@ -155,7 +157,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Players";
+    return @"Players - Swipe to delete";
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

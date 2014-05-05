@@ -101,7 +101,9 @@
         if (cell == nil) {
             cell = [[EazeBasketballScoringTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-            
+        
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         float fgp = 0.0, threefgp = 0.0, ftp = 0.0;
        
         if (indexPath.row < currentSettings.gameList.count) {
@@ -158,6 +160,8 @@
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         if (indexPath.row < currentSettings.gameList.count) {
             stat = [player findBasketballGameStatEntries:[[currentSettings.gameList objectAtIndex:indexPath.row] id]];
             cell.playerLabel.text = [[currentSettings.gameList objectAtIndex:indexPath.row] opponent_mascot];
@@ -194,11 +198,13 @@
     if ([visiblestats isEqualToString:@"Scoring"]) {
         static NSString *CellIdentifier = @"ScoringHeaderTableCell";
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        headerView.backgroundColor = [UIColor blueColor];
         UILabel *label = (UILabel *)[headerView viewWithTag:9];
         label.text = @"Game";
      } else {
         static NSString *CellIdentifier = @"StatTableHeaderCell";
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+         headerView.backgroundColor = [UIColor blueColor];
         UILabel *label = (UILabel *)[headerView viewWithTag:1];
         label.text = @"PF";
         label = (UILabel *)[headerView viewWithTag:2];

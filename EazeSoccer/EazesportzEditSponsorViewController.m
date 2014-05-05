@@ -92,11 +92,20 @@
     adInventoryPicker = NO;
     
     if (sponsor) {
-        if (sponsor.thumbimage) {
-            _sponsorImage.image = [currentSettings normalizedImage:sponsor.thumbimage scaledToSize:100];
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+            if (sponsor.thumbimage) {
+                _sponsorImage.image = [currentSettings normalizedImage:sponsor.thumbimage scaledToSize:100];
+            } else {
+                _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:100];
+            }
         } else {
-            _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:100];
+            if (sponsor.mediumimage) {
+                _sponsorImage.image = [currentSettings normalizedImage:sponsor.mediumimage scaledToSize:200];
+            } else {
+                _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:200];
+            }
         }
+        
         _sponsorName.text = sponsor.name;
         _streetNumber.text = [sponsor.addrnum stringValue];
         _streetName.text = sponsor.street;

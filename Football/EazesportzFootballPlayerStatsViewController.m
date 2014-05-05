@@ -247,7 +247,7 @@
             if ((player)  && (indexPath.row < qbs.count)) {
                 stat = [qbs objectAtIndex:indexPath.row];
                 GameSchedule *agame = [currentSettings findGame:stat.gameschedule_id];
-                cell.fbimageView.image = [agame opponentImage];
+                cell.fbimageView.image = [currentSettings getOpponentImage:agame];
                 cell.namelabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", agame.opponent_mascot];
             } else if ((game) && (indexPath.row < qbs.count)) { // game
                 stat = [qbs objectAtIndex:indexPath.row];
@@ -293,7 +293,7 @@
             if ((player)  && (indexPath.row < rbs.count)) {
                 stat = [rbs objectAtIndex:indexPath.row];
                 GameSchedule *agame = [currentSettings findGame:stat.gameschedule_id];
-                cell.fbimageView.image = [agame opponentImage];
+                cell.fbimageView.image = [currentSettings getOpponentImage:agame];
                 cell.namelabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", agame.opponent_mascot];
             } else if ((game) && (indexPath.row < rbs.count)) { // game
                 stat = [rbs objectAtIndex:indexPath.row];
@@ -342,7 +342,7 @@
             if ((player) && (indexPath.row < wrs.count)) {
                 stat = [wrs objectAtIndex:indexPath.row];
                 GameSchedule *agame = [currentSettings findGame:stat.gameschedule_id];
-                cell.fbimageView.image = [agame opponentImage];
+                cell.fbimageView.image = [currentSettings getOpponentImage:agame];
                 cell.namelabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", agame.opponent_mascot];
             } else if ((game) && (indexPath.row < wrs.count)) {
                 stat = [wrs objectAtIndex:indexPath.row];
@@ -394,7 +394,7 @@
             if ((player) && (indexPath.row < pks.count)) {
                 stat = [pks objectAtIndex:indexPath.row];
                 GameSchedule *agame = [currentSettings findGame:stat.gameschedule_id];
-                cell.fbimageView.image = [agame opponentImage];
+                cell.fbimageView.image = [currentSettings getOpponentImage:agame];
                 cell.namelabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", agame.opponent_mascot];
             } else if ((game) && (indexPath.row < pks.count)) {
                 stat = [pks objectAtIndex:indexPath.row];
@@ -438,7 +438,7 @@
             if ((player) && (indexPath.row < kickerlist.count)) {
                 stat = [kickerlist objectAtIndex:indexPath.row];
                 GameSchedule *agame = [currentSettings findGame:stat.gameschedule_id];
-                cell.fbimageView.image = [agame opponentImage];
+                cell.fbimageView.image = [currentSettings getOpponentImage:agame];
                 cell.namelabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", agame.opponent_mascot];
             } else if ((game) && (indexPath.row < kickerlist.count)) {
                 stat = [kickerlist objectAtIndex:indexPath.row];
@@ -473,7 +473,7 @@
             if ((player) && (indexPath.row < punterlist.count)) {
                 stat = [punterlist objectAtIndex:indexPath.row];
                 GameSchedule *agame = [currentSettings findGame:stat.gameschedule_id];
-                cell.fbimageView.image = [agame opponentImage];
+                cell.fbimageView.image = [currentSettings getOpponentImage:agame];
                 cell.namelabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", agame.opponent_mascot];
             } else if ((game) && (indexPath.row < punterlist.count)) {
                 stat = [punterlist objectAtIndex:indexPath.row];
@@ -517,7 +517,7 @@
             if ((player) && (indexPath.row < retrunerlist.count)) {
                 stat = [retrunerlist objectAtIndex:indexPath.row];
                 GameSchedule *agame = [currentSettings findGame:stat.gameschedule_id];
-                cell.fbimageView.image = [agame opponentImage];
+                cell.fbimageView.image = [currentSettings getOpponentImage:agame];
                 cell.namelabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", agame.opponent_mascot];
             } else if ((game) && (indexPath.row < retrunerlist.count)) {
                 stat = [retrunerlist objectAtIndex:indexPath.row];

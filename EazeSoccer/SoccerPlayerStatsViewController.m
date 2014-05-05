@@ -75,8 +75,14 @@
             _finalLabel.hidden = YES;
         
         _clockLabel.text = game.currentgametime;
-        _homeImageView.image = [currentSettings.team getImage:@"tiny"];
-        _visitorImageView.image = [game opponentImage];
+        
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+            _homeImageView.image = [currentSettings.team getImage:@"tiny"];
+            _visitorImageView.image = [currentSettings getOpponentImage:game];
+        } else {
+            _homeImageView.image = [currentSettings.team getImage:@"thumb"];
+            _visitorImageView.image = [currentSettings getOpponentImage:game];
+        }
         
         _homeTeamLabel.text = currentSettings.team.mascot;
         _visitorTeamLabel.text = game.opponent_mascot;
@@ -192,7 +198,7 @@
                 GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
                 cell.playerName.text = agame.opponent;
                 stats = [athlete findSoccerGameStats:agame.id];
-                cell.imageView.image = [agame opponentImage];
+                cell.imageView.image = [currentSettings getOpponentImage:agame];
             } else {
                 cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
                 cell.playerName.text = @"Totals";
@@ -248,7 +254,7 @@
                 GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
                 cell.playerName.text = agame.opponent;
                 stats = [athlete findSoccerGameStats:agame.id];
-                cell.imageView.image = [agame opponentImage];
+                cell.imageView.image = [currentSettings getOpponentImage:agame];
             } else {
                 cell.playerImage.image = [currentSettings.team getImage:@"tiny"];
                 cell.playerName.text = @"Totals";

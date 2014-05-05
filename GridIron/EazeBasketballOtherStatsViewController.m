@@ -37,6 +37,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [_playerImage setClipsToBounds:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,7 +51,11 @@
     
     addstats = YES;
     
-    _playerImage.image = [currentSettings getRosterThumbImage:player];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        _playerImage.image = [currentSettings getRosterThumbImage:player];
+    else
+        _playerImage.image = [currentSettings getRosterMediumImage:player];
+    
     stats = [player findBasketballGameStatEntries:game.id];
     [self populateStatLabels];
 }

@@ -58,7 +58,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        self.view.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
     else
         self.view.backgroundColor = [UIColor whiteColor];
     
@@ -79,10 +79,8 @@
     
     [self registerForKeyboardNotifications];
     
-    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, self.cameraBarButton,
-                                                   self.cameraRollBarButton, nil];
-    }
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, self.cameraBarButton,
+                                              self.cameraRollBarButton, nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -357,7 +355,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Players";
+    return @"Players - Swipe to Delete";
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -576,6 +574,9 @@
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
+    } else {
+        NSDictionary *photodict = [json objectForKey:@"photo"];
+        photo.players = [photodict objectForKey:@"players"];
     }
 }
 
@@ -614,6 +615,9 @@
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
+    } else {
+        NSDictionary *photodict = [json objectForKey:@"photo"];
+        photo.players = [photodict objectForKey:@"players"];
     }
 }
 

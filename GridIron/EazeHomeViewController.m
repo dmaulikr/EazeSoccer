@@ -26,6 +26,7 @@
 #import "EazeEventViewController.h"
 #import "EditTeamViewController.h"
 #import "EazesportzCheckAdImageViewController.h"
+#import "FindSiteViewController.h"
 
 @interface EazeHomeViewController () <UIAlertViewDelegate>
 
@@ -347,6 +348,9 @@
             destController.team = nil;
     } else if ([segue.identifier isEqualToString:@"AdSegue"] ) {
         adController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"FindSiteSegue"]) {
+        FindSiteViewController *destController = segue.destinationViewController;
+        destController.findsite = NO;
     }
 }
 

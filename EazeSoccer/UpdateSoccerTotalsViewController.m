@@ -42,6 +42,8 @@
     _stealsTextField.keyboardType = UIKeyboardTypeNumberPad;
     _savesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _cornerkickTextField.keyboardType = UIKeyboardTypeNumberPad;
+    
+    [_playerImage setClipsToBounds:YES];
 }
 
 - (void)didReceiveMemoryWarning

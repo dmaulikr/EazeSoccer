@@ -44,6 +44,7 @@
     [super viewWillAppear:animated];
     showBanner = NO;
     _bannerImage.hidden = YES;
+    _bannerText.hidden = YES;
 }
 /*
 #pragma mark - Navigation
@@ -68,9 +69,11 @@
 - (IBAction)bannerAdExampleButtonClicked:(id)sender {
     if (showBanner) {
         _bannerImage.hidden = YES;
+        _bannerText.hidden = YES;
         showBanner = NO;
     } else {
         _bannerImage.hidden = NO;
+        _bannerText.hidden = NO;
         showBanner = YES;
         
         _bannerText.text = [NSString stringWithFormat:@"%@ - proud sponsor", currentSettings.sport.sitename];
@@ -84,4 +87,5 @@
         }
     }
 }
+
 @end

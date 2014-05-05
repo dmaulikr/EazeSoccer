@@ -193,7 +193,7 @@
         _minutesTextField.text = timearray[0];
         _secondsTextField.text = timearray[1];
         _homeImageView.image = [currentSettings.team getImage:@"tiny"];
-        _visitorImageView.image = [game opponentImage];
+        _visitorImageView.image = [currentSettings getOpponentImage:game];
         _homeLabel.text = currentSettings.team.mascot;
         _visitorLabel.text = game.opponent;
         _visitorScoreLabel.text = [game.opponentscore stringValue];

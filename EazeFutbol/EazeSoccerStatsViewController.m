@@ -12,6 +12,7 @@
 #import "EazeSoccerPlayerStatsViewController.h"
 #import "EazesportzRetrievePlayers.h"
 #import "EazesportzDisplayAdBannerViewController.h"
+#import "EazesportzStatTableHeaderCell.h"
 
 @interface EazeSoccerStatsViewController ()
 
@@ -65,6 +66,9 @@
     if (cell == nil) {
         cell = [[SoccerPlayerStatsTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+    
+    cell.backgroundColor = [UIColor darkGrayColor];
+    
     Soccer *stats;
     
     if (indexPath.section == 0) {
@@ -191,28 +195,56 @@
     return cell;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSBundle *mainBundle = [NSBundle mainBundle];
-
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    EazesportzStatTableHeaderCell *headerView;
+    
+    static NSString *CellIdentifier = @"StatTableHeaderCell";
+    
     if (section == 0) {
-        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
-            return @"Opponent";
-        } else {
-            if (self.game)
-                    return @"Player       G     Sht     Ast    Stl    C/K      Pts";
-            else
-                    return @"Game              G    Sht   Ast    Stl    C/K  Pts";
-        }
+        headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        UILabel *label = (UILabel *)[headerView viewWithTag:1];
+        label.text = @"G";
+        label = (UILabel *)[headerView viewWithTag:2];
+        label.text = @"AST";
+        label = (UILabel *)[headerView viewWithTag:3];
+        label.text = @"SHT";
+        label = (UILabel *)[headerView viewWithTag:4];
+        label.text = @"STL";
+        label = (UILabel *)[headerView viewWithTag:5];
+        label.text = @"C/K";
+        label = (UILabel *)[headerView viewWithTag:6];
+        label.text = @"PTS";
     } else {
-        if ([[mainBundle objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"]) {
-            return @"Goalie";
-        } else {
-            if (self.game)
-                return @"Goalie       Save   GA         Minutes";
-            else
-                return @"Game           Save  GA               Minutes";
-        }
+        headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        UILabel *label = (UILabel *)[headerView viewWithTag:1];
+        label.text = @"";
+        label = (UILabel *)[headerView viewWithTag:2];
+        label.text = @"";
+        label = (UILabel *)[headerView viewWithTag:3];
+        label.text = @"";
+        label = (UILabel *)[headerView viewWithTag:4];
+        label.text = @"GA";
+        label = (UILabel *)[headerView viewWithTag:5];
+        label.text = @"GS";
+        label = (UILabel *)[headerView viewWithTag:6];
+        label.text = @"MIN";
+        label = (UILabel *)[headerView viewWithTag:9];
+        label.text = @"Goalie";
     }
+        
+    
+    if (headerView == nil){
+        [NSException raise:@"headerView == nil.." format:@"No cells with matching CellIdentifier loaded from your storyboard"];
+    }
+    
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        return 30.0;
+    else
+        return 44.0;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -52,7 +52,7 @@
     
     if (game) {
         _visitorImage.hidden = NO;
-        _visitorImage.image = [game opponentImage];
+        _visitorImage.image = [currentSettings getOpponentImage:[game ;]
         _visitorteamLabel.text = game.opponent_mascot;
         
         if (game.visitorbonus)

@@ -51,7 +51,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     if ([[[NSBundle mainBundle]objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        self.view.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
     else
         self.view.backgroundColor = [UIColor whiteColor];
     
@@ -126,7 +126,7 @@
         }
         
         if (game.opponentpic.length > 0) {
-            [_opponentImageButton setImage:[game opponentImage] forState:UIControlStateNormal];
+            [_opponentImageButton setImage:[game opponentImage:@"tiny"] forState:UIControlStateNormal];
             
             if (game.eazesportzOpponent)
                 _opponentImageButton.enabled = NO;

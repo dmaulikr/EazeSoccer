@@ -131,12 +131,14 @@
     
     visiblestats = @"Team";
     
-    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
         _homeImage.image = [currentSettings.team getImage:@"tiny"];
-    else
+        _visitorImage.image = [currentSettings getOpponentImage:game];
+    } else {
         _homeImage.image = [currentSettings.team getImage:@"thumb"];
+        _visitorImage.image = [currentSettings getOpponentImage:game];
+    }
     
-    _visitorImage.image = [game opponentImage];
     _homeLabel.text = currentSettings.team.mascot;
     _visitorLabel.text = game.opponent_mascot;
     _clockLabel.text = game.currentgametime;

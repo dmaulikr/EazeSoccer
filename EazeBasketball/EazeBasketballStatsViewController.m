@@ -71,7 +71,7 @@
         GameSchedule *agame = [currentSettings.gameList objectAtIndex:indexPath.row];
         cell.nameLabel.text = [NSString stringWithFormat:@"%@%@", @"vs. ", agame.opponent];
         stats = [self.athlete findBasketballGameStatEntries:agame.id];
-        cell.playerImage.image = [self.game opponentImage];
+        cell.playerImage.image = [currentSettings getOpponentImage:self.game];
     } else {
         stats = [[BasketballStats alloc] init];
         cell.nameLabel.text = @"Totals";

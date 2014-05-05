@@ -16,6 +16,7 @@
 
 @property(nonatomic, strong) NSString *opponent;
 @property(nonatomic, strong) NSString *opponentpic;
+@property(nonatomic, strong) NSString *opponentpicthumb;
 @property(nonatomic, strong) NSDate *opponentpic_updated_at;
 @property(nonatomic, assign) BOOL eazesportzOpponent;
 @property (nonatomic, strong) NSString *opponent_sport_id;
@@ -79,7 +80,7 @@
 
 - (void)deleteGame;
 
-- (UIImage *)opponentImage;
+- (UIImage *)opponentImage:(NSString *)size;
 
 - (Gamelogs *)findGamelog:(NSString *)gamelogid;
 - (void)updateGamelog:(Gamelogs *)gamelog;

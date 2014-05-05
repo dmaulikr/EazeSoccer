@@ -116,8 +116,15 @@
     
     _hometeamLabelText.text = currentSettings.team.mascot;
     _visitorLabelText.text = game.opponent_mascot;
-    _hometeamImage.image = [currentSettings.team getImage:@"tiny"];
-    _visitorTeamImage.image = [game opponentImage];
+    
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        _hometeamImage.image = [currentSettings.team getImage:@"tiny"];
+        _visitorTeamImage.image = [currentSettings getOpponentImage:game];
+    } else {
+        _hometeamImage.image = [currentSettings.team getImage:@"thumb"];
+        _visitorTeamImage.image = [currentSettings getOpponentImage:game];
+    }
+    
     
     if ([game.possession isEqualToString:@"Home"]) {
         _homePossessionArrowButton.hidden = NO;
@@ -237,6 +244,8 @@
             cell = [[EazesportzFootballStatTotalsTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         BasketballStats *astat;
         int fgm = 0, fga = 0, threefgm = 0, threefga = 0, ftm = 0, fta = 0, points = 0, assist = 0, steals = 0, turnovers = 0, blocks = 0, fouls = 0;
         float fgp = 0.0, threefgp = 0.0, ftp = 0.0;
@@ -331,6 +340,8 @@
             cell = [[EazesportzStatTableHeaderCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         BasketballStats *stats;
         Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
         cell.playerLabel.text = player.logname;
@@ -373,6 +384,7 @@
         static NSString *CellIdentifier = @"StatTableHeaderCell";
         
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        headerView.backgroundColor = [UIColor cyanColor];
         UILabel *label = [[UILabel alloc] init];
         
         label.text = @"Player";
@@ -392,6 +404,7 @@
         static NSString *CellIdentifier = @"TotalsHeaderCell";
         
         headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        headerView.backgroundColor = [UIColor cyanColor];
     }
     
     if (headerView == nil){
@@ -402,7 +415,10 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 30.0;
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        return 30.0;
+    else
+        return 44.0;
 }
 
 - (IBAction)teamstatsButtonClicked:(id)sender {

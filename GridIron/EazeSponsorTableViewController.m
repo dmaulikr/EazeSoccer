@@ -52,15 +52,28 @@
     
     Sponsor *sponsor = [currentSettings.sponsors.sponsors objectAtIndex:indexPath.row];
     
-    if (sponsor.tinyimage == nil) {
-        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        //this will start the image loading in bg
-        dispatch_async(concurrentQueue, ^{
-            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:sponsor.tiny]];
-            cell.sponsorImage.image = [UIImage imageWithData:image];
-        });
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        if (sponsor.tinyimage == nil) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:sponsor.tiny]];
+                cell.sponsorImage.image = [UIImage imageWithData:image];
+            });
+        } else {
+            cell.sponsorImage.image = sponsor.tinyimage;
+        }
     } else {
-        cell.sponsorImage.image = sponsor.tinyimage;
+        if (sponsor.thumbimage == nil) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:sponsor.thumb]];
+                cell.sponsorImage.image = [UIImage imageWithData:image];
+            });
+        } else {
+            cell.sponsorImage.image = sponsor.thumbimage;
+        }
     }
     
     cell.sponsorName.text = sponsor.name;
@@ -87,7 +100,8 @@
             ([currentSettings isSiteOwner])) {
             [self performSegueWithIdentifier:@"EditSponsorSegue" sender:self];
         }
-    } else if (![[currentSettings.sponsors.sponsors objectAtIndex:indexPath.row] playerad]) {
+    } else if ((![[currentSettings.sponsors.sponsors objectAtIndex:indexPath.row] playerad]) &&
+               ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])) {
         [self performSegueWithIdentifier:@"SponsorMapSegue" sender:self];
     }
 }

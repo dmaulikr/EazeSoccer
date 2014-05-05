@@ -326,7 +326,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Players";
+    return @"Players - Swipe to delete!";
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -525,6 +525,9 @@
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
+    } else {
+        NSDictionary *videodict = [json objectForKey:@"videoclip"];
+        video.players = [videodict objectForKey:@"players"];
     }
 }
 
@@ -564,6 +567,9 @@
                                                        delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
+    } else {
+        NSDictionary *videodict = [json objectForKey:@"videoclip"];
+        video.players = [videodict objectForKey:@"players"];
     }
 }
 

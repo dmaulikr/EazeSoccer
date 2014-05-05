@@ -204,7 +204,19 @@
             [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
     }
     
-    self.tabBarController.selectedIndex = 0;
+    UIView * fromView = tabBarController.selectedViewController.view;
+    UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+    
+    // Transition using a page curl.
+    [UIView transitionFromView:fromView
+                        toView:toView
+                      duration:0.5
+                       options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                    completion:^(BOOL finished) {
+                        if (finished) {
+                            tabBarController.selectedIndex = 0;
+                        }
+                    }];
 }
 
 - (IBAction)addSiteButtonClicked:(id)sender {
@@ -301,12 +313,17 @@
         case 0:
             cell.backgroundColor = [UIColor whiteColor];
             if (currentSettings.team.teamid.length > 0) {
-                cell.imageView.image = [currentSettings.team getImage:@"tiny"];
+                
+                if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+                    cell.imageView.image = [currentSettings.team getImage:@"tiny"];
+                else
+                    cell.imageView.image = [currentSettings.team getImage:@"thumb"];
+                
                 cell.detailTextLabel.text = currentSettings.sport.sitename;
                 cell.textLabel.text = @"Contacts";
             } else {
                 cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
-                cell.textLabel.text = @"Welcome to Eazesportz";
+                cell.textLabel.text = @"Welcome!";
                 cell.detailTextLabel.text = @"Contact us!";
             }
             break;
@@ -315,22 +332,42 @@
             cell.backgroundColor = [UIColor whiteColor];
             
             if (currentSettings.user.userid.length > 0) {
-                if (currentSettings.user.tinyimage == nil) {
-                    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-                    //this will start the image loading in bg
-                    dispatch_async(concurrentQueue, ^{
-                        NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:currentSettings.user.tiny]];
-                        
-                        //this will set the image when loading is finished
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (cell.tag == indexPath.row) {
-                                cell.imageView.image = [UIImage imageWithData:image];
-                                [cell setNeedsLayout];
-                            }
+                
+                if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+                    if (currentSettings.user.tinyimage == nil) {
+                        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                        //this will start the image loading in bg
+                        dispatch_async(concurrentQueue, ^{
+                            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:currentSettings.user.tiny]];
+                            
+                            //this will set the image when loading is finished
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (cell.tag == indexPath.row) {
+                                    cell.imageView.image = [UIImage imageWithData:image];
+                                    [cell setNeedsLayout];
+                                }
+                            });
                         });
-                    });
-                } else
-                    cell.imageView.image = currentSettings.user.tinyimage;
+                    } else
+                        cell.imageView.image = currentSettings.user.tinyimage;
+                } else {
+                    if (currentSettings.user.thumbimage == nil) {
+                        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                        //this will start the image loading in bg
+                        dispatch_async(concurrentQueue, ^{
+                            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:currentSettings.user.userthumb]];
+                            
+                            //this will set the image when loading is finished
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (cell.tag == indexPath.row) {
+                                    cell.imageView.image = [UIImage imageWithData:image];
+                                    [cell setNeedsLayout];
+                                }
+                            });
+                        });
+                    } else
+                        cell.imageView.image = currentSettings.user.thumbimage;
+                }
                 
                 cell.textLabel.text = @"My Profile";
                 cell.detailTextLabel.text = currentSettings.user.username;
@@ -344,7 +381,12 @@
         case 2:
             cell.backgroundColor = [UIColor whiteColor];
             if (currentSettings.team.teamid.length > 0) {
-                cell.imageView.image = [currentSettings.team getImage:@"tiny"];
+                
+                if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+                    cell.imageView.image = [currentSettings.team getImage:@"tiny"];
+                else
+                    cell.imageView.image = [currentSettings.team getImage:@"thumb"];
+                
                 cell.textLabel.text = currentSettings.team.team_name;
                 cell.detailTextLabel.text = @"Change Team";
             } else  {
@@ -356,10 +398,18 @@
             
         case 3:
             cell.backgroundColor = [UIColor whiteColor];
-            if (currentSettings.sport.id.length > 0)
-                cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
-            else
-                cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
+            
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+                if (currentSettings.sport.id.length > 0)
+                    cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+                else
+                    cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
+            } else {
+                if (currentSettings.sport.id.length > 0)
+                    cell.imageView.image = [currentSettings.sport getImage:@"thumb"];
+                else
+                    cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
+            }
             
             cell.textLabel.text = @"Change Sport";
             cell.detailTextLabel.text = @"Find a Program or Player";
@@ -368,35 +418,60 @@
         case 4:
             cell.backgroundColor = [UIColor whiteColor];
             if (currentSettings.user.userid.length > 0) {
-                if (currentSettings.user.tinyimage == nil) {
-                    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-                    //this will start the image loading in bg
-                    dispatch_async(concurrentQueue, ^{
-                        NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:currentSettings.user.tiny]];
-                        
-                        //this will set the image when loading is finished
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (cell.tag == indexPath.row) {
-                                cell.imageView.image = [UIImage imageWithData:image];
-                                [cell setNeedsLayout];
-                            }
+                
+                if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+                    if (currentSettings.user.tinyimage == nil) {
+                        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                        //this will start the image loading in bg
+                        dispatch_async(concurrentQueue, ^{
+                            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:currentSettings.user.tiny]];
+                            
+                            //this will set the image when loading is finished
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (cell.tag == indexPath.row) {
+                                    cell.imageView.image = [UIImage imageWithData:image];
+                                    [cell setNeedsLayout];
+                                }
+                            });
                         });
-                    });
-                } else
-                    cell.imageView.image = currentSettings.user.tinyimage;
+                    } else
+                        cell.imageView.image = currentSettings.user.tinyimage;
+                } else {
+                    if (currentSettings.user.thumbimage == nil) {
+                        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                        //this will start the image loading in bg
+                        dispatch_async(concurrentQueue, ^{
+                            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:currentSettings.user.userthumb]];
+                            
+                            //this will set the image when loading is finished
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (cell.tag == indexPath.row) {
+                                    cell.imageView.image = [UIImage imageWithData:image];
+                                    [cell setNeedsLayout];
+                                }
+                            });
+                        });
+                    } else
+                        cell.imageView.image = currentSettings.user.thumbimage;
+                }
                 
                 cell.textLabel.text = currentSettings.user.email;
                 cell.detailTextLabel.text = @"Logout";
             } else {
                 cell.imageView.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"icon-76.png"], 1)];
-                cell.textLabel.text = @"Login to Eazesportz!";
+                cell.textLabel.text = @"Login!";
                 cell.detailTextLabel.text = @"";
             }
             break;
             
         case 5:
             cell.backgroundColor = [UIColor whiteColor];
-            cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+                cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            else
+                cell.imageView.image = [currentSettings.sport getImage:@"thumb"];
+            
             cell.textLabel.text = @"Sponsors";
             
             if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id]))
@@ -423,13 +498,18 @@
         case 7:
             cell.backgroundColor = [UIColor whiteColor];
             cell.imageView.image = nil;
-            cell.textLabel.text = @"Eazesportz Information";
-            cell.detailTextLabel.text = @"Package and info";
+            cell.textLabel.text = @"Learn more";
+            cell.detailTextLabel.text = @"Packages and info";
             break;
             
         default:
             cell.backgroundColor = [UIColor whiteColor];
-            cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+                cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            else
+                cell.imageView.image = [currentSettings.sport getImage:@"thumb"];
+            
             cell.textLabel.text = @"Manage Users";
             cell.detailTextLabel.text = @"Manage your sites users ....";
             break;
