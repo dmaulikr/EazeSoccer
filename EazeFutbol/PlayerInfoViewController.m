@@ -77,6 +77,8 @@
     _weightTitleLabel.layer.cornerRadius = 6;
     _bioTextView.layer.cornerRadius = 6;
     
+    [playerImage setClipsToBounds:YES];
+    
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.photoButton, self.videoButton, self.alertButton, self.statsButton, nil];
     
     self.navigationController.toolbarHidden = YES;

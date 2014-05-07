@@ -12,6 +12,7 @@
 #import "EazesportzAppDelegate.h"
 #import "sportzCurrentSettings.h"
 #import "EazesportzRetrieveCoaches.h"
+#import "EazesportzDisplayAdBannerViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -21,6 +22,8 @@
 
 @implementation FullCoachSelectionViewController {
     NSIndexPath *deleteIndexPath;
+    
+    EazesportzDisplayAdBannerViewController *adbannerController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -49,6 +52,13 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        [adbannerController displayAd];
+        _adBannerContainer.hidden = NO;
+    } else
+        _adBannerContainer.hidden = YES;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -129,6 +139,28 @@
 
 - (IBAction)refreshButtonClicked:(id)sender {
     [[[EazesportzRetrieveCoaches alloc] init] retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+}
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+    _bannerView.hidden = NO;
+}
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {
+    return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner {
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
+    _bannerView.hidden = YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
+        adbannerController = segue.destinationViewController;
+    } else
+        [super prepareForSegue:segue sender:sender];
 }
 
 @end

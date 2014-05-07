@@ -47,22 +47,39 @@
     }
     
     self.title = sponsor.name;
-    [_AdLabelButton setTitle:sponsor.name forState:UIControlStateNormal];
+//    [_AdLabelButton setTitle:sponsor.name forState:UIControlStateNormal];
     
-    if ((sponsor.mediumimage == nil) && (sponsor.medium.length > 0)) {
-        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        //this will start the image loading in bg
-        dispatch_async(concurrentQueue, ^{
-            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:sponsor.medium]];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                _sponsorAdImage.image = [UIImage imageWithData:image];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        if ((sponsor.mediumimage == nil) && (sponsor.medium.length > 0)) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:sponsor.medium]];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    _sponsorAdImage.image = [UIImage imageWithData:image];
+                });
             });
-        });
-    } else if (sponsor.medium.length == 0) {
-        _sponsorAdImage.image = [currentSettings.team getImage:@"thumb"];
-    } else
-        _sponsorAdImage.image = sponsor.mediumimage;
+        } else if (sponsor.medium.length == 0) {
+            _sponsorAdImage.image = [currentSettings.team getImage:@"thumb"];
+        } else
+            _sponsorAdImage.image = sponsor.mediumimage;
+    } else {
+        if ((sponsor.largeimage == nil) && (sponsor.large.length > 0)) {
+            dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            //this will start the image loading in bg
+            dispatch_async(concurrentQueue, ^{
+                NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:sponsor.large]];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    _sponsorAdImage.image = [UIImage imageWithData:image];
+                });
+            });
+        } else if (sponsor.large.length == 0) {
+            _sponsorAdImage.image = [currentSettings.team getImage:@"thumb"];
+        } else
+            _sponsorAdImage.image = sponsor.largeimage;
+    }
 }
 
 /*

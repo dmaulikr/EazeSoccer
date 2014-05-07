@@ -475,7 +475,7 @@
             cell.textLabel.text = @"Sponsors";
             
             if ((currentSettings.user.admin) && ([currentSettings.user.adminsite isEqualToString:currentSettings.sport.id]))
-                cell.detailTextLabel.text = @"Manage my sponsors ....";
+                cell.detailTextLabel.text = @"Our sponsors ....";
             else
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ Sponsors", currentSettings.team.mascot];
             break;

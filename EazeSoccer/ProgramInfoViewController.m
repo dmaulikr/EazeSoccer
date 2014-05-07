@@ -117,9 +117,6 @@
         _sportTextField.enabled = NO;
         newsport = NO;
     } else {
-        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-            self.navigationItem.hidesBackButton = YES;
-        
         _deleteButton.hidden = YES;
         _deleteButton.enabled = NO;
         _sportTextField.enabled = YES;

@@ -73,6 +73,8 @@
     _seasonTextField.keyboardType = UIKeyboardTypeNumberPad;
     imageselected = NO;
     _heightTextField.inputView = _heightPicker.inputView;
+    _bioTextView.layer.borderWidth = 1.0f;
+    _bioTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
     height = [[NSMutableArray alloc] initWithObjects:@"3", @"4", @"5", @"6", @"7", @"8", nil];
     inches = [[NSMutableArray alloc] initWithObjects:@"0", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", nil];

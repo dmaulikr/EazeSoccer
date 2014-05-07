@@ -53,6 +53,8 @@
     _yearsOnStaffTextField.keyboardType = UIKeyboardTypeNumberPad;
     _bioTextView.layer.borderWidth = 1.0f;
     _bioTextView.layer.borderColor = [[UIColor grayColor] CGColor];
+    
+    [_coachImage setClipsToBounds:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

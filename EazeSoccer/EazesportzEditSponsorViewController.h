@@ -40,6 +40,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *adInventoryTextField;
 @property (weak, nonatomic) IBOutlet UITextField *playerTextField;
 @property (weak, nonatomic) IBOutlet UIView *playerContainer;
+@property (weak, nonatomic) IBOutlet UIImageView *bannerImage;
 
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 

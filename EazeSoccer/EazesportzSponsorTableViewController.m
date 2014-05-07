@@ -88,7 +88,7 @@
     cell.state.text = sponsor.state;
     cell.zip.text = sponsor.zip;
     cell.phone.text = sponsor.phone;
-    cell.sponsorLevel.text = sponsor.sponsorlevel;
+    cell.sponsorLevel.text = sponsor.adsponsorlevel;
     
     return cell;
 }

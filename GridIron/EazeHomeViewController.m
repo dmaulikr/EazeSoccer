@@ -62,6 +62,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.tabBarController.tabBar.hidden = NO;
     _adContainer.hidden = YES;
     [_activityIndicator stopAnimating];
     

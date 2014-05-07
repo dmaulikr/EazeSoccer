@@ -342,7 +342,9 @@
 }
 
 - (UIImage *)getPortraitBanner {
-    if (portraitBannerImage != nil)
+    if (landscapeBannerImage != nil)
+        return landscapeBannerImage;
+    else if (portraitBannerImage != nil)
         return portraitBannerImage;
     else
         return nil;

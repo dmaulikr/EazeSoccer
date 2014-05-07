@@ -30,9 +30,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    if ([currentSettings isSiteOwner])
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBarButton, self.infoButton, nil];
-    else
+//    if ([currentSettings isSiteOwner])
+//        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addBarButton, self.infoButton, nil];
+//    else
         self.navigationItem.rightBarButtonItem = self.infoButton;
     
     self.navigationController.toolbarHidden = YES;
@@ -83,7 +83,7 @@
     cell.state.text = sponsor.state;
     cell.zip.text = sponsor.zip;
     cell.phone.text = sponsor.phone;
-    cell.sponsorLevel.text = sponsor.sponsorlevel;
+    cell.sponsorLevel.text = sponsor.adsponsorlevel;
     cell.sponsorUrl.text = sponsor.adurl;
     
     if (sponsor.athlete_id.length > 0)

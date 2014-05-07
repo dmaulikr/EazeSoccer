@@ -8,6 +8,8 @@
 
 #import "CoachSelectionViewController.h"
 
+#import<iAd/iAd.h>
+
 @interface FullCoachSelectionViewController : CoachSelectionViewController
 @property (weak, nonatomic) IBOutlet UITableView *coachTableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addCoachButton;
@@ -15,5 +17,7 @@
 - (IBAction)changeteamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 - (IBAction)refreshButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet ADBannerView *bannerView;
+@property (weak, nonatomic) IBOutlet UIView *adBannerContainer;
 
 @end

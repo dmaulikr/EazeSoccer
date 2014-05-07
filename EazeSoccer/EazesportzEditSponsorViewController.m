@@ -19,7 +19,7 @@
 
 @implementation EazesportzEditSponsorViewController {
     NSDictionary *stateDictionary;
-    BOOL newmedia, imageselected, statePicker, adInventoryPicker, countryPick;
+    BOOL newmedia, imageselected, statePicker, adInventoryPicker, countryPick, bannerimgselected;
     NSMutableArray *countryarray;
     NSArray *stateList;
     NSString *country, *stateabreviation;
@@ -130,6 +130,11 @@
             _playerTextField.hidden = YES;
             _playerTextField.enabled = NO;
         }
+        
+        _bannerImage.image = [sponsor getPortraitBanner];
+        
+        if ((_bannerImage.image.CIImage == nil) && (_bannerImage.image.CGImage == nil))
+            _bannerImage.image = [UIImage imageNamed:@"nobannerimage.png"];
         
     } else {
         _sponsorImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
