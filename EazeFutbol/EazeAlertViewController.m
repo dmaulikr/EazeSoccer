@@ -71,13 +71,6 @@
     [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
                                                       Token:currentSettings.user.authtoken];
     
-    if (currentSettings.sport.hideAds) {
-        _bannerView.hidden = YES;
-        _adBannerContainer.hidden = NO;
-        [adBannerController displayPlayerAd:player];
-    } else {
-        _adBannerContainer.hidden = YES;
-    }
 }
 
 - (void)gotAlerts:(NSNotification *)notification {
@@ -365,7 +358,14 @@
  }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayPlayerAd:player];
+    } else {
+        _adBannerContainer.hidden = YES;
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {

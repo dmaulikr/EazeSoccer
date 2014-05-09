@@ -80,13 +80,6 @@
 
     [_playerStatTableView reloadData];
     
-    if (currentSettings.sport.hideAds) {
-        _bannerView.hidden = YES;
-        _adBannerContainer.hidden = NO;
-        [adBannerController displayAd];
-    } else {
-        _adBannerContainer.hidden = YES;
-    }
 }
 
 #pragma mark - Table view data source
@@ -910,7 +903,14 @@
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayAd];
+    } else {
+        _adBannerContainer.hidden = YES;
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {

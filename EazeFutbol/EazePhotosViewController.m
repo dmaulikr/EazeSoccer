@@ -57,14 +57,6 @@
         [super viewWillAppear:animated];
     }
     
-    if (currentSettings.sport.hideAds) {
-        _bannerView.hidden = YES;
-        _adBannerContainer.hidden = NO;
-        [adBannerController displayAd];
-    } else {
-        _adBannerContainer.hidden = YES;
-    }
-    
     if (([currentSettings isSiteOwner]) || (currentSettings.sport.enable_user_pics)) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, self.videoButton, self.addPhotoButton, nil];
     } else {
@@ -223,7 +215,14 @@
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayAd];
+    } else {
+        _adBannerContainer.hidden = YES;        
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {

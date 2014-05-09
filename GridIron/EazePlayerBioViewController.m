@@ -54,13 +54,6 @@
         _adBannerContainer.hidden = YES;
     }
     
-    if (currentSettings.isSiteOwner) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, nil];
-        _playerBioTextView.editable = YES;
-    } else {
-        _playerBioTextView.editable = NO;
-    }
-    
     self.navigationController.toolbarHidden = YES;
 }
 
@@ -71,7 +64,13 @@
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+    if (currentSettings.isSiteOwner) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveButton, nil];
+        _playerBioTextView.editable = YES;
+    } else {
+        _playerBioTextView.editable = NO;
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {

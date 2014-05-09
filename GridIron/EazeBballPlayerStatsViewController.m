@@ -62,13 +62,6 @@
         
     [_playerStatsTableView reloadData];
     
-    if (currentSettings.sport.hideAds) {
-        _bannerView.hidden = YES;
-        _adBannerContainer.hidden = NO;
-        [adBannerController displayAd];
-    } else {
-        _adBannerContainer.hidden = YES;
-    }
 }
 
 #pragma mark - Table view data source
@@ -229,7 +222,10 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 30.0;
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
+        return 44.0;
+    else
+        return 30.0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -260,7 +256,14 @@
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayAd];
+    } else {
+        _adBannerContainer.hidden = YES;
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {

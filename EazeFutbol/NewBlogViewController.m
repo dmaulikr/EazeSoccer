@@ -139,14 +139,6 @@
         
         selectplay = NO;
     }
-    
-    if (currentSettings.sport.hideAds) {
-        _bannerView.hidden = YES;
-        _adBannerContainer.hidden = NO;
-        [adBannerController displayAd];
-    } else {
-        _adBannerContainer.hidden = YES;
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -191,8 +183,15 @@
     [textField resignFirstResponder];
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {    
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayAd];
+    } else {
+        _adBannerContainer.hidden = YES;
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {

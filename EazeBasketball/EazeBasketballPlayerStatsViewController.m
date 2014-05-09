@@ -109,8 +109,7 @@
     }
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
-{
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
     _bannerView.hidden = NO;
 }
 

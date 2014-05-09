@@ -64,15 +64,8 @@
             self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.searchButton, nil];
         
         self.navigationController.toolbarHidden = YES;
-}
-    
-    if (currentSettings.sport.hideAds) {
-        _bannerView.hidden = YES;
-        _adBannerContainer.hidden = NO;
-        [adBannerController displayAd];
-    } else {
-        _adBannerContainer.hidden = YES;
     }
+    
 }
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue {
@@ -194,7 +187,14 @@
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayAd];
+    } else {
+        _adBannerContainer.hidden = YES;
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {

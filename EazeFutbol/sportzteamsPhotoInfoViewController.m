@@ -160,8 +160,6 @@
     
     self.title = photo.displayname;
     
-    if (currentSettings.sport.hideAds)
-        _bannerView.hidden = YES;
 }
 
 - (void)displayPhoto:(Photo *)thephoto {
@@ -315,9 +313,11 @@
     }
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
-{
-    _bannerView.hidden = NO;
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
+    else
+        _bannerView.hidden = NO;
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave

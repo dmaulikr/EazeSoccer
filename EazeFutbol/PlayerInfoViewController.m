@@ -136,14 +136,6 @@
         _videoButton.enabled = NO;
     }
     
-    if (currentSettings.sport.hideAds) {
-        _bannerView.hidden = YES;
-        _adBannerContainer.hidden = NO;
-        [adBannerController displayPlayerAd:player];
-    } else {
-        _adBannerContainer.hidden = YES;
-    }
-    
     if ([currentSettings isSiteOwner]) {
         _editButton.enabled = YES;
         _editButton.hidden = NO;
@@ -206,9 +198,15 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
-{
-    _bannerView.hidden = NO;
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayPlayerAd:player];
+    } else {
+        _adBannerContainer.hidden = YES;
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave

@@ -48,6 +48,8 @@
     self.staffPosition.layer.cornerRadius = 6;
     staffPosition.numberOfLines = 2;
     _yearsonstaffLabel.layer.cornerRadius = 6;
+    
+    [coachImage setClipsToBounds:YES];
 }
 
 -(BOOL)shouldAutorotate {
@@ -67,15 +69,6 @@
     self.title = coach.fullname;
     [staffPosition setText:coach.speciality];
     coachImage.image = [coach mediumimage];
-    
-    if (currentSettings.sport.hideAds) {
-        _bannerView.hidden = YES;
-        _adBannerContainer.hidden = NO;
-        [adBannerController displayAd];
-    } else {
-        _adBannerContainer.hidden = YES;
-    }
-
     if (currentSettings.isSiteOwner) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.editButton,  nil];
     }
@@ -89,9 +82,15 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
-{
-    _bannerView.hidden = NO;
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner {    
+    if (currentSettings.sport.hideAds) {
+        _bannerView.hidden = YES;
+        _adBannerContainer.hidden = NO;
+        [adBannerController displayAd];
+    } else {
+        _adBannerContainer.hidden = YES;
+        _bannerView.hidden = NO;
+    }
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave

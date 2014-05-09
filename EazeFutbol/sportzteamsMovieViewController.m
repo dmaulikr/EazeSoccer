@@ -102,9 +102,6 @@
     else
         self.title = videoclip.displayName;
     
-    if (currentSettings.sport.hideAds)
-        _bannerView.hidden = YES;
-    
     if (([currentSettings isSiteOwner]) || ([currentSettings.user.userid isEqualToString:videoclip.userid]))
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.playBarButton, self.editBarButton, nil];
     else
@@ -270,7 +267,10 @@
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
+    else
+        _bannerView.hidden = NO;
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave {
