@@ -201,7 +201,10 @@
 }
 
 - (void)bannerViewDidLoadAd:(ADBannerView *)banner {
-    _bannerView.hidden = NO;
+    if (currentSettings.sport.hideAds)
+        _bannerView.hidden = YES;
+    else
+        _bannerView.hidden = NO;
 }
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave

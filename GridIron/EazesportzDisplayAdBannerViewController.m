@@ -75,14 +75,23 @@
     if (sponsor.portraitbanner.length > 0) {
         UIImage *image = [sponsor getPortraitBanner];
         
-        if (image != nil) {
+        if ((image.CIImage == nil) && (image.CGImage == nil)) {
+            _fullBannerImageView.hidden = YES;
+            
+            image = [sponsor bannerImage];
+            
+            if ((image.CIImage == nil) && (image.CGImage == nil)) {
+                _bannerImage.hidden = YES;
+                _teamLabel.hidden = YES;
+                _sponsorLabel.hidden = YES;
+            } else {
+                _bannerImage.image = [sponsor bannerImage];
+                _teamLabel.text = [NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot];
+                _sponsorLabel.text = [NSString stringWithFormat:@"%@", sponsor.name];
+            }
+        } else {
             _fullBannerImageView.image = image;
             _bannerImage.hidden = YES;
-        } else {
-            _fullBannerImageView.hidden = YES;
-            _bannerImage.image = [sponsor bannerImage];
-            _teamLabel.text = [NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot];
-            _sponsorLabel.text = [NSString stringWithFormat:@"%@", sponsor.name];
         }
     } else {
         _fullBannerImageView.hidden = YES;
