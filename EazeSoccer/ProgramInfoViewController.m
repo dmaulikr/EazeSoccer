@@ -105,6 +105,10 @@
         _sportTextField.enabled = NO;
         newsport = NO;
         _logoImage.image = [currentSettings.sport getImage:@"thumb"];
+        
+        if (!currentSettings.user.setupforads)
+            [self displayAdWarning];
+        
     } else if (sportid.length > 0) {
         sport = [currentSettings retrieveSport:(sportid)];
         _sitenameTextField.text = sport.sitename;
@@ -127,6 +131,13 @@
     [_userVideosSwitch setOn:sport.enable_user_video];
     [_userPicsSwitch setOn:sport.enable_user_pics];
     [_reviewMediaSwitch setOn:sport.review_media];
+}
+
+- (void)displayAdWarning {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                message:@"Your site is not set up to collect ad revenue.\n Visit the website to set up your site to sell and collect ad revenue"
+                                                   delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Visit Website", nil];
+    [alert show];
 }
 
 - (IBAction)cameraRollButtonClicked:(id)sender {
@@ -208,8 +219,7 @@
                                       currentSettings.user.email, @"contactemail", @"Fall", @"season", _countryTextField.text, @"country",
                                       _sportTextField.text, @"name", [[NSNumber numberWithBool:sport.enable_user_pics] stringValue], @"enable_user_pics",
                                       [[NSNumber numberWithBool:sport.enable_user_video] stringValue], @"enable_user_video",
-                                      [[NSNumber numberWithBool:sport.review_media] stringValue], @"review_media",
-                                      _paypalEmailTextField.text, @"paypal_email", nil];
+                                      [[NSNumber numberWithBool:sport.review_media] stringValue], @"review_media", nil];
     
     NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:sportDict, @"sport", nil];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
@@ -309,46 +319,42 @@
 - (void)saveCompleted {
     currentSettings.user = [[[EazesportzLogin alloc] init] getUserSynchronous:currentSettings.user.userid];
     
-    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        [self performSegueWithIdentifier:@"SelectTeamSegue" sender:self];
-    else {
-        [currentSettings setUpSport:currentSettings.user.adminsite];
+    [currentSettings setUpSport:currentSettings.user.adminsite];
+    
+    if (newsport) {
+        [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
+    } else {
+        UITabBarController *tabBarController = self.tabBarController;
         
-        if (newsport) {
-            [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
-        } else {
-            UITabBarController *tabBarController = self.tabBarController;
-            
-            UIView * fromView = tabBarController.selectedViewController.view;
-            UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
-            
-            if (fromView != toView) {
-                // Transition using a page curl.
-                [UIView transitionFromView:fromView toView:toView duration:0.5
-                                   options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
-                                completion:^(BOOL finished) {
-                                    if (finished) {
-                                        [self.navigationController popToRootViewControllerAnimated:NO];
-                                        
-                                        for (UIViewController *viewController in tabBarController.viewControllers) {
-                                            if ([viewController isKindOfClass:[UINavigationController class]])
-                                                [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
-                                        }
-                                        
-                                        tabBarController.selectedIndex = 0;
+        UIView * fromView = tabBarController.selectedViewController.view;
+        UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
+        
+        if (fromView != toView) {
+            // Transition using a page curl.
+            [UIView transitionFromView:fromView toView:toView duration:0.5
+                               options:(4 > tabBarController.selectedIndex ? UIViewAnimationOptionTransitionCurlUp : UIViewAnimationOptionTransitionCurlDown)
+                            completion:^(BOOL finished) {
+                                if (finished) {
+                                    [self.navigationController popToRootViewControllerAnimated:NO];
+                                    
+                                    for (UIViewController *viewController in tabBarController.viewControllers) {
+                                        if ([viewController isKindOfClass:[UINavigationController class]])
+                                            [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
                                     }
-                                }];
-            } else
-                [self.navigationController popToRootViewControllerAnimated:YES];
-            
-        }
+                                    
+                                    tabBarController.selectedIndex = 0;
+                                }
+                            }];
+        } else
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        
     }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
-    if([title isEqualToString:@"Confirm"]) {
+    if ([title isEqualToString:@"Confirm"]) {
         NSURL *url = [NSURL URLWithString:[sportzServerInit getSport:currentSettings.user.authtoken]];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         NSURLResponse* response;
@@ -381,6 +387,9 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+    } else if ([title isEqualToString:@"Visit Website"]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:currentSettings.sport.adurl]];
+        NSLog(@"adulr = %@", currentSettings.sport.adurl);
     }
 }
 

@@ -110,6 +110,11 @@
             _changeTeamButton.enabled = NO;
             [self teamSelected];
         } else {
+            [[[[self.tabBarController tabBar]items]objectAtIndex:1]setEnabled:NO];
+            [[[[self.tabBarController tabBar]items]objectAtIndex:2]setEnabled:NO];
+            [[[[self.tabBarController tabBar]items]objectAtIndex:3]setEnabled:NO];
+            [[[[self.tabBarController tabBar]items]objectAtIndex:4]setEnabled:YES];
+
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Notice"
                                             message:[NSString stringWithFormat:@"No Teams entered yet for %@", currentSettings.sport.sitename]
                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];

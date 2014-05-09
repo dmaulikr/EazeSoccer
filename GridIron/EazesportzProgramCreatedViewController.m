@@ -48,7 +48,7 @@
 */
 
 - (IBAction)visitEazesportzButtonClicked:(id)sender {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:currentSettings.sport.pricingurl]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:currentSettings.sport.adurl]];
 }
 
 - (IBAction)getStartedButtonClicked:(id)sender {

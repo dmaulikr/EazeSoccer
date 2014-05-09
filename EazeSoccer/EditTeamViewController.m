@@ -45,7 +45,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-        self.view.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor = [UIColor whiteColor];
     else
         self.view.backgroundColor = [UIColor whiteColor];
     
@@ -176,11 +176,6 @@
     if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
         currentSettings.teams = getTeams.teams;
         
-        if (currentSettings.teams.count == 1)
-            currentSettings.team = [getTeams.teams objectAtIndex:0];
-        else
-            currentSettings.team = nil;
-
         [self.navigationController popViewControllerAnimated:YES];
     } else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:[[notification userInfo] objectForKey:@"Result"] delegate:nil

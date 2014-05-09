@@ -35,6 +35,7 @@
 
 @property(nonatomic, strong) UIImage *thumbimage;
 @property(nonatomic, strong) UIImage *tinyimage;
+@property (nonatomic, assign) BOOL setupforads;
 
 - (BOOL)isBasic;
 

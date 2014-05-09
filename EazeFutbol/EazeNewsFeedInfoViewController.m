@@ -19,6 +19,7 @@
 #import "sportzteamsMovieViewController.h"
 #import "NewsFeedEditViewController.h"
 #import "EazesportzDisplayAdBannerViewController.h"
+#import "EazeWebViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -55,6 +56,8 @@
     [[_imageButton imageView] setContentMode: UIViewContentModeScaleAspectFit];
     _newsTextView.layer.borderWidth = 1.0f;
     _newsTextView.layer.borderColor = [[UIColor grayColor] CGColor];
+    [_imageButton.imageView setClipsToBounds:YES];
+    _imageButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,66 +80,50 @@
     if (newsitem.videoclip_id.length > 0) {
         _imageButton.enabled = YES;
         if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-            [_imageButton setBackgroundImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:512] forState:UIControlStateNormal];
+            [_imageButton setImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:512] forState:UIControlStateNormal];
 //            _imageView.image = [currentSettings normalizedImage:newsitem.videoPoster scaledToSize:512];
         else
-            [_imageButton setBackgroundImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125] forState:UIControlStateNormal];
+            [_imageButton setImage:[currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125] forState:UIControlStateNormal];
 //            _imageView.image = [currentSettings normalizedImage:newsitem.videoPoster scaledToSize:125];
     } else if (((newsitem.tinyurl.length > 0) || (newsitem.thumburl.length > 0)) &&
                ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])) {
-        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        //this will start the image loading in bg
-        dispatch_async(concurrentQueue, ^{
+        _imageButton.enabled = YES;
             NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:newsitem.thumburl]];
-            
-            //this will set the image when loading is finished
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_imageButton setImage:[UIImage imageWithData:image] forState:UIControlStateNormal];
-                _imageView.image = [UIImage imageWithData:image];
-            });
-        });
+            [_imageButton setImage:[[UIImage alloc] initWithData:image] forState:UIControlStateNormal];
     } else if ((newsitem.mediumurl.length > 0) ||
                ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])) {
-        dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        //this will start the image loading in bg
-        dispatch_async(concurrentQueue, ^{
-            NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:newsitem.mediumurl]];
-            
-            //this will set the image when loading is finished
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_imageButton setImage:[UIImage imageWithData:image] forState:UIControlStateNormal];
-                _imageView.image = [UIImage imageWithData:image];
-            });
-        });
+        _imageButton.enabled = YES;
+        NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:newsitem.mediumurl]];
+        [_imageButton setImage:[UIImage imageWithData:image] forState:UIControlStateNormal];
     } else if (newsitem.athlete.length > 0) {
         _imageButton.enabled = YES;
         if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-            [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+            [_imageButton setImage:[currentSettings normalizedImage:
                                           [currentSettings getRosterMediumImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:512] forState:UIControlStateNormal];
         else
-            [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+            [_imageButton setImage:[currentSettings normalizedImage:
                                               [currentSettings getRosterThumbImage:[currentSettings findAthlete:newsitem.athlete]] scaledToSize:125] forState:UIControlStateNormal];
     } else if (newsitem.game.length > 0) {
         _imageButton.enabled = YES;
         if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-            [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+            [_imageButton setImage:[currentSettings normalizedImage:
                                           [currentSettings getOpponentImage:[currentSettings findGame:newsitem.game]] scaledToSize:512] forState:UIControlStateNormal];
         else
-            [_imageButton setBackgroundImage:[currentSettings normalizedImage:
+            [_imageButton setImage:[currentSettings normalizedImage:
                                               [currentSettings getOpponentImage:[currentSettings findGame:newsitem.game]] scaledToSize:50] forState:UIControlStateNormal];
     } else if (newsitem.coach.length > 0) {
         _imageButton.enabled = YES;
         if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
-            [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"medium"] scaledToSize:512]
+            [_imageButton setImage:[currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"medium"] scaledToSize:512]
                       forState:UIControlStateNormal];
         else
-            [_imageButton setBackgroundImage:[currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"thumb"] scaledToSize:125]
+            [_imageButton setImage:[currentSettings normalizedImage:[[currentSettings findCoach:newsitem.coach] getImage:@"thumb"] scaledToSize:125]
                                     forState:UIControlStateNormal];
     } else if (newsitem.team.length > 0) {
-        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[currentSettings.team getImage:@"thumb"] scaledToSize:125]
+        [_imageButton setImage:[currentSettings normalizedImage:[currentSettings.team getImage:@"thumb"] scaledToSize:125]
                                 forState:UIControlStateNormal];
     } else {
-        [_imageButton setBackgroundImage:[currentSettings normalizedImage:[currentSettings.sport getImage:@"thumb"] scaledToSize:125]
+        [_imageButton setImage:[currentSettings normalizedImage:[currentSettings.sport getImage:@"thumb"] scaledToSize:125]
                       forState:UIControlStateNormal];
     }
     
@@ -205,6 +192,9 @@
         destController.newsitem = newsitem;
     } else if ([segue.identifier isEqualToString:@"AdDisplaySegue"]) {
         adbannerController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"NewsItemUrlSegue"]) {
+        EazeWebViewController *destController = segue.destinationViewController;
+        destController.external_url = [NSURL URLWithString:newsitem.external_url];
     }
 }
 
@@ -244,6 +234,8 @@
         [self gameButtonClicked:self];
     } else if (newsitem.coach.length > 0) {
         [self performSegueWithIdentifier:@"CoachInfoSegue" sender:self];
+    } else if (newsitem.thumburl.length > 0) {
+        [self performSegueWithIdentifier:@"NewsItemUrlSegue" sender:self];
     }
 }
 

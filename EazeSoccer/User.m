@@ -35,6 +35,7 @@
 
 @synthesize tinyimage;
 @synthesize thumbimage;
+@synthesize setupforads;
 
 - (BOOL)isBasic {
     if ([tier isEqualToString:@"Basic"])
@@ -91,6 +92,7 @@
             default_site = @"";
         
         adminsite = [userDictionary objectForKey:@"adminsite"];
+        setupforads = [[userDictionary objectForKey:@"setupforads"] boolValue];
         
         return self;
     } else {

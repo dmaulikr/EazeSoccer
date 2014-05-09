@@ -155,10 +155,12 @@
     if ([title isEqualToString:@"Player"]) {
         self.game = nil;
         self.user = nil;
+        self.gamelog = nil;
         self.playerSelectContainer.hidden = NO;
     } else if ([title isEqualToString:@"Game"]) {
         self.player = nil;
         self.user = nil;
+        self.gamelog = nil;
         self.gameSelectContainer.hidden = NO;
     } else if ([title isEqualToString:@"Play"]) {
         self.player = nil;
@@ -179,11 +181,13 @@
     } else if ([title isEqualToString:@"User"]) {
         self.player = nil;
         self.game = nil;
+        self.gamelog = nil;
         self.userSelectionContainer.hidden = NO;
     } else if ([title isEqualToString:@"All"]) {
         self.game = nil;
         self.user = nil;
         self.player = nil;
+        self.gamelog = nil;
         
         [super retrieveVideos];
     }

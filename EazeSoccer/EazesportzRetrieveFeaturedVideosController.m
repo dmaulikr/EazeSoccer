@@ -84,7 +84,20 @@
 }
 
 - (void)addFeaturedVideo:(Video *)video {
-    [featuredvideos addObject:video];
+    BOOL found = NO;
+    int cnt;
+    
+    for (cnt = 0; cnt < featuredvideos.count; cnt++) {
+        if ([video.videoid isEqualToString:[[featuredvideos objectAtIndex:cnt] videoid]]) {
+            found = YES;
+            break;
+        }
+    }
+    
+    if (!found)
+        [featuredvideos addObject:video];
+    else
+        [featuredvideos replaceObjectAtIndex:cnt withObject:video];
 }
 
 - (void)removeFeaturedVideo:(Video *)video {

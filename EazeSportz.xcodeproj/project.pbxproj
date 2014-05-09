@@ -187,6 +187,8 @@
 		2B7D69BE18F7764100AD56E0 /* EazesportzSponsorInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7D69BD18F7764100AD56E0 /* EazesportzSponsorInfoViewController.m */; };
 		2B7F40A318FDFBF50040077C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7F40A218FDFBF50040077C /* StoreKit.framework */; };
 		2B7F40AB18FDFCB90040077C /* EazesportzSponsorProductsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7F40AA18FDFCB90040077C /* EazesportzSponsorProductsViewController.m */; };
+		2B80AB8D191C097E0055BEDF /* EazeUserSettingsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B41432481835FA6B0081ED15 /* EazeUserSettingsViewController.h */; };
+		2B80AB8E191C097E0055BEDF /* EazeUserSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B41432491835FA6B0081ED15 /* EazeUserSettingsViewController.m */; };
 		2B81665C18F11FC400B6EEA4 /* BasketballTotalStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B46544F6182D92F500E1C08A /* BasketballTotalStatsViewController.h */; };
 		2B81665D18F11FC400B6EEA4 /* BasketballTotalStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B46544F7182D92F500E1C08A /* BasketballTotalStatsViewController.m */; };
 		2B8602AB18F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B8602AA18F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.m */; };
@@ -2364,7 +2366,7 @@
 		B4CCFDFA18CEA8880039BCE1 /* EazeHomeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazeHomeTableViewCell.m; sourceTree = "<group>"; };
 		B4CCFDFD18CEABF70039BCE1 /* EazesportzRetrieveNews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzRetrieveNews.h; sourceTree = "<group>"; };
 		B4CCFDFE18CEABF70039BCE1 /* EazesportzRetrieveNews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzRetrieveNews.m; sourceTree = "<group>"; };
-		B4D0F1F8183D99A600D2FA5C /* GameTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4D0F1F8183D99A600D2FA5C /* GameTrackerHD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameTrackerHD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4D0F1FE183D99A600D2FA5C /* Football-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Football-Info.plist"; sourceTree = "<group>"; };
 		B4D0F200183D99A600D2FA5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B4D0F202183D99A600D2FA5C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -3412,7 +3414,7 @@
 				B4A5AD761831FE99002E2CCF /* EazeBasketballTests.xctest */,
 				B4E154E31832B442006DE367 /* EazeFutbol.app */,
 				B4E155021832B443006DE367 /* EazeFutbolTests.xctest */,
-				B4D0F1F8183D99A600D2FA5C /* GameTracker.app */,
+				B4D0F1F8183D99A600D2FA5C /* GameTrackerHD.app */,
 				B4D0F217183D99A600D2FA5C /* FootballTests.xctest */,
 				B482E233185B5D6900CEFF0A /* GameTracker.app */,
 				B482E252185B5D6A00CEFF0A /* GridIronTests.xctest */,
@@ -3728,7 +3730,7 @@
 			);
 			name = Football;
 			productName = Football;
-			productReference = B4D0F1F8183D99A600D2FA5C /* GameTracker.app */;
+			productReference = B4D0F1F8183D99A600D2FA5C /* GameTrackerHD.app */;
 			productType = "com.apple.product-type.application";
 		};
 		B4D0F216183D99A600D2FA5C /* FootballTests */ = {
@@ -4895,6 +4897,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B80AB8D191C097E0055BEDF /* EazeUserSettingsViewController.h in Sources */,
+				2B80AB8E191C097E0055BEDF /* EazeUserSettingsViewController.m in Sources */,
 				2B5936AB1915E9AB0079082C /* NewBlogViewController.h in Sources */,
 				2B5936AC1915E9AB0079082C /* NewBlogViewController.m in Sources */,
 				2B5936A61915DA4F0079082C /* EazeBlogDetailViewController.h in Sources */,
@@ -6055,8 +6059,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -6074,7 +6078,7 @@
 				INFOPLIST_FILE = "GridIron/GridIron-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = GameTracker;
-				PROVISIONING_PROFILE = "21145635-58B6-4033-9987-E4AB467F613E";
+				PROVISIONING_PROFILE = "318A5126-B225-4916-99F9-2B8C15E1E975";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -6086,8 +6090,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -6101,7 +6105,7 @@
 				INFOPLIST_FILE = "GridIron/GridIron-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = GameTracker;
-				PROVISIONING_PROFILE = "21145635-58B6-4033-9987-E4AB467F613E";
+				PROVISIONING_PROFILE = "318A5126-B225-4916-99F9-2B8C15E1E975";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -6260,8 +6264,10 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Football/Football-Info.plist";
-				PRODUCT_NAME = GameTracker;
-				PROVISIONING_PROFILE = "21145635-58B6-4033-9987-E4AB467F613E";
+				PRIVATE_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PrivateHeaders";
+				PRODUCT_NAME = GameTrackerHD;
+				PROVISIONING_PROFILE = "318A5126-B225-4916-99F9-2B8C15E1E975";
+				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Headers";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -6283,8 +6289,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Football/Football-Prefix.pch";
 				INFOPLIST_FILE = "Football/Football-Info.plist";
-				PRODUCT_NAME = GameTracker;
-				PROVISIONING_PROFILE = "21145635-58B6-4033-9987-E4AB467F613E";
+				PRIVATE_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PrivateHeaders";
+				PRODUCT_NAME = GameTrackerHD;
+				PROVISIONING_PROFILE = "318A5126-B225-4916-99F9-2B8C15E1E975";
+				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Headers";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -106,7 +106,20 @@
 }
 
 - (void)addFeaturedPhoto:(Photo *)photo {
-    [featuredphotos addObject:photo];
+    BOOL found = NO;
+    int cnt;
+    
+    for (cnt = 0; cnt < featuredphotos.count; cnt++) {
+        if ([photo.photoid isEqualToString:[[featuredphotos objectAtIndex:cnt] photoid]]) {
+            found = YES;
+            break;
+        }
+    }
+    
+    if (!found)
+        [featuredphotos addObject:photo];
+    else
+        [featuredphotos replaceObjectAtIndex:cnt withObject:photo];
 }
 
 - (void)removeFeaturedPhoto:(Photo *)photo {

@@ -333,14 +333,23 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if ([title isEqualToString:@"Player"]) {
+        game = nil;
+        user = nil;
+        gamelog = nil;
         _playerSelectContainer.hidden = NO;
         playerSelectionController.player = nil;
         [playerSelectionController viewWillAppear:YES];
     } else if ([title isEqualToString:@"Game"]) {
+        player = nil;
+        user = nil;
+        gamelog = nil;
         _gameSelectContainer.hidden = NO;
         gameSelectionController.thegame = nil;
         [gameSelectionController viewWillAppear:YES];
     } else if ([title isEqualToString:@"User"]) {
+        gamelog = nil;
+        game = nil;
+        player = nil;
         _userSelectionContainer.hidden = NO;
         userSelectionController.user = nil;
         [userSelectionController viewWillAppear:YES];
@@ -348,6 +357,7 @@
         player = nil;
         game = nil;
         user = nil;
+        gamelog = nil;
         [self retrieveVideos];
     }
 }

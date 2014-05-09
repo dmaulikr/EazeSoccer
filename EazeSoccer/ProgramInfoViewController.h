@@ -40,6 +40,5 @@
 - (IBAction)userVideosSwitchSelected:(id)sender;
 @property (weak, nonatomic) IBOutlet UISwitch *reviewMediaSwitch;
 - (IBAction)reviewMediaSwitchSelected:(id)sender;
-@property (weak, nonatomic) IBOutlet UITextField *paypalEmailTextField;
 
 @end

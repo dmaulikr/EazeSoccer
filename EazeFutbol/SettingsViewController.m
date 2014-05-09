@@ -520,46 +520,50 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (currentSettings.team.teamid.length > 0) {
-        switch (indexPath.row) {
-                
-            case 0:
-                [self performSegueWithIdentifier:@"ContactSegue" sender:self];
-                break;
-                
-            case 1:
-                [self profileButtonClicked:self];
-                break;
-                
-            case 2:
-                if (currentSettings.team.teamid.length > 0)
-                    [self changeTeamButtonClicked:self];
-                break;
-                
-            case 3:
-                [self siteButtonClicked:self];
-                break;
-                
-            case 4:
-                [self logoutButtonClicked:self];
-                break;
-                
-            case 5:
+    switch (indexPath.row) {
+            
+        case 0:
+            [self performSegueWithIdentifier:@"ContactSegue" sender:self];
+            break;
+            
+        case 1:
+            [self profileButtonClicked:self];
+            break;
+            
+        case 2:
+            if (currentSettings.team.teamid.length > 0)
+                [self changeTeamButtonClicked:self];
+            break;
+            
+        case 3:
+            [self siteButtonClicked:self];
+            break;
+            
+        case 4:
+            [self logoutButtonClicked:self];
+            break;
+            
+        case 5:
+            if (currentSettings.team.teamid.length > 0) {
                 [self performSegueWithIdentifier:@"SponsorSegue" sender:self];
-                break;
-                
-            case 6:
-                [self addSiteButtonClicked:self];
-                break;
-                
-            case 7:
-                [self performSegueWithIdentifier:@"PackageSegue" sender:self];
-                break;
-                
-            default:
-                [self performSegueWithIdentifier:@"ManageUsersSegue" sender:self];
-                break;
-        }
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No team selected. No sponsors to display" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                [alert show];
+            }
+            
+            break;
+            
+        case 6:
+            [self addSiteButtonClicked:self];
+            break;
+            
+        case 7:
+            [self performSegueWithIdentifier:@"PackageSegue" sender:self];
+            break;
+            
+        default:
+            [self performSegueWithIdentifier:@"ManageUsersSegue" sender:self];
+            break;
     }
 }
 

@@ -68,7 +68,7 @@
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
     } else {
         Contact *contact = [[Contact alloc] init];
-        contact.title = @"Eazesportz, LLC.";
+        contact.title = @"GameTracker by Eazesportz, LLC. Visit us at gametrackerpro.com!";
         contact.email = @"info@eazesportz.com";
         contacts = [[NSMutableArray alloc] init];
         [contacts addObject:contacts];
