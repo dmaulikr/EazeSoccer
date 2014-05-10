@@ -89,5 +89,6 @@
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *yardsPluMinusSegmentedControl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 @end

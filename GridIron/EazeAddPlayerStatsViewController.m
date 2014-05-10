@@ -59,6 +59,14 @@
     [_playerImageView setClipsToBounds:YES];
     
     _activityIndicator.hidesWhenStopped = YES;
+    
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapGestureCaptured:)];
+    [_scrollView addGestureRecognizer:singleTap];
+}
+
+- (void)singleTapGestureCaptured:(UITapGestureRecognizer *)gesture {
+    CGPoint touchPoint = [gesture locationInView:_scrollView];
+    [self.view endEditing:YES];
 }
 
 -(BOOL)shouldAutorotate {

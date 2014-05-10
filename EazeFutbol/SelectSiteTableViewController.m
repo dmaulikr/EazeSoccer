@@ -184,7 +184,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Eazesportz Sites";
+    return @"Game Tracker Sites";
 }
 
 
