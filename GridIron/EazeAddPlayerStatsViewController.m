@@ -56,6 +56,8 @@
     
     _receiverTextField.inputView = playerSelectController.inputView;
     
+    [_playerImageView setClipsToBounds:YES];
+    
     _activityIndicator.hidesWhenStopped = YES;
 }
 

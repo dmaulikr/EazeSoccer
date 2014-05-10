@@ -75,25 +75,7 @@
     } else
         [super prepareForSegue:segue sender:sender];
 }
-/*
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    
-    if ([title isEqualToString:@"All"]) {
-        self.team = currentSettings.team;
-        self.player = nil;
-        self.game = nil;
-        self.coach = nil;
-        self.user = nil;
-        [self getBlogs:nil];
-    } else if ([title isEqualToString:@"Dismiss"]) {
-        self.tabBarController.selectedIndex = 0;
-    } else if ([title isEqualToString:@"Select Site"]) {
-        self.tabBarController.selectedIndex = 0;
-    } else
-        [super alertView:alertView clickedButtonAtIndex:buttonIndex];
-}
-*/
+
 - (IBAction)searchButtonClicked:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Search" message:@"Enter Blog Search Criteria"
                          delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Player", @"Game", @"User", @"Coach", @"All", nil];
