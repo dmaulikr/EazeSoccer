@@ -17,12 +17,15 @@
 #import "EazeBasketballScoringStatsViewController.h"
 
 
-@interface EazeBasketballGameSummaryViewController ()
+@interface EazeBasketballGameSummaryViewController () <UIAlertViewDelegate>
 
 @end
 
 @implementation EazeBasketballGameSummaryViewController {
     NSString *visiblestats;
+    int responseStatusCode;
+    NSDictionary *serverData;
+    NSMutableData *theData;
 }
 
 @synthesize game;
@@ -74,7 +77,7 @@
     [super viewWillAppear:animated];
     
     if ([currentSettings isSiteOwner])
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.saveBarButton, nil];
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.saveBarButton, self.messageBarButton, nil];
     else
         self.navigationItem.rightBarButtonItem = self.refreshButton;
     
@@ -516,6 +519,78 @@
 
 - (IBAction)playerstatsBarButtonClicked:(id)sender {
     [self playerstatsButtonClicked:sender];
+}
+
+- (IBAction)messageBarButtonClicked:(id)sender {
+    NSString *scoreMessage = [NSString stringWithFormat:@"%@ - %d, %@ - %@", currentSettings.team.mascot,
+                              [currentSettings teamTotalPoints:game.id], game.opponent_mascot, [game.opponentscore stringValue]];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Send Score Message" message:scoreMessage delegate:self cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Ok", nil] ;
+    alertView.tag = 2;
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alertView textFieldAtIndex:0].text = scoreMessage;
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    UITextField * alertTextField = [alertView textFieldAtIndex:0];
+    NSLog(@"alerttextfiled - %@",alertTextField.text);
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/teams/%@/gameschedules/%@/alertupdate.json?auth_token=%@",
+                                       [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
+                                       currentSettings.team.teamid, game.id, currentSettings.user.authtoken]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSDictionary *messageDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:alertTextField.text, @"message", nil];
+    NSError *jsonSerializationError;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:messageDictionary options:0 error:&jsonSerializationError];
+    
+    if (jsonSerializationError) {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    
+    [request setHTTPMethod:@"PUT"];
+    
+    [request setHTTPBody:jsonData];
+    
+    [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error posting notification!" delegate:nil cancelButtonTitle:@"Ok"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
+    
+    if (responseStatusCode == 200) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Notification Sent!" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error posting notification!" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 @end

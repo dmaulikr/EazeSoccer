@@ -169,11 +169,7 @@
 - (IBAction)submitButtonClicked:(id)sender {
     NSURL *url = [NSURL URLWithString:[sportzServerInit updateUser:currentSettings.user.userid Token:currentSettings.user.authtoken]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    NSDictionary *userData = [[NSDictionary alloc] initWithObjectsAndKeys:[_usernameTextField text], @"username",
-                              [NSNumber numberWithBool:[_bioSwitch isOn]], @"bio_alert", [NSNumber numberWithBool:[_blogSwitch isOn]],
-                              @"blog_alert", [NSNumber numberWithBool:[_statsSwitch isOn]], @"stat_alert",
-                              [NSNumber numberWithBool:[_scoreSwitch isOn]], @"score_alert", [NSNumber numberWithBool:[_mediaSwitch isOn]],
-                              @"media_alert", nil];
+    NSDictionary *userData = [[NSDictionary alloc] initWithObjectsAndKeys:[_usernameTextField text], @"username", nil];
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
     [jsonDict setValue:userData forKey:@"user"];
     NSError *jsonSerializationError = nil;
@@ -224,32 +220,7 @@
         currentSettings.user.username = [_usernameTextField text];
         NSDictionary *auser = [serverData objectForKey:@"user"];
         currentSettings.user.authtoken = [serverData objectForKey:@"authentication_token"];
-        
-        if ([_bioSwitch isOn])
-            currentSettings.user.bio_alert = [NSNumber numberWithInteger:1];
-        else
-            currentSettings.user.bio_alert = [NSNumber numberWithInteger:0];
-        
-        if ([_blogSwitch isOn])
-            currentSettings.user.blog_alert = [NSNumber numberWithInteger:1];
-        else
-            currentSettings.user.blog_alert = [NSNumber numberWithInteger:0];
-        
-        if ([_mediaSwitch isOn])
-            currentSettings.user.media_alert = [NSNumber numberWithInteger:1];
-        else
-            currentSettings.user.media_alert = [NSNumber numberWithInteger:0];
-        
-        if ([_statsSwitch isOn])
-            currentSettings.user.stat_alert = [NSNumber numberWithInteger:1];
-        else
-            currentSettings.user.stat_alert = [NSNumber numberWithInteger:0];
-        
-        if ([_scoreSwitch isOn])
-            currentSettings.user.score_alert = [NSNumber numberWithInteger:1];
-        else
-            currentSettings.user.score_alert = [NSNumber numberWithInteger:0];
-        
+                
         if (imageselected) {
             [self uploadImage:currentSettings.user];
         } else {

@@ -20,6 +20,7 @@
 #import "EazesportzRetrieveTeams.h"
 #import "EazesportzRetrieveFeaturedPhotos.h"
 #import "EazesportzRetrieveFeaturedVideosController.h"
+#import "EazesportzSendNotificationData.h"
 
 #import <AWSRuntime/AmazonErrorHandler.h>
 #import <CoreLocation/CoreLocation.h>
@@ -45,8 +46,14 @@
         [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
         [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
         
-        [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:@"FirstRun"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+        [standardDefaults setValue:@"1strun" forKey:@"FirstRun"];
+        [standardDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"MediaAlerts"];
+        [standardDefaults setValue:[NSNumber numberWithBool:YES] forKey:@"ScoreAlerts"];
+        [standardDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"BioAlerts"];
+        [standardDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"BlogAlerts"];
+        [standardDefaults setValue:[NSNumber numberWithBool:YES] forKey:@"TeamAlerts"];
+        [standardDefaults synchronize];
     }
 
     currentSettings = [[sportzCurrentSettings alloc] init];
@@ -54,10 +61,6 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains
     (NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    //make a file name to write the data to using the documents directory:
-//    NSString *fileName = [NSString stringWithFormat:@"%@/currentsport.txt", documentsDirectory];
-//    NSString *content = [[NSString alloc] initWithContentsOfFile:fileName usedEncoding:nil error:nil];
     
     NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"currentsport.txt"];
     NSString *content = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
@@ -100,6 +103,9 @@
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     [locationManager startUpdatingLocation];
 
+	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+            (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    
     return YES;
 }
 
@@ -267,6 +273,24 @@
     
     //Return an NSDictionary, not an NSMutableDictionary
     return [NSDictionary dictionaryWithDictionary:dict];
+}
+
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+	NSLog(@"My token is: %@", deviceToken);
+    NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+    [standardDefaults setObject:deviceToken forKey:@"deviceToken" ];
+    [standardDefaults synchronize];
+    
+    if (currentSettings.team.teamid.length > 0) {
+        [[[EazesportzSendNotificationData alloc] init] sendNotificationData:currentSettings.sport Team:currentSettings.team Athlete:nil
+                                                                       User:currentSettings.user];
+    }
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+	NSLog(@"Failed to get token, error: %@", error);
 }
 
 @end

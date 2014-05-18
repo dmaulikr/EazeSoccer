@@ -27,6 +27,7 @@
 #import "EditTeamViewController.h"
 #import "EazesportzCheckAdImageViewController.h"
 #import "FindSiteViewController.h"
+#import "EazesportzSendNotificationData.h"
 
 @interface EazeHomeViewController () <UIAlertViewDelegate>
 
@@ -387,6 +388,8 @@
     _changeTeamButton.enabled = YES;
     _teamPicker.hidden = YES;
     [_activityIndicator startAnimating];
+    
+    [[[EazesportzSendNotificationData alloc] init] sendNotificationData:currentSettings.sport Team:currentSettings.team Athlete:nil User:currentSettings.user];
     
     currentSettings.opponentimages = [[NSMutableArray alloc] init];
     currentSettings.rosterimages = [[NSMutableArray alloc] init];

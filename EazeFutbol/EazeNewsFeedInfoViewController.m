@@ -256,4 +256,6 @@
     }
 }
 
+- (IBAction)notificationSwitchSelected:(id)sender {
+}
 @end

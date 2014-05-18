@@ -290,11 +290,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ([currentSettings isSiteOwner])
-        return 8;
+        return 9;
     else if (currentSettings.user.userid.length > 0)
-        return 7;
+        return 8;
     else
-        return 6;
+        return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -480,7 +480,19 @@
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ Sponsors", currentSettings.team.mascot];
             break;
             
-       case 6:
+        case 6:
+            cell.backgroundColor = [UIColor whiteColor];
+            
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+                cell.imageView.image = [currentSettings.sport getImage:@"tiny"];
+            else
+                cell.imageView.image = [currentSettings.sport getImage:@"thumb"];
+            
+            cell.textLabel.text = @"Notification Settings";
+            cell.detailTextLabel.text = @"Change alert notificaiton settings ....";
+            break;
+            
+        case 7:
             cell.backgroundColor = [UIColor whiteColor];
             cell.imageView.image = nil;
             if (currentSettings.user.admin) {
@@ -495,7 +507,7 @@
             }
             break;
             
-        case 7:
+        case 8:
             cell.backgroundColor = [UIColor whiteColor];
             cell.imageView.image = nil;
             cell.textLabel.text = @"Learn more";
@@ -554,10 +566,17 @@
             break;
             
         case 6:
-            [self addSiteButtonClicked:self];
+            if (currentSettings.team.teamid.length > 0) {
+                [self performSegueWithIdentifier:@"NotificationSettingsSegue" sender:self];
+            }
+            
             break;
             
         case 7:
+            [self addSiteButtonClicked:self];
+            break;
+            
+        case 8:
             [self performSegueWithIdentifier:@"PackageSegue" sender:self];
             break;
             

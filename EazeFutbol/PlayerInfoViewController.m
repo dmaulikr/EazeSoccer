@@ -62,7 +62,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-//    self.view.backgroundColor = [UIColor clearColor];
     nameLabel.layer.cornerRadius = 6;
     yearLabel.layer.cornerRadius = 6;
     positionLabel.layer.cornerRadius = 6;
@@ -224,21 +223,27 @@
 }
 
 - (IBAction)followPlayerSwitch:(id)sender {
-    if (currentSettings.user.userid.length > 0) {
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"BioAlerts"] boolValue]) {
         if ([_followSwitch isOn]) {
             follow = YES;
-            NSURL *url = [NSURL URLWithString:[sportzServerInit followAthlete:[player athleteid] Token:currentSettings.user.authtoken]];
+            NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/athletes/%@/mobilefollow?token=%@",
+                                   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
+                                   player.athleteid, [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"]];
+            NSURL *url = [NSURL URLWithString:urlstring];
             NSURLRequest *request = [NSURLRequest requestWithURL:url];
             [[NSURLConnection alloc] initWithRequest:request delegate:self];
         } else {
             unfollow = YES;
-            NSURL *url = [NSURL URLWithString:[sportzServerInit unfollowAthlete:[player athleteid] Token:currentSettings.user.authtoken]];
+            NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/athletes/%@/mobileunfollow?token=%@",
+                                   [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
+                                   player.athleteid, [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"]];
+            NSURL *url = [NSURL URLWithString:urlstring];
             NSURLRequest *request = [NSURLRequest requestWithURL:url];
             [[NSURLConnection alloc] initWithRequest:request delegate:self];
         }
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"You must login to follow players."
-                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Login", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Athlete Notifications is turned off. Activate Athlete alerts?"
+                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Activate", nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -266,7 +271,7 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    serverData = [NSJSONSerialization JSONObjectWithData:theData options:nil error:nil];
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     NSLog(@"%@", serverData);
     
     if (responseStatusCode == 200) {
@@ -313,6 +318,15 @@
     
     if ([title isEqualToString:@"Login"]) {
         [self performSegueWithIdentifier:@"LoginSegue" sender:self];
+    } else if ([title isEqualToString:@"Activate"]) {
+        [[NSUserDefaults standardUserDefaults] setValue:@"YES" forKey:@"BioAlerts"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
+        if ([player.following boolValue]) {
+            [_followSwitch setOn:YES];
+        } else {
+            [_followSwitch setOn:NO];
+        }
     }
 }
 

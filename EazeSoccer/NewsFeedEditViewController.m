@@ -35,6 +35,9 @@
     
     BOOL newNewsFeed, imageselected, newmedia;
     long responseStatusCode;
+
+    NSDictionary *serverData;
+    NSMutableData *theData;
 }
 
 @synthesize newsitem;
@@ -64,7 +67,7 @@
     _newsTextView.layer.borderWidth = 1.0f;
     _newsTextView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
     
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.deleteBarButton, self.messageBarButton, nil];
     self.navigationController.toolbarHidden = YES;
 }
 
@@ -323,7 +326,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
-    if([title isEqualToString:@"Confirm"]) {
+    if ([title isEqualToString:@"Confirm"]) {
         if (![newsitem initDeleteNewsFeed]) {
             [self.navigationController popViewControllerAnimated:YES];
         } else {
@@ -332,6 +335,65 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+    } else if ([title isEqualToString:@"Post Notification"]) {
+        UITextField * alertTextField = [alertView textFieldAtIndex:0];
+        NSLog(@"alerttextfiled - %@",alertTextField.text);
+
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/newsfeeds/%@/alertupdate.json?auth_token=%@",
+                                           [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
+                                           newsitem.newsid, currentSettings.user.authtoken]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        NSDictionary *messageDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:alertTextField.text, @"message",
+                                           currentSettings.team.teamid, @"team_id", nil];
+        NSError *jsonSerializationError;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:messageDictionary options:0 error:&jsonSerializationError];
+
+        if (jsonSerializationError) {
+            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+        }
+
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+
+        [request setHTTPMethod:@"PUT"];
+
+        [request setHTTPBody:jsonData];
+
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error posting notification!" delegate:nil cancelButtonTitle:@"Ok"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
+    
+    if (responseStatusCode == 200) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Notification Sent!" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error posting notification!" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
     }
 }
 
@@ -511,6 +573,15 @@
 
 - (IBAction)testUrlButtonClicked:(id)sender {
     [self performSegueWithIdentifier:@"NewsExternalUrlSegue" sender:self];
+}
+
+- (IBAction)messageBarButtonClicked:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Send News Notification" message:@"Title will be sent as a mobile notification."
+                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Post Notification", nil] ;
+    alertView.tag = 2;
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alertView textFieldAtIndex:0].text = [NSString stringWithFormat:@"%@ - %@", currentSettings.team.mascot, newsitem.title];
+    [alertView show];
 }
 
 @end
