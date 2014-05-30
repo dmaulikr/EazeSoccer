@@ -61,6 +61,7 @@
 @synthesize teamVideos;
 @synthesize inventorylist;
 @synthesize coaches;
+@synthesize visitingteams;
 
 - (id)init {
     if (self = [super init]) {
@@ -73,6 +74,7 @@
         sponsors = [[EazesportzRetrieveSponsors alloc] init];
         inventorylist = [[EazesportzRetrieveSportadinv alloc] init];
         coaches = [[EazesportzRetrieveCoaches alloc] init];
+        visitingteams = [[EazesportzRetrieveVisitingTeams alloc] init];
         
         newuser = nil;
         photodeleted = NO;
@@ -828,6 +830,19 @@
     else
         return [NSURL URLWithString:urlstring];
 
+}
+
+- (VisitingTeam *)findVisitingTeam:(NSString *)visiting_team_id {
+    VisitingTeam *theteam = nil;
+    
+    for (int i = 0; i < visitingteams.visitingTeams.count; i++) {
+        if ([[[visitingteams.visitingTeams objectAtIndex:i] visiting_team_id] isEqualToString:visiting_team_id]) {
+            theteam = [visitingteams.visitingTeams objectAtIndex:i];
+            break;
+        }
+    }
+    
+    return theteam;
 }
 
 @end

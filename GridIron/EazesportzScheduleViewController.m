@@ -13,6 +13,7 @@
 #import "EazesportzSoccerGameSummaryViewController.h"
 #import "EditGameViewController.h"
 #import "EazesportzDisplayAdBannerViewController.h"
+#import "EazesportzLacrosseGameSummaryViewController.h"
 
 @interface EazesportzScheduleViewController () <UIAlertViewDelegate>
 
@@ -91,6 +92,9 @@
         } else if ([segue.identifier isEqualToString:@"EditGameSegue"]) {
             EditGameViewController *destController = segue.destinationViewController;
             destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        } else if ([segue.identifier isEqualToString:@"LacrosseGameSummary"]) {
+            EazesportzLacrosseGameSummaryViewController *destController = segue.destinationViewController;
+            destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
         } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
             adBannerController = segue.destinationViewController;
         }
@@ -107,6 +111,8 @@
             [self performSegueWithIdentifier:@"GameBasketballSegue" sender:self];
         } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
             [self performSegueWithIdentifier:@"GameSoccerSegue" sender:self];
+        } else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
+            [self performSegueWithIdentifier:@"LacrosseGameSummary" sender:self];
         }
     }
 }

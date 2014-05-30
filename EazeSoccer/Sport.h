@@ -54,6 +54,12 @@
 
 @property(nonatomic, strong) NSMutableDictionary *playerPositions;
 
+@property (nonatomic, strong) NSMutableDictionary *lacrosse_score_codes;
+@property (nonatomic, strong) NSMutableDictionary *lacrosse_shots;
+@property (nonatomic, strong) NSMutableDictionary *lacrosse_periods;
+@property (nonatomic, strong) NSMutableArray *lacrosse_technical_fouls;
+@property (nonatomic, strong) NSMutableArray *lacrosse_personal_fouls;
+
 @property(nonatomic, strong) NSMutableDictionary *footballOffensePositions;
 @property(nonatomic, strong) NSMutableDictionary *footballDefensePositions;
 @property(nonatomic, strong) NSMutableDictionary *footballSpecialTeamsPositions;

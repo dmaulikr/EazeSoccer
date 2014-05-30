@@ -7,9 +7,9 @@
 //
 
 #import "GameSchedule.h"
-#import "EazesportzAppDelegate.h"
 #import "Gamelogs.h"
 #import "EazesportzRetrieveGames.h"
+#import "EazesportzAppDelegate.h"
 
 @implementation GameSchedule {
     UIImage *opponentImage, *opponentThumbImage;
@@ -84,6 +84,12 @@
 @synthesize socceroppsog;
 
 @synthesize gamelogs;
+
+@synthesize lacross_game;
+@synthesize lacrosse_home_score;
+@synthesize lacrosse_home_score_by_period;
+@synthesize lacrosse_visitor_score;
+@synthesize lacrosse_visitor_score_by_period;
 
 @synthesize httperror;
 
@@ -226,6 +232,13 @@
                  [gamelogs addObject:[[Gamelogs alloc] initWithDictionary:[[logs objectAtIndex:cnt] objectForKey:@"gamelog"]]];
              }
             [self sortGamelog];
+        } else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
+            lacross_game = [[LacrossGame alloc] initWithDictionary:[gameScheduleDictionary objectForKey:@"lacross_game"]];
+            
+            lacrosse_home_score = [gameScheduleDictionary objectForKey:@"lacrosse_home_score"];
+            lacrosse_home_score_by_period = [gameScheduleDictionary objectForKey:@"lacrosse_home_score_by_period"];
+            lacrosse_visitor_score = [gameScheduleDictionary objectForKey:@"lacrosse_visitor_score"];
+            lacrosse_visitor_score_by_period = [gameScheduleDictionary objectForKey:@"lacrosse_visitor_score_by_period"];
         }
         
         return self;

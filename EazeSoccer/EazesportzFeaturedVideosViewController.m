@@ -206,7 +206,7 @@
     //Capturing server response
     NSURLResponse* response;
     NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
     NSLog(@"%@", serverData);
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;

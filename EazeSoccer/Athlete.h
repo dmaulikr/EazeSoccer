@@ -20,6 +20,9 @@
 #import "FootballReturnerStats.h"
 
 #import "Soccer.h"
+#import "Lacrosstat.h"
+#import "GameSchedule.h"
+
 
 @interface Athlete : NSObject
 
@@ -61,6 +64,8 @@
 @property(nonatomic, strong) NSMutableArray *basketball_stats;
 
 @property(nonatomic, strong) NSMutableArray *soccer_stats;
+
+@property (nonatomic, strong) NSMutableArray *lacrosstats;
 
 //@property(nonatomic, strong) UIImage *thumbimage;
 //@property(nonatomic, strong) UIImage *tinyimage;
@@ -134,6 +139,9 @@
 - (BOOL)isSoccerGoalie;
 
 - (Soccer *)soccerSeasonTotals;
+
+- (Lacrosstat *)findLacrosstat:(GameSchedule *)game;
+- (Lacrosstat *)getLacrosstatById:(NSString *)lacross_stat_id;
 
 //- (UIImage *)getImage:(NSString *)size;
 

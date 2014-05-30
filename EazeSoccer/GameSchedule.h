@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "Gamelogs.h"
+#import "LacrossGame.h"
 
 @interface GameSchedule : NSObject
 
@@ -71,6 +72,13 @@
 @property(nonatomic, strong) NSNumber *socceroppsaves;
 
 @property(nonatomic, strong) NSMutableArray *gamelogs;
+
+@property (nonatomic, strong) LacrossGame *lacross_game;
+@property (nonatomic, strong) NSNumber *lacrosse_home_score;
+@property (nonatomic, strong) NSMutableArray *lacrosse_home_score_by_period;
+@property (nonatomic, strong) NSNumber *lacrosse_visitor_score;
+@property (nonatomic, strong) NSMutableArray *lacrosse_visitor_score_by_period;
+
 
 @property(nonatomic, strong) NSString *httperror;
 

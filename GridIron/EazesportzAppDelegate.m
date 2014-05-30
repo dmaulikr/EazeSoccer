@@ -21,6 +21,7 @@
 #import "EazesportzRetrieveFeaturedPhotos.h"
 #import "EazesportzRetrieveFeaturedVideosController.h"
 #import "EazesportzSendNotificationData.h"
+#import "EazesportzRetrieveVisitingTeams.h"
 
 #import <AWSRuntime/AmazonErrorHandler.h>
 #import <CoreLocation/CoreLocation.h>
@@ -174,6 +175,7 @@
 
 - (void)getAllSportData {
     if ((currentSettings.sport.id.length > 0) && (currentSettings.team.teamid.length > 0)) {
+        [[currentSettings visitingteams] retrieveVisitingTeams:currentSettings.sport User:currentSettings.user];
         [currentSettings.inventorylist retrieveSportadinv:currentSettings.sport User:currentSettings.user];
         [currentSettings.sponsors retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
         [[[EazesportzRetrieveGames alloc] init] retrieveGames:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
@@ -182,9 +184,6 @@
         [currentSettings.coaches retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
         [[currentSettings teamPhotos] retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
         [[currentSettings teamVideos] retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
-        
-        if (currentSettings.user.authtoken.length > 0)
-            [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     }
     
 }

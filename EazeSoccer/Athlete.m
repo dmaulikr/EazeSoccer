@@ -58,6 +58,8 @@
 
 @synthesize soccer_stats;
 
+@synthesize lacrosstats;
+
 //@synthesize thumbimage;
 //@synthesize tinyimage;
 //@synthesize mediumimage;
@@ -208,6 +210,13 @@
             
             for (int i = 0; i < soccerstats.count; i++) {
                 [soccer_stats addObject:[[Soccer alloc] initWithDirectory:[[soccerstats objectAtIndex:i] objectForKey:@"soccer"] AthleteId:athleteid]];
+            }
+        } else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
+            NSArray *lacrosse_stats = [athleteDictionary objectForKey:@"lacrosstats"];
+            lacrosstats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < lacrosse_stats.count; i++) {
+                [lacrosstats addObject:[[Lacrosstat alloc] initWithDictionary:[lacrosse_stats objectAtIndex:i]]];
             }
         }
         
@@ -1303,6 +1312,33 @@
     }
         
     return YES;
+}
+
+- (Lacrosstat *)findLacrosstat:(GameSchedule *)game {
+    Lacrosstat *astat = nil;
+    
+    for (int i = 0; i < lacrosstats.count; i++) {
+        
+        if ([[[lacrosstats objectAtIndex:i] lacross_game_id] isEqualToString:game.lacross_game.lacross_game_id]) {
+            astat = [lacrosstats objectAtIndex:i];
+            break;
+        }
+    }
+    
+    return astat;
+}
+
+- (Lacrosstat *)getLacrosstatById:(NSString *)lacross_stat_id {
+    Lacrosstat *astat = nil;
+    
+    for (int i = 0; i < lacrosstats.count; i++) {
+        if ([[[lacrosstats objectAtIndex:i] lacrosstat_id] isEqualToString:lacross_stat_id]) {
+            astat = [lacrosstats objectAtIndex:i];
+            break;
+        }
+    }
+    
+    return astat;
 }
 
 @end

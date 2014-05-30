@@ -41,11 +41,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    if (currentSettings.isSiteOwner)
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, self.saveGameButton, nil];
-    else
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, nil];
-    
     self.navigationController.toolbarHidden = YES;
     _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
     _secondsTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -75,6 +70,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if (currentSettings.isSiteOwner)
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, self.saveGameButton, nil];
+    else
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, nil];
     
 //    _clockLabel.text = [game currentgametime];
     

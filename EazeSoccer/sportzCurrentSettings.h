@@ -22,6 +22,7 @@
 #import "EazesportzRetrieveSponsors.h"
 #import "EazesportzRetrieveSportadinv.h"
 #import "EazesportzRetrieveCoaches.h"
+#import "EazesportzRetrieveVisitingTeams.h"
 
 #import <AWSRuntime/AWSRuntime.h>
 #import <AWSS3/AWSS3.h>
@@ -72,6 +73,7 @@
 @property (nonatomic, strong) EazesportzRetrieveSponsors *sponsors;
 @property (nonatomic, strong) EazesportzRetrieveSportadinv *inventorylist;
 @property (nonatomic, strong) EazesportzRetrieveCoaches *coaches;
+@property (nonatomic, strong) EazesportzRetrieveVisitingTeams *visitingteams;
 
 - (UIImage *)getBannerImage;
 
@@ -125,6 +127,8 @@
 - (void)setUpSport:(NSString *)sportid;
 
 - (NSURL *)addAuthenticationToken:(NSString *)urlstring;
+
+- (VisitingTeam *)findVisitingTeam:(NSString *)visiting_team_id;
 
 @end
 

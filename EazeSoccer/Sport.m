@@ -56,6 +56,12 @@
 
 @synthesize playerPositions;
 
+@synthesize lacrosse_score_codes;
+@synthesize lacrosse_periods;
+@synthesize lacrosse_shots;
+@synthesize lacrosse_personal_fouls;
+@synthesize lacrosse_technical_fouls;
+
 @synthesize footballDefensePositions;
 @synthesize footballOffensePositions;
 @synthesize footballSpecialTeamsPositions;
@@ -125,6 +131,13 @@
             footballOffensePositions = [self parsePositions:[sportDictionary objectForKey:@"football_offense_position"]];
             footballDefensePositions = [self parsePositions:[sportDictionary objectForKey:@"football_defense_position"]];
             footballSpecialTeamsPositions = [self parsePositions:[sportDictionary objectForKey:@"football_specialteams_position"]];
+        } else if ([name isEqualToString:@"Lacrosse"]) {
+            playerPositions = [self parsePositions:[sportDictionary objectForKey:@"lacrosse_positions"]];
+            lacrosse_score_codes = [self parsePositions:[sportDictionary objectForKey:@"lacrosse_score_codes"]];
+            lacrosse_shots = [self parsePositions:[sportDictionary objectForKey:@"lacrosse_shots"]];
+            lacrosse_periods = [self parsePositions:[sportDictionary objectForKey:@"lacrosse_periods"]];
+            lacrosse_technical_fouls = [sportDictionary objectForKey:@"lacrosse_technical_fouls"];
+            lacrosse_personal_fouls = [sportDictionary objectForKey:@"lacrosse_personal_fouls"];
         }
         
         return self;

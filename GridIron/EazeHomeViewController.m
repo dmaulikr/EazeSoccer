@@ -28,6 +28,7 @@
 #import "EazesportzCheckAdImageViewController.h"
 #import "FindSiteViewController.h"
 #import "EazesportzSendNotificationData.h"
+#import "EazesportzLacrosseGameSummaryViewController.h"
 
 @interface EazeHomeViewController () <UIAlertViewDelegate>
 
@@ -233,7 +234,7 @@
             
             if (game) {
                 if (currentSettings.team.teamid.length > 0) {
-                    cell.homeTableCellTitle.text = [NSString stringWithFormat:@"%@ Last Game",  currentSettings.team.mascot];
+                    cell.homeTableCellTitle.text = [NSString stringWithFormat:@"Game %@ vs %@",  currentSettings.team.mascot, game.opponent_mascot];
                     cell.homeTableCellText.text = game.game_name;
                 } else  {
                     cell.homeTableCellTitle.text = @"No Team Selected";
@@ -293,6 +294,8 @@
                         [self performSegueWithIdentifier:@"BasketballGameInfoSegue" sender:self];
                     else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
                         [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
+                    else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"])
+                        [self performSegueWithIdentifier:@"LacrosseGameInfoSegue" sender:self];
                 }
                 break;
                 
@@ -338,6 +341,9 @@
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"SoccerGameInfoSegue"]) {
         EazesportzSoccerGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"LacrosseGameInfoSegue"]) {
+        EazesportzLacrosseGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"FeaturedPhotosSegue"]) {
         EazeFeaturedPhotosViewController *destController = segue.destinationViewController;
@@ -391,6 +397,7 @@
     
     [[[EazesportzSendNotificationData alloc] init] sendNotificationData:currentSettings.sport Team:currentSettings.team Athlete:nil User:currentSettings.user];
     
+    [currentSettings.visitingteams retrieveVisitingTeams:currentSettings.sport User:currentSettings.user];
     currentSettings.opponentimages = [[NSMutableArray alloc] init];
     currentSettings.rosterimages = [[NSMutableArray alloc] init];
     [currentSettings.inventorylist retrieveSportadinv:currentSettings.sport User:currentSettings.user];
@@ -400,11 +407,6 @@
     [currentSettings.coaches retrieveCoaches:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     [currentSettings.teamVideos retrieveFeaturedVideos:currentSettings.sport.id Token:currentSettings.user.authtoken];
     [currentSettings.teamPhotos retrieveFeaturedPhotos:currentSettings.sport.id Token:currentSettings.user.authtoken];
-    
-    if (currentSettings.user.userid.length > 0) {
-        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                          Token:currentSettings.user.authtoken];
-    }
     
     [[[[self.tabBarController tabBar]items]objectAtIndex:1]setEnabled:YES];
     [[[[self.tabBarController tabBar]items]objectAtIndex:2]setEnabled:YES];
@@ -424,6 +426,10 @@
             if ([[[currentSettings.gameList objectAtIndex:i] gamedatetime] compare:date] == NSOrderedAscending) {
                 agame = [currentSettings.gameList objectAtIndex:i];
             }
+        }
+        
+        if ((!agame) && (currentSettings.gameList.count > 0)) {
+            agame = [currentSettings.gameList objectAtIndex:0];
         }
     }
     
