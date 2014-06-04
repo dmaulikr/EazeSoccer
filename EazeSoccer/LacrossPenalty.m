@@ -8,7 +8,10 @@
 
 #import "LacrossPenalty.h"
 
-@implementation LacrossPenalty
+@implementation LacrossPenalty {
+    int responseStatusCode;
+    NSMutableData *theData;
+}
 
 @synthesize infraction;
 @synthesize type;
@@ -26,7 +29,7 @@
     if (self = [super init]) {
         infraction = @"";
         type = @"";
-        gametime = @"";
+        gametime = @"00:00";
         return self;
     } else
         return nil;
@@ -91,23 +94,43 @@
     
     [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:jsonData];
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     
-    //Capturing server response
-    NSURLResponse* response;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-    NSLog(@"%@", serverData);
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrossePenaltyStatNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    NSError *jsonSerializationError = nil;
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
     NSDictionary *items = [serverData objectForKey:@"lacross_penalty"];
     
-    if ([httpResponse statusCode] == 200) {
-        
+    if (responseStatusCode == 200) {
         if (lacross_penalty_id.length == 0) {
             lacross_penalty_id = [items objectForKey:@"_id"];
         }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrossePenaltyStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        httperror = [items objectForKey:@"error"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrossePenaltyStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
     }
 }
 

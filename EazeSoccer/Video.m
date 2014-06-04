@@ -28,6 +28,8 @@
 @synthesize athletes;
 @synthesize game;
 
+@synthesize lacross_scoring_id;
+
 - (id)init {
     if (self = [super init]) {
         players = [[NSMutableArray alloc] init];
@@ -64,6 +66,8 @@
         self.gamelog = [items objectForKey:@"gamelog"];
         pending = [[items objectForKey:@"pending"] boolValue];
         updated_at = [items objectForKey:@"updated_at"];
+        
+        lacross_scoring_id = [items objectForKey:@"lacross_scoring_id"];
         
         return self;
     } else {

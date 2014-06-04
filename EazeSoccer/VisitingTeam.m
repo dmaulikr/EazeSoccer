@@ -64,8 +64,8 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     
     if (self.visiting_team_id.length > 0)
-        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                     @"/sports/", sport.id, @"/visiting_teams.json?auth_token=", user.authtoken]];
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", sport.id, @"/visiting_teams/", visiting_team_id, @".json?auth_token=", user.authtoken]];
     else
         aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
                                      @"/sports/", sport.id, @"/visiting_teams.json?auth_token=",
@@ -130,8 +130,8 @@
 
 - (void)deleteTeam:(Sport *)sport User:(User *)user {
     NSBundle *mainBundle = [NSBundle mainBundle];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                       @"/sports/", sport.id, @"/visiting_teams.json?auth_token=", user.authtoken]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/visiting_teams/%@.json?auth_token=%@",
+                                       [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], sport.id, visiting_team_id, user.authtoken]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSError *error = nil;
     NSDictionary *jsonDict = [[NSDictionary alloc] init];
@@ -207,6 +207,10 @@
     }
     
     return athlete;
+}
+
+- (void)refreshRoster {
+    
 }
 
 @end

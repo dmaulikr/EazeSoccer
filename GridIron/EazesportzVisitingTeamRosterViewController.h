@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+#import "VisitingTeam.h"
+
 @interface EazesportzVisitingTeamRosterViewController : UIViewController
+
+@property (nonatomic, strong) VisitingTeam *visitingTeam;
 
 @property (weak, nonatomic) IBOutlet UITableView *rosterTableView;
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;

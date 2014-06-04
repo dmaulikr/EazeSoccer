@@ -18,5 +18,8 @@
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollview;
+@property (weak, nonatomic) IBOutlet UIView *scorelogContainer;
+
+- (IBAction)scoreLogSelected:(UIStoryboardSegue *)segue;
 
 @end

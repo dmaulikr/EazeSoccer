@@ -698,6 +698,7 @@
                 [animage setThumb:player.thumb UpdatedAt:player.pic_updated_at];
                 [animage setMedium:player.mediumpic UpdatedAt:player.pic_updated_at];
 //                [animage setLarge:player.largepic UpdatedAt:player.pic_updated_at];
+                animage.noimage = nil;
             } else{
                 animage.noimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
             }
@@ -713,6 +714,7 @@
             [animage setThumb:player.thumb UpdatedAt:player.pic_updated_at];
             [animage setMedium:player.mediumpic UpdatedAt:player.pic_updated_at];
 //            [animage setLarge:player.largepic UpdatedAt:player.pic_updated_at];
+            animage.noimage = nil;
         } else {
             animage.noimage = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         }
@@ -726,6 +728,7 @@
     for (int i = 0; i < rosterimages.count; i++) {
         if ([[[rosterimages objectAtIndex:i] modelid] isEqualToString:player.athleteid]) {
             EazesportzImage *animage = [rosterimages objectAtIndex:i];
+            
             if (animage.noimage == nil)
                 image = animage.tiny;
             else

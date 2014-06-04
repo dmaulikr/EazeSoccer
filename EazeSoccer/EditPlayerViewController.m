@@ -35,7 +35,7 @@
     
     NSString *heighttext;
     
-    int responseStatusCode;
+    long responseStatusCode;
     NSMutableDictionary *serverData;
     NSMutableData *theData;
     
@@ -151,15 +151,6 @@
             _videosButton.enabled = NO;
         }
     } else {
-        _numberTextField.text = @"";
-        _lastnameTextField.text = @"";
-        _firstnameTextField.text = @"";
-        _middlenameTextField.text = @"";
-        _heightTextField.text = @"0-0";
-        _weightTextField.text = @"0";
-        _gradeageclassTextField.text = @"";
-        _bioTextView.text = @"";
-        _seasonTextField.text = @"";
         _warningDeleteButton.hidden = YES;
         _warningDeleteButton.enabled = NO;
         _statsButton.enabled = NO;
@@ -171,7 +162,7 @@
 
 - (void)displayDataEntryAlert:(NSString *)message {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:message
-                                                   delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
 }
@@ -216,11 +207,16 @@
 
 - (void)playerSaved {
     [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Ahtlete Update Successful!"
-                                                   delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-    [alert setAlertViewStyle:UIAlertViewStyleDefault];
-    [alert show];
+    if (imageselected) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Image uploaded and athlete updated. \nImage is being processed."
+                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+        [alert show];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Ahtlete Update Successful!"
+                                                       delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    }
 }
 
 //Method to define how many columns/dials to show
@@ -515,7 +511,7 @@
 //    UIImage *image = [currentSettings normalizedImage:_playerImage.image scaledToSize:512];
     NSData *imageData = UIImageJPEGRepresentation(_playerImage.image, 1.0);
     
-    NSLog(@"%d", imageData.length);
+    NSLog(@"%lu", (unsigned long)imageData.length);
     
     por.data = imageData;
     int imagesize = imageData.length;
@@ -543,7 +539,7 @@
 //    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:athDict options:0 error:&error];
     [urlrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlrequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [urlrequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [urlrequest setHTTPMethod:@"PUT"];
     [urlrequest setHTTPBody:jsonData];
     NSData* result = [NSURLConnection sendSynchronousRequest:urlrequest  returningResponse:&urlresponse error:&error];
@@ -554,8 +550,8 @@
     if (responseStatusCode == 200) {
         [self playerSaved];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
-                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"] delegate:nil
+                                              cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
     }
@@ -563,7 +559,7 @@
 
 -(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Photo Upload Error" delegate:self
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Photo Upload Error" delegate:nil
                                           cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];

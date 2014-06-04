@@ -127,6 +127,7 @@
         following = [NSNumber numberWithBool:[[athleteDictionary objectForKey:@"following"] boolValue]];
         hasvideos = [[athleteDictionary objectForKey:@"hasvideos"] boolValue];
         hasphotos = [[athleteDictionary objectForKey:@"hasphotos"] boolValue];
+        processing = [[athleteDictionary objectForKey:@"processing"] boolValue];
         
 //        [self loadImages];
         
@@ -251,7 +252,7 @@
     }
     
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     
     if (self.athleteid != nil)
         [request setHTTPMethod:@"PUT"];
@@ -274,7 +275,7 @@
     NSDictionary *jsonDict = [[NSDictionary alloc] init];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPMethod:@"DELETE"];
     [request setHTTPBody:jsonData];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -1323,6 +1324,13 @@
             astat = [lacrosstats objectAtIndex:i];
             break;
         }
+    }
+    
+    if (!astat) {
+        astat = [[Lacrosstat alloc] init];
+        astat.athlete_id = athleteid;
+        astat.lacross_game_id = game.lacross_game.lacross_game_id;
+        [lacrosstats addObject:astat];
     }
     
     return astat;

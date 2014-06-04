@@ -8,9 +8,32 @@
 
 #import <UIKit/UIKit.h>
 
+#import "GameSchedule.h"
+
 @interface EazesportzLacrosseStatsViewController : UIViewController
+
+@property (nonatomic, strong) GameSchedule *game;
 
 - (IBAction)playerButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *statsTableView;
 - (IBAction)goalieButtonClicked:(id)sender;
+- (IBAction)homeButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *homeButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *visitorButton;
+- (IBAction)visitorButtonClicked:(id)sender;
+
+- (IBAction)lacrosseShotsAdded:(UIStoryboardSegue *)segue;
+- (IBAction)lacrosseCancelStats:(UIStoryboardSegue *)segue;
+- (IBAction)lacrossePlayerStatsAdded:(UIStoryboardSegue *)segue;
+- (IBAction)lacrosseGoalieStatsAdded:(UIStoryboardSegue *)segue;
+
+@property (weak, nonatomic) IBOutlet UIView *shotsContainer;
+
+@property (weak, nonatomic) IBOutlet UIView *playerstatsContainer;
+@property (weak, nonatomic) IBOutlet UIView *goaliestatsContainer;
+@property (weak, nonatomic) IBOutlet UIPickerView *pickerView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
+- (IBAction)refreshBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *scoreButton;
+- (IBAction)scoreButtonClicked:(id)sender;
 @end

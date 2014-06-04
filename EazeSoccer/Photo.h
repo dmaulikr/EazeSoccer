@@ -24,6 +24,7 @@
 @property(nonatomic, strong) NSString *gamelog;
 @property (nonatomic, assign) BOOL pending;
 
+@property (nonatomic, strong) NSString *lacross_scoring_id;
 @property(nonatomic, strong) NSString *sport_id;
 @property(nonatomic, strong) NSString *team_id;
 @property (nonatomic, strong) NSString *user_id;

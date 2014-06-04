@@ -35,4 +35,6 @@
 
 - (BOOL)isExtraManScore;
 
+- (NSString *)getScoreLog;
+
 @end

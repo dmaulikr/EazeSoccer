@@ -189,7 +189,7 @@
         _personalFoulTextField.text = @"";
     } else {
         _periodTextField.text = [periodarray objectAtIndex:row];
-        penatlyStat.period = [currentSettings.sport.lacrosse_periods objectForKey:_periodTextField.text];
+        penatlyStat.period = [NSNumber numberWithInt:[[currentSettings.sport.lacrosse_periods objectForKey:_periodTextField.text] intValue]];
     }
     
     _pickerView.hidden = YES;

@@ -13,6 +13,8 @@
 #import "EazesportzLacrosseScoresheetViewController.h"
 #import "EazesportzLacrossePenaltyViewController.h"
 #import "EazesportzNumberFieldViewController.h"
+#import "EazesportzLacrosseStatsViewController.h"
+#import "EazesportzRetrievePlayers.h"
 
 @interface EazesportzLacrosseGameStatsViewController () <UIAlertViewDelegate>
 
@@ -23,11 +25,12 @@
     BOOL extraMan, scoreLog, penalty, clears, home;
     int extramanIndex;
     
-    NSMutableArray *gamescoreings, *gamepenalties, *scoreextraman;
+    NSArray *gamescoreings, *gamepenalties;
+    NSMutableArray *scoreextraman;
     VisitingTeam *visitors;
     
     EazesportzLacrossePenaltyViewController *penatlyController;
-    EazesportzNumberFieldViewController *numberTextFieldController;
+    EazesportzNumberFieldViewController *extramanController, *clearsController;
 }
 
 @synthesize game;
@@ -69,7 +72,12 @@
     } else if ([segue.identifier isEqualToString:@"PenaltySegue"]) {
         penatlyController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"ExtraManSegue"]) {
-        numberTextFieldController = segue.destinationViewController;
+        extramanController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"ClearSegue"]) {
+        clearsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
+        EazesportzLacrosseStatsViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 
@@ -88,7 +96,7 @@
     [_scoreLogTableView reloadData];
     
     if (currentSettings.isSiteOwner)
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, self.sheetButton, self.saveButton, nil];
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, self.sheetButton, nil];
     else
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.statsButton, nil];
     
@@ -99,52 +107,13 @@
     gamepenalties = [[NSMutableArray alloc] init];
     
     if (home) {
-        for (int i = 0; i < currentSettings.roster.count; i++) {
-            Lacrosstat *astat = [[currentSettings.roster objectAtIndex:i] findLacrosstat:game];
-            
-            if (astat.scoring_stats.count > 0) {
-                for (int cnt = 0; cnt < astat.scoring_stats.count; cnt++) {
-                    [gamescoreings addObject:[astat.scoring_stats objectAtIndex:cnt]];
-                }
-            }
-            
-            if (astat.penalty_stats.count > 0) {
-                for (int cnt = 0; cnt < astat.penalty_stats.count; cnt++)
-                    [gamepenalties addObject:[astat.penalty_stats objectAtIndex:cnt]];
-            }
-        }
-    } else if ((!home) && (game.lacross_game.visiting_team_id.length > 0)) {
-        visitors = [currentSettings findVisitingTeam:game.lacross_game.visiting_team_id];
+        gamescoreings = [game.lacross_game getLacrosseScores:YES];
+        gamepenalties = [game.lacross_game getLacrossePenalties:YES];
         
-        for (int i = 0; i < visitors.visitor_roster.count; i++) {
-            Lacrosstat *astat = [[visitors.visitor_roster objectAtIndex:i] findLacrossStat:game];
-            
-            if (astat) {
-                if (astat.scoring_stats.count > 0) {
-                    for (int cnt = 0; cnt < astat.scoring_stats.count; cnt++) {
-                        [gamescoreings addObject:[astat.scoring_stats objectAtIndex:cnt]];
-                    }
-                }
-                
-                if (astat.penalty_stats.count > 0) {
-                    for (int cnt = 0; cnt < astat.penalty_stats.count; cnt++)
-                        [gamepenalties addObject:[astat.penalty_stats objectAtIndex:cnt]];
-                }
-            }
-        }
+    } else if ((!home) && (game.lacross_game.visiting_team_id.length > 0)) {
+        gamescoreings = [game.lacross_game getLacrosseScores:NO];
+        gamepenalties = [game.lacross_game getLacrossePenalties:NO];
     }
-    
-    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES];
-    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO
-                                                                      selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSArray *descriptors = [NSArray arrayWithObjects:firstDescriptor, secondDescriptor, nil];
-    [gamescoreings sortUsingDescriptors:descriptors];
-    
-    firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES];
-    secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO
-                                                    selector:@selector(localizedCaseInsensitiveCompare:)];
-    descriptors = [NSArray arrayWithObjects:firstDescriptor, secondDescriptor, nil];
-    [gamepenalties sortedArrayUsingDescriptors:descriptors];
 }
 
 #pragma mark - Navigation
@@ -205,6 +174,8 @@
     if (scoreLog) {
         EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ScoreTableCell" forIndexPath:indexPath];
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         LacrossScoring *thestat = [gamescoreings objectAtIndex:indexPath.row];
         cell.positionLabel.text = [thestat.period stringValue];
         cell.numberLabel.text = thestat.gametime;
@@ -222,6 +193,8 @@
     } else if (penalty) {
         EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PenaltyTableCell" forIndexPath:indexPath];
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         LacrossPenalty *thestat = [gamepenalties objectAtIndex:indexPath.row];
         cell.positionLabel.text = thestat.type;
         
@@ -237,8 +210,10 @@
     } else if (extraMan ) {
         EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ClearTableCell" forIndexPath:indexPath];
         
+        cell.backgroundColor = [UIColor darkGrayColor];
+        
         if (indexPath.row < 5) {
-            cell.positionLabel.text = indexPath.row < 4 ? [NSString stringWithFormat:@"%ld", indexPath.row + 1] : @"OT";
+            cell.positionLabel.text = indexPath.row < 4 ? [NSString stringWithFormat:@"%d", indexPath.row + 1] : @"OT";
             cell.numberLabel.text = [NSString stringWithFormat:@"%@", [[scoreextraman objectAtIndex:indexPath.row] stringValue]];
             
             if (home) {
@@ -273,6 +248,8 @@
         return cell;
     } else {
         EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ClearTableCell" forIndexPath:indexPath];
+        
+        cell.backgroundColor = [UIColor darkGrayColor];
         
         if (indexPath.row < 5) {
             cell.positionLabel.text = indexPath.row < 4 ? [NSString stringWithFormat:@"%d", indexPath.row + 1] : @"OT";
@@ -320,31 +297,43 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (scoreLog) {
-        LacrossScoring *thestat = [gamescoreings objectAtIndex:indexPath.row];
-        [self performSegueWithIdentifier:@"ScoreSheetSegue" sender:self];
-    } else if (extraMan) {
-        if (indexPath.row < 5) {
-            _extramanContainer.hidden = NO;
-            extramanIndex = indexPath.row;
-            numberTextFieldController.labelValueTextField.text = [NSString stringWithFormat:@"%d", indexPath.row + 1];
+    if ([currentSettings isSiteOwner]) {
+        if (scoreLog) {
+            [self performSegueWithIdentifier:@"ScoreSheetSegue" sender:self];
+        } else if (extraMan) {
+            if (indexPath.row < 5) {
+                _extramanContainer.hidden = NO;
+                extramanIndex = indexPath.row;
+                extramanController.labelValueTextField.text = [NSString stringWithFormat:@"%d", indexPath.row + 1];
+                
+                if (home)
+                    extramanController.numberTextField.text = [[game.lacross_game.extraman_fail objectAtIndex:indexPath.row] stringValue];
+                else
+                    extramanController.numberTextField.text = [[game.lacross_game.visitor_extraman_fail objectAtIndex:indexPath.row] stringValue];
+            }
+        } else if (clears) {
+            if (indexPath.row < 5) {
+                _clearContainer.hidden = NO;
+                extramanIndex = indexPath.row;
+                clearsController.labelValueTextField.text = [NSString stringWithFormat:@"%d", indexPath.row + 1];
+                
+                if (home) {
+                    clearsController.numberTextField.text = [[game.lacross_game.clears objectAtIndex:indexPath.row] stringValue];
+                    clearsController.number2TextField.text = [[game.lacross_game.failedclears objectAtIndex:indexPath.row] stringValue];
+                } else {
+                    clearsController.numberTextField.text = [[game.lacross_game.visitor_clears objectAtIndex:indexPath.row] stringValue];
+                    clearsController.number2TextField.text = [[game.lacross_game.visitor_badclears objectAtIndex:indexPath.row] stringValue];
+                }
+            }
+        } else if (penalty) {
+            _penaltyContainer.hidden = NO;
+            penatlyController.penatlyStat = [gamepenalties objectAtIndex:indexPath.row];
             
-            if (home)
-                numberTextFieldController.numberTextField.text = [[game.lacross_game.extraman_fail objectAtIndex:indexPath.row] stringValue];
-            else
-                numberTextFieldController.numberTextField.text = [[game.lacross_game.visitor_extraman_fail objectAtIndex:indexPath.row] stringValue];
-            
-        }
-    } else if (clears) {
-        
-    } else if (penalty) {
-        _penaltyContainer.hidden = NO;
-        penatlyController.penatlyStat = [gamepenalties objectAtIndex:indexPath.row];
-        
-        if (home) {
-            penatlyController.visitingTeam = NO;
-        } else {
-            penatlyController.visitingTeam = YES;
+            if (home) {
+                penatlyController.visitingTeam = NO;
+            } else {
+                penatlyController.visitingTeam = YES;
+            }
         }
     }
 }
@@ -452,9 +441,19 @@
 }
 
 - (IBAction)refreshButtonClicked:(id)sender {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRoster:) name:@"RosterChangedNotification" object:nil];
+    [[EazesportzRetrievePlayers alloc] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
 }
 
-- (IBAction)saveButtonClicked:(id)sender {
+- (void)gotRoster:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        [_scoreLogTableView reloadData];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error refreshing stats" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RosterChangedNotification" object:nil];
 }
 
 - (IBAction)scoreButtonClicked:(id)sender {
@@ -592,11 +591,11 @@
     
     if (home) {
         [game.lacross_game.extraman_fail replaceObjectAtIndex:extramanIndex
-                                                   withObject:[NSNumber numberWithInt:[numberTextFieldController.numberTextField.text intValue]]];
+                                                   withObject:[NSNumber numberWithInt:[extramanController.numberTextField.text intValue]]];
         [game.lacross_game saveExtraManFails:@"Home"];
     } else {
         [game.lacross_game.visitor_extraman_fail replaceObjectAtIndex:extramanIndex
-                                                    withObject:[NSNumber numberWithInt:[numberTextFieldController.numberTextField.text intValue]]];
+                                                    withObject:[NSNumber numberWithInt:[extramanController.numberTextField.text intValue]]];
         [game.lacross_game saveExtraManFails:@"Visitor"];
     }
     
@@ -604,7 +603,23 @@
 }
 
 - (void)saveLacrosseClears:(UIStoryboardSegue *)segue {
+    _clearContainer.hidden = YES;
     
+    if (home) {
+        [game.lacross_game.clears replaceObjectAtIndex:extramanIndex
+                                                   withObject:[NSNumber numberWithInt:[clearsController.numberTextField.text intValue]]];
+        [game.lacross_game.failedclears replaceObjectAtIndex:extramanIndex
+                                            withObject:[NSNumber numberWithInt:[clearsController.number2TextField.text intValue]]];
+        [game.lacross_game saveClears:@"Home"];
+    } else {
+        [game.lacross_game.visitor_clears replaceObjectAtIndex:extramanIndex
+                                                           withObject:[NSNumber numberWithInt:[clearsController.numberTextField.text intValue]]];
+        [game.lacross_game.visitor_badclears replaceObjectAtIndex:extramanIndex
+                                                    withObject:[NSNumber numberWithInt:[clearsController.number2TextField.text intValue]]];
+        [game.lacross_game saveClears:@"Visitor"];
+    }
+    
+    [_scoreLogTableView reloadData];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -614,9 +629,7 @@
         _penaltyContainer.hidden = NO;
         penatlyController.penatlyStat = nil;
         [penatlyController viewWillAppear:YES];
-    } else if ([title isEqualToString:@"Add Clear"]) {
-        
-    }
+    } 
 }
 
 @end

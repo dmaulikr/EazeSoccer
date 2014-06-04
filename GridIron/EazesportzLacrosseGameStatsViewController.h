@@ -19,12 +19,10 @@
 @property (weak, nonatomic) IBOutlet UITableView *scoreLogTableView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sheetButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *homeBarButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *visitorBarButton;
 
-- (IBAction)saveButtonClicked:(id)sender;
 - (IBAction)scoreButtonClicked:(id)sender;
 - (IBAction)penaltyButtonClicked:(id)sender;
 - (IBAction)extramanButtonClicked:(id)sender;

@@ -428,12 +428,11 @@
         }
     }
     
-    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES];
-    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO
-                                                                      selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES selector:@selector(compare:)];
+    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)];
     NSArray *descriptors = [NSArray arrayWithObjects:firstDescriptor, secondDescriptor, nil];
     [scores sortUsingDescriptors:descriptors];
-
+    
     return scores;
 }
 
@@ -453,8 +452,7 @@
     }
     
     NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES];
-    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO
-                                                                      selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO];
     NSArray *descriptors = [NSArray arrayWithObjects:firstDescriptor, secondDescriptor, nil];
     [scores sortUsingDescriptors:descriptors];
     

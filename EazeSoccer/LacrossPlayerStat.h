@@ -41,5 +41,7 @@
 - (id)initWithDictionary:(NSDictionary *)lacross_player_stat_dictionary;
 
 - (void)save:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user;
+- (void)saveShot:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user Shot:(NSString *)theshot;
+- (void)deleteshot:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user Shot:(NSString *)theshot;
 
 @end

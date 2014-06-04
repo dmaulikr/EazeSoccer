@@ -152,7 +152,7 @@
         scorestat.scorecode = [currentSettings.sport.lacrosse_score_codes objectForKey:_scorecodeTextField.text];
     } else {
         _periodTextField.text = [periodarray objectAtIndex:row];
-        scorestat.period = [currentSettings.sport.lacrosse_periods objectForKey:_periodTextField.text];
+        scorestat.period = [NSNumber numberWithInt:[[currentSettings.sport.lacrosse_periods objectForKey:_periodTextField.text] intValue]];
     }
     
     _pickerView.hidden = YES;

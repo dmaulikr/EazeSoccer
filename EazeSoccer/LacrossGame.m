@@ -24,6 +24,19 @@
 @synthesize homepenaltybox;
 @synthesize visitorpenaltybox;
 
+@synthesize home_penaltyone_number;
+@synthesize home_penaltyone_minutes;
+@synthesize home_penaltyone_seconds;
+@synthesize home_penaltytwo_number;
+@synthesize home_penaltytwo_minutes;
+@synthesize home_penaltytwo_seconds;
+@synthesize visitor_penaltyone_number;
+@synthesize visitor_penaltyone_minutes;
+@synthesize visitor_penaltyone_seconds;
+@synthesize visitor_penaltytwo_number;
+@synthesize visitor_penaltytwo_minutes;
+@synthesize visitor_penaltytwo_seconds;
+
 @synthesize home_1stperiod_timeouts;
 @synthesize home_2ndperiod_timeouts;
 @synthesize visitor_1stperiod_timeouts;
@@ -41,10 +54,14 @@
         gameschedule_id = [lacross_game_dictionary objectForKey:@"gameschedule_id"];
         lacross_game_id = [lacross_game_dictionary objectForKey:@"lacross_game_id"];
         
-        clears = [lacross_game_dictionary objectForKey:@"clears"];
-        failedclears = [lacross_game_dictionary objectForKey:@"failedclears"];
-        visitor_clears = [lacross_game_dictionary objectForKey:@"visitor_clears"];
-        visitor_badclears = [lacross_game_dictionary objectForKey:@"visitor_badclears"];
+        dictionary = [lacross_game_dictionary objectForKey:@"clears"];
+        clears = [dictionary mutableCopy];
+        dictionary = [lacross_game_dictionary objectForKey:@"failedclears"];
+        failedclears = [dictionary mutableCopy];
+        dictionary = [lacross_game_dictionary objectForKey:@"visitor_clears"];
+        visitor_clears = [dictionary mutableCopy];
+        dictionary = [lacross_game_dictionary objectForKey:@"visitor_failedclears"];
+        visitor_badclears = [dictionary mutableCopy];
         
         dictionary = [lacross_game_dictionary objectForKey:@"extraman_fail"];
         extraman_fail = [dictionary mutableCopy];
@@ -67,9 +84,78 @@
         
         visiting_team_id = [lacross_game_dictionary objectForKey:@"visiting_team_id"];
         
+        home_penaltyone_number = [lacross_game_dictionary objectForKey:@"home_penaltyone_number"];
+        home_penaltyone_minutes = [lacross_game_dictionary objectForKey:@"home_penaltyone_minutes"];
+        home_penaltyone_seconds = [lacross_game_dictionary objectForKey:@"home_penaltyone_seconds"];
+        home_penaltytwo_number = [lacross_game_dictionary objectForKey:@"home_penaltytwo_number"];
+        home_penaltytwo_minutes = [lacross_game_dictionary objectForKey:@"home_penaltytwo_minutes"];
+        home_penaltytwo_seconds = [lacross_game_dictionary objectForKey:@"home_penaltytwo_seconds"];
+        visitor_penaltyone_number = [lacross_game_dictionary objectForKey:@"visitor_penaltyone_number"];
+        visitor_penaltyone_minutes = [lacross_game_dictionary objectForKey:@"visitor_penaltyone_minutes"];
+        visitor_penaltyone_seconds = [lacross_game_dictionary objectForKey:@"visitor_penaltyone_seconds"];
+        visitor_penaltytwo_number = [lacross_game_dictionary objectForKey:@"visitor_penaltytwo_number"];
+        visitor_penaltytwo_minutes = [lacross_game_dictionary objectForKey:@"visitor_penaltytwo_minutes"];
+        visitor_penaltytwo_seconds = [lacross_game_dictionary objectForKey:@"visitor_penaltytwo_seconds"];
+        
         return self;
     } else {
         return nil;
+    }
+}
+
+- (BOOL)save {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules/",
+                                        [[currentSettings findGame:gameschedule_id] id], @"/update_lacrosse_game_summary.json?auth_token=",
+                                        currentSettings.user.authtoken]];
+    
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                                        [home_penaltyone_number stringValue], @"homeonenumber",
+                                        [home_penaltyone_minutes stringValue], @"homeoneminutes",
+                                        [home_penaltyone_seconds stringValue], @"homeoneseconds",
+                                        [home_penaltytwo_number stringValue], @"hometwonumber",
+                                        [home_penaltytwo_minutes stringValue], @"hometwominutes",
+                                        [home_penaltytwo_seconds stringValue], @"hometwoseconds",
+                                        [visitor_penaltyone_number stringValue], @"visitoronenumber",
+                                        [visitor_penaltyone_minutes stringValue], @"visitoroneminutes",
+                                        [visitor_penaltyone_seconds stringValue], @"visitoroneseconds",
+                                        [visitor_penaltytwo_number stringValue], @"visitortwonumber",
+                                        [visitor_penaltytwo_minutes stringValue], @"visitortwominutes",
+                                        [visitor_penaltytwo_seconds stringValue], @"visitortwoseconds", nil];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    //    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:dictionary, @"gameschedule", nil];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"PUT"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *items = [serverData objectForKey:@"lacross_game"];
+    
+    if ([httpResponse statusCode] == 200) {
+        return YES;
+    } else {
+        return NO;
     }
 }
 
@@ -269,6 +355,166 @@
     } else {
         return NO;
     }
+}
+
+- (BOOL)saveClears:(NSString *)home {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", currentSettings.sport.id, @"/teams/", currentSettings.team.teamid, @"/gameschedules/",
+                                        [[currentSettings findGame:gameschedule_id] id], @"/lacrosse_clears.json?auth_token=",
+                                        currentSettings.user.authtoken]];
+    
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:home, @"home", nil];
+    
+    if ([home isEqualToString:@"Home"]) {
+        for (int i = 0; i < 5; i++) {
+            [dictionary setValue:[[clears objectAtIndex:i] stringValue] forKey:[NSString stringWithFormat:@"clear%d", i + 1]];
+        }
+        for (int i = 0; i < 5; i++) {
+            [dictionary setValue:[[failedclears objectAtIndex:i] stringValue] forKey:[NSString stringWithFormat:@"failedclear%d", i + 1]];
+        }
+    } else {
+        for (int i = 0; i < 5; i++) {
+            [dictionary setValue:[[visitor_clears objectAtIndex:i] stringValue] forKey:[NSString stringWithFormat:@"clear%d", i + 1]];
+        }
+        for (int i = 0; i < 5; i++) {
+            [dictionary setValue:[[visitor_badclears objectAtIndex:i] stringValue] forKey:[NSString stringWithFormat:@"failedclear%d", i + 1]];
+        }
+    }
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    //    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:dictionary, @"gameschedule", nil];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"PUT"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    
+    //Capturing server response
+    NSURLResponse* response;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    NSDictionary *items = [serverData objectForKey:@"lacross_game"];
+    
+    if ([httpResponse statusCode] == 200) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (NSArray *)getLacrosseScores:(BOOL)home {
+    NSMutableArray *gamescoreings = [[NSMutableArray alloc] init];
+    GameSchedule *game = [currentSettings findGame:gameschedule_id];
+    
+    if (home) {
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            Lacrosstat *astat = [[currentSettings.roster objectAtIndex:i] findLacrosstat:game];
+            
+            if (astat.scoring_stats.count > 0) {
+                for (int cnt = 0; cnt < astat.scoring_stats.count; cnt++) {
+                    [gamescoreings addObject:[astat.scoring_stats objectAtIndex:cnt]];
+                }
+            }
+        }
+    } else if ((!home) && (visiting_team_id.length > 0)) {
+        VisitingTeam *visitors = [currentSettings findVisitingTeam:game.lacross_game.visiting_team_id];
+        
+        for (int i = 0; i < visitors.visitor_roster.count; i++) {
+            Lacrosstat *astat = [[visitors.visitor_roster objectAtIndex:i] findLacrossStat:game];
+            
+            if (astat) {
+                if (astat.scoring_stats.count > 0) {
+                    for (int cnt = 0; cnt < astat.scoring_stats.count; cnt++) {
+                        [gamescoreings addObject:[astat.scoring_stats objectAtIndex:cnt]];
+                    }
+                }
+            }
+        }
+    }
+    
+    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES];
+    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO
+                                                                      selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSArray *descriptors = [NSArray arrayWithObjects:firstDescriptor, secondDescriptor, nil];
+    [gamescoreings sortUsingDescriptors:descriptors];
+    
+    return gamescoreings;
+}
+
+- (NSArray *)getLacrossePenalties:(BOOL)home {
+    NSMutableArray *gamepenalties = [[NSMutableArray alloc] init];
+    GameSchedule *game = [currentSettings findGame:gameschedule_id];
+    
+    if (home) {
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            Lacrosstat *astat = [[currentSettings.roster objectAtIndex:i] findLacrosstat:game];
+            if (astat.penalty_stats.count > 0) {
+                for (int cnt = 0; cnt < astat.penalty_stats.count; cnt++)
+                    [gamepenalties addObject:[astat.penalty_stats objectAtIndex:cnt]];
+            }
+        }
+    } else if ((!home) && (visiting_team_id.length > 0)) {
+        VisitingTeam *visitors = [currentSettings findVisitingTeam:game.lacross_game.visiting_team_id];
+        
+        for (int i = 0; i < visitors.visitor_roster.count; i++) {
+            Lacrosstat *astat = [[visitors.visitor_roster objectAtIndex:i] findLacrossStat:game];
+            
+            if (astat) {
+                if (astat.penalty_stats.count > 0) {
+                    for (int cnt = 0; cnt < astat.penalty_stats.count; cnt++)
+                        [gamepenalties addObject:[astat.penalty_stats objectAtIndex:cnt]];
+                }
+            }
+        }
+    }
+    
+    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES];
+    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO
+                                                    selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSArray *descriptors = [NSArray arrayWithObjects:firstDescriptor, secondDescriptor, nil];
+    [gamepenalties sortedArrayUsingDescriptors:descriptors];
+    
+    return gamepenalties;
+}
+
+- (NSString *)findScoreLog:(NSString *)scorelogid {
+    NSString *scorelog;
+    GameSchedule *game = [currentSettings findGame:gameschedule_id];
+    
+    if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            Lacrosstat *lacrosstat = [[currentSettings.roster objectAtIndex:i] findLacrosstat:game];
+            
+            for (int cnt = 0; cnt < lacrosstat.scoring_stats.count; cnt++) {
+                
+                if ([[[lacrosstat.scoring_stats objectAtIndex:cnt] lacross_scoring_id] isEqualToString:scorelogid]) {
+                    LacrossScoring *scorestat = [lacrosstat.scoring_stats objectAtIndex:cnt];
+                    scorelog = [scorestat getScoreLog];
+                    goto Done;
+                }
+                
+            }
+            
+        }
+    }
+    
+Done:
+    return scorelog;
 }
 
 @end

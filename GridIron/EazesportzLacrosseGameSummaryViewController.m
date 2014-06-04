@@ -13,6 +13,7 @@
 #import "EazesportzLacrosseMinutesStatTableViewCell.h"
 #import "EazesportzLacrosseGameStatsViewController.h"
 #import "EazesportzLacrosseScoresheetViewController.h"
+#import "EazesportzGetGame.h"
 
 @interface EazesportzLacrosseGameSummaryViewController ()
 
@@ -20,6 +21,7 @@
 
 @implementation EazesportzLacrosseGameSummaryViewController {
     NSIndexPath *deleteIndexPath;
+    EazesportzGetGame *getgame;
     
     BOOL home;
 }
@@ -98,6 +100,23 @@
     _summaryHomeLabel.text = currentSettings.team.mascot;
     _summaryVisitorLabel.text = game.opponent_mascot;
     
+    NSArray *gametime = [game.currentgametime componentsSeparatedByString:@":"];
+    _minutesTextField.text = gametime[0];
+    _secondsTextField.text = gametime[1];
+    
+    _homePenaltyOnePlayerTextField.text = [game.lacross_game.home_penaltyone_number stringValue];
+    _homePenaltyOneSecondsTextField.text = [self padzerotime:[game.lacross_game.home_penaltyone_seconds intValue]];
+    _homePenaltyOneMinutesTextField.text = [game.lacross_game.home_penaltyone_minutes stringValue];
+    _homePenaltyTwoPlayerTextField.text = [game.lacross_game.home_penaltytwo_number stringValue];
+    _homePenaltyOneSecondsTextField.text = [self padzerotime:[game.lacross_game.home_penaltytwo_seconds intValue]];
+    _homePenaltyTwoMinutesTextField.text = [game.lacross_game.home_penaltytwo_minutes stringValue];
+    _visitorPenaltyOnePlayerTextField.text = [game.lacross_game.visitor_penaltyone_number stringValue];
+    _visitorPenaltyOneSecondsTextField.text = [self padzerotime:[game.lacross_game.visitor_penaltyone_seconds intValue]];
+    _visitorPenaltyOneMinutesTextField.text = [game.lacross_game.visitor_penaltyone_minutes stringValue];
+    _visitorPenaltyTwoPlayerTextField.text = [game.lacross_game.visitor_penaltytwo_number stringValue];
+    _visitorPenaltyTwoSecondsTextField.text = [self padzerotime:[game.lacross_game.visitor_penaltytwo_seconds intValue]];
+    _visitorPenaltyTwoMinutesTextField.text = [game.lacross_game.visitor_penaltytwo_minutes stringValue];
+    
     _summaryHomeFirstPeriodScore.text = [[game.lacrosse_home_score_by_period objectAtIndex:0] stringValue];
     _summaryHomeSecondPeriodScore.text = [[game.lacrosse_home_score_by_period objectAtIndex:1] stringValue];
     _summaryHomeThirdPeriodScore.text = [[game.lacrosse_home_score_by_period objectAtIndex:2] stringValue];
@@ -132,17 +151,11 @@
     if (currentSettings.isSiteOwner) {
         _visitorButton.enabled = YES;
         _homeButton.enabled = YES;
-        _homePenaltyButton.enabled = YES;
-        _visitorPenaltyButton.enabled = YES;
     } else {
         _visitorButton.enabled = NO;
         _homeButton.enabled = NO;
-        _homePenaltyButton.enabled = NO;
-        _visitorPenaltyButton.enabled = NO;
         [_visitorButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_homeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_homePenaltyButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
-        [_visitorPenaltyButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
     }
     
     if (currentSettings.isSiteOwner)
@@ -228,15 +241,54 @@
 }
 
 - (IBAction)refreshButtonClicked:(id)sender {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGame:) name:@"GameDataNotification" object:nil];
+    getgame = [[EazesportzGetGame alloc] init];
+    [getgame getGame:currentSettings.sport.id Team:currentSettings.team.teamid Game:game.id Token:currentSettings.user.authtoken];
+}
+
+- (void)gotGame:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GameDataNotification" object:nil];
+        game = getgame.game;
+        [self viewWillAppear:YES];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving game!" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (IBAction)saveButtonClicked:(id)sender {
+    game.currentgametime = [NSString stringWithFormat:@"%@:%@", _minutesTextField.text, _secondsTextField.text];
+    game.period = [NSNumber numberWithInt:[_periodTextField.text intValue]];
+    game.opponentscore = [NSNumber numberWithInt:[_visitorTextField.text intValue]];
+    game.lacross_game.home_penaltyone_number = [NSNumber numberWithInt:[_homePenaltyOnePlayerTextField.text intValue]];
+    game.lacross_game.home_penaltyone_minutes = [NSNumber numberWithInt:[_homePenaltyOneMinutesTextField.text intValue]];
+    game.lacross_game.home_penaltyone_seconds = [NSNumber numberWithInt:[_homePenaltyOneSecondsTextField.text intValue]];
+    game.lacross_game.home_penaltytwo_number = [NSNumber numberWithInt:[_homePenaltyTwoPlayerTextField.text intValue]];
+    game.lacross_game.home_penaltytwo_minutes = [NSNumber numberWithInt:[_homePenaltyTwoMinutesTextField.text intValue]];
+    game.lacross_game.home_penaltytwo_seconds = [NSNumber numberWithInt:[_homePenaltyTwoSecondsTextField.text intValue]];
+    game.lacross_game.visitor_penaltyone_number = [NSNumber numberWithInt:[_visitorPenaltyOnePlayerTextField.text intValue]];
+    game.lacross_game.visitor_penaltyone_minutes = [NSNumber numberWithInt:[_visitorPenaltyOneMinutesTextField.text intValue]];
+    game.lacross_game.visitor_penaltyone_seconds = [NSNumber numberWithInt:[_visitorPenaltyOneSecondsTextField.text intValue]];
+    game.lacross_game.visitor_penaltytwo_number = [NSNumber numberWithInt:[_visitorPenaltyTwoPlayerTextField.text intValue]];
+    game.lacross_game.visitor_penaltytwo_minutes = [NSNumber numberWithInt:[_visitorPenaltyTwoMinutesTextField.text intValue]];
+    game.lacross_game.visitor_penaltytwo_seconds = [NSNumber numberWithInt:[_visitorPenaltyTwoSecondsTextField.text intValue]];
+    
+    [game.lacross_game save];
+    [game saveGameschedule];
 }
 
-- (IBAction)visitorPenaltyButtonClicked:(id)sender {
-}
-
-- (IBAction)homePenaltyButtonClicked:(id)sender {
+- (NSString *)padzerotime:(int)entry {
+    NSString *result;
+    
+    if (entry < 10) {
+        result = [NSString stringWithFormat:@"0%d", entry];
+    } else {
+        result = [NSString stringWithFormat:@"%d", entry];
+    }
+    
+    return result;
 }
 
 @end

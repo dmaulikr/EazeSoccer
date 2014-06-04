@@ -58,9 +58,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *summaryVisitorFourthPeriodScore;
 @property (weak, nonatomic) IBOutlet UILabel *summaryVisitorOvertimeScore;
 @property (weak, nonatomic) IBOutlet UILabel *summaryVisitorTotalScore;
-@property (weak, nonatomic) IBOutlet UIButton *visitorPenaltyButton;
-- (IBAction)visitorPenaltyButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *homePenaltyButton;
-- (IBAction)homePenaltyButtonClicked:(id)sender;
 
 @end

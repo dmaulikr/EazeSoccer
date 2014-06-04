@@ -234,4 +234,94 @@
     }
 }
 
+- (LacrossAllStats *)summarizeStats {
+    LacrossAllStats *stats = [[LacrossAllStats alloc] init];
+    
+    stats.athlete_id = athlete_id;
+    stats.visitor_roster_id = visitor_roster_id;
+    stats.goals = [NSNumber numberWithLong:scoring_stats.count];
+    
+    for (int i = 0; i < player_stats.count; i++) {
+        LacrossPlayerStat *thestats = [player_stats objectAtIndex:i];
+        stats.shots = [NSNumber numberWithLong:thestats.shot.count + [stats.shots longValue]];
+        stats.face_off_won = [NSNumber numberWithInt:[thestats.face_off_won intValue] + [stats.face_off_won intValue]];
+        stats.face_off_lost = [NSNumber numberWithInt:[thestats.face_off_won intValue] + [stats.face_off_won intValue]];
+        stats.face_off_violation = [NSNumber numberWithInt:[thestats.face_off_violation intValue] + [stats.face_off_violation intValue]];
+        stats.ground_ball = [NSNumber numberWithInt:[thestats.ground_ball intValue] + [stats.ground_ball intValue]];
+        stats.interception = [NSNumber numberWithInt:[thestats.interception intValue] + [stats.interception intValue]];
+        stats.turnover = [NSNumber numberWithInt:[thestats.turnover intValue] + [stats.turnover intValue]];
+        stats.caused_turnover = [NSNumber numberWithInt:[thestats.caused_turnover intValue] + [stats.caused_turnover intValue]];
+        stats.steals = [NSNumber numberWithInt:[thestats.steals intValue] + [stats.steals intValue]];
+    }
+    
+    stats.penalties = [NSNumber numberWithLong:penalty_stats.count];
+    int minutes = 0;
+    int seconds = 0;
+    
+    for (int i = 0; i < penalty_stats.count; i++) {
+        NSArray *penaltytime = [[[penalty_stats objectAtIndex:i] gametime] componentsSeparatedByString:@":"];
+        minutes += [penaltytime[0] intValue];
+        seconds += [penaltytime[1] intValue];
+    }
+    
+    int minsecs = seconds % 60;
+    int secmins = seconds / 60;
+    minutes += secmins;
+    
+    stats.penaltytime = [NSString stringWithFormat:@"%@:%@", [self padzerotime:minutes], [self padzerotime:minsecs]];
+    
+    NSNumber *goalminutes = [NSNumber numberWithInt:0];
+    
+    for (int i = 0; i < goalstats.count; i++) {
+        LacrossGoalstat *goalstat = [goalstats objectAtIndex:i];
+        stats.saves = [NSNumber numberWithInt:[goalstat.saves intValue] + [stats.saves intValue]];
+        stats.goals_allowed = [NSNumber numberWithInt:[goalstat.goals_allowed intValue] + [stats.goals_allowed intValue]];
+        goalminutes = [NSNumber numberWithInt:[goalstat.minutesplayed intValue] + [goalminutes intValue]];
+    }
+    
+    minutes = [goalminutes intValue] % 60;
+    int hours = [goalminutes intValue] / 60;
+    stats.minutesplayed = [NSString stringWithFormat:@"%@:%@", [self padzerotime:hours], [self padzerotime:minutes]];
+    
+    return stats;
+}
+
+- (NSString *)padzerotime:(int)entry {
+    NSString *result;
+    
+    if (entry < 10) {
+        result = [NSString stringWithFormat:@"0%d", entry];
+    } else {
+        result = [NSString stringWithFormat:@"%d", entry];
+    }
+    
+    return result;
+}
+
+- (BOOL)hasPlayerStatPeriod:(NSNumber *)period {
+    BOOL hasperiod = NO;
+    
+    for (int i = 0; i < player_stats.count; i++) {
+        if ([[[player_stats objectAtIndex:i] period] isEqual:period]) {
+            hasperiod = YES;
+            break;
+        }
+    }
+    
+    return hasperiod;
+}
+
+- (BOOL)hasGoalieStatPeriod:(NSNumber *)period {
+    BOOL hasperiod = NO;
+    
+    for (int i = 0; i < goalstats.count; i++) {
+        if ([[[goalstats objectAtIndex:i] period] isEqual:period]) {
+            hasperiod = YES;
+            break;
+        }
+    }
+    
+    return hasperiod;
+}
+
 @end

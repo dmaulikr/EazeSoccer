@@ -8,7 +8,10 @@
 
 #import "LacrossPlayerStat.h"
 
-@implementation LacrossPlayerStat
+@implementation LacrossPlayerStat {
+    int responseStatusCode;
+    NSMutableData *theData;
+}
 
 @synthesize shot;
 
@@ -34,14 +37,16 @@
 
 - (id)init {
     if (self = [super init]) {
-        
+        shot = [[NSMutableArray alloc] init];
         return self;
     } else
         return nil;
 }
 
 - (id)initWithDictionary:(NSDictionary *)lacross_player_stat_dictionary {
-    shot = [lacross_player_stat_dictionary objectForKey:@"shot"];
+    NSDictionary *dictionary;
+    dictionary = [lacross_player_stat_dictionary objectForKey:@"shot"];
+    shot = [dictionary mutableCopy];
     face_off_won = [lacross_player_stat_dictionary objectForKey:@"face_off_won"];
     face_off_lost = [lacross_player_stat_dictionary objectForKey:@"face_off_lost"];
     face_off_violation = [lacross_player_stat_dictionary objectForKey:@"face_off_lost"];
@@ -66,30 +71,34 @@
 - (void)save:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user {
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", game.id, @"/lacrosse_score_entry.json?auth_token=",
-                                        user.authtoken]];
+                                        @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", game.id,
+                                        @"/lacrosse_player_stats.json?auth_token=", user.authtoken]];
     
-    NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:face_off_won, @"face_off_won", face_off_lost, @"face_off_lost",
-                                face_off_violation, @"face_off_violation", period, @"period", ground_ball, @"ground_ball", interception, @"interception",
-                                turnover, @"turnover", caused_turnover, @"caused_turnover", steals, @"steals", nil];
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:face_off_won, @"face_off_won", face_off_lost, @"face_off_lost",
+                                face_off_violation, @"face_off_violation", period, @"period", ground_ball, @"groundball", interception, @"interception",
+                                turnover, @"turnover", caused_turnover, @"caused_turnover", steals, @"steals", lacrosstat_id, @"lacrosstat_id", nil];
     
     if (lacross_player_stat_id.length > 0) {
         [dictionary setValue:lacross_player_stat_id forKeyPath:@"lacross_player_stat_id"];
     }
     
+    if (athlete_id.length > 0) {
+        [dictionary setValue:@"Home" forKey:@"home"];
+        [dictionary setValue:athlete_id forKey:@"player"];
+    } else {
+        [dictionary setValue:@"Visitor" forKey:@"home"];
+        [dictionary setValue:visitor_roster_id forKey:@"player"];
+    }
+    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
-    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:dictionary, @"gameschedule", nil];
+//    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:dictionary, @"gameschedule", nil];
     
     NSError *jsonSerializationError = nil;
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    if (lacrosstat_id.length > 0) {
-        [request setHTTPMethod:@"PUT"];
-    } else {
-        [request setHTTPMethod:@"POST"];
-    }
+    [request setHTTPMethod:@"PUT"];
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -100,24 +109,128 @@
     
     [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:jsonData];
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (void)saveShot:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user Shot:(NSString *)theshot {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", game.id, @"/lacrosse_add_shot.json?auth_token=",
+                                        user.authtoken]];
     
-    //Capturing server response
-    NSURLResponse* response;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-    NSLog(@"%@", serverData);
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *items = [serverData objectForKey:@"lacrosse_scoring"];
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theshot, @"addshot", lacrosstat_id, @"lacrosstat_id",
+                                                                                        period, @"period", nil];
     
-    if ([httpResponse statusCode] == 200) {
-        
-        if (lacrosstat_id.length == 0) {
-            lacrosstat_id = [items objectForKey:@"_id"];
-        }
-    } else {
-        httperror = [items objectForKey:@"error"];
+    if (lacross_player_stat_id.length > 0) {
+        [dictionary setValue:lacross_player_stat_id forKeyPath:@"lacross_player_stat_id"];
     }
+    
+    if (athlete_id.length > 0) {
+        [dictionary setValue:@"Home" forKey:@"home"];
+        [dictionary setValue:athlete_id forKey:@"player"];
+    } else {
+        [dictionary setValue:@"Visitor" forKey:@"home"];
+        [dictionary setValue:visitor_roster_id forKey:@"player"];
+    }
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+//    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:dictionary, @"gameschedule", nil];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"PUT"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrossePlayerStatNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    NSError *jsonSerializationError = nil;
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSDictionary *items = [serverData objectForKey:@"lacross_player_stat"];
+    
+    if (responseStatusCode == 200) {
+        if (lacross_player_stat_id.length == 0) {
+            lacross_player_stat_id = [items objectForKey:@"_id"];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrossePlayerStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrossePlayerStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
+    }
+}
+
+- (void)deleteshot:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user Shot:(NSString *)theshot {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", game.id,
+                                        @"/delete_lacrosse_player_shot.json?auth_token=", user.authtoken]];
+    
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theshot, @"shot", lacrosstat_id, @"lacrosstat_id",
+                                                                                           period, @"period", nil];
+    
+    if (lacross_player_stat_id.length > 0) {
+        [dictionary setValue:lacross_player_stat_id forKeyPath:@"lacross_player_stat_id"];
+    }
+    
+    if (athlete_id.length > 0) {
+        [dictionary setValue:@"Home" forKey:@"home"];
+        [dictionary setValue:athlete_id forKey:@"player"];
+    } else {
+        [dictionary setValue:@"Visitor" forKey:@"home"];
+        [dictionary setValue:visitor_roster_id forKey:@"player"];
+    }
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+//    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:dictionary, @"gameschedule", nil];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"PUT"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
 }
 
 @end

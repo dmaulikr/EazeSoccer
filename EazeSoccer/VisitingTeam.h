@@ -29,4 +29,6 @@
 
 - (VisitorRoster *)findAthlete:(NSString *)rosterid;
 
+- (void)refreshRoster;
+
 @end

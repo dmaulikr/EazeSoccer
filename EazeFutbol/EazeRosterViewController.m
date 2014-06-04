@@ -11,6 +11,7 @@
 #import "EazesportzAppDelegate.h"
 #import "RosterTableCell.h"
 #import "EazesportzDisplayAdBannerViewController.h"
+#import "EazesportzRetrievePlayers.h"
 
 @interface EazeRosterViewController ()
 
@@ -33,6 +34,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRosterData:) name:@"RosterChangedNotification" object:nil];
+}
+
+- (void)gotRosterData:(NSNotificationCenter *)notification {
+    self.rosterdata = currentSettings.roster;
+    [self.playerTableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,6 +50,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                            Token:currentSettings.user.authtoken];
     
     if ([currentSettings isSiteOwner]) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.coachesButton, self.addButton, nil];

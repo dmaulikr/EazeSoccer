@@ -8,7 +8,10 @@
 
 #import "LacrossGoalstat.h"
 
-@implementation LacrossGoalstat
+@implementation LacrossGoalstat {
+    int responseStatusCode;
+    NSMutableData *theData;
+}
 
 @synthesize saves;
 @synthesize goals_allowed;
@@ -35,6 +38,82 @@
         return self;
     } else
         return nil;
+}
+
+- (void)save:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                        @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", game.id,
+                                        @"/lacrosse_goalstats.json?auth_token=", user.authtoken]];
+    
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:goals_allowed, @"goals_allowed",
+                                       saves, @"saves", minutesplayed, @"minutesplayed", [period stringValue], @"period", nil];
+    
+    if (lacross_goalstat_id.length > 0) {
+        [dictionary setValue:lacross_goalstat_id forKeyPath:@"lacross_goalstat_id"];
+    }
+    
+    if (athlete_id.length > 0) {
+        [dictionary setValue:@"Home" forKey:@"home"];
+        [dictionary setValue:athlete_id forKey:@"player"];
+    } else {
+        [dictionary setValue:@"Visitor" forKey:@"home"];
+        [dictionary setValue:visitor_roster_id forKey:@"player"];
+    }
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"PUT"];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosseGoalieStatNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    NSError *jsonSerializationError = nil;
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSDictionary *items = [serverData objectForKey:@"lacross_player_stat"];
+    
+    if (responseStatusCode == 200) {
+        if (lacross_goalstat_id.length == 0) {
+            lacross_goalstat_id = [items objectForKey:@"_id"];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosseGoalieStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosseGoalieStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
+    }
 }
 
 @end

@@ -433,13 +433,16 @@
 
         photoDict =  [[NSMutableDictionary alloc] initWithObjectsAndKeys: _photonameTextField.text, @"displayname", _descriptionTextView.text, @"description",
                       currentSettings.team.teamid, @"team_id", currentSettings.user.userid, @"user_id",
-                      [[NSNumber numberWithBool:photo.pending] stringValue], @"pending", nil];
+                      [[NSNumber numberWithBool:photo.pending] stringValue],  @"pending", nil];
         
         if (photo.game.id.length > 0)
             [photoDict setObject:photo.game.id forKey:@"gameschedule_id"];
         
         if (photo.gamelog.length > 0)
             [photoDict setObject:photo.gamelog forKey:@"gamelog_id"];
+        
+        if (photo.lacross_scoring_id.length > 0)
+            [photoDict setObject:photo.lacross_scoring_id forKey:@"lacross_scoring_id"];
         
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
         NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:photoDict, @"photo", nil];

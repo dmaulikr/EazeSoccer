@@ -61,10 +61,17 @@
 }
 
 - (void)save:(Sport *)sport User:(User *)user {
-    NSURL * aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
+    NSURL *aurl;
+    
+    if (visitor_roster_id.length > 0)
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
                                          [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
                                      @"/sports/", sport.id, @"/visiting_teams/", visiting_team_id, @"/visitor_rosters/", visitor_roster_id,
                                      @".json?auth_token=", user.authtoken]];
+    else
+        aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@",
+                                     [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                     @"/sports/", sport.id, @"/visiting_teams/", visiting_team_id, @"/visitor_rosters.json?auth_token=", user.authtoken]];
     
     NSMutableDictionary *rosterDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:number, @"number", lastname, @"lastname", firstname,
                                      @"firstname", position,  @"position", nil];

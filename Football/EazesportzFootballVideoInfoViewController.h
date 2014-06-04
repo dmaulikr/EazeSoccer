@@ -17,5 +17,8 @@
 @property (nonatomic, strong) Gamelogs *gamelog;
 
 - (IBAction)searchBlogGameLog:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIView *scorelogContainer;
+
+- (IBAction)scoreLogSelected:(UIStoryboardSegue *)segue;
 
 @end

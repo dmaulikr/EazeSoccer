@@ -30,6 +30,8 @@
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) NSMutableArray *athletes;
 
+@property (nonatomic, strong) NSString *lacross_scoring_id;
+
 - (id)initWithDirectory:(NSDictionary *)items;
 
 @end

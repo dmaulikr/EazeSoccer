@@ -290,7 +290,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ([currentSettings isSiteOwner])
-        return 9;
+        return 10;
     else if (currentSettings.user.userid.length > 0)
         return 8;
     else
@@ -522,8 +522,8 @@
             else
                 cell.imageView.image = [currentSettings.sport getImage:@"thumb"];
             
-            cell.textLabel.text = @"Manage Users";
-            cell.detailTextLabel.text = @"Manage your sites users ....";
+            cell.textLabel.text = @"Manage Visiting Teams";
+            cell.detailTextLabel.text = @"Manage your opponents ....";
             break;
             
    }
@@ -581,7 +581,7 @@
             break;
             
         default:
-            [self performSegueWithIdentifier:@"ManageUsersSegue" sender:self];
+            [self performSegueWithIdentifier:@"VisitingTeamsSegue" sender:self];
             break;
     }
 }

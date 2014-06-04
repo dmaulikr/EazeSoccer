@@ -235,6 +235,9 @@
         if (video.gamelog.length > 0)
             [videoDict setObject:video.gamelog forKey:@"gamelog_id"];
         
+        if (video.lacross_scoring_id.length > 0)
+            [videoDict setObject:video.lacross_scoring_id forKey:@"lacross_scoring_id"];
+        
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
         NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:videoDict, @"videoclip", nil];
         

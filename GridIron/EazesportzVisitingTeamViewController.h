@@ -17,4 +17,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 - (IBAction)deleteButtonClicked:(id)sender;
 
+- (IBAction)rosterButtonClicked:(id)sender;
 @end

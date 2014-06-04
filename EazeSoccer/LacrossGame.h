@@ -23,6 +23,19 @@
 @property (nonatomic, strong) NSDictionary *homepenaltybox;
 @property (nonatomic, strong) NSDictionary *visitorpenaltybox;
 
+@property (nonatomic, strong) NSNumber *home_penaltyone_number;
+@property (nonatomic, strong) NSNumber *home_penaltyone_minutes;
+@property (nonatomic, strong) NSNumber *home_penaltyone_seconds;
+@property (nonatomic, strong) NSNumber *home_penaltytwo_number;
+@property (nonatomic, strong) NSNumber *home_penaltytwo_minutes;
+@property (nonatomic, strong) NSNumber *home_penaltytwo_seconds;
+@property (nonatomic, strong) NSNumber *visitor_penaltyone_number;
+@property (nonatomic, strong) NSNumber *visitor_penaltyone_minutes;
+@property (nonatomic, strong) NSNumber *visitor_penaltyone_seconds;
+@property (nonatomic, strong) NSNumber *visitor_penaltytwo_number;
+@property (nonatomic, strong) NSNumber *visitor_penaltytwo_minutes;
+@property (nonatomic, strong) NSNumber *visitor_penaltytwo_seconds;
+
 @property (nonatomic, strong) NSMutableArray *home_1stperiod_timeouts;
 @property (nonatomic, strong) NSMutableArray *home_2ndperiod_timeouts;
 @property (nonatomic, strong) NSMutableArray *visitor_1stperiod_timeouts;
@@ -35,8 +48,14 @@
 
 - (id)initWithDictionary:(NSDictionary *)lacross_game_dictionary;
 
+- (BOOL)save;
 - (BOOL)saveHomeTimeouts;
 - (BOOL)saveVisitorTimeouts;
 - (BOOL)saveExtraManFails:(NSString *)home;
+- (BOOL)saveClears:(NSString *)home;
+
+- (NSArray *)getLacrosseScores:(BOOL)home;
+- (NSArray *)getLacrossePenalties:(BOOL)home;
+- (NSString *)findScoreLog:(NSString *)scorelogid;
 
 @end

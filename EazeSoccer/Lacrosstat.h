@@ -12,6 +12,7 @@
 #import "LacrossPenalty.h"
 #import "LacrossPlayerStat.h"
 #import "LacrossScoring.h"
+#import "LacrossAllStats.h"
 
 @interface Lacrosstat : NSObject
 
@@ -43,6 +44,11 @@
 - (void)addPenaltyStat:(LacrossPenalty *)stat;
 
 - (BOOL)deleteStat:(const NSString *)statid Game:(NSString *)gameid Stat:(NSString *)lacross_stat;
+
+- (LacrossAllStats *)summarizeStats;
+
+- (BOOL)hasPlayerStatPeriod:(NSNumber *)period;
+- (BOOL)hasGoalieStatPeriod:(NSNumber *)period;
 
 @end
     

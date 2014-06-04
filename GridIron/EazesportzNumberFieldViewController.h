@@ -12,5 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *numberTextField;
 @property (weak, nonatomic) IBOutlet UILabel *labelValueTextField;
+@property (weak, nonatomic) IBOutlet UITextField *number2TextField;
 
 @end

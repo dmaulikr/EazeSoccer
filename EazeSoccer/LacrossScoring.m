@@ -10,7 +10,10 @@
 
 #import "EazesportzAppDelegate.h"
 
-@implementation LacrossScoring
+@implementation LacrossScoring {
+    int responseStatusCode;
+    NSMutableData *theData;
+}
 
 @synthesize scorecodes;
 
@@ -97,24 +100,7 @@
     
     [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
     [request setHTTPBody:jsonData];
-    
-    //Capturing server response
-    NSURLResponse* response;
-    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-    NSLog(@"%@", serverData);
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    NSDictionary *items = [serverData objectForKey:@"lacross_scoring"];
-    
-    if ([httpResponse statusCode] == 200) {
-        
-        if (lacross_scoring_id.length == 0) {
-            lacross_scoring_id = [items objectForKey:@"_id"];
-        }
-    } else {
-        httperror = [items objectForKey:@"error"];
-    }
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
 }
 
 - (BOOL)isExtraManScore {
@@ -122,6 +108,52 @@
         return YES;
     else
         return NO;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosseScoringStatNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    NSError *jsonSerializationError = nil;
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
+    NSDictionary *items = [serverData objectForKey:@"lacross_scoring"];
+    
+    if (responseStatusCode == 200) {
+        if (lacross_scoring_id.length == 0) {
+            lacross_scoring_id = [items objectForKey:@"_id"];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosseScoringStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosseScoringStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
+    }
+}
+
+- (NSString *)getScoreLog {
+    NSString *score = [NSString stringWithFormat:@"%@ - %@: %@", [period stringValue], gametime, [[currentSettings findAthlete:athlete_id] numberLogname]];
+                       
+    if (assist.length > 0)
+        score = [score stringByAppendingString:[NSString stringWithFormat:@", Assist: %@", [[currentSettings findAthlete:assist] numberLogname]]];
+    
+    return score;
 }
 
 @end
