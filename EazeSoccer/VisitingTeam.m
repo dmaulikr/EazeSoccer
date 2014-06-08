@@ -51,6 +51,7 @@
 
 - (void)gotVisitorRoster:(NSNotification *)notification {
     if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
         visitor_roster = visitorRoster.visitorRoster;
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving visitor roster" delegate:nil cancelButtonTitle:@"Ok"

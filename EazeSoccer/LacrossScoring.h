@@ -27,6 +27,10 @@
 @property (nonatomic, strong) NSString *athlete_id;
 @property (nonatomic, strong) NSString *visitor_roster_id;
 
+@property (nonatomic, assign) BOOL dirty;
+@property (nonatomic, strong) NSMutableArray *photos;
+@property (nonatomic, strong) NSMutableArray *videos;
+
 @property (nonatomic, strong) NSString *httperror;
 
 - (id)initWithDictionary:(NSDictionary *)lacross_scoring_dictionary; 

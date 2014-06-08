@@ -34,6 +34,8 @@
 
 - (IBAction)saveLacrossePenalty:(UIStoryboardSegue *)segue;
 - (IBAction)deleteLacrossePenalty:(UIStoryboardSegue *)segue;
+- (IBAction)cancelLacrossePenalty:(UIStoryboardSegue *)segue;
+
 - (IBAction)saveLacrosseExtraManFail:(UIStoryboardSegue *)segue;
 - (IBAction)saveLacrosseClears:(UIStoryboardSegue *)segue;
 

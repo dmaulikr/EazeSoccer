@@ -19,8 +19,11 @@
 
 @property(nonatomic, strong) NSMutableArray *videos;
 
+@property (nonatomic, strong) NSString *lacross_scoring_id;
+@property (nonatomic, strong) Gamelogs *gamelog;
+
 - (void)retrieveVideos:(Sport *)sport Team:(Team *)team Athlete:(Athlete *)athlete Game:(GameSchedule *)game SearchUser:(User *)searchuser
-               GameLog:(Gamelogs *)gamelog User:(User *)user;
+                        User:(User *)user;
 
 - (Video *)getVideoSynchronous:(Sport *)sport Team:(Team *)team VideoId:(NSString *)videoid User:(User *)user;
 

@@ -9,16 +9,19 @@
 #import "EazesportzLacrosseShotsViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "VisitingTeam.h"
+#import "EazesportzLacrosseScoreCollectionViewCell.h"
+#import "HeaderSelectCollectionReusableView.h"
 
-@interface EazesportzLacrosseShotsViewController ()
+@interface EazesportzLacrosseShotsViewController () <UIAlertViewDelegate>
 
 @end
 
 @implementation EazesportzLacrosseShotsViewController {
     NSArray *periodarray;
-    NSMutableArray *shotsarray, *playershots;
-    NSString *pickertype;
+    NSMutableArray *playershots;
     VisitingTeam *visitors;
+    int selectedPeriod;
+    NSIndexPath *deleteIndex;
     
     Lacrosstat *stats;
 }
@@ -40,14 +43,12 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    pickertype = @"Player";
     periodarray = [[currentSettings.sport.lacrosse_periods allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         return [[currentSettings.sport.lacrosse_periods objectForKey:obj1] compare:[currentSettings.sport.lacrosse_periods objectForKey:obj2]];
     }];
     
-    NSArray *shotarray = [currentSettings.sport.lacrosse_shots allKeys];
-    shotsarray = [shotarray mutableCopy];
-    [shotsarray removeObject:@"Goal"];
+    [_periodoneCollectionView.layer setBorderColor:(__bridge CGColorRef)([UIColor blackColor])];
+    [_periodoneCollectionView.layer setBorderWidth:1.0f];
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,183 +60,273 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _pickerView.hidden = YES;
+    _saveImage.hidden = YES;
+    
+    _overtimeCollectionView.hidden = YES;
+    
+    [_periodSegmentControl setSelectedSegmentIndex:UISegmentedControlNoSegment];
+    [_shottypeSegmentControl setSelectedSegmentIndex:UISegmentedControlNoSegment];
     
     if (visitingPlayer) {
-        _playerLabel.text = visitingPlayer.numberlogname;
         stats = [visitingPlayer findLacrossStat:game];
+        _shotsNavigationItem.title = [NSString stringWithFormat:@"%@ - Shots", visitingPlayer.numberlogname];
     } else {
-        _playerLabel.text = player.numberLogname;
         stats = [player findLacrosstat:game];
+        _shotsNavigationItem.title = [NSString stringWithFormat:@"%@ - Shots", player.numberLogname];
     }
+    
+    [_periodoneCollectionView reloadData];
+    [_periodtwoCollectionView reloadData];
+    [_periodthreeCollectionView reloadData];
+    [_periodfourCollectionView reloadData];
+    [_overtimeCollectionView reloadData];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    return 1;
+- (IBAction)addButonClicked:(id)sender {
+    [stats save:currentSettings.sport Game:game User:currentSettings.user];
+    _saveImage.hidden = NO;
 }
 
-// Method to define the numberOfRows in a component using the array.
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
-    if ([pickertype isEqualToString:@"Period"]) {
-        return periodarray.count;
+- (IBAction)shottypeSegmentClicked:(id)sender {
+    LacrossPlayerStat *astat;
+    
+    if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:selectedPeriod]]) {
+        astat = [stats.player_stats objectAtIndex:selectedPeriod - 1];
     } else {
-        return shotsarray.count;
-    }
-}
-
-// Method to show the title of row for a component.
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    if ([pickertype isEqualToString:@"Period"])
-        return [periodarray objectAtIndex:row];
-    else
-        return [shotsarray objectAtIndex:row];
-}
-
--(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    if ([pickertype isEqualToString:@"Shot"]){
-        _shotTextField.text = [shotsarray objectAtIndex:row];
-    } else {
-        _periodTextField.text = [periodarray objectAtIndex:row];
-        [_shotTableView reloadData];
+        astat = [[LacrossPlayerStat alloc] init];
+        [stats.player_stats addObject:astat];
+        astat.period = [NSNumber numberWithInt:selectedPeriod];
+        astat.lacrosstat_id = stats.lacrosstat_id;
+        
+        if (visitingPlayer)
+            astat.visitor_roster_id = visitingPlayer.visitor_roster_id;
+        else
+            astat.athlete_id = player.athleteid;
     }
     
-    _pickerView.hidden = YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (textField == _periodTextField) {
-        pickertype = @"Period";
-        [_pickerView reloadAllComponents];
-    } else if (textField == _shotTextField) {
-        pickertype = @"Shot";
-        [_pickerView reloadAllComponents];
-    }
+    if (astat.shot.count == 0)
+        astat.shot = [[NSMutableArray alloc] init];
     
-    _pickerView.hidden = NO;
-    [textField resignFirstResponder];
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    // Return the number of sections.
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
-    
-    NSNumber *period = [NSNumber numberWithInt:[_periodTextField.text intValue]];
-    
-    switch ([period intValue]) {
+    switch (_shottypeSegmentControl.selectedSegmentIndex) {
+        case 0:
+            [astat.shot addObject:[currentSettings.sport.lacrosse_shots objectForKey:@"Wide"]];
+            break;
+            
         case 1:
-            if ([stats hasPlayerStatPeriod:period])
-                return [[stats.player_stats objectAtIndex:0] shot].count;
-            break;
-            
-        case 2:
-            if ([stats hasPlayerStatPeriod:period])
-                return [[stats.player_stats objectAtIndex:1] shot].count;
-            break;
-            
-        case 3:
-            if ([stats hasPlayerStatPeriod:period])
-                return [[stats.player_stats objectAtIndex:2] shot].count;
-            break;
-            
-        case 4:
-            if ([stats hasPlayerStatPeriod:period])
-                return [[stats.player_stats objectAtIndex:3] shot].count;
-            break;
-            
-        case 5:
-            if ([stats hasPlayerStatPeriod:period])
-                return [[stats.player_stats objectAtIndex:4] shot].count;
+            [astat.shot addObject:[currentSettings.sport.lacrosse_shots objectForKey:@"Pipe"]];
             break;
             
         default:
-            return 0;
+            [astat.shot addObject:[currentSettings.sport.lacrosse_shots objectForKey:@"Save"]];
+    }
+    
+    astat.dirty = YES;
+    _saveImage.hidden = YES;
+    
+    [self updateCollectionViews];
+}
+
+- (IBAction)periodSegmentClicked:(id)sender {
+    switch (_periodSegmentControl.selectedSegmentIndex) {
+        case 0:
+            selectedPeriod = 1;
+            break;
+            
+        case 1:
+            selectedPeriod = 2;
+            break;
+            
+        case 2:
+            selectedPeriod = 3;
+            break;
+            
+        case 3:
+            selectedPeriod = 4;
+            break;
+            
+        default:
+            selectedPeriod = 5;
             break;
     }
     
-    return 0;
+    if (_periodSegmentControl.selectedSegmentIndex == 4) {
+        _overtimeCollectionView.hidden = NO;
+        [self.view bringSubviewToFront:_overtimeCollectionView];
+    } else {
+        _overtimeCollectionView.hidden = YES;
+        [self.view sendSubviewToBack:_overtimeCollectionView];
+    }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Configure the cell...
+#pragma mark - UICollectionView Datasource
+
+- (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section {
+    if (view == _periodoneCollectionView) {
+        if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:1]])
+             return [stats getPlayerStatPeriod:[NSNumber numberWithInt:1]].shot.count;
+        else
+            return 0;
+    } else if (view == _periodtwoCollectionView) {
+        if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:2]])
+            return [stats getPlayerStatPeriod:[NSNumber numberWithInt:2]].shot.count;
+        else
+            return 0;
+    } else if (view == _periodthreeCollectionView) {
+        if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:3]])
+            return [stats getPlayerStatPeriod:[NSNumber numberWithInt:3]].shot.count;
+        else
+            return 0;
+    } else if (view == _periodfourCollectionView) {
+        if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:4]])
+            return [stats getPlayerStatPeriod:[NSNumber numberWithInt:4]].shot.count;
+        else
+            return 0;
+    } else {
+        if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:5]])
+            return [stats getPlayerStatPeriod:[NSNumber numberWithInt:5]].shot.count;
+        else
+            return 0;
+    }
+}
+
+- (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView {
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    EazesportzLacrosseScoreCollectionViewCell *cell = [cv dequeueReusableCellWithReuseIdentifier:@"ShotCell" forIndexPath:indexPath];
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ShotTableCell" forIndexPath:indexPath];
+    cell.layer.borderWidth = 1.0f;
+    cell.layer.borderColor=[UIColor blackColor].CGColor;
     
-    int theperiod = [_periodTextField.text intValue];
-    NSArray *shots = [[stats.player_stats objectAtIndex:(theperiod - 1)] shot];
-    NSArray* arrayOfKeys = [currentSettings.sport.lacrosse_shots allKeysForObject:[shots objectAtIndex:indexPath.row]];
-    cell.textLabel.text = [arrayOfKeys objectAtIndex:0];
+    if (cv == _periodoneCollectionView) {
+        LacrossPlayerStat *thestat = [stats getPlayerStatPeriod:[NSNumber numberWithInt:1]];
+        [thestat.shot objectAtIndex:indexPath.row];
+        
+        if (visitingPlayer)
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [visitingPlayer.number stringValue],
+                                       [thestat.shot objectAtIndex:indexPath.row]];
+        else
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [player.number stringValue], [thestat.shot objectAtIndex:indexPath.row]];
+        
+    } else if (cv == _periodtwoCollectionView) {
+        LacrossPlayerStat *thestat = [stats getPlayerStatPeriod:[NSNumber numberWithInt:2]];
+        [thestat.shot objectAtIndex:indexPath.row];
+        
+        if (visitingPlayer)
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [visitingPlayer.number stringValue],
+                                       [thestat.shot objectAtIndex:indexPath.row]];
+        else
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [player.number stringValue], [thestat.shot objectAtIndex:indexPath.row]];
+        
+    } else if (cv == _periodthreeCollectionView) {
+        LacrossPlayerStat *thestat = [stats getPlayerStatPeriod:[NSNumber numberWithInt:3]];
+        [thestat.shot objectAtIndex:indexPath.row];
+        
+        if (visitingPlayer)
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [visitingPlayer.number stringValue],
+                                       [thestat.shot objectAtIndex:indexPath.row]];
+        else
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [player.number stringValue], [thestat.shot objectAtIndex:indexPath.row]];
+        
+    } else if (cv == _periodfourCollectionView) {
+        LacrossPlayerStat *thestat = [stats getPlayerStatPeriod:[NSNumber numberWithInt:4]];
+        [thestat.shot objectAtIndex:indexPath.row];
+        
+        if (visitingPlayer)
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [visitingPlayer.number stringValue],
+                                       [thestat.shot objectAtIndex:indexPath.row]];
+        else
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [player.number stringValue], [thestat.shot objectAtIndex:indexPath.row]];
+        
+    } else {
+        LacrossPlayerStat *thestat = [stats getPlayerStatPeriod:[NSNumber numberWithInt:5]];
+        [thestat.shot objectAtIndex:indexPath.row];
+        
+        if (visitingPlayer)
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [visitingPlayer.number stringValue],
+                                       [thestat.shot objectAtIndex:indexPath.row]];
+        else
+            cell.timetypeLabel.text = [NSString stringWithFormat:@"%@ - %@", [player.number stringValue], [thestat.shot objectAtIndex:indexPath.row]];
+        
+    }
+    
     return cell;
 }
+// 4
+/*- (UICollectionReusableView *)collectionView:
+ (UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+ {
+ return [[UICollectionReusableView alloc] init];
+ }*/
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+#pragma mark - UICollectionViewDelegate
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete" message:@"Delete shot?" delegate:self cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Delete", nil];
+    [alert show];
+    deleteIndex = indexPath;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([[stats.player_stats objectAtIndex:[_periodTextField.text intValue]] isEqualToString:@"G"]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Shots from goals are automatically removed when a goal is deleted. Please delete the goal and the shot will be automtically removed." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
-    } else {
-        LacrossPlayerStat *playerstat = [stats.player_stats objectAtIndex:[_periodTextField.text intValue]];
-        [playerstat.shot removeObjectAtIndex:indexPath.row];
-        [playerstat deleteshot:currentSettings.sport Team:currentSettings.team Game:game User:currentSettings.user
-                                                    Shot:[currentSettings.sport.lacrosse_shots objectForKey:_shotTextField.text]];
-        [_shotTableView reloadData];
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
+    // TODO: Deselect item
+}
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind
+                                 atIndexPath:(NSIndexPath *)indexPath {
+    UICollectionReusableView *reusableview = nil;
+    
+    if (kind == UICollectionElementKindSectionHeader) {
+        HeaderSelectCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                                                                                    withReuseIdentifier:@"ShotHeaderCell" forIndexPath:indexPath];
+        
+        headerView.layer.borderWidth = 1.0f;
+        headerView.layer.borderColor=[UIColor blackColor].CGColor;
+        
+        reusableview = headerView;
+    }
+    
+    if (kind == UICollectionElementKindSectionFooter) {
+        UICollectionReusableView *footerview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"FooterCell" forIndexPath:indexPath];
+        
+        reusableview = footerview;
+    }
+    
+    return reusableview;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Delete"]) {
+        LacrossPlayerStat *thestat = [stats.player_stats objectAtIndex:selectedPeriod - 1];
+        [thestat.shot removeObjectAtIndex:deleteIndex.row];
+    }
+    
+    [self updateCollectionViews];
+}
+
+- (void)updateCollectionViews {
+    switch (selectedPeriod) {
+        case 1:
+            [_periodoneCollectionView reloadData];
+            break;
+            
+        case 2:
+            [_periodtwoCollectionView reloadData];
+            break;
+            
+        case 3:
+            [_periodthreeCollectionView reloadData];
+            break;
+            
+        case 4:
+            [_periodfourCollectionView reloadData];
+            break;
+            
+        default:
+            [_overtimeCollectionView reloadData];
+            break;
     }
 }
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Shot Type - Swipe to delete";
-}
-
-- (IBAction)saveButtonClicked:(id)sender {
-    if ((_shotTextField.text.length > 0) && (_periodTextField.text.length > 0)) {
-        LacrossPlayerStat *playerstat;
-        
-        if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:[_periodTextField.text intValue]]])
-            playerstat = [stats.player_stats objectAtIndex:[_periodTextField.text intValue]];
-        else {
-            playerstat = [[LacrossPlayerStat alloc] init];
-            playerstat.period = [NSNumber numberWithInt:[_periodTextField.text intValue]];
-            playerstat.lacrosstat_id = stats.lacrosstat_id;
-            
-            if (visitingPlayer)
-                playerstat.visitor_roster_id = visitingPlayer.visitor_roster_id;
-            else
-                playerstat.athlete_id = player.athleteid;
-            
-            [stats.player_stats addObject:playerstat];
-        }
-        
-        [playerstat.shot addObject:[currentSettings.sport.lacrosse_shots objectForKey:_shotTextField.text]];
-        [playerstat saveShot:currentSettings.sport Team:currentSettings.team Game:game User:currentSettings.user
-                                                    Shot:[currentSettings.sport.lacrosse_shots objectForKey:_shotTextField.text]];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter shot and period" delegate:nil cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }
-}
-
 @end

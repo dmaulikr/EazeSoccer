@@ -27,13 +27,21 @@
 @synthesize athlete_id;
 @synthesize visitor_roster_id;
 
+@synthesize dirty;
+@synthesize photos;
+@synthesize videos;
+
 @synthesize httperror;
 
 - (id)init {
     if (self = [super init]) {
+        period = [NSNumber numberWithInt:0];
         assist = @"";
         gametime = @"00:00";
         scorecode = @"";
+        photos = [[NSMutableArray alloc] init];
+        videos = [[NSMutableArray alloc] init];
+        dirty = NO;
         scorecodes = [[NSDictionary alloc] initWithObjectsAndKeys:@"Broken clear resulted in goal", @"B", @"Cutter scored after receiving feed", @"C",
                                                                 @"Dodging goal", @"D", @"Fast break goal", @"F", @"Outside shot scored", @"O",
                                                                 @"Extra man play scored", @"X", nil];
@@ -56,6 +64,23 @@
         lacrosstat_id = [lacross_scoring_dictionary objectForKey:@"lacrosstat_id"];
         athlete_id = [lacross_scoring_dictionary objectForKey:@"athlete_id"];
         visitor_roster_id = [lacross_scoring_dictionary objectForKey:@"visitor_roster_id"];
+        dirty = NO;
+        
+        NSArray *photoarray = [lacross_scoring_dictionary objectForKey:@"photos"];
+        photos = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < photoarray.count; i++) {
+            NSDictionary *dictionary = [photoarray objectAtIndex:i];
+            [photos addObject:[dictionary objectForKey:@"id"]];
+        }
+        
+        NSArray *videoarray = [lacross_scoring_dictionary objectForKey:@"videos"];
+        videos = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < videoarray.count; i++) {
+            NSDictionary *dictionary = [videoarray objectAtIndex:i];
+            [videos addObject:[dictionary objectForKey:@"id"]];
+        }
         
         return  self;
     } else

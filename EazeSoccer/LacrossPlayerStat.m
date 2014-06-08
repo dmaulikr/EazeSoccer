@@ -33,11 +33,22 @@
 @synthesize athlete_id;
 @synthesize visitor_roster_id;
 
+@synthesize dirty;
+
 @synthesize httperror;
 
 - (id)init {
     if (self = [super init]) {
         shot = [[NSMutableArray alloc] init];
+        face_off_won = [NSNumber numberWithInt:0];
+        face_off_lost = [NSNumber numberWithInt:0];
+        face_off_violation = [NSNumber numberWithInt:0];
+        ground_ball = [NSNumber numberWithInt:0];
+        interception = [NSNumber numberWithInt:0];
+        turnover = [NSNumber numberWithInt:0];
+        caused_turnover = [NSNumber numberWithInt:0];
+        steals = [NSNumber numberWithInt:0];
+        period = [NSNumber numberWithInt:0];
         return self;
     } else
         return nil;
@@ -115,8 +126,8 @@
 - (void)saveShot:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user Shot:(NSString *)theshot {
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSURL *aurl = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",[mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                        @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", game.id, @"/lacrosse_add_shot.json?auth_token=",
-                                        user.authtoken]];
+                                        @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", game.id,
+                                        @"/lacrosse_add_shot.json?auth_token=", user.authtoken]];
     
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:theshot, @"addshot", lacrosstat_id, @"lacrosstat_id",
                                                                                         period, @"period", nil];

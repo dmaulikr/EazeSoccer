@@ -79,6 +79,7 @@
         penatlyStat = [[LacrossPenalty alloc] init];
     }
 }
+
 /*
 #pragma mark - Navigation
 

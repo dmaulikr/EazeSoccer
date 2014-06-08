@@ -28,5 +28,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *scorecodeTextField;
 @property (weak, nonatomic) IBOutlet UITextField *playergoalTextField;
 @property (weak, nonatomic) IBOutlet UITextField *playerassistTextField;
+@property (weak, nonatomic) IBOutlet UIButton *mediaButton;
+- (IBAction)mediaButtonClicked:(id)sender;
 
 @end

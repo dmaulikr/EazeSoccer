@@ -39,7 +39,7 @@
     NSString *urlstring = [NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
                                        @"/sports/", sport.id, @"/updateApnNotification.json"];
     
-    if (user.userid.length > 0) {
+    if ([user loggedIn]) {
         [notificationDictionary setValue:user.userid forKey:@"user_id"];
         urlstring = [urlstring stringByAppendingFormat:@"?auth_token=%@", user.authtoken];
     }

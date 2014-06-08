@@ -124,4 +124,20 @@
     }
 }
 
+- (BOOL)loggedIn {
+    if (userid.length > 0)
+        return YES;
+    else
+        return NO;
+}
+
+- (void)logout {
+    email = nil;
+    authtoken = nil;
+    userid = nil;
+    username = nil;
+    admin = NO;
+    adminsite = @"";
+}
+
 @end

@@ -31,7 +31,7 @@
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSURL *url;
     
-    if (token)
+    if (token.length > 0)
         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
                                        @"/sports/", currentSettings.sport.id, @"/photos/showfeaturedphotos.json?team_id=",
                                        currentSettings.team.teamid, @"&auth_token=", currentSettings.user.authtoken]];

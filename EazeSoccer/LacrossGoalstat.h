@@ -25,6 +25,8 @@
 @property (nonatomic, strong) NSString *athlete_id;
 @property (nonatomic, strong) NSString *visitor_roster_id;
 
+@property (nonatomic, assign) BOOL dirty;
+
 - (id)initWithDictionary:(NSDictionary *)lacross_goalstat_dictionary;
 
 - (void)save:(Sport *)sport Team:(Team *)team Game:(GameSchedule *)game User:(User *)user;

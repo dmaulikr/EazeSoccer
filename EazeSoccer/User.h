@@ -41,4 +41,8 @@
 
 - (id)initWithDictionary:(NSDictionary *)userDictionary;
 
+- (BOOL)loggedIn;
+
+- (void)logout;
+
 @end

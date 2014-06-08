@@ -49,6 +49,9 @@
 
 - (BOOL)hasPlayerStatPeriod:(NSNumber *)period;
 - (BOOL)hasGoalieStatPeriod:(NSNumber *)period;
+- (LacrossPlayerStat *)getPlayerStatPeriod:(NSNumber *)period;
+
+- (void)save:(Sport *)sport Game:(GameSchedule *)game User:(User *)user;
 
 @end
     

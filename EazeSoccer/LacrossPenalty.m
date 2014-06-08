@@ -23,6 +23,8 @@
 @synthesize athlete_id;
 @synthesize visitor_roster_id;
 
+@synthesize dirty;
+
 @synthesize httperror;
 
 - (id)init {
@@ -30,6 +32,7 @@
         infraction = @"";
         type = @"";
         gametime = @"00:00";
+        period = [NSNumber numberWithInt:0];
         return self;
     } else
         return nil;

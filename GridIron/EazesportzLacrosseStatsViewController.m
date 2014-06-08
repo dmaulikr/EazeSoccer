@@ -83,7 +83,7 @@
     [self getGoalieStats];
     
     if (currentSettings.isSiteOwner)
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, self.scoreButton, nil];
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, self.scoreButton, self.saveBarButton, nil];
     else
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, nil];
 }
@@ -139,19 +139,12 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
     if (playerStats) {
-        if ((gamestats.count == 0) && ([currentSettings isSiteOwner])) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Player Stats" message:@"Select Stat to Add" delegate:self
-                                                  cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add Shot", @"Player Stats", nil];
-            [alert show];
-        }
         return gamestats.count;
     } else {
-        if ((goaliestats.count == 0) && ([currentSettings isSiteOwner])) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Goalie Stats" message:@"Select Add to add goalie stats" delegate:self
-                                                  cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add Goalie", nil];
-            [alert show];
-        }
-        return goaliestats.count;
+        if ([currentSettings isSiteOwner])
+            return goaliestats.count + 1;
+        else
+            return goaliestats.count;
     }
 }
 
@@ -183,6 +176,11 @@
         cell.label3.text = [thestat.shots stringValue];
         cell.label4.text = [thestat.ground_ball stringValue];
         
+        if ([currentSettings isSiteOwner])
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        else
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         return cell;
     } else if ((playerStats) && (indexPath.section == 1)) {
         EazesportzLacrosseStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PlayerTableCell" forIndexPath:indexPath];
@@ -208,6 +206,11 @@
         cell.label3.text = [thestat.steals stringValue];
         cell.label4.text = [thestat.penalties stringValue];
         
+        if ([currentSettings isSiteOwner])
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        else
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         return cell;
     } else if ((playerStats) && (indexPath.section == 2)) {
         EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PlayerFaceoffTableCell" forIndexPath:indexPath];
@@ -231,28 +234,48 @@
         cell.faceoffLabel.text = [NSString stringWithFormat:@"%@-%@", [thestat.face_off_won stringValue], [thestat.face_off_lost stringValue]];
         cell.penaltyLabel.text = thestat.penaltytime;
         
+        if ([currentSettings isSiteOwner])
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        else
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         return cell;
     } else {
-        EazesportzLacrosseGoalieStatsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GoalieTableCell" forIndexPath:indexPath];
-        
-        cell.backgroundColor = [UIColor darkGrayColor];
-        
-        LacrossAllStats *thestat = [gamestats objectAtIndex:indexPath.row];
-        
-        if (visitorstats) {
-            VisitorRoster *player = [visitors findAthlete:[[gamestats objectAtIndex:indexPath.row] visitor_roster_id]];
-            cell.numberLabel.text = [player.number stringValue];
-            cell.playerLabel.text = player.logname;
+        if (indexPath.row < goaliestats.count) {
+            EazesportzLacrosseGoalieStatsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GoalieTableCell" forIndexPath:indexPath];
+            
+            cell.backgroundColor = [UIColor darkGrayColor];
+            
+            LacrossAllStats *thestat = [gamestats objectAtIndex:indexPath.row];
+            
+            if (visitorstats) {
+                VisitorRoster *player = [visitors findAthlete:[[gamestats objectAtIndex:indexPath.row] visitor_roster_id]];
+                cell.numberLabel.text = [player.number stringValue];
+                cell.playerLabel.text = player.logname;
+            } else {
+                Athlete *player = [currentSettings findAthlete:[[gamestats objectAtIndex:indexPath.row] athlete_id]];
+                cell.numberLabel.text = [player.number stringValue];
+                cell.playerLabel.text = player.logname;
+            }
+            
+            cell.savesLabel.text = [thestat.saves stringValue];
+            cell.minutesLabel.text = thestat.minutesplayed;
+            cell.decisionLabel.text = @"";
+            
+            if ([currentSettings isSiteOwner])
+                cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+            else
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            return cell;
         } else {
-            Athlete *player = [currentSettings findAthlete:[[gamestats objectAtIndex:indexPath.row] athlete_id]];
-            cell.numberLabel.text = [player.number stringValue];
-            cell.playerLabel.text = player.logname;
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GoalieTableCell" forIndexPath:indexPath];
+            cell.backgroundColor = [UIColor darkGrayColor];
+            cell.textLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.textLabel.text = @"Add Goalie";
+            return cell;
         }
-        
-        cell.savesLabel.text = [thestat.saves stringValue];
-        cell.minutesLabel.text = thestat.minutesplayed;
-        cell.decisionLabel.text = @"";
-        return cell;
     }
 }
 
@@ -260,38 +283,34 @@
     if ([currentSettings isSiteOwner]) {
         if (playerStats) {
             selectedIndex = indexPath;
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stats" message:@"Select Stat to Add" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add Shot", @"Player Stats", nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Stats" message:@"Select Stat to Add" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add Shot", @"Add Player Stat", nil];
             [alert show];
         } else {
             _goaliestatsContainer.hidden = NO;
             
-            if (visitorstats) {
-                goalieController.visitingPlayer = [visitors findAthlete:[[goaliestats objectAtIndex:selectedIndex.row] visitor_roster_id]];
-                goalieController.player = nil;
+            if (indexPath.row < goaliestats.count) {
+                if (visitorstats) {
+                    goalieController.visitingPlayer = [visitors findAthlete:[[goaliestats objectAtIndex:indexPath.row] visitor_roster_id]];
+                    goalieController.player = nil;
+                    goalieController.lacrosstat = [goalieController.visitingPlayer findLacrossStat:game];
+                } else {
+                    goalieController.player = [currentSettings findAthlete:[[goaliestats objectAtIndex:indexPath.row] athlete_id]];
+                    goalieController.visitingPlayer = nil;
+                    goalieController.lacrosstat = [goalieController.player findLacrosstat:game];
+                }
             } else {
-                goalieController.player = [currentSettings findAthlete:[[goaliestats objectAtIndex:selectedIndex.row] athlete_id]];
-                goalieController.visitingPlayer = nil;
+                _pickerView.hidden = NO;
             }
             
+//            goalieController.goalstat =
             goalieController.game = game;
             [goalieController viewWillAppear:YES];
         }
     }
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if ([currentSettings isSiteOwner]) {
-        if (editingStyle == UITableViewCellEditingStyleDelete) {
-            deleteIndexPath = indexPath;
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                            message:@"Stats will be automatically updated. Click Confirm to Proceed"
-                                                           delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
-        }
-    }
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+        return NO;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -417,10 +436,6 @@
     [_statsTableView reloadData];
 }
 
-- (IBAction)lacrosseCancelStats:(UIStoryboardSegue *)segue {
-    _shotsContainer.hidden = YES;
-}
-
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
@@ -436,7 +451,7 @@
         }
         shotsController.game = game;
         [shotsController viewWillAppear:YES];
-    } else if ([title isEqualToString:@"Player Stats"]) {
+    } else if ([title isEqualToString:@"Add Player Stat"]) {
         _playerstatsContainer.hidden = NO;
         
         if (visitorstats) {
@@ -448,10 +463,6 @@
         }
         playerStatsController.game = game;
         [playerStatsController viewWillAppear:YES];
-    } else if ([title isEqualToString:@"Add Goalie"]) {
-        _pickerView.hidden = NO;
-    } else if ([title isEqualToString:@"Add Player Stat"]) {
-        _pickerView.hidden = NO;
     }
 }
 
@@ -490,24 +501,18 @@
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     _pickerView.hidden = YES;
     
-    if (playerStats) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Add Player Stat" message:@"Add Shot or Other Player Statistic?" delegate:self
-                                              cancelButtonTitle:@"Ok" otherButtonTitles:@"Add Shot", @"Player Stats", nil];
-        [alert show];
+    _goaliestatsContainer.hidden = NO;
+    goalieController.game = game;
+    
+    if (visitorstats) {
+        goalieController.visitingPlayer = [visitors.visitor_roster objectAtIndex:row];
+        goalieController.player = nil;
     } else {
-        _goaliestatsContainer.hidden = NO;
-        goalieController.game = game;
-        
-        if (visitorstats) {
-            goalieController.visitingPlayer = [visitors.visitor_roster objectAtIndex:row];
-            goalieController.player = nil;
-        } else {
-            goalieController.player = [currentSettings.roster objectAtIndex:row];
-            goalieController.visitingPlayer = nil;
-        }
-        
-        [goalieController viewWillAppear:YES];
+        goalieController.player = [currentSettings.roster objectAtIndex:row];
+        goalieController.visitingPlayer = nil;
     }
+    
+    [goalieController viewWillAppear:YES];
 }
 
 - (IBAction)refreshBarButtonClicked:(id)sender {
@@ -528,4 +533,15 @@
 
 - (IBAction)scoreButtonClicked:(id)sender {
 }
+
+- (IBAction)lacrosseSaveGoalieStat:(UIStoryboardSegue *)segue {
+    
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+        [[[currentSettings.roster objectAtIndex:i] findLacrossStat:game] save:currentSettings.sport Game:game User:currentSettings.user];
+    }
+}
+
 @end

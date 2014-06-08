@@ -36,7 +36,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSURL *url;
     
-    if (authtoken)
+    if (authtoken.length > 0)
         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports/",
                                     sportid, @"/sponsors.json?auth_token=", authtoken]];
     else

@@ -24,7 +24,7 @@
     NSString *stringurl = [NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
                                     @"/sports/", sport.id, @"/newsfeeds.json?team_id=", team.teamid];
     
-    if (user.authtoken.length > 0) {
+    if ([user loggedIn]) {
         stringurl = [stringurl stringByAppendingFormat:@"&auth_token=%@", user.authtoken];
     }
 

@@ -28,5 +28,6 @@
 
 - (IBAction)scoreEntryCompleted:(UIStoryboardSegue *)segue;
 - (IBAction)deleteScoreEntryCompleted:(UIStoryboardSegue *)segue;
+- (IBAction)cancelScoreEntryCompleted:(UIStoryboardSegue *)segue;
 
 @end

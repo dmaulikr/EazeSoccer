@@ -45,6 +45,7 @@
 @synthesize user;
 @synthesize gamelog;
 @synthesize videos;
+@synthesize lacross_scoring_id;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -81,7 +82,7 @@
     _playerSelectContainer.hidden = YES;
     _userSelectionContainer.hidden = YES;
     
-    if ((player) || (game) || (user)) {
+    if ((player) || (game) || (user) || (lacross_scoring_id.length > 0)) {
         [self retrieveVideos];
     }
     
@@ -91,8 +92,11 @@
 
 - (void)retrieveVideos {
     [_activityIndicator startAnimating];
-    [getVideos retrieveVideos:currentSettings.sport Team:currentSettings.team Athlete:player Game:game SearchUser:user GameLog:(Gamelogs*)gamelog
-                         User:currentSettings.user];
+    
+    getVideos.gamelog = gamelog;
+    getVideos.lacross_scoring_id = lacross_scoring_id;
+    
+    [getVideos retrieveVideos:currentSettings.sport Team:currentSettings.team Athlete:player Game:game SearchUser:user User:currentSettings.user];
 }
 
 - (void)gotVideos:(NSNotification *)notification {

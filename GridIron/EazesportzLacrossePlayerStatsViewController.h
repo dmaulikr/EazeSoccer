@@ -18,7 +18,6 @@
 @property (nonatomic, strong) Athlete *player;
 @property (nonatomic, strong) VisitorRoster *visitingPlayer;
 
-@property (weak, nonatomic) IBOutlet UITextField *periodTextField;
 @property (weak, nonatomic) IBOutlet UITextField *groundBallTextField;
 @property (weak, nonatomic) IBOutlet UITextField *turnoverTextField;
 @property (weak, nonatomic) IBOutlet UITextField *causedTurnoverTextField;
@@ -27,6 +26,16 @@
 @property (weak, nonatomic) IBOutlet UITextField *faceofflostTextField;
 @property (weak, nonatomic) IBOutlet UITextField *faceoffviolationTextField;
 - (IBAction)saveButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIPickerView *pickerView;
-@property (weak, nonatomic) IBOutlet UILabel *playerLabel;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *periodSegmentControl;
+- (IBAction)periodSegmentControlClicked:(id)sender;
+- (IBAction)groundBallStepperClicked:(id)sender;
+- (IBAction)turnoverStepperClicked:(id)sender;
+- (IBAction)causedTurnoverStepperClicked:(id)sender;
+- (IBAction)stealsStepperClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UINavigationItem *playerStatsNavigationItem;
+@property (weak, nonatomic) IBOutlet UIStepper *groundballStepper;
+@property (weak, nonatomic) IBOutlet UIStepper *turnoverStepper;
+@property (weak, nonatomic) IBOutlet UIStepper *causedturnoverStepper;
+@property (weak, nonatomic) IBOutlet UIStepper *stealsStepper;
+@property (weak, nonatomic) IBOutlet UIImageView *saveImage;
 @end

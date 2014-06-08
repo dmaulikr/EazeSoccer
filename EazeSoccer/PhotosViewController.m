@@ -47,6 +47,7 @@
 @synthesize user;
 @synthesize photos;
 @synthesize activityIndicator;
+@synthesize lacross_scoring_id;
 
 - (void)viewDidLoad
 {
@@ -73,7 +74,7 @@
     _userSelectContainer.hidden = YES;
     
     if (currentSettings.photodeleted) {
-        if ((player) || (game) || (user))
+        if ((player) || (game) || (user) || (lacross_scoring_id.length > 0))
             [self getPhotos];
         else if (!photos)
             [self teamButtonClicked:self];
@@ -398,6 +399,18 @@
                                         @"/sports/", currentSettings.sport.id, @"/photos.json?team_id=",
                                         currentSettings.team.teamid, @"&user_id=", currentSettings.user.userid]];
         
+    } else if (lacross_scoring_id.length > 0) {
+        NSString *urlstring;
+        
+        urlstring = [NSString stringWithFormat:@"%@/sports/%@/photos.json?team_id=%@&lacross_scoring_id=%@",
+                                            [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
+                                            currentSettings.team.teamid, lacross_scoring_id];
+        
+        if (currentSettings.user.authtoken.length > 0)
+            urlstring = [urlstring stringByAppendingString:[NSString stringWithFormat:@"&auth_token=%@", currentSettings.user.authtoken]];
+        
+        
+        url = [NSURL URLWithString:urlstring];
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:url];

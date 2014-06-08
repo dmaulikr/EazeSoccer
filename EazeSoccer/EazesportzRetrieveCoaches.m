@@ -32,7 +32,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSURL *url;
     
-    if (authtoken)
+    if (authtoken.length > 0)
         url = [NSURL URLWithString:[sportzServerInit getCoachList:currentSettings.team.teamid Token:currentSettings.user.authtoken]];
     else
         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],

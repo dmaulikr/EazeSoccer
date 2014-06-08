@@ -9,7 +9,7 @@
 #import "EazesportzLacrosseScoreEntryViewController.h"
 #import "EazesportzAppDelegate.h"
 
-@interface EazesportzLacrosseScoreEntryViewController ()
+@interface EazesportzLacrosseScoreEntryViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -81,8 +81,19 @@
             visitor = [visitors findAthlete:scorestat.visitor_roster_id];
         else
             athlete = [currentSettings findAthlete:scorestat.athlete_id];
-    } else
+        
+        if ((scorestat.photos.count > 0) || (scorestat.videos.count > 0)) {
+            _mediaButton.enabled = YES;
+            _mediaButton.hidden = NO;
+        } else {
+            _mediaButton.enabled = NO;
+            _mediaButton.hidden = YES;
+        }
+    } else {
         scorestat = [[LacrossScoring alloc] init];
+        _mediaButton.enabled = NO;
+        _mediaButton.hidden = YES;
+    }
 }
 
 /*
@@ -199,6 +210,9 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
+}
+
+- (IBAction)mediaButtonClicked:(id)sender {
 }
 
 @end

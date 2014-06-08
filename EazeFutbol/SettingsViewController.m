@@ -107,7 +107,7 @@
         if ([httpResponse statusCode] == 200) {
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:PIN_SAVED];
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
-            currentSettings.user = nil;
+            [currentSettings.user logout];
             UITabBarController *tabBarController = self.tabBarController;
           
             for (UIViewController *viewController in tabBarController.viewControllers)

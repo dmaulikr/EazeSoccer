@@ -21,6 +21,8 @@
 @property(nonatomic, strong) GameSchedule *game;
 @property(nonatomic, strong) User *user;
 
+@property (nonatomic, strong) NSString *lacross_scoring_id;
+
 @property(nonatomic, strong) NSMutableArray *photos;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *searchButton;

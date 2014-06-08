@@ -23,6 +23,19 @@
 @synthesize athlete_id;
 @synthesize visitor_roster_id;
 
+@synthesize dirty;
+
+- (id)init {
+    if (self = [super init]) {
+        goals_allowed = [NSNumber numberWithInt:0];
+        minutesplayed = [NSNumber numberWithInt:0];
+        period = [NSNumber numberWithInt:0];
+        saves = [NSNumber numberWithInt:0];
+        return self;
+    } else
+        return nil;
+}
+
 - (id)initWithDictionary:(NSDictionary *)lacross_goalstat_dictionary {
     if (self = [super init]) {
         saves = [lacross_goalstat_dictionary objectForKey:@"saves"];

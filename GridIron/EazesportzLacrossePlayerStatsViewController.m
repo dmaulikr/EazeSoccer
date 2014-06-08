@@ -16,6 +16,8 @@
 @implementation EazesportzLacrossePlayerStatsViewController {
     NSArray *periodarray;
     Lacrosstat *stats;
+    LacrossPlayerStat *playerstat;
+    int selectedPeriod;
 }
 
 @synthesize game;
@@ -56,14 +58,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _pickerView.hidden = YES;
+    _saveImage.hidden = YES;
     
     if (visitingPlayer) {
         stats = [visitingPlayer findLacrossStat:game];
-        _playerLabel.text = visitingPlayer.numberlogname;
+        _playerStatsNavigationItem.title = visitingPlayer.numberlogname;
     } else {
         stats = [player findLacrosstat:game];
-        _playerLabel.text = player.numberLogname;
+        _playerStatsNavigationItem.title = player.numberLogname;
     }
     
     _groundBallTextField.text = @"0";
@@ -73,85 +75,45 @@
     _faceoffwonTextField.text = @"0";
     _faceofflostTextField.text = @"0";
     _faceoffviolationTextField.text = @"0";
+    
+    [_periodSegmentControl setSelectedSegmentIndex:UISegmentedControlNoSegment];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (IBAction)saveButtonClicked:(id)sender {
-    if (_periodTextField.text.length > 0) {
-        LacrossPlayerStat *playerstat;
-        
-        if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:[_periodTextField.text intValue]]]) {
-            playerstat = [stats.player_stats objectAtIndex:[_periodTextField.text intValue] - 1];
-        } else {
-            playerstat = [[LacrossPlayerStat alloc] init];
-            playerstat.period = [NSNumber numberWithInt:[_periodTextField.text intValue]];
-            playerstat.lacrosstat_id = stats.lacrosstat_id;
-            
-            if (visitingPlayer)
-                playerstat.visitor_roster_id = visitingPlayer.visitor_roster_id;
-            else
-                playerstat.athlete_id = player.athleteid;
-            
-            [stats.player_stats addObject:playerstat];
-        }
-        
-        playerstat.ground_ball = [NSNumber numberWithInt:[playerstat.ground_ball intValue] +
-                                  [_groundBallTextField.text intValue]];
-        playerstat.turnover =[NSNumber numberWithInt:[playerstat.turnover intValue] +
-                              [_turnoverTextField.text intValue]];
-        playerstat.caused_turnover =[NSNumber numberWithInt:[playerstat.caused_turnover intValue] +
-                              [_causedTurnoverTextField.text intValue]];
-        playerstat.steals =[NSNumber numberWithInt:[playerstat.steals intValue] +
-                                     [_stealsTextField.text intValue]];
-        playerstat.face_off_won =[NSNumber numberWithInt:[playerstat.face_off_won intValue] +
-                                     [_faceoffwonTextField.text intValue]];
-        playerstat.face_off_lost =[NSNumber numberWithInt:[playerstat.face_off_lost intValue] +
-                                     [_faceofflostTextField.text intValue]];
-        playerstat.face_off_violation =[NSNumber numberWithInt:[playerstat.face_off_violation intValue] +
-                                     [_faceoffviolationTextField.text intValue]];
-        [playerstat save:currentSettings.sport Team:currentSettings.team Game:game User:currentSettings.user];
+    if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:selectedPeriod]]) {
+        playerstat = [stats.player_stats objectAtIndex:selectedPeriod - 1];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Period required!" delegate:nil cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-        [alert show];
+        playerstat = [[LacrossPlayerStat alloc] init];
+        playerstat.period = [NSNumber numberWithInt:selectedPeriod];
+        playerstat.lacrosstat_id = stats.lacrosstat_id;
+        
+        if (visitingPlayer)
+            playerstat.visitor_roster_id = visitingPlayer.visitor_roster_id;
+        else
+            playerstat.athlete_id = player.athleteid;
+        
+        [stats.player_stats addObject:playerstat];
     }
-}
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    return 1;
-}
-
-// Method to define the numberOfRows in a component using the array.
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
-    return periodarray.count;
-}
-
-// Method to show the title of row for a component.
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [periodarray objectAtIndex:row];
-}
-
--(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    _periodTextField.text = [periodarray objectAtIndex:row];
-    _pickerView.hidden = YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (textField == _periodTextField) {
-        [_pickerView reloadAllComponents];
-        _pickerView.hidden = NO;
-        [textField resignFirstResponder];
-    }    
+    
+    playerstat.dirty = YES;
+    
+    playerstat.ground_ball = [NSNumber numberWithInt:[playerstat.ground_ball intValue] +
+                              [_groundBallTextField.text intValue]];
+    playerstat.turnover =[NSNumber numberWithInt:[playerstat.turnover intValue] +
+                          [_turnoverTextField.text intValue]];
+    playerstat.caused_turnover =[NSNumber numberWithInt:[playerstat.caused_turnover intValue] +
+                          [_causedTurnoverTextField.text intValue]];
+    playerstat.steals =[NSNumber numberWithInt:[playerstat.steals intValue] +
+                                 [_stealsTextField.text intValue]];
+    playerstat.face_off_won =[NSNumber numberWithInt:[playerstat.face_off_won intValue] +
+                                 [_faceoffwonTextField.text intValue]];
+    playerstat.face_off_lost =[NSNumber numberWithInt:[playerstat.face_off_lost intValue] +
+                                 [_faceofflostTextField.text intValue]];
+    playerstat.face_off_violation =[NSNumber numberWithInt:[playerstat.face_off_violation intValue] +
+                                 [_faceoffviolationTextField.text intValue]];
+    [playerstat save:currentSettings.sport Team:currentSettings.team Game:game User:currentSettings.user];
+    [stats save:currentSettings.sport Game:game User:currentSettings.user];
+    _saveImage.hidden = NO;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -160,17 +122,89 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    if (textField != _periodTextField) {
-        NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
-        NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
-        BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
-        
-        if (myStringMatchesRegEx)
-            return YES;
-        else
-            return NO;
-    } else
+    NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
+    NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+    BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+    
+    if (myStringMatchesRegEx)
         return YES;
+    else
+        return NO;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    _saveImage.hidden = YES;
+}
+
+- (IBAction)periodSegmentControlClicked:(id)sender {
+    switch (_periodSegmentControl.selectedSegmentIndex) {
+        case 0:
+            selectedPeriod = 1;
+            break;
+            
+        case 1:
+            selectedPeriod = 2;
+            break;
+            
+        case 2:
+            selectedPeriod = 3;
+            break;
+            
+        case 3:
+            selectedPeriod = 4;
+            break;
+            
+        default:
+            selectedPeriod = 5;
+            break;
+    }
+    
+    [self populatePlayerStats];
+}
+
+- (IBAction)groundBallStepperClicked:(id)sender {
+    _saveImage.hidden = YES;
+    _groundBallTextField.text = [NSString stringWithFormat:@"%d", (int)_groundballStepper.value];
+}
+
+- (IBAction)turnoverStepperClicked:(id)sender {
+    _saveImage.hidden = YES;
+    _turnoverTextField.text = [NSString stringWithFormat:@"%d", (int)_turnoverStepper.value];
+}
+
+- (IBAction)causedTurnoverStepperClicked:(id)sender {
+    _saveImage.hidden = YES;
+    _causedTurnoverTextField.text = [NSString stringWithFormat:@"%d", (int)_causedturnoverStepper.value];
+}
+
+- (IBAction)stealsStepperClicked:(id)sender {
+    _saveImage.hidden = YES;
+    _stealsTextField.text = [NSString stringWithFormat:@"%d", (int)_stealsStepper.value];
+}
+
+- (void)populatePlayerStats {
+    if ([stats hasPlayerStatPeriod:[NSNumber numberWithInt:selectedPeriod]]) {
+        playerstat = [stats.player_stats objectAtIndex:selectedPeriod - 1];
+    } else {
+        playerstat = [[LacrossPlayerStat alloc] init];
+        playerstat.period = [NSNumber numberWithInt:selectedPeriod];
+        playerstat.lacrosstat_id = stats.lacrosstat_id;
+        
+        if (visitingPlayer)
+            playerstat.visitor_roster_id = visitingPlayer.visitor_roster_id;
+        else
+            playerstat.athlete_id = player.athleteid;
+        
+        [stats.player_stats addObject:playerstat];
+    }
+    
+    _groundBallTextField.text = [playerstat.ground_ball stringValue];
+    _turnoverTextField.text = [playerstat.turnover stringValue];
+    _causedTurnoverTextField.text = [playerstat.caused_turnover stringValue];
+    _stealsTextField.text = [playerstat.steals stringValue];
+    _faceoffwonTextField.text = [playerstat.face_off_won stringValue];
+    _faceofflostTextField.text = [playerstat.face_off_lost stringValue];
+    _faceoffviolationTextField.text = [playerstat.face_off_violation stringValue];
 }
 
 @end

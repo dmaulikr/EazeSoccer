@@ -10,7 +10,10 @@
 
 #import "EazesportzAppDelegate.h"
 
-@implementation Lacrosstat
+@implementation Lacrosstat {
+    int responseStatusCode;
+    NSMutableData *theData;
+}
 
 @synthesize scoring_stats;
 @synthesize goalstats;
@@ -322,6 +325,204 @@
     }
     
     return hasperiod;
+}
+
+- (LacrossPlayerStat *)getPlayerStatPeriod:(NSNumber *)period {
+    LacrossPlayerStat *thestat;
+    
+    for (int i = 0; i < player_stats.count; i++) {
+        if ([[[player_stats objectAtIndex:i] period] isEqual:period]) {
+            thestat = [player_stats objectAtIndex:i];
+            break;
+        }
+    }
+    
+    return thestat;
+}
+
+- (void)save:(Sport *)sport Game:(GameSchedule *)game User:(User *)user {
+    BOOL savestats = NO;
+    BOOL savescores = NO;
+    BOOL savepenalties = NO;
+    BOOL savegoalies = NO;
+    
+    NSURL *url;
+    
+    if (lacrosstat_id.length > 0) {
+        if (athlete_id.length > 0) {
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/athletes/%@/lacrosstats/%@.json?auth_token=%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], sport.id, athlete_id, lacrosstat_id,
+                                        user.authtoken]];
+            } else {
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@visitor_roster/%@/lacrosstats/%@.json?auth_token=%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], sport.id, visitor_roster_id,
+                                        lacrosstat_id, user.authtoken]];
+        }
+    } else {
+        if (athlete_id.length > 0) {
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/athletes/%@/lacrosstats.json?auth_token=%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], sport.id, athlete_id,
+                                        user.authtoken]];
+        } else {
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@visitor_roster/%@/lacrosstats.json?auth_token=%@",
+                                        [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], sport.id, visitor_roster_id,
+                                        user.authtoken]];
+        }
+    }
+    
+    NSMutableDictionary *statDictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:game.lacross_game.lacross_game_id,
+                                           @"lacross_game_id", nil];
+        
+    NSMutableArray *statsarray = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < player_stats.count; i++) {
+
+        if ([[player_stats objectAtIndex:i] dirty]) {
+            savestats = YES;
+            LacrossPlayerStat *playerstat = [player_stats objectAtIndex:i];
+            NSDictionary *adict = [[NSDictionary alloc] initWithObjectsAndKeys:playerstat.ground_ball, @"ground_ball",
+                                   playerstat.face_off_won, @"face_off_won", playerstat.face_off_lost, @"face_off_lost",
+                                   playerstat.face_off_violation, @"face_off_violation", playerstat.interception, @"interception",
+                                   playerstat.turnover, @"turnover", playerstat.caused_turnover, @"caused_turnover",
+                                   playerstat.steals, @"steals", playerstat.period, @"period", playerstat.shot, @"shot",
+                                   playerstat.lacrosstat_id, @"lacrosstat_id", nil];
+            
+            if (playerstat.lacross_player_stat_id.length > 0)
+                [adict setValue:playerstat.lacross_player_stat_id forKey:@"lacross_player_stat_id"];
+            
+            playerstat.dirty = NO;
+            
+            [statsarray addObject:adict];
+        }
+    }
+    
+    if (savestats)
+        [statDictionary setObject:statsarray forKey:@"lacross_player_stats"];
+    
+    statsarray = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < goalstats.count; i++) {
+        if ([[goalstats objectAtIndex:i] dirty]) {
+            savegoalies = YES;
+            LacrossGoalstat *goalstat = [goalstats objectAtIndex:i];
+            NSDictionary *adict = [[NSDictionary alloc] initWithObjectsAndKeys:goalstat.saves, @"saves", goalstat.minutesplayed, @"minutesplayed",
+                                   goalstat.goals_allowed, @"goals_allowed", goalstat.period, @"period", goalstat.lacrosstat_id, @"lacrosstat_id", nil];
+            
+            if (goalstat.lacross_goalstat_id.length > 0)
+                [adict setValue:goalstat.lacross_goalstat_id forKeyPath:@"lacross_goalstat_id"];
+            
+            goalstat.dirty = NO;
+            
+            [statsarray addObject:adict];
+        }
+    }
+    
+    if (savegoalies)
+        [statDictionary setObject:statsarray forKey:@"lacross_goalstats"];
+    
+    statsarray = [[NSMutableArray alloc] init];
+
+    for (int i = 0; i < scoring_stats.count; i++) {
+        if ([[scoring_stats objectAtIndex:i] dirty]) {
+            savescores = YES;
+            LacrossScoring *score = [scoring_stats objectAtIndex:i];
+            NSDictionary *adict = [[NSDictionary alloc] initWithObjectsAndKeys:score.scorecode, @"scorecode", score.gametime, @"gametime",
+                                   score.period, @"period", score.assist, @"assist", score.lacrosstat_id, @"lacrosstat_id", nil];
+            
+            if (score.lacross_scoring_id.length > 0)
+                [adict setValue:score.lacross_scoring_id forKeyPath:@"lacross_scoring_id"];
+            
+            score.dirty = NO;
+            
+            [statsarray addObject:adict];
+        }
+    }
+    
+    if (savescores)
+        [statDictionary setObject:statsarray forKey:@"lacross_scorings"];
+    
+    statsarray = [[NSMutableArray alloc] init];
+
+    for (int i = 0; i < penalty_stats.count; i++) {
+        if ([[penalty_stats objectAtIndex:i] dirty]) {
+            savepenalties = YES;
+            LacrossPenalty *penalty = [penalty_stats objectAtIndex:i];
+            NSDictionary *adict = [[NSDictionary alloc] initWithObjectsAndKeys:penalty.infraction, @"infraction", penalty.gametime, @"gametime",
+                                   penalty.period, @"period", penalty.type, @"type", penalty.lacrosstat_id, @"lacrosstat_id", nil];
+            
+            if (penalty.lacross_penalty_id.length > 0)
+                [adict setValue:penalty.lacross_penalty_id forKeyPath:@"lacross_penalty_id"];
+            
+            penalty.dirty = NO;
+            
+            [statsarray addObject:adict];
+        }
+    }
+    
+    if (savepenalties)
+        [statDictionary setObject:statsarray forKey:@"lacross_penalties"];
+    
+    if ((savepenalties) || (savegoalies) || (savescores) || (savestats)) {
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        NSError *jsonSerializationError = nil;
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        
+        if (lacrosstat_id.length > 0)
+            [request setHTTPMethod:@"PUT"];
+        else
+            [request setHTTPMethod:@"POST"];
+        
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[[NSDictionary alloc] initWithObjectsAndKeys:statDictionary, @"lacrosstats", nil]
+                                                           options:0 error:&jsonSerializationError];
+        
+        if (!jsonSerializationError) {
+            NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            NSLog(@"Serialized JSON: %@", serJson);
+        } else {
+            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+        }
+        
+        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPBody:jsonData];
+        [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+    
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosstatUpdatedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    NSError *jsonSerializationError = nil;
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    NSDictionary *items = [serverData objectForKey:@"lacrosstat_id"];
+    
+    if (responseStatusCode == 200) {
+        if (lacrosstat_id.length == 0) {
+            lacrosstat_id = [items objectForKey:@"_id"];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosstatUpdatedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LacrosstatUpdatedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
+    }
 }
 
 @end

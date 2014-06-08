@@ -15,6 +15,8 @@
 #import "EazesportzNumberFieldViewController.h"
 #import "EazesportzLacrosseStatsViewController.h"
 #import "EazesportzRetrievePlayers.h"
+#import "EazePhotosViewController.h"
+#import "EazesVideosViewController.h"
 
 @interface EazesportzLacrosseGameStatsViewController () <UIAlertViewDelegate>
 
@@ -78,6 +80,18 @@
     } else if ([segue.identifier isEqualToString:@"PlayerStatsSegue"]) {
         EazesportzLacrosseStatsViewController *destController = segue.destinationViewController;
         destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"PhotosSegue"]) {
+        NSIndexPath *indexPath = [_scoreLogTableView indexPathForSelectedRow];
+        LacrossScoring *scorestat = [gamescoreings objectAtIndex:indexPath.row];
+        
+        EazePhotosViewController *destController = segue.destinationViewController;
+        destController.lacross_scoring_id = scorestat.lacross_scoring_id;
+    } else if ([segue.identifier isEqualToString:@"VideosSegue"]) {
+        NSIndexPath *indexPath = [_scoreLogTableView indexPathForSelectedRow];
+        LacrossScoring *scorestat = [gamescoreings objectAtIndex:indexPath.row];
+        
+        EazesVideosViewController *destController = segue.destinationViewController;
+        destController.lacross_scoring_id = scorestat.lacross_scoring_id;
     }
 }
 
@@ -152,15 +166,19 @@
 {
     // Return the number of rows in the section.
     if (scoreLog) {
-        return gamescoreings.count;
-    } else if (penalty) {
-        if ((gamepenalties.count == 0) && ([currentSettings isSiteOwner])) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No Penaltes. Click Add Penalty to add." delegate:self
-                                                  cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add Penalty", nil];
-            [alert show];
-        }
         
-        return gamepenalties.count;
+        if ([currentSettings isSiteOwner])
+            return gamescoreings.count + 1;
+        else
+            return gamescoreings.count;
+        
+    } else if (penalty) {
+        
+        if ([currentSettings isSiteOwner])
+            return gamepenalties.count + 1;
+        else
+            return gamepenalties.count;
+        
     } else if (extraMan) {
         return 6;
     } else
@@ -172,45 +190,79 @@
     // Configure the cell...
     
     if (scoreLog) {
-        EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ScoreTableCell" forIndexPath:indexPath];
-        
-        cell.backgroundColor = [UIColor darkGrayColor];
-        
-        LacrossScoring *thestat = [gamescoreings objectAtIndex:indexPath.row];
-        cell.positionLabel.text = [thestat.period stringValue];
-        cell.numberLabel.text = thestat.gametime;
-        cell.penaltyLabel.text = thestat.scorecode;
-        
-        if (home) {
-            cell.playerLabel.text = [[currentSettings findAthlete:thestat.athlete_id] logname];
-            cell.faceoffLabel.text = [[currentSettings findAthlete:thestat.assist] logname];
+        if (indexPath.row < gamescoreings.count) {
+            EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ScoreTableCell" forIndexPath:indexPath];
+            cell.backgroundColor = [UIColor darkGrayColor];
+            
+            LacrossScoring *thestat = [gamescoreings objectAtIndex:indexPath.row];
+            cell.positionLabel.text = [thestat.period stringValue];
+            cell.numberLabel.text = thestat.gametime;
+            cell.penaltyLabel.text = thestat.scorecode;
+            
+            if (home) {
+                cell.playerLabel.text = [[currentSettings findAthlete:thestat.athlete_id] logname];
+                cell.faceoffLabel.text = [[currentSettings findAthlete:thestat.assist] logname];
+            } else {
+                cell.playerLabel.text = [[visitors findAthlete:thestat.visitor_roster_id] logname];
+                cell.faceoffLabel.text = [[visitors findAthlete:thestat.assist] logname];
+            }
+            
+            if ((thestat.photos.count > 0) || (thestat.videos.count > 0)) {
+                cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            } else
+                cell.selectionStyle = UITableViewCellEditingStyleNone;
+            
+            return cell;
         } else {
-            cell.playerLabel.text = [[visitors findAthlete:thestat.visitor_roster_id] logname];
-            cell.faceoffLabel.text = [[visitors findAthlete:thestat.assist] logname];
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ScoreTableCell" forIndexPath:indexPath];
+            cell.backgroundColor = [UIColor darkGrayColor];
+            cell.textLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.textLabel.text = @"Add Score";
+            return cell;
+        }
+    } else if (penalty) {
+        if (indexPath.row < gamepenalties.count) {
+            EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PenaltyTableCell" forIndexPath:indexPath];
+            cell.backgroundColor = [UIColor darkGrayColor];
+            
+            if ([currentSettings isSiteOwner])
+                cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+            else
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            LacrossPenalty *thestat = [gamepenalties objectAtIndex:indexPath.row];
+            cell.positionLabel.text = thestat.type;
+            
+            if (home)
+                cell.numberLabel.text = [[[currentSettings findAthlete:thestat.athlete_id] number] stringValue];
+            else
+                cell.numberLabel.text = [[[visitors findAthlete:thestat.athlete_id] number] stringValue];
+            
+            cell.penaltyLabel.text = thestat.gametime;
+            cell.playerLabel.text = thestat.infraction;
+            cell.faceoffLabel.text = [thestat.period stringValue];
+            return cell;
+        } else {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PenaltyTableCell" forIndexPath:indexPath];
+            cell.backgroundColor = [UIColor darkGrayColor];
+            cell.textLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
+            cell.textLabel.textColor = [UIColor whiteColor];
+            cell.textLabel.text = @"Add Penalty";
+            return cell;
         }
         
-        return cell;
-    } else if (penalty) {
-        EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PenaltyTableCell" forIndexPath:indexPath];
-        
-        cell.backgroundColor = [UIColor darkGrayColor];
-        
-        LacrossPenalty *thestat = [gamepenalties objectAtIndex:indexPath.row];
-        cell.positionLabel.text = thestat.type;
-        
-        if (home)
-            cell.numberLabel.text = [[[currentSettings findAthlete:thestat.athlete_id] number] stringValue];
-        else
-            cell.numberLabel.text = [[[visitors findAthlete:thestat.athlete_id] number] stringValue];
-        
-        cell.penaltyLabel.text = thestat.gametime;
-        cell.playerLabel.text = thestat.infraction;
-        cell.faceoffLabel.text = [thestat.period stringValue];
-        return cell;
     } else if (extraMan ) {
         EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ClearTableCell" forIndexPath:indexPath];
         
         cell.backgroundColor = [UIColor darkGrayColor];
+        
+        if ([currentSettings isSiteOwner])
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        else
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         
         if (indexPath.row < 5) {
             cell.positionLabel.text = indexPath.row < 4 ? [NSString stringWithFormat:@"%d", indexPath.row + 1] : @"OT";
@@ -250,6 +302,12 @@
         EazesportzLacrosseMinutesStatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ClearTableCell" forIndexPath:indexPath];
         
         cell.backgroundColor = [UIColor darkGrayColor];
+        
+        if ([currentSettings isSiteOwner])
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        else
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         
         if (indexPath.row < 5) {
             cell.positionLabel.text = indexPath.row < 4 ? [NSString stringWithFormat:@"%d", indexPath.row + 1] : @"OT";
@@ -297,10 +355,21 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([currentSettings isSiteOwner]) {
-        if (scoreLog) {
-            [self performSegueWithIdentifier:@"ScoreSheetSegue" sender:self];
-        } else if (extraMan) {
+    if (scoreLog) {
+        LacrossScoring *scorestat = [gamescoreings objectAtIndex:indexPath.row];
+        
+        if ((scorestat.photos.count > 0) && (scorestat.videos.count > 0)) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Media" message:@"Photos and Video" delegate:self
+                                                  cancelButtonTitle:@"Cancel" otherButtonTitles:@"Photo", @"Video", nil];
+            [alert show];
+        } else if (scorestat.photos.count > 0) {
+            currentSettings.photodeleted = YES;
+            [self performSegueWithIdentifier:@"PhotosSegue" sender:self];
+        } else if (scorestat.videos.count > 0) {
+            [self performSegueWithIdentifier:@"VideosSegue" sender:self];
+        }
+    } else if ([currentSettings isSiteOwner]) {
+        if(extraMan) {
             if (indexPath.row < 5) {
                 _extramanContainer.hidden = NO;
                 extramanIndex = indexPath.row;
@@ -327,28 +396,20 @@
             }
         } else if (penalty) {
             _penaltyContainer.hidden = NO;
-            penatlyController.penatlyStat = [gamepenalties objectAtIndex:indexPath.row];
+            
+            if (indexPath.row < gamepenalties.count) {
+                penatlyController.penatlyStat = [gamepenalties objectAtIndex:indexPath.row];
+            } else {
+                penatlyController.penatlyStat = nil;
+            }
             
             if (home) {
                 penatlyController.visitingTeam = NO;
             } else {
                 penatlyController.visitingTeam = YES;
             }
-        }
-    }
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if ([currentSettings isSiteOwner]) {
-        if (editingStyle == UITableViewCellEditingStyleDelete) {
-            deleteIndexPath = indexPath;
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                            message:@"Stats will be automatically updated. Click Confirm to Proceed"
-                                                           delegate:self cancelButtonTitle:@"Confirm" otherButtonTitles:@"Cancel", nil];
-            [alert setAlertViewStyle:UIAlertViewStyleDefault];
-            [alert show];
+            [penatlyController viewWillAppear:YES];
         }
     }
 }
@@ -545,7 +606,8 @@
 - (IBAction)saveLacrossePenalty:(UIStoryboardSegue *)segue {
     _penaltyContainer.hidden = YES;
     
-    if (penatlyController.player) {
+    if ((penatlyController.player) && (penatlyController.minutesTextField.text.length > 0) && (penatlyController.secondsTextField.text.length > 0) &&
+        (penatlyController.periodTextField.text.length > 0)) {
         penatlyController.penatlyStat.gametime = [NSString stringWithFormat:@"%@:%@", penatlyController.minutesTextField.text,
                                                  penatlyController.secondsTextField.text];
         [penatlyController.penatlyStat save:currentSettings.sport Team:currentSettings.team Gameschedule:game User:currentSettings.user];
@@ -584,6 +646,10 @@
     
     [self createScorePenaltyArray];
     [_scoreLogTableView reloadData];
+}
+
+- (IBAction)cancelLacrossePenalty:(UIStoryboardSegue *)segue {
+    _penaltyContainer.hidden = YES;
 }
 
 - (IBAction)saveLacrosseExtraManFail:(UIStoryboardSegue *)segue {
@@ -629,7 +695,12 @@
         _penaltyContainer.hidden = NO;
         penatlyController.penatlyStat = nil;
         [penatlyController viewWillAppear:YES];
-    } 
+    } else if ([title isEqualToString:@"Photo"]) {
+        currentSettings.photodeleted = YES;
+        [self performSegueWithIdentifier:@"PhotosSegue" sender:self];
+    } else if ([title isEqualToString:@"Video"]) {
+        [self performSegueWithIdentifier:@"VideosSegue" sender:self];
+    }
 }
 
 @end

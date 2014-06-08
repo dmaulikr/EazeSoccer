@@ -20,12 +20,15 @@
 
 @synthesize videos;
 
+@synthesize lacross_scoring_id;
+@synthesize gamelog;
+
 - (void)retrieveVideos:(Sport *)sport Team:(Team *)team Athlete:(Athlete *)athlete Game:(GameSchedule *)game SearchUser:(User *)searchuser
-               GameLog:(Gamelogs *)gamelog User:(User *)user {
+                        User:(User *)user {
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *stringurl;
     
-    if (user)
+    if ([user loggedIn])
         stringurl = [NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
                                     @"/sports/", sport.id, @"/videoclips.json?team_id=", team.teamid, @"&auth_token=", user.authtoken];
     else
@@ -46,6 +49,10 @@
     
     if (gamelog) {
         stringurl = [stringurl stringByAppendingFormat:@"&gamelog_id=%@", gamelog.gamelogid];
+    }
+    
+    if (lacross_scoring_id.length > 0) {
+        stringurl = [stringurl stringByAppendingString:[NSString stringWithFormat:@"&lacross_scoring_id=%@", lacross_scoring_id]];
     }
     
     originalRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:stringurl]];

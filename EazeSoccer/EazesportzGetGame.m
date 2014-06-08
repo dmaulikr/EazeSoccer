@@ -25,7 +25,7 @@
     NSString *urlstring = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
                                     @"/sports/", sportid, @"/teams/", teamid, @"/gameschedules/", gameid, @".json"];
     
-    if (authtoken)
+    if (authtoken.length > 0)
         urlstring = [urlstring stringByAppendingFormat:@"%@%@", @"?auth_token=", currentSettings.user.authtoken];
     
     NSURL *url = [NSURL URLWithString:urlstring];

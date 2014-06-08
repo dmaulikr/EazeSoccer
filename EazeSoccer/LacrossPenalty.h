@@ -27,6 +27,8 @@
 
 @property (nonatomic, strong) NSString *httperror;
 
+@property (nonatomic, assign) BOOL dirty;
+
 - (id)initWithDictionary:(NSDictionary *)lacross_penalty_dictionary;
 
 - (void)save:(Sport *)sport Team:(Team *)team Gameschedule:(GameSchedule *)game User:(User *)user;

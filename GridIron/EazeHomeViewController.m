@@ -129,8 +129,6 @@
     }
     
     editTeam = NO;
-    
-    [_homeTableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -143,6 +141,8 @@
     } else {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
     }
+    
+    [_homeTableView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

@@ -24,8 +24,8 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     NSURL *url;
     
-    if (currentSettings.user.authtoken)
-        url = [NSURL URLWithString:[sportzServerInit getTeams:sportid Token:currentSettings.user.authtoken]];
+    if (authtoken.length > 0)
+        url = [NSURL URLWithString:[sportzServerInit getTeams:sportid Token:authtoken]];
     else
         url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
                                     @"/sports/", currentSettings.sport.id, @"/teams.json"]];

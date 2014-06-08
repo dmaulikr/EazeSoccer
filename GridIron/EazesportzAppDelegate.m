@@ -107,6 +107,8 @@
 	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
             (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
+    NSSetUncaughtExceptionHandler(&onUncaughtException);
+
     return YES;
 }
 
@@ -290,6 +292,11 @@
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
 {
 	NSLog(@"Failed to get token, error: %@", error);
+}
+
+void onUncaughtException(NSException* exception)
+{
+    NSLog(@"uncaught exception: %@", exception.description);
 }
 
 @end

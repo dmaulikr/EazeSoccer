@@ -17,7 +17,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-@interface EazesportzLacrosseScoresheetViewController ()
+@interface EazesportzLacrosseScoresheetViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -544,6 +544,20 @@
     
     visitorscores = [self getVisitorScores];
     [homeCollectionView reloadData];
+}
+
+- (IBAction)cancelScoreEntryCompleted:(UIStoryboardSegue *)segue {
+    _scoreEntryContainer.hidden = YES;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Photo"]) {
+        [self performSegueWithIdentifier:@"PhotosSegue" sender:self];
+    } else if ([title isEqualToString:@"Video"]) {
+        [self performSegueWithIdentifier:@"VideosSegue" sender:self];
+    }
 }
 
 @end

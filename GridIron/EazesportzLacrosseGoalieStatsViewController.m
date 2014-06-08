@@ -16,11 +16,14 @@
 @implementation EazesportzLacrosseGoalieStatsViewController {
     NSArray *periodarray;
     Lacrosstat *stats;
+    LacrossGoalstat *goaliestats;
+    int selectedPeriod;
 }
 
 @synthesize game;
 @synthesize visitingPlayer;
 @synthesize player;
+@synthesize lacrosstat;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -54,84 +57,31 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _pickerView.hidden = YES;
+    _saveImage.hidden = YES;
     
     if (visitingPlayer) {
         stats = [visitingPlayer findLacrossStat:game];
-        _playerLabel.text = visitingPlayer.numberlogname;
+        _goalieNavigationItem.title = visitingPlayer.numberlogname;
     } else {
         stats = [player findLacrosstat:game];
-        _playerLabel.text = player.numberLogname;
+        _goalieNavigationItem.title = player.numberLogname;
     }
     
     _decisionsTextField.text = @"0";
     _goalsagainstTextField.text = @"0";
     _savesTextField.text = @"0";
     _minutesTextField.text = @"0";
+    
+    [_periodSegmentedControl setSelectedSegmentIndex:UISegmentedControlNoSegment];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (IBAction)saveButtonClicked:(id)sender {
-    if (_periodTextField.text.length > 0) {
-        LacrossGoalstat *goalstat;
-        
-        if ([stats hasGoalieStatPeriod:[NSNumber numberWithInt:[_periodTextField.text intValue]]]) {
-            goalstat = [stats.goalstats objectAtIndex:[_periodTextField.text intValue] - 1];
-        } else {
-            goalstat = [[LacrossGoalstat alloc] init];
-            goalstat.period = [NSNumber numberWithInt:[_periodTextField.text intValue]];
-            goalstat.lacrosstat_id = stats.lacrosstat_id;
-            
-            if (visitingPlayer)
-                goalstat.visitor_roster_id = visitingPlayer.visitor_roster_id;
-            else
-                goalstat.athlete_id = player.athleteid;
-            
-            [stats.goalstats addObject:goalstat];
-        }
-        
-        goalstat.minutesplayed = [NSNumber numberWithInt:[_minutesTextField.text intValue]];
-        goalstat.goals_allowed = [NSNumber numberWithInt:[_goalsagainstTextField.text intValue]];
-        goalstat.saves = [NSNumber numberWithInt:[_savesTextField.text intValue]];
-        [goalstat save:currentSettings.sport Team:currentSettings.team Game:game User:currentSettings.user];
-    }
-}
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    return 1;
-}
-
-// Method to define the numberOfRows in a component using the array.
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
-    return periodarray.count;
-}
-
-// Method to show the title of row for a component.
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [periodarray objectAtIndex:row];
-}
-
--(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    _periodTextField.text = [periodarray objectAtIndex:row];
-    _pickerView.hidden = YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if (textField == _periodTextField) {
-        [_pickerView reloadAllComponents];
-        _pickerView.hidden = NO;
-        [textField resignFirstResponder];
-    }
+    goaliestats.dirty = YES;
+    goaliestats.minutesplayed = [NSNumber numberWithInt:[_minutesTextField.text intValue]];
+    goaliestats.goals_allowed = [NSNumber numberWithInt:[_goalsagainstTextField.text intValue]];
+    goaliestats.saves = [NSNumber numberWithInt:[_savesTextField.text intValue]];
+    [stats save:currentSettings.sport Game:game User:currentSettings.user];
+    _saveImage.hidden = NO;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -140,17 +90,83 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    if (textField != _periodTextField) {
-        NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
-        NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
-        BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
-        
-        if (myStringMatchesRegEx)
-            return YES;
-        else
-            return NO;
-    } else
+    NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
+    NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+    BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+    
+    if (myStringMatchesRegEx)
         return YES;
+    else
+        return NO;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    _saveImage.hidden = YES;
+}
+
+- (IBAction)savesStepperClicked:(id)sender {
+    _saveImage.hidden = YES;
+    _savesTextField.text = [NSString stringWithFormat:@"%d", (int)_savesStepper.value];
+}
+
+- (IBAction)goalsagainstStepperClicked:(id)sender {
+    _saveImage.hidden = YES;
+    _goalsagainstTextField.text = [NSString stringWithFormat:@"%d", (int)_goalsagainstStepper.value];
+}
+
+- (IBAction)decisionsStepperClicked:(id)sender {
+}
+
+- (IBAction)minutesplayedStepperClicked:(id)sender {
+    _saveImage.hidden = YES;
+    _minutesTextField.text = [NSString stringWithFormat:@"%d", (int)_minutesplayedStepper.value];
+}
+
+- (IBAction)periodSegmentedControlClicked:(id)sender {
+    switch (_periodSegmentedControl.selectedSegmentIndex) {
+        case 0:
+            selectedPeriod = 1;
+            break;
+            
+        case 1:
+            selectedPeriod = 2;
+            break;
+            
+        case 2:
+            selectedPeriod = 3;
+            break;
+            
+        case 3:
+            selectedPeriod = 4;
+            break;
+            
+        default:
+            selectedPeriod = 5;
+            break;
+    }
+    
+    [self populatePlayerStats];
+}
+
+- (void)populatePlayerStats {
+    if ([stats hasGoalieStatPeriod:[NSNumber numberWithInt:selectedPeriod]]) {
+        goaliestats = [stats.goalstats objectAtIndex:selectedPeriod - 1];
+    } else {
+        goaliestats = [[LacrossGoalstat alloc] init];
+        goaliestats.period = [NSNumber numberWithInt:selectedPeriod];
+        goaliestats.lacrosstat_id = stats.lacrosstat_id;
+        
+        if (visitingPlayer)
+            goaliestats.visitor_roster_id = visitingPlayer.visitor_roster_id;
+        else
+            goaliestats.athlete_id = player.athleteid;
+        
+        [stats.goalstats addObject:goaliestats];
+    }
+    
+    _savesTextField.text = [goaliestats.saves stringValue];
+    _minutesTextField.text = [goaliestats.minutesplayed stringValue];
+    _goalsagainstTextField.text = [goaliestats.goals_allowed stringValue];
 }
 
 @end

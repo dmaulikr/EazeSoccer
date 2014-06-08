@@ -23,7 +23,6 @@
 - (IBAction)visitorButtonClicked:(id)sender;
 
 - (IBAction)lacrosseShotsAdded:(UIStoryboardSegue *)segue;
-- (IBAction)lacrosseCancelStats:(UIStoryboardSegue *)segue;
 - (IBAction)lacrossePlayerStatsAdded:(UIStoryboardSegue *)segue;
 - (IBAction)lacrosseGoalieStatsAdded:(UIStoryboardSegue *)segue;
 
@@ -35,5 +34,11 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
 - (IBAction)refreshBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *scoreButton;
+
 - (IBAction)scoreButtonClicked:(id)sender;
+
+- (IBAction)lacrossSaveGoalieStat:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
+- (IBAction)saveBarButtonClicked:(id)sender;
+
 @end
