@@ -59,12 +59,6 @@
 
     currentSettings = [[sportzCurrentSettings alloc] init];
 
-    NSArray *paths = NSSearchPathForDirectoriesInDomains
-    (NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"currentsport.txt"];
-    NSString *content = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
     UIImageView *myGraphic;
     
     if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"manager"])
@@ -93,7 +87,7 @@
                 [self getSport];
             }
         }
-    } else if (content) {
+    } else if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentsport"]) {
         [self getSport];
     } else
         currentSettings.firstuse = YES;
@@ -191,13 +185,9 @@
 }
 
 - (void)getSport {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains
-    (NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *sitefilename = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/currentsite.txt", documentsDirectory] encoding:NSUTF8StringEncoding error:NULL];
-    
-    if (sitefilename != nil) {
-        [[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:sitefilename Token:currentSettings.user.authtoken];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentsite"]) {
+        [[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:[[NSUserDefaults standardUserDefaults] objectForKey:@"currentsite"]
+                                                                   Token:currentSettings.user.authtoken];
         getTeams = [[EazesportzRetrieveTeams alloc] init];
         if ([getTeams retrieveTeamsSynchronous:currentSettings.sport.id Token:currentSettings.user.authtoken]) {
             currentSettings.teams = getTeams.teams;

@@ -130,16 +130,23 @@
     NSURLResponse* response;
     NSError *error = nil;
     NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+    
     if ([(NSHTTPURLResponse*)response statusCode] == 200) {
         NSDictionary *thelist = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         sportsname = [[NSMutableArray alloc] init];
         sportsvalue = [[NSMutableArray alloc] init];
         NSArray *thesports = [thelist objectForKey:@"sports_list"];
+        NSDictionary *supportedsports = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"GameTrackerSports"];
+        
         for (int i = 0; i < [thesports count]; i++) {
             NSArray *sportlist = [thesports objectAtIndex:i];
-            [sportsname addObject:[sportlist objectAtIndex:0]];
-            [sportsvalue addObject:[sportlist objectAtIndex:1]];
+            
+            if ([supportedsports objectForKey:[sportlist objectAtIndex:0]]) {
+                [sportsname addObject:[sportlist objectAtIndex:0]];
+                [sportsvalue addObject:[sportlist objectAtIndex:1]];
+            }
         }
+        
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Initializing app. Are you connected to the Internet?" delegate:nil
                                               cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];

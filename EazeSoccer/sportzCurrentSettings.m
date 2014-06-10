@@ -805,7 +805,7 @@
     EazesportzRetrieveTeams *getTeams;
     
     if ([[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:sportid Token:user.authtoken]) {
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+/*        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
         
         //make a file name to write the data to using the documents directory:
@@ -815,7 +815,11 @@
         NSString *content = sport.id;
         //save content to the documents directory
         [content writeToFile:fileName atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
-        [sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil];
+        [sport.name writeToFile:sportFile atomically:NO encoding:NSStringEncodingConversionAllowLossy error:nil]; */
+        
+        [[NSUserDefaults standardUserDefaults] setValue:sport.id forKey:@"currentsite"];
+        [[NSUserDefaults standardUserDefaults] setValue:sport.name forKey:@"currentsport"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         
         getTeams = [[EazesportzRetrieveTeams alloc] init];
         

@@ -85,6 +85,7 @@
         NSURLResponse* response;
         NSError *error = nil;
         NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+        
         if ([(NSHTTPURLResponse*)response statusCode] == 200) {
             NSArray *serverData = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
             siteList = [[NSMutableArray alloc] init];
@@ -108,6 +109,7 @@
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];
         }
+        
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"You must select a sport name and at least one other search criteria!"
                                             delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
