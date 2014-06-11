@@ -59,4 +59,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *summaryVisitorOvertimeScore;
 @property (weak, nonatomic) IBOutlet UILabel *summaryVisitorTotalScore;
 
+@property (weak, nonatomic) IBOutlet UILabel *hometimeOuts;
+@property (weak, nonatomic) IBOutlet UILabel *visitortimeOuts;
+
 @end

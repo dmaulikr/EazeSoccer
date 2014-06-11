@@ -51,6 +51,15 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if ((sport.id.length == 0) && (!admin)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No sport loaded. Creating a login without loading a sport will make you administrator of a new site." delegate:self cancelButtonTitle:@"Create Admin" otherButtonTitles:@"Cancel Admin", nil];
+        [alert show];
+    }
+}
+
 -(BOOL)shouldAutorotate {
     return NO;
 }
@@ -112,6 +121,8 @@
         NSArray* cfBundleURLTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
         NSDictionary* cfBundleURLTypes0 = [cfBundleURLTypes objectAtIndex:0];
         NSArray *schemearray = [cfBundleURLTypes0 objectForKey:@"CFBundleURLSchemes"];
+        
+        NSLog(@"sport=%@", sport.id);
         
         if (admin)
             loginData = [[NSDictionary alloc] initWithObjectsAndKeys:[_emailText text], @"email",[_passwordText text], @"password",
@@ -201,8 +212,12 @@
 {
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
-    if([title isEqualToString:@"Ok"]) {
+    if ([title isEqualToString:@"Ok"]) {
         [self.navigationController popViewControllerAnimated:YES];
+    } else if ([title isEqualToString:@"Cancel Create Admin"]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if ([title isEqualToString:@"Create Admin"]) {
+        admin = YES;
     }
 }
 

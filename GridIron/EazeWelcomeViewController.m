@@ -7,6 +7,7 @@
 //
 
 #import "EazeWelcomeViewController.h"
+#import "sportzteamsRegisterLoginViewController.h"
 
 #import <iAd/iAd.h>
 

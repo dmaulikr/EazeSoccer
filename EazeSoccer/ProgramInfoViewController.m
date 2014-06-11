@@ -30,6 +30,7 @@
     int responseStatusCode;
     
     NSMutableArray *countryarray;
+    NSArray *sportlist;
     NSString *country;
     BOOL selectSport;
     
@@ -69,6 +70,8 @@
     countryarray = [[NSMutableArray alloc] init];
     [countryarray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:@"United States", @"name", @"US", @"code", nil]];
     [countryarray addObjectsFromArray:temparray];
+    
+    sportlist = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"GameTrackerSports"] allKeys];
 
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyBoard:)];
     [_scrollView addGestureRecognizer:gestureRecognizer];
@@ -463,7 +466,7 @@
 // Method to define the numberOfRows in a component using the array.
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
     if (selectSport)
-        return currentSettings.sport.supportedsports.count;
+        return sportlist.count;
     else
         return countryarray.count;
 }
@@ -471,7 +474,7 @@
 // Method to show the title of row for a component.
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     if (selectSport ) {
-        return [currentSettings.sport.supportedsports objectAtIndex:row];
+        return [sportlist objectAtIndex:row];
     } else {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
         return [subDict objectForKey:@"name"];
@@ -480,7 +483,7 @@
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     if (selectSport) {
-        _sportTextField.text = [currentSettings.sport.supportedsports objectAtIndex:row];
+        _sportTextField.text = [sportlist objectAtIndex:row];
     } else {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
         _countryTextField.text = [subDict objectForKey:@"name"];

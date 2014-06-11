@@ -106,7 +106,7 @@
 
 - (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView {
     if ((collectionView == homeCollectionView) || (collectionView == visitorCollectionView))
-        return 2;
+        return 1;
     else
         return 1;
 }
@@ -372,15 +372,30 @@
     CGSize size;
     
     if ((collectionView == homeCollectionView) || (collectionView == visitorCollectionView)) {
-        size.height = 80;
-        size.width = 80;
+        if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+            size.height = 80;
+            size.width = 80;
+        } else {
+            size.height = 100;
+            size.width = 100;
+        }
     } else {
         if ((indexPath.row == 0) || (indexPath.row == 3) || (indexPath.row == 6) || (indexPath.row == 9)) {
-            size.height = 20;
-            size.width = 20;
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+                size.height = 20;
+                size.width = 20;
+            } else {
+                size.height = 30;
+                size.width = 30;
+            }
         } else {
-            size.height = 20;
-            size.width = 55;
+            if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+                size.height = 20;
+                size.width = 55;
+            } else {
+                size.height = 30;
+                size.width = 135;
+            }
         }
     }
     
