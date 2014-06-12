@@ -266,6 +266,7 @@
 		2B7D69BE18F7764100AD56E0 /* EazesportzSponsorInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7D69BD18F7764100AD56E0 /* EazesportzSponsorInfoViewController.m */; };
 		2B7F40A318FDFBF50040077C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B7F40A218FDFBF50040077C /* StoreKit.framework */; };
 		2B7F40AB18FDFCB90040077C /* EazesportzSponsorProductsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7F40AA18FDFCB90040077C /* EazesportzSponsorProductsViewController.m */; };
+		2B8068C3194A165400D3C5B2 /* EazesportzLacrosseGameSummaryStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B8068C2194A165400D3C5B2 /* EazesportzLacrosseGameSummaryStatsViewController.m */; };
 		2B80AB8D191C097E0055BEDF /* EazeUserSettingsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B41432481835FA6B0081ED15 /* EazeUserSettingsViewController.h */; };
 		2B80AB8E191C097E0055BEDF /* EazeUserSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B41432491835FA6B0081ED15 /* EazeUserSettingsViewController.m */; };
 		2B81665C18F11FC400B6EEA4 /* BasketballTotalStatsViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = B46544F6182D92F500E1C08A /* BasketballTotalStatsViewController.h */; };
@@ -2099,6 +2100,8 @@
 		2B7F40A218FDFBF50040077C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2B7F40A918FDFCB90040077C /* EazesportzSponsorProductsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzSponsorProductsViewController.h; sourceTree = "<group>"; };
 		2B7F40AA18FDFCB90040077C /* EazesportzSponsorProductsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzSponsorProductsViewController.m; sourceTree = "<group>"; };
+		2B8068C1194A165400D3C5B2 /* EazesportzLacrosseGameSummaryStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EazesportzLacrosseGameSummaryStatsViewController.h; path = ../Football/EazesportzLacrosseGameSummaryStatsViewController.h; sourceTree = "<group>"; };
+		2B8068C2194A165400D3C5B2 /* EazesportzLacrosseGameSummaryStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EazesportzLacrosseGameSummaryStatsViewController.m; path = ../Football/EazesportzLacrosseGameSummaryStatsViewController.m; sourceTree = "<group>"; };
 		2B8602A918F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazeBasketballOtherStatsViewController.h; sourceTree = "<group>"; };
 		2B8602AA18F08B1C00E23DD3 /* EazeBasketballOtherStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazeBasketballOtherStatsViewController.m; sourceTree = "<group>"; };
 		2B89047E18E5FD6000A91A09 /* EazeAddPlayerStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazeAddPlayerStatsViewController.h; sourceTree = "<group>"; };
@@ -3072,6 +3075,8 @@
 				2BA89327193C31BE007942D2 /* EazesportzLacrossePlayerStatsViewController.m */,
 				2B2A1C86193CBB410002977A /* EazesportzLacrosseGoalieStatsViewController.h */,
 				2B2A1C87193CBB410002977A /* EazesportzLacrosseGoalieStatsViewController.m */,
+				2B8068C1194A165400D3C5B2 /* EazesportzLacrosseGameSummaryStatsViewController.h */,
+				2B8068C2194A165400D3C5B2 /* EazesportzLacrosseGameSummaryStatsViewController.m */,
 			);
 			name = Lacrosse;
 			sourceTree = "<group>";
@@ -5345,6 +5350,7 @@
 				2B2D5C9A18FF3D960047F6D6 /* EazesportzRetrieveFootballReturnerGameStats.m in Sources */,
 				2B2D5C9B18FF3D960047F6D6 /* EazesportzFootballStatTotalsTableCell.h in Sources */,
 				2B2D5C9C18FF3D960047F6D6 /* EazesportzFootballStatTotalsTableCell.m in Sources */,
+				2B8068C3194A165400D3C5B2 /* EazesportzLacrosseGameSummaryStatsViewController.m in Sources */,
 				2B2D5C9D18FF3D960047F6D6 /* EazesportzStatTableHeaderCell.h in Sources */,
 				2B2D5C9E18FF3D960047F6D6 /* EazesportzStatTableHeaderCell.m in Sources */,
 				2B2D5C9F18FF3D960047F6D6 /* EazeFootballPlayerStatsViewController.h in Sources */,
@@ -6658,7 +6664,7 @@
 				INFOPLIST_FILE = "Football/Football-Info.plist";
 				PRIVATE_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PrivateHeaders";
 				PRODUCT_NAME = GameTrackerHD;
-				PROVISIONING_PROFILE = "4E3D1288-8D82-44C3-913B-F0E1B7C2467F";
+				PROVISIONING_PROFILE = "3A903B38-41BC-46E4-9C2C-15FA2A206ED3";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Headers";
 				WRAPPER_EXTENSION = app;
 			};
@@ -6683,7 +6689,7 @@
 				INFOPLIST_FILE = "Football/Football-Info.plist";
 				PRIVATE_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PrivateHeaders";
 				PRODUCT_NAME = GameTrackerHD;
-				PROVISIONING_PROFILE = "4E3D1288-8D82-44C3-913B-F0E1B7C2467F";
+				PROVISIONING_PROFILE = "3A903B38-41BC-46E4-9C2C-15FA2A206ED3";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Headers";
 				WRAPPER_EXTENSION = app;
 			};
