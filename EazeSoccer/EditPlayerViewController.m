@@ -157,6 +157,7 @@
         _playerImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         [_videosButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         [_photosButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        _bioTextView.text = @"";
     }
 }
 
@@ -199,10 +200,16 @@
 }
 
 - (void)savedPlayer:(NSNotification *)notification {
-    if (imageselected)
-        [self uploadImage:player];
-    else
-        [self playerSaved];
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        if (imageselected)
+            [self uploadImage:player];
+        else
+            [self playerSaved];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:player.httperror delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void)playerSaved {
@@ -631,7 +638,7 @@
 }
 
 - (IBAction)saveBarButtonClicked:(id)sender {
-    [self saveButtonClicked:sender];
+    [self submitButtonClicked:sender];
 }
 
 - (IBAction)deleteBarButtonClicked:(id)sender {

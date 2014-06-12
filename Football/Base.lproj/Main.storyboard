@@ -8211,6 +8211,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                                     <rect key="frame" x="20" y="10" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="4RX-rO-q7k"/>
                                                         <constraint firstAttribute="width" constant="50" id="eO2-cO-DOs"/>
                                                     </constraints>
                                                 </imageView>
@@ -8634,6 +8635,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <segue destination="IwZ-4M-rdk" kind="push" identifier="BasketballGameInfoSegue" id="qJP-Lw-J2o"/>
                         <segue destination="q6W-fF-gk9" kind="push" identifier="SoccerGameInfoSegue" id="nd0-3X-o5D"/>
                         <segue destination="5jc-dB-q8o" kind="push" identifier="LacrosseGameInfoSegue" id="QnJ-xh-m8l"/>
+                        <segue destination="aPp-Qg-c5v" kind="push" identifier="CreateSiteSegue" id="MMG-V9-NcW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hba-SY-h1C" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -12624,7 +12626,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Pick a name - Fans will find your site by the name!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="94p-zT-Cze">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Pick a name - Fans will find your site by the name!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="94p-zT-Cze">
                                 <rect key="frame" x="184" y="318" width="407" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="407" id="vUN-0a-UEx"/>
@@ -12633,7 +12635,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kkE-iV-uw4">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kkE-iV-uw4">
                                 <rect key="frame" x="178" y="347" width="407" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="407" id="1CO-9f-SW3"/>
@@ -12644,14 +12646,14 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="aPp-Qg-c5v" id="MUH-98-xko"/>
                                 </connections>
                             </textField>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" image="photo_not_available.png" translatesAutoresizingMaskIntoConstraints="NO" id="l1z-s7-0Oq">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="photo_not_available.png" translatesAutoresizingMaskIntoConstraints="NO" id="l1z-s7-0Oq">
                                 <rect key="frame" x="182" y="423" width="100" height="100"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="5MK-OD-DHa"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="2014" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UPg-WN-lXI">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="2014" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UPg-WN-lXI">
                                 <rect key="frame" x="181" y="560" width="80" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="aEj-RR-c9z"/>
@@ -12662,7 +12664,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="aPp-Qg-c5v" id="wge-74-NP0"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Sport" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LYe-7d-3G5">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Sport" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LYe-7d-3G5">
                                 <rect key="frame" x="181" y="598" width="104" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="104" id="gWH-Mu-Vxc"/>
@@ -12673,7 +12675,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="aPp-Qg-c5v" id="a7L-8A-r2d"/>
                                 </connections>
                             </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Year, Season:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Unl-GZ-f4z">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Year, Season:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Unl-GZ-f4z">
                                 <rect key="frame" x="180" y="531" width="102" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="102" id="ubw-SU-Wbj"/>
@@ -12682,7 +12684,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Country" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txQ-jb-tKf">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Country" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="txQ-jb-tKf">
                                 <rect key="frame" x="407" y="531" width="69" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="69" id="Ykc-ci-QcG"/>
@@ -12691,7 +12693,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mascot" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Az5-dg-7fr">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Mascot" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Az5-dg-7fr">
                                 <rect key="frame" x="181" y="385" width="407" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -12699,7 +12701,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="aPp-Qg-c5v" id="sHe-me-Mdb"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fik-D0-neL">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fik-D0-neL">
                                 <rect key="frame" x="488" y="598" width="100" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="Csm-JT-vwI"/>
@@ -12710,7 +12712,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="aPp-Qg-c5v" id="QiA-Zc-mhj"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Country" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mfG-Oj-adl">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Country" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mfG-Oj-adl">
                                 <rect key="frame" x="294" y="560" width="294" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -12718,14 +12720,14 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="aPp-Qg-c5v" id="pxz-P8-zQe"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bIJ-ZB-X5m">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bIJ-ZB-X5m">
                                 <rect key="frame" x="503" y="458" width="85" height="30"/>
                                 <state key="normal" title="Camera Roll"/>
                                 <connections>
                                     <action selector="cameraRollButtonClicked:" destination="aPp-Qg-c5v" eventType="touchUpInside" id="uoP-Mb-toV"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Zip Code:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="un4-9O-f3m">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Zip Code:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="un4-9O-f3m">
                                 <rect key="frame" x="410" y="602" width="70" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="blO-na-IMs"/>
@@ -12734,7 +12736,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="User Videos" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBq-qx-lXO">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="User Videos" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBq-qx-lXO">
                                 <rect key="frame" x="446" y="640" width="85" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="85" id="CSX-IV-TgF"/>
@@ -12743,7 +12745,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="User Pics" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bTn-Zu-o2o">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="User Pics" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bTn-Zu-o2o">
                                 <rect key="frame" x="182" y="641" width="72" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="72" id="lia-66-tuJ"/>
@@ -12752,14 +12754,14 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" misplaced="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="4b4-MW-RK2">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="4b4-MW-RK2">
                                 <rect key="frame" x="366" y="493" width="37" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="37" id="jdd-eZ-XMz"/>
                                 </constraints>
                                 <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </activityIndicatorView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="190" translatesAutoresizingMaskIntoConstraints="NO" id="knA-RK-sIb">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="190" translatesAutoresizingMaskIntoConstraints="NO" id="knA-RK-sIb">
                                 <rect key="frame" x="294" y="423" width="190" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <string key="text">Logo - This will be used for all teams you create. If you want to use a seperate logo for each team you can enter a log on the team creation page.</string>
@@ -12767,7 +12769,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <pickerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FNn-fg-SZP">
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FNn-fg-SZP">
                                 <rect key="frame" x="0.0" y="714" width="768" height="216"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <connections>
@@ -12775,38 +12777,38 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="aPp-Qg-c5v" id="lS2-PC-TSn"/>
                                 </connections>
                             </pickerView>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x3L-CX-fGG">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x3L-CX-fGG">
                                 <rect key="frame" x="539" y="635" width="51" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="userVideosSwitchSelected:" destination="aPp-Qg-c5v" eventType="valueChanged" id="5ry-Li-huc"/>
                                 </connections>
                             </switch>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4XT-fY-VGY">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4XT-fY-VGY">
                                 <rect key="frame" x="296" y="635" width="51" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="userPicsSwitchSelected:" destination="aPp-Qg-c5v" eventType="valueChanged" id="JMD-La-azi"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Review Media" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fu4-Fj-MRo">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Review Media" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fu4-Fj-MRo">
                                 <rect key="frame" x="182" y="680" width="94" height="21"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DSD-H7-SQx">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DSD-H7-SQx">
                                 <rect key="frame" x="296" y="675" width="51" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="reviewMediaSwitchSelected:" destination="aPp-Qg-c5v" eventType="valueChanged" id="Jm2-g2-dWp"/>
                                 </connections>
                             </switch>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Footballbkg.png" translatesAutoresizingMaskIntoConstraints="NO" id="xiN-jp-1sS">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Footballbkg.png" translatesAutoresizingMaskIntoConstraints="NO" id="xiN-jp-1sS">
                                 <rect key="frame" x="182" y="114" width="163" height="172"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="sports-highlights.png" translatesAutoresizingMaskIntoConstraints="NO" id="jWF-N9-1ro">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sports-highlights.png" translatesAutoresizingMaskIntoConstraints="NO" id="jWF-N9-1ro">
                                 <rect key="frame" x="425" y="114" width="163" height="172"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -13635,7 +13637,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Users of your site will not have access to editing features. Please be careful with your password!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="534" translatesAutoresizingMaskIntoConstraints="NO" id="oL2-Xq-uxm">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Users of your site will not have access to editing features. Please be careful with your password!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="534" translatesAutoresizingMaskIntoConstraints="NO" id="oL2-Xq-uxm">
                                 <rect key="frame" x="117" y="504" width="534" height="61"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -13656,7 +13658,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="534" translatesAutoresizingMaskIntoConstraints="NO" id="1GD-JL-uoM">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="534" translatesAutoresizingMaskIntoConstraints="NO" id="1GD-JL-uoM">
                                 <rect key="frame" x="117" y="274" width="534" height="84"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <string key="text">You can enter all the content you want. You will start with 1GB of free space. We optimize all photo and video sizes for mobile so that will take you a long way. You can choose to purchase more space for media if you need it. Visit our web site for more information.</string>
@@ -13664,7 +13666,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MyR-XF-OKr">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MyR-XF-OKr">
                                 <rect key="frame" x="244" y="454" width="130" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -13678,7 +13680,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <action selector="visitEazesportzButtonClicked:" destination="t6m-kC-Rzm" eventType="touchUpInside" id="wM7-5k-O9c"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pyc-Mx-HkK">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pyc-Mx-HkK">
                                 <rect key="frame" x="445" y="453" width="80" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Get Started">
@@ -13688,7 +13690,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <action selector="getStartedButtonClicked:" destination="t6m-kC-Rzm" eventType="touchUpInside" id="gKJ-6Y-liD"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="534" translatesAutoresizingMaskIntoConstraints="NO" id="EHw-IM-U4l">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="534" translatesAutoresizingMaskIntoConstraints="NO" id="EHw-IM-U4l">
                                 <rect key="frame" x="117" y="366" width="534" height="79"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -18123,39 +18125,39 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="3io-3T-YAw"/>
-        <segue reference="dlu-eS-Lpy"/>
+        <segue reference="nd0-3X-o5D"/>
         <segue reference="mKf-k0-GTj"/>
         <segue reference="WXN-cq-dRL"/>
-        <segue reference="PXL-ma-8C1"/>
-        <segue reference="WnF-KJ-9bC"/>
+        <segue reference="kiw-w9-Cvy"/>
+        <segue reference="Ksy-nU-cBK"/>
+        <segue reference="Ban-4g-4Xu"/>
+        <segue reference="QnJ-xh-m8l"/>
+        <segue reference="1Kt-je-sYs"/>
+        <segue reference="4jJ-jB-vYA"/>
+        <segue reference="MMG-V9-NcW"/>
+        <segue reference="SGE-un-NTU"/>
+        <segue reference="qJP-Lw-J2o"/>
         <segue reference="u0d-wO-R1L"/>
         <segue reference="HXG-o4-icu"/>
-        <segue reference="OfC-K8-lHu"/>
         <segue reference="v6u-Om-qKq"/>
+        <segue reference="OfC-K8-lHu"/>
+        <segue reference="3io-3T-YAw"/>
+        <segue reference="PXL-ma-8C1"/>
+        <segue reference="JsF-dp-ihV"/>
+        <segue reference="3Aw-KW-Gef"/>
+        <segue reference="8Vy-Zn-A5W"/>
+        <segue reference="KYp-R5-gb9"/>
         <segue reference="u3w-je-1iw"/>
         <segue reference="yjK-PW-ftb"/>
-        <segue reference="HDk-kT-Uby"/>
+        <segue reference="dVS-nJ-zoK"/>
         <segue reference="t4d-I2-32N"/>
+        <segue reference="HDk-kT-Uby"/>
         <segue reference="Qv7-69-wfe"/>
         <segue reference="s3g-Kf-GBf"/>
         <segue reference="u4E-HE-IdB"/>
         <segue reference="75O-2O-NqL"/>
-        <segue reference="leF-Xn-0nf"/>
+        <segue reference="aoK-QQ-PxZ"/>
         <segue reference="H65-We-2x9"/>
         <segue reference="ouT-lJ-drv"/>
-        <segue reference="aoK-QQ-PxZ"/>
-        <segue reference="6Fe-j2-jPt"/>
-        <segue reference="3Aw-KW-Gef"/>
-        <segue reference="8Vy-Zn-A5W"/>
-        <segue reference="T26-gt-7gb"/>
-        <segue reference="JsF-dp-ihV"/>
-        <segue reference="oZ6-57-rQC"/>
-        <segue reference="hPY-7d-xha"/>
-        <segue reference="kiw-w9-Cvy"/>
-        <segue reference="U7V-el-Lye"/>
-        <segue reference="Ksy-nU-cBK"/>
-        <segue reference="Y6h-rV-Hr0"/>
-        <segue reference="Ban-4g-4Xu"/>
     </inferredMetricsTieBreakers>
 </document>

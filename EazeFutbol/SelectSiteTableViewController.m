@@ -92,10 +92,7 @@
             
             if (serverData.count > 0) {
                 for (int i = 0; i < [serverData count]; i++) {
-                    Sport *asport = [[Sport alloc] initWithDictionary:[serverData objectAtIndex:i]];
-                     
-                    if ((asport.approved) && ([asport.teamcount intValue] > 0))
-                        [siteList addObject:asport];
+                    [siteList addObject:[[Sport alloc] initWithDictionary:[serverData objectAtIndex:i]]];
                 }
             } else {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice!" message:@"No Sites match search cirteria!" delegate:nil

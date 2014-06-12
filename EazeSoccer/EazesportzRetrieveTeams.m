@@ -55,6 +55,8 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
+    NSLog(@"%@", serverData);
+    
     if (responseStatusCode == 200) {
         teams =[[NSMutableArray alloc] init];
         for (int i = 0; i < [serverData count]; i++) {

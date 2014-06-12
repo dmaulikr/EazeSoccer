@@ -188,14 +188,21 @@
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentsite"]) {
         [[[EazesportzRetrieveSport alloc] init] retrieveSportSynchronous:[[NSUserDefaults standardUserDefaults] objectForKey:@"currentsite"]
                                                                    Token:currentSettings.user.authtoken];
-        getTeams = [[EazesportzRetrieveTeams alloc] init];
-        if ([getTeams retrieveTeamsSynchronous:currentSettings.sport.id Token:currentSettings.user.authtoken]) {
-            currentSettings.teams = getTeams.teams;
-            
-            if (currentSettings.teams.count == 1)
-                currentSettings.team = [currentSettings.teams objectAtIndex:0];
-            
-            [self getAllSportData];
+        
+        if (currentSettings.sport.id.length > 0) {
+            getTeams = [[EazesportzRetrieveTeams alloc] init];
+            if ([getTeams retrieveTeamsSynchronous:currentSettings.sport.id Token:currentSettings.user.authtoken]) {
+                currentSettings.teams = getTeams.teams;
+                
+                if (currentSettings.teams.count == 1)
+                    currentSettings.team = [currentSettings.teams objectAtIndex:0];
+                
+                [self getAllSportData];
+            }
+        } else {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"currentsite"];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"currentsport"];
+            currentSettings.changesite = YES;
         }
     } else {
         currentSettings.changesite = YES;

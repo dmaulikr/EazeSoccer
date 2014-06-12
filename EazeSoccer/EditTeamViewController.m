@@ -87,6 +87,11 @@
     }
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (IBAction)camerarollButtonClicked:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc]
                           initWithTitle: @"Team Logo"

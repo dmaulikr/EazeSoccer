@@ -39,7 +39,7 @@
     EazesportzRetrieveNews *getNews;
     Newsfeed *newsitem;
     GameSchedule *game;
-    BOOL editTeam;
+    BOOL editTeam, gotgamelist;
     EazesportzCheckAdImageViewController *adController;
 }
 
@@ -137,7 +137,10 @@
     if (currentSettings.firstuse) {
         [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
     } else if ((currentSettings.changesite) || (currentSettings.sport.id.length == 0)) {
-        [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
+        if (([currentSettings.user loggedIn]) && (currentSettings.user.admin))
+            [self performSegueWithIdentifier:@"CreateSiteSegue" sender:self];
+        else
+            [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
     } else {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
     }
@@ -282,7 +285,8 @@
                 break;
                 
             case 1:
-                if (currentSettings.gameList.count > 0)
+//                if (currentSettings.gameList.count > 0)
+                if (gotgamelist)
                     [self performSegueWithIdentifier:@"NewsInfoSegue" sender:self];
                 break;
                 
@@ -440,6 +444,7 @@
 - (void)gotGames:(NSNotification *)notification {
     [_activityIndicator stopAnimating];
     if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        gotgamelist = YES;
         [_homeTableView reloadData];
     } else {
         UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving game data. Check your internet connection"
