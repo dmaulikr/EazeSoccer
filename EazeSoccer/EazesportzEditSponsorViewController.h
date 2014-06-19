@@ -7,12 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <StoreKit/StoreKit.h>
 
 #import "Sponsor.h"
+#import "InAppProducts.h"
+#import "Athlete.h"
 
 @interface EazesportzEditSponsorViewController : UIViewController
 
 @property(nonatomic, strong) Sponsor *sponsor;
+
+@property (nonatomic, strong) SKProduct *storekitProduct;
+@property (nonatomic, strong) InAppProducts *adproduct;
+@property (nonatomic, strong) Athlete *player;
 
 @property(nonatomic, strong) UIPopoverController *popover;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
@@ -39,9 +46,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *checkImageButton;
 @property (weak, nonatomic) IBOutlet UITextField *adInventoryTextField;
 @property (weak, nonatomic) IBOutlet UITextField *playerTextField;
-@property (weak, nonatomic) IBOutlet UIView *playerContainer;
 @property (weak, nonatomic) IBOutlet UIImageView *bannerImage;
+@property (weak, nonatomic) IBOutlet UIButton *bannerCameraRollButton;
+@property (weak, nonatomic) IBOutlet UIButton *bannerCameraButton;
 
-- (IBAction)playerSelected:(UIStoryboardSegue *)segue;
+@property (weak, nonatomic) IBOutlet UIImageView *bannerlogoImage;
+@property (weak, nonatomic) IBOutlet UILabel *bannerlogoTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bannerlogoMessageLabel;
+@property (weak, nonatomic) IBOutlet UIButton *sponsorCameraButton;
+@property (weak, nonatomic) IBOutlet UIButton *sponsorCameraRollButton;
 
 @end

@@ -35,6 +35,8 @@
 @synthesize approved;
 @synthesize hideAds;
 
+@synthesize purchaseads;
+
 @synthesize review_media;
 @synthesize enable_user_pics;
 @synthesize enable_user_video;
@@ -106,6 +108,8 @@
         beta = [[sportDictionary objectForKey:@"beta"] boolValue];
         approved = [[sportDictionary objectForKey:@"approved"] boolValue];
         hideAds = [[sportDictionary objectForKey:@"hideads"] boolValue];
+        
+        purchaseads = [[sportDictionary objectForKey:@"purchaseads"] boolValue];
         
         review_media = [[sportDictionary objectForKey:@"review_media"] boolValue];
         enable_user_pics = [[sportDictionary objectForKey:@"enable_user_pics"] boolValue];

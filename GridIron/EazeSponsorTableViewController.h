@@ -13,5 +13,9 @@
 - (IBAction)addBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *infoButton;
 - (IBAction)infoButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *searchBarButton;
+- (IBAction)searchBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
+- (IBAction)refreshBarButtonClicked:(id)sender;
 
 @end

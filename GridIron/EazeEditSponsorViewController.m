@@ -32,9 +32,6 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.navigationItem.rightBarButtonItems = [[NSArray alloc] initWithObjects:self.saveBarButton, self.deleteBarButton, self.globeBarButton, nil];
-    self.navigationController.toolbarHidden = YES;
-    
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyBoard:)];
     gestureRecognizer.delegate = self;
     [_scrollView addGestureRecognizer:gestureRecognizer];
@@ -48,6 +45,21 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if (self.sponsor) {
+        NSMutableArray *baritems = [[NSMutableArray alloc] initWithObjects:self.saveBarButton, self.globeBarButton, nil];
+        
+        if ([currentSettings.user.userid isEqualToString:self.sponsor.user_id]) {
+            [baritems addObject:self.deleteBarButton];
+        }
+        
+        self.navigationItem.rightBarButtonItems = baritems;
+        self.navigationController.toolbarHidden = YES;
+    } else if (([currentSettings.user loggedIn]) && (![currentSettings isSiteOwner])) {
+        self.navigationItem.rightBarButtonItems = [[NSMutableArray alloc] initWithObjects:self.saveBarButton, self.globeBarButton, nil];
+    } else {
+        self.navigationItem.rightBarButtonItem = self.globeBarButton;
+    }
     
     if ([currentSettings isSiteOwner]) {
         _catalogButton.hidden = NO;

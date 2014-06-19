@@ -8358,7 +8358,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <segue destination="IwZ-4M-rdk" kind="push" identifier="BasketballGameInfoSegue" id="qJP-Lw-J2o"/>
                         <segue destination="q6W-fF-gk9" kind="push" identifier="SoccerGameInfoSegue" id="nd0-3X-o5D"/>
                         <segue destination="5jc-dB-q8o" kind="push" identifier="LacrosseGameInfoSegue" id="QnJ-xh-m8l"/>
-                        <segue destination="aPp-Qg-c5v" kind="push" identifier="CreateSiteSegue" id="MMG-V9-NcW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hba-SY-h1C" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -8703,7 +8702,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                         </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L4U-rM-rSO">
-                                        <rect key="frame" x="174" y="272" width="65" height="30"/>
+                                        <rect key="frame" x="120" y="272" width="70" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="Submit">
@@ -8711,6 +8710,16 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                         </state>
                                         <connections>
                                             <action selector="submitButtonClicked:" destination="jZD-U8-Wav" eventType="touchUpInside" id="KdI-uU-vUg"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FAL-Tf-2so">
+                                        <rect key="frame" x="210" y="272" width="120" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Login">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="loginButtonClicked:" destination="jZD-U8-Wav" eventType="touchUpInside" id="ttC-qH-F3j"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Find Sport" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0GO-Ch-LIU">
@@ -8773,24 +8782,21 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Find Sport or Player" id="ivk-37-dPg">
-                        <barButtonItem key="rightBarButtonItem" title="Login" id="zaG-nk-zLz">
-                            <connections>
-                                <segue destination="fAy-eU-pHF" kind="push" id="eVq-7z-GSm"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Find Sport or Player" id="ivk-37-dPg"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="cityTextField" destination="ude-Vd-7OP" id="vWz-ZK-eq3"/>
                         <outlet property="countryPicker" destination="bQh-wn-AV3" id="joK-ZW-0NG"/>
                         <outlet property="countryTextField" destination="mtj-BK-6da" id="XCC-hs-8Au"/>
+                        <outlet property="loginButton" destination="FAL-Tf-2so" id="5Lh-bz-th2"/>
                         <outlet property="sitenameTextField" destination="uYc-IH-xn6" id="fRe-U0-gI0"/>
                         <outlet property="sportPicker" destination="sji-Yl-0iD" id="YcD-3a-GFG"/>
                         <outlet property="sportTextField" destination="Zip-IV-WAs" id="5tv-5h-Gst"/>
                         <outlet property="statePicker" destination="CQW-Ro-CX7" id="kyZ-uS-moy"/>
                         <outlet property="stateTextField" destination="buX-xG-pGI" id="wsq-vd-phf"/>
                         <segue destination="fUd-IB-vw4" kind="push" identifier="SelectSiteSegue" id="6Z5-LF-QIc"/>
+                        <segue destination="fAy-eU-pHF" kind="push" identifier="LoginSegue" id="2v8-El-onb"/>
+                        <segue destination="aPp-Qg-c5v" kind="push" identifier="ProgramInfoSegue" id="qhe-2t-7GB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C2B-lW-762" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -10170,7 +10176,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="5-3" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e22-gi-QoS">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="5-3" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e22-gi-QoS">
                                 <rect key="frame" x="133" y="493" width="48" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -10202,7 +10208,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="E49-cd-V36" id="4wP-9l-Fcf"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="2014" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IPk-em-ze6">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="2014" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IPk-em-ze6">
                                 <rect key="frame" x="478" y="493" width="48" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -10247,7 +10253,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Grade, Age:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bSx-NF-GlJ">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Grade, Age:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bSx-NF-GlJ">
                                 <rect key="frame" x="563" y="497" width="80" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -10257,13 +10263,13 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <rect key="frame" x="56" y="115" width="451" height="325"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Season:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4vj-hf-NUj">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Season:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4vj-hf-NUj">
                                 <rect key="frame" x="396" y="497" width="74" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weight:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EqU-xd-8jD">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Weight:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EqU-xd-8jD">
                                 <rect key="frame" x="216" y="497" width="74" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -10314,7 +10320,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="E49-cd-V36" id="yzE-dQ-ekl"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="140" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kYK-xg-BxW">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="140" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kYK-xg-BxW">
                                 <rect key="frame" x="298" y="493" width="48" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -10326,7 +10332,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="E49-cd-V36" id="q4d-wv-k5B"/>
                                 </connections>
                             </textField>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Height:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w8e-t4-bV3">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Height:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w8e-t4-bV3">
                                 <rect key="frame" x="56" y="497" width="80" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -10371,7 +10377,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="E49-cd-V36" id="XFs-VD-90e"/>
                                 </connections>
                             </pickerView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="3d3-PE-aB1">
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="3d3-PE-aB1">
                                 <rect key="frame" x="366" y="493" width="37" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -17854,38 +17860,38 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Ksy-nU-cBK"/>
-        <segue reference="kiw-w9-Cvy"/>
-        <segue reference="Ban-4g-4Xu"/>
         <segue reference="mKf-k0-GTj"/>
         <segue reference="WXN-cq-dRL"/>
         <segue reference="Oyd-7t-Tze"/>
-        <segue reference="icr-Gj-Ge2"/>
-        <segue reference="SGE-un-NTU"/>
-        <segue reference="4jJ-jB-vYA"/>
-        <segue reference="QnJ-xh-m8l"/>
-        <segue reference="1Kt-je-sYs"/>
-        <segue reference="MMG-V9-NcW"/>
+        <segue reference="Ksy-nU-cBK"/>
+        <segue reference="kiw-w9-Cvy"/>
         <segue reference="nd0-3X-o5D"/>
+        <segue reference="4jJ-jB-vYA"/>
+        <segue reference="1Kt-je-sYs"/>
+        <segue reference="SGE-un-NTU"/>
+        <segue reference="QnJ-xh-m8l"/>
         <segue reference="qJP-Lw-J2o"/>
-        <segue reference="PXL-ma-8C1"/>
+        <segue reference="8Vy-Zn-A5W"/>
         <segue reference="u0d-wO-R1L"/>
-        <segue reference="v6u-Om-qKq"/>
         <segue reference="HXG-o4-icu"/>
-        <segue reference="FEs-Np-xEv"/>
-        <segue reference="OfC-K8-lHu"/>
         <segue reference="fve-wf-e6Q"/>
+        <segue reference="v6u-Om-qKq"/>
+        <segue reference="OfC-K8-lHu"/>
+        <segue reference="FEs-Np-xEv"/>
         <segue reference="yjK-PW-ftb"/>
         <segue reference="u3w-je-1iw"/>
         <segue reference="HDk-kT-Uby"/>
-        <segue reference="dVS-nJ-zoK"/>
         <segue reference="t4d-I2-32N"/>
-        <segue reference="Qv7-69-wfe"/>
-        <segue reference="u4E-HE-IdB"/>
-        <segue reference="s3g-Kf-GBf"/>
-        <segue reference="75O-2O-NqL"/>
-        <segue reference="H65-We-2x9"/>
-        <segue reference="8Vy-Zn-A5W"/>
+        <segue reference="dVS-nJ-zoK"/>
+        <segue reference="PXL-ma-8C1"/>
+        <segue reference="qhe-2t-7GB"/>
+        <segue reference="6Z5-LF-QIc"/>
+        <segue reference="2v8-El-onb"/>
         <segue reference="JsF-dp-ihV"/>
+        <segue reference="Qv7-69-wfe"/>
+        <segue reference="H65-We-2x9"/>
+        <segue reference="s3g-Kf-GBf"/>
+        <segue reference="u4E-HE-IdB"/>
+        <segue reference="75O-2O-NqL"/>
     </inferredMetricsTieBreakers>
 </document>

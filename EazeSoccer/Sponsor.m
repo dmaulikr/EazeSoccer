@@ -41,8 +41,9 @@
 @synthesize user_id;
 @synthesize athlete_id;
 @synthesize sportadinv_id;
+@synthesize ios_client_ad;
 
-@synthesize price;
+@synthesize adprice;
 @synthesize forsale;
 @synthesize adsponsorlevel;
 @synthesize playerad;
@@ -61,6 +62,17 @@
 
 @synthesize httperror;
 
+- (id)init {
+    if (self = [super init]) {
+        athlete_id = @"";
+        user_id = @"";
+        sponsorid = @"";
+        
+        return self;
+    } else
+        return nil;
+}
+
 - (id)initWithDirectory:(NSDictionary *)sponsorDictionary {
     if ((self = [super init]) && (sponsorDictionary.count > 0)) {
         
@@ -77,39 +89,24 @@
         adurl = [sponsorDictionary objectForKey:@"adurl"];
         email = [sponsorDictionary objectForKey:@"contactemail"];
         sponsorlevel = [sponsorDictionary objectForKey:@"sponsorlevel"];
-        teamid = [sponsorDictionary objectForKey:@"teamid"];
-        sportadinv_id = [sponsorDictionary objectForKey:@"sportadinv_id"];
-        
-        user_id = [sponsorDictionary objectForKey:@"user_id"];
-        athlete_id = [sponsorDictionary objectForKey:@"athlete_id"];
-        
-        price = [[sponsorDictionary objectForKey:@"price"] floatValue];
+        adprice = [[sponsorDictionary objectForKey:@"price"] floatValue];
         forsale = [[sponsorDictionary objectForKey:@"forsale"] boolValue];
         adsponsorlevel = [sponsorDictionary objectForKey:@"adsponsorlevel"];
         playerad = [[sponsorDictionary objectForKey:@"playerad"] boolValue];
-
-        if ((NSNull *)[sponsorDictionary objectForKey:@"large"] != [NSNull null])
-            large = [sponsorDictionary objectForKey:@"large"];
-        else
-            large = @"";
         
-        if ((NSNull *)[sponsorDictionary objectForKey:@"medium"] != [NSNull null])
-            medium = [sponsorDictionary objectForKey:@"medium"];
-        else
-            medium = @"";
-
-        if ((NSNull *)[sponsorDictionary objectForKey:@"thumb"] != [NSNull null])
-            thumb = [sponsorDictionary objectForKey:@"thumb"];
-        else
-            thumb = @"";
+        teamid = [sponsorDictionary objectForKey:@"teamid"];
+        sportadinv_id = [sponsorDictionary objectForKey:@"sportadinv_id"];
+        ios_client_ad = [sponsorDictionary objectForKey:@"ios_client_ad"];
+        user_id = [sponsorDictionary objectForKey:@"user_id"];
+        athlete_id = [sponsorDictionary objectForKey:@"athlete_id"];        
         
-        if ((NSNull *)[sponsorDictionary objectForKey:@"tiny"] != [NSNull null])
-            tiny = [sponsorDictionary objectForKey:@"tiny"];
-        else
-            tiny = @"";
-        
+        large = [sponsorDictionary objectForKey:@"large"];
+        medium = [sponsorDictionary objectForKey:@"medium"];
+        thumb = [sponsorDictionary objectForKey:@"thumb"];
+        tiny = [sponsorDictionary objectForKey:@"tiny"];
         portraitbanner = [sponsorDictionary objectForKey:@"portraitbanner"];
         landscapebanner = [sponsorDictionary objectForKey:@"landscapebanner"];
+        
         sponsorpic_updated_at = [sponsorDictionary objectForKey:@"sponsorpic_updated_at"];
         adbanner_updated_at = [sponsorDictionary objectForKey:@"adbanner_updated_at"];
         
@@ -126,7 +123,7 @@
     NSString *serverUrlString = [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"];
     NSURL *url;
     
-    if (self.sponsorid) {
+    if (sponsorid.length > 0) {
         url = [NSURL URLWithString:[serverUrlString stringByAppendingFormat:@"%@%@%@%@%@%@", @"/sports/", currentSettings.sport.id, @"/sponsors/",
                                     self.sponsorid, @".json?&auth_token=", currentSettings.user.authtoken]];
     } else {
@@ -136,10 +133,15 @@
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
-    NSMutableDictionary *sponsordict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:name, @"name", [addrnum stringValue], @"addrnum",
-                                        street, @"street", zip, @"zip", phone, @"phone", fax, @"fax", mobile, @"mobile",
-                                        email, @"contactemail", adurl, @"adurl", sponsorlevel, @"sponsorlevel", currentSettings.team.teamid, @"team_id",
-                                        user_id, @"user_id", athlete_id, @"athlete_id", nil];
+    NSMutableDictionary *sponsordict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:currentSettings.team.teamid, @"team_id",
+                                        currentSettings.user.userid, @"user_id", athlete_id, @"athlete_id", name, @"name",
+                                        [addrnum stringValue], @"addrnum", street, @"street", zip, @"zip", phone, @"phone", fax, @"fax",
+                                        mobile, @"mobile", email, @"contactemail", adurl, @"adurl", sponsorlevel, @"sponsorlevel",  nil];
+    
+    if (sportadinv_id.length > 0)
+        [sponsordict setValue:sportadinv_id forKeyPath:@"sportadvin_id"];
+    else if (ios_client_ad.length > 0)
+        [sponsordict setValue:ios_client_ad forKeyPath:@"ios_client_ad_id"];
 
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
     [jsonDict setValue:sponsordict forKey:@"sponsor"];
@@ -156,7 +158,7 @@
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
     
-    if (!self.sponsorid) {
+    if (sponsorid.length == 0) {
         [request setHTTPMethod:@"POST"];
     } else {
         [request setHTTPMethod:@"PUT"];
@@ -182,9 +184,9 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     
-    UIAlertView *errorView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"The download cound not complete - please make sure you're connected to either 3G or WI-FI" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
-    [errorView show];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorSavedNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -209,6 +211,8 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorSavedNotification" object:nil
                                                               userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
         }
+        
+        [currentSettings.sponsors retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
     } else {
         if (deleteSponsor)
             [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorDeletedNotification" object:nil

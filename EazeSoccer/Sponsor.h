@@ -34,8 +34,9 @@
 @property (nonatomic, strong) NSString *user_id;
 @property (nonatomic, strong) NSString *athlete_id;
 @property (nonatomic, strong) NSString *sportadinv_id;
+@property (nonatomic, strong) NSString *ios_client_ad;
 
-@property (nonatomic, assign) float price;
+@property (nonatomic, assign) float adprice;
 @property (nonatomic, assign) BOOL forsale;
 @property (nonatomic, strong) NSString *adsponsorlevel;
 @property (nonatomic, assign) BOOL playerad;

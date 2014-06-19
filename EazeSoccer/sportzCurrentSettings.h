@@ -23,6 +23,7 @@
 #import "EazesportzRetrieveSportadinv.h"
 #import "EazesportzRetrieveCoaches.h"
 #import "EazesportzRetrieveVisitingTeams.h"
+#import "EazesportzInApAdDetailViewController.h"
 
 #import <AWSRuntime/AWSRuntime.h>
 #import <AWSS3/AWSS3.h>
@@ -74,6 +75,8 @@
 @property (nonatomic, strong) EazesportzRetrieveSportadinv *inventorylist;
 @property (nonatomic, strong) EazesportzRetrieveCoaches *coaches;
 @property (nonatomic, strong) EazesportzRetrieveVisitingTeams *visitingteams;
+
+@property (nonatomic, strong) EazesportzInApAdDetailViewController *purchaseController;
 
 - (UIImage *)getBannerImage;
 

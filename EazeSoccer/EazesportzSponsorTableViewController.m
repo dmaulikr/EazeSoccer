@@ -9,7 +9,6 @@
 #import "EazesportzSponsorTableViewController.h"
 
 #import "EazesportzAppDelegate.h"
-#import "EazesportzRetrieveSponsors.h"
 #import "EazesportzSponsorsTableViewCell.h"
 #import "EazesportzEditSponsorViewController.h"
 
@@ -34,7 +33,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSponsors:) name:@"SponsorListChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -45,6 +43,17 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSponsors:) name:@"SponsorListChangedNotification" object:nil];
+    
+    if (([currentSettings isSiteOwner]) && (!currentSettings.sport.purchaseads)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Your sport is not set up to sell ads and receive ad revenue. \nPlease visit GameTrackerPro.com to set up your site for ads." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)gotSponsors:(NSNotification *)notification {
@@ -96,6 +105,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return [NSString stringWithFormat:@"Sponsors for %@", currentSettings.team.mascot];
+}
+
 #pragma mark - Navigation
 
 // In a story board-based application, you will often want to do a little preparation before navigation
@@ -107,6 +120,8 @@
         NSIndexPath *indexPath = [_sponsorTableView indexPathForSelectedRow];
         EazesportzEditSponsorViewController *destController = segue.destinationViewController;
         destController.sponsor = [currentSettings.sponsors.sponsors objectAtIndex:indexPath.row];
+        destController.storekitProduct = nil;
+        destController.adproduct = nil;
     }
 }
 
@@ -123,7 +138,7 @@
 }
 
 - (void)addSponsor {
-    if (currentSettings.user.userid.length > 0)
+    if ([currentSettings.user loggedIn])
         [self performSegueWithIdentifier:@"NewSponsorSegue" sender:self];
     else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please create a login to become a sponsor" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"More Info", nil];

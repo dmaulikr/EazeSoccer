@@ -33,6 +33,8 @@
 @synthesize awskeyid;
 @synthesize awssecretkey;
 
+@synthesize adminsid;
+
 @synthesize tinyimage;
 @synthesize thumbimage;
 @synthesize setupforads;
@@ -83,6 +85,7 @@
         admin = [[userDictionary objectForKey:@"admin"] boolValue];
         awssecretkey = [userDictionary objectForKey:@"awskey"];
         awskeyid = [userDictionary objectForKey:@"awskeyid"];
+        adminsid = [userDictionary objectForKey:@"adminsid"];
         tier = [userDictionary objectForKey:@"tier"];
         authtoken = [userDictionary objectForKey:@"authentication_token"];
         
@@ -138,6 +141,7 @@
     username = nil;
     admin = NO;
     adminsite = @"";
+    adminsid = @"";
 }
 
 @end

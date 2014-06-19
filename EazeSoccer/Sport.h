@@ -33,6 +33,8 @@
 @property(nonatomic, assign) BOOL approved;
 @property(nonatomic, assign) BOOL hideAds;
 
+@property (nonatomic, assign) BOOL purchaseads;
+
 @property (nonatomic, assign) BOOL review_media;
 @property (nonatomic, assign) BOOL enable_user_pics;
 @property (nonatomic, assign) BOOL enable_user_video;

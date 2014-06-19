@@ -37,11 +37,11 @@
     NSURL *url;
     
     if (authtoken.length > 0)
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports/",
-                                    sportid, @"/sponsors.json?auth_token=", authtoken]];
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", sportid, @"/sponsors.json?auth_token=", authtoken]];
     else
-        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports/",
-                                    sportid, @"/sponsors.json"]];
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                    @"/sports/", sportid, @"/sponsors.json"]];
     
     originalRequest = [NSURLRequest requestWithURL:url];
     [[NSURLConnection alloc] initWithRequest:originalRequest delegate:self];
@@ -91,6 +91,10 @@
         }
         
         if (sponsors.count > 0) {
+            NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"adprice" ascending:YES];
+            NSArray *descriptors = [NSArray arrayWithObjects:firstDescriptor, nil];
+            [sponsors sortedArrayUsingDescriptors:descriptors];
+
             currentSettings.sport.hideAds = YES;
             pricearray = [[NSMutableArray alloc] init];
             playerads = [[NSMutableArray alloc] init];
@@ -100,17 +104,21 @@
             
             for (int i = 0; i < sponsors.count; i++) {
                 
-                if (oldprice > [[sponsors objectAtIndex:i] price]) {
-                    if ([[sponsors objectAtIndex:i] playerad]) {
-                        [playerads addObject:[sponsors objectAtIndex:i]];
-                    } else if (adlist.count > 0) {
+                if (oldprice > [[sponsors objectAtIndex:i] adprice]) {
+                    
+                    if (adlist.count > 0) {
                         [pricearray addObject:adlist];
                     }
+                    
                     adlist = [[NSMutableArray alloc] init];
                 }
                 
-                [adlist addObject:[sponsors objectAtIndex:i]];
-                oldprice = [[sponsors objectAtIndex:i] price];
+                if ([[sponsors objectAtIndex:i] playerad])
+                    [playerads addObject:[sponsors objectAtIndex:i]];
+                else
+                    [adlist addObject:[sponsors objectAtIndex:i]];
+                
+                oldprice = [[sponsors objectAtIndex:i] adprice];
             }
             
             if (adlist.count > 0)
@@ -162,7 +170,8 @@
     for (int i = 0; i < sponsors.count; i++) {
         
         if (([[[sponsors objectAtIndex:i] sponsorid] isEqualToString:sponsor.sponsorid]) &&
-           ([[[sponsors objectAtIndex:i] sponsorpic_updated_at] compare:sponsor.sponsorpic_updated_at] == NSOrderedSame)) {
+           ([[[sponsors objectAtIndex:i] sponsorpic_updated_at] compare:sponsor.sponsorpic_updated_at] == NSOrderedSame) &&
+            ([[[sponsors objectAtIndex:i] adbanner_updated_at] compare:sponsor.adbanner_updated_at] == NSOrderedSame)) {
             found = YES;
             break;
         }
@@ -180,7 +189,7 @@
         BOOL found = NO;
         
         for (int cnt = 0; cnt < sponsorlist.count; cnt++) {
-            if ([[[sponsors objectAtIndex:cnt] sponsorid] isEqualToString:[[sponsors objectAtIndex:i] sponsorid] ]) {
+            if ([[[sponsorlist objectAtIndex:cnt] sponsorid] isEqualToString:[[sponsors objectAtIndex:i] sponsorid] ]) {
                 found = YES;
                 break;
             }
@@ -233,6 +242,16 @@
         return [adlist objectAtIndex:randomIndex];
     } else
         return nil;
+}
+
+- (BOOL)allPlayerAds {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"playerad==%d", YES];
+    NSArray *results = [pricearray filteredArrayUsingPredicate:predicate];
+    
+    if (results.count == pricearray.count)
+        return  YES;
+    else
+        return NO;
 }
 
 @end

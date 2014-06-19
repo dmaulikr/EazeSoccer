@@ -107,6 +107,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if (([currentSettings.user loggedIn]) && (currentSettings.user.adminsid.length == 0)) {
+        [_loginButton setTitle:@"Create Sport" forState:UIControlStateNormal];
+    } else {
+        [_loginButton setTitle:@"Login" forState:UIControlStateNormal];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatedLocation:) name:@"NewLocationNotification" object:nil];
     
     if ((currentSettings.changesite) && (currentSettings.sport.id.length == 0)) {
@@ -276,6 +282,13 @@
 //        stateabreviation = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
         _statePicker.hidden = YES;
     }
+}
+
+- (IBAction)loginButtonClicked:(id)sender {
+    if ([currentSettings.user loggedIn])
+        [self performSegueWithIdentifier:@"ProgramInfoSegue" sender:self];
+    else
+        [self performSegueWithIdentifier:@"LoginSegue" sender:self];
 }
 
 @end

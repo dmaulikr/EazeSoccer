@@ -22,12 +22,16 @@
 #import "EazesportzRetrieveFeaturedVideosController.h"
 #import "EazesportzSendNotificationData.h"
 #import "EazesportzRetrieveVisitingTeams.h"
+#import "EazesportzInApAdDetailViewController.h"
 
 #import <AWSRuntime/AmazonErrorHandler.h>
 #import <CoreLocation/CoreLocation.h>
+#import <StoreKit/StoreKit.h>
 
 
 @interface EazesportzAppDelegate () <CLLocationManagerDelegate>
+
+@property (nonatomic, strong) EazesportzInApAdDetailViewController *purchaseController;
 
 @end
 
@@ -35,6 +39,8 @@
     EazesportzRetrieveTeams *getTeams;
     CLLocationManager *locationManager;
     CLLocation *currentLocation;
+    
+    EazesportzInApAdDetailViewController *paymentController;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -103,6 +109,9 @@
     
     NSSetUncaughtExceptionHandler(&onUncaughtException);
 
+    paymentController = [[EazesportzInApAdDetailViewController alloc] init];
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:paymentController];
+    
     return YES;
 }
 
@@ -123,6 +132,8 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:paymentController];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

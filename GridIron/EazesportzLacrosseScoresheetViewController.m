@@ -280,7 +280,7 @@
         scoreEntryController.visitingTeam = NO;
         [scoreEntryController viewWillAppear:YES];
         _scoreEntryContainer.hidden = NO;
-    } else if (collectionView == visitorCollectionView) {
+    } else if ((collectionView == visitorCollectionView) && (game.lacross_game.visiting_team_id.length > 0)) {
         
         if (indexPath.row - 1 < visitorscores.count)
             scoreEntryController.scorestat = [visitorscores objectAtIndex:indexPath.row - 1];

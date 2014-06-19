@@ -19,5 +19,6 @@
 
 - (Sponsor *)getSponsorAd;
 - (Sponsor *)getPlayerAd:(Athlete *)ahtlete;
+- (BOOL)allPlayerAds;
 
 @end

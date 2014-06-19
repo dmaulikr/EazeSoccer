@@ -63,6 +63,8 @@
 @synthesize coaches;
 @synthesize visitingteams;
 
+@synthesize purchaseController;
+
 - (id)init {
     if (self = [super init]) {
         user = [[User alloc] init];

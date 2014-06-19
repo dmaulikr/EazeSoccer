@@ -8,7 +8,6 @@
 
 #import "EazesportzEditSponsorViewController.h"
 #import "EazesportzAppDelegate.h"
-#import "PlayerSelectionViewController.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -19,19 +18,20 @@
 
 @implementation EazesportzEditSponsorViewController {
     NSDictionary *stateDictionary;
-    BOOL newmedia, imageselected, statePicker, adInventoryPicker, countryPick, bannerimgselected;
+    BOOL newmedia, bannermedia, bannerimageselected, sponsorimageselected, statePicker, adInventoryPicker, countryPick, bannerimgselected;
     NSMutableArray *countryarray;
     NSArray *stateList;
     NSString *country, *stateabreviation;
-    
-    Athlete *player;
-    PlayerSelectionViewController *playerController;
     
     Sportadinv *adinventory;
 }
 
 @synthesize sponsor;
 @synthesize popover;
+
+@synthesize storekitProduct;
+@synthesize adproduct;
+@synthesize player;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -53,6 +53,10 @@
     _zipcode.keyboardType = UIKeyboardTypeNumberPad;
     _sponsorEmail.keyboardType = UIKeyboardTypeEmailAddress;
     _sponsorurl.keyboardType = UIKeyboardTypeURL;
+    _phone.keyboardType = UIKeyboardTypeNamePhonePad;
+    _faxnumber.keyboardType = UIKeyboardTypeNamePhonePad;
+    _mobile.keyboardType = UIKeyboardTypeNamePhonePad;
+    
     _countryTextField.inputView = _countryPicker.inputView;
     _adInventoryTextField.inputView = _countryPicker.inputView;
     
@@ -81,8 +85,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _playerContainer.hidden = YES;
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sponsorDeleted:) name:@"SponsorDeletedNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sponsorSaved:) name:@"SponsorSavedNotification" object:nil];
     
@@ -94,9 +96,9 @@
     if (sponsor) {
         if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
             if (sponsor.thumbimage) {
-                _sponsorImage.image = [currentSettings normalizedImage:sponsor.thumbimage scaledToSize:100];
+                _sponsorImage.image = [currentSettings normalizedImage:sponsor.thumbimage scaledToSize:125];
             } else {
-                _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:100];
+                _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:125];
             }
         } else {
             if (sponsor.mediumimage) {
@@ -104,6 +106,34 @@
             } else {
                 _sponsorImage.image = [currentSettings normalizedImage:[UIImage imageNamed:@"photo_not_available.png"] scaledToSize:200];
             }
+        }
+        
+        if (sponsor.athlete_id.length > 0) {
+            player = [currentSettings findAthlete:sponsor.athlete_id];
+            _sponsorImage.hidden = YES;
+            _sponsorCameraButton.hidden = YES;
+            _sponsorCameraButton.enabled = NO;
+            _sponsorCameraRollButton.hidden = YES;
+            _sponsorCameraRollButton.enabled = NO;
+            _adInventoryTextField.hidden = YES;
+            _adInventoryTextField.enabled = NO;
+        } else {
+            _sponsorCameraRollButton.hidden = NO;
+            _sponsorCameraRollButton.enabled = YES;
+            _sponsorCameraButton.hidden = NO;
+            _sponsorCameraButton.enabled = YES;
+        }
+                
+        _bannerImage.image = [sponsor getPortraitBanner];
+        
+        if ((_bannerImage.image.CIImage == nil) && (_bannerImage.image.CGImage == nil) && (!bannermedia)) {
+            _bannerlogoImage.image = [currentSettings.team getImage:@"tiny"];
+            _bannerlogoTitleLabel.text = [NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot];
+            _bannerlogoMessageLabel.text = [NSString stringWithFormat:@"%@", sponsor.name];
+       } else {
+            _bannerlogoImage.hidden = YES;
+            _bannerlogoMessageLabel.hidden = YES;
+            _bannerlogoTitleLabel.hidden = YES;
         }
         
         _sponsorName.text = sponsor.name;
@@ -125,30 +155,79 @@
         if (sponsor.athlete_id.length > 0) {
             _playerTextField.text = [[currentSettings findAthlete:sponsor.athlete_id] numberLogname];
             _playerTextField.hidden = NO;
-            _playerTextField.enabled = YES;
+            _playerTextField.enabled = NO;
         } else {
             _playerTextField.hidden = YES;
             _playerTextField.enabled = NO;
         }
-        
-        _bannerImage.image = [sponsor getPortraitBanner];
-        
-        if ((_bannerImage.image.CIImage == nil) && (_bannerImage.image.CGImage == nil))
-            _bannerImage.image = [UIImage imageNamed:@"nobannerimage.png"];
-        
     } else {
-        _sponsorImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
         _checkImageButton.enabled = NO;
         _checkImageButton.hidden = YES;
         _adInventoryTextField.enabled = YES;
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome"
-                                                        message:[NSString stringWithFormat:@"As an administrator you can edit and create new ad sponsors for the %@. General advertisers will have to use the web site to purchase ad space on your site.", currentSettings.team.mascot] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
+        if ([currentSettings isSiteOwner]) {
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome"
+                                message:[NSString stringWithFormat:@"As an administrator you can edit and create new ad sponsors for the %@. General advertisers will have to use the web site to purchase ad space on your site.",
+                                         currentSettings.team.mascot] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+        } else if ((storekitProduct) && (adproduct)) {
+            _adInventoryTextField.hidden = YES;
+            _adInventoryTextField.enabled = NO;
+            
+            if (adproduct.playerad) {
+                _playerTextField.text = player.numberLogname;
+                _playerTextField.hidden = NO;
+                _playerTextField.enabled = NO;
+                
+                _sponsorImage.hidden = YES;
+                _sponsorCameraButton.hidden = YES;
+                _sponsorCameraButton.enabled = NO;
+                _sponsorCameraRollButton.hidden = YES;
+                _sponsorCameraRollButton.enabled = NO;
+            } else {
+                _playerTextField.hidden = YES;
+                _playerTextField.enabled = NO;
+                _sponsorCameraButton.hidden = NO;
+                _sponsorCameraButton.enabled = YES;
+                _sponsorCameraRollButton.hidden = NO;
+                _sponsorCameraRollButton.enabled = YES;
+                
+                if ((_sponsorImage.image.CIImage == nil) && (_sponsorImage.image.CGImage == nil))
+                    _sponsorImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+            }
+                        
+            if ((_bannerImage.image.CIImage == nil) && (_bannerImage.image.CGImage == nil) && (!bannermedia))  {
+                _bannerlogoImage.image = [currentSettings.team getImage:@"tiny"];
+                _bannerlogoTitleLabel.text = [NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot];
+                _bannerlogoMessageLabel.text = @"Sponsor's message appears here!";
+                UIAlertView *alert;
+                
+                if (adproduct.playerad) {
+                    alert = [[UIAlertView alloc] initWithTitle:@"Player Ad"
+                                message:@"Enter your sponsor information. Player ads only require sponsor name or message. Contact informatio is not required." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                } else {
+                    alert = [[UIAlertView alloc] initWithTitle:@"Team Ad"
+                                        message:@"Enter your sponsor information. Make sure to enter contact information so we can map your business!"
+                                                      delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                }
+                
+                [alert show];
+            } else if (bannermedia) {
+                _bannerlogoImage.hidden = YES;
+                _bannerlogoMessageLabel.hidden = YES;
+                _bannerlogoTitleLabel.hidden = YES;
+            }
+        }
     }
 }
 
 - (IBAction)cameraRollButtonClicked:(id)sender {
+    if (sender == _bannerCameraRollButton)
+        bannermedia = YES;
+    else
+        bannermedia = NO;
+    
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         
@@ -176,6 +255,11 @@
 }
 
 - (IBAction)cameraButtonClicked:(id)sender {
+    if (sender == _bannerCameraButton)
+        bannermedia = YES;
+    else
+        bannermedia = NO;
+
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
@@ -218,8 +302,14 @@
         if (newmedia)
             UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:finishedSavingWithError:contextInfo:), nil);
         
-        _sponsorImage.image = image;
-        imageselected = YES;
+        if (bannermedia) {
+            _bannerImage.image = image;
+            bannerimageselected = YES;
+        } else {
+            _sponsorImage.image = image;
+            sponsorimageselected = YES;
+        }
+        
     }
     else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
     {
@@ -248,35 +338,29 @@
     CIImage *cim = [_sponsorImage.image CIImage];
 
     if (_sponsorName.text.length == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor must have a name!"
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor must have a name or message!"
                                                 delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
         return;
     }
     
-    if ((cgref == NULL) && (cim == nil)) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor must have an image!"
-                                                       delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-        return;
-    }
-    
-    if (_sponsorurl.text.length == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor must have a url for your fans to click!"
-                                                       delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-        return;
-    }
-    
-    if (_adInventoryTextField.text.length == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Ad inventory field is blank!"
-                                                       delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-        return;
+    if (sponsor) {
+        if ((cgref == NULL) && (cim == nil) && (!player)) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor must have an image!"
+                                                           delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+            return;
+        }
+        
+        if ((_sponsorurl.text.length == 0) && (!player)) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor must have a url for your fans to click!"
+                                                           delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+            return;
+        }
     }
     
     if (!sponsor) {
@@ -295,7 +379,11 @@
     sponsor.fax = _faxnumber.text;
     sponsor.adurl = _sponsorurl.text;
     sponsor.email = _sponsorEmail.text;
-    sponsor.sportadinv_id = adinventory.sportadinvid;
+    
+    if (adinventory.sportadinvid.length > 0)
+        sponsor.sportadinv_id = adinventory.sportadinvid;
+    else if (adproduct.ios_client_ad_id.length > 0)
+        sponsor.ios_client_ad = adproduct.ios_client_ad_id;
     
     if (player) {
         sponsor.athlete_id = player.athleteid;
@@ -328,7 +416,7 @@
 
 - (void)sponsorSaved:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
-        if (imageselected) {
+        if (sponsorimageselected) {
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
             [_activityIndicator startAnimating];
             // Upload image data.  Remember to set the content type.
@@ -348,7 +436,12 @@
             
             // Put the image data into the specified s3 bucket and object.
             [[currentSettings getS3] putObject:por];
+        } else if (bannerimageselected) {
+            [self uploadBannerImage];
         } else {
+            if (adproduct)
+                currentSettings.purchaseController.sponsor = sponsor;
+            
             [self.navigationController popViewControllerAnimated:YES];
         }
     } else {
@@ -377,15 +470,24 @@
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     NSBundle *mainBundle = [NSBundle mainBundle];
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], @"/sports/",
-                                       currentSettings.sport.id, @"/sponsors/", sponsor.sponsorid, @"/updatephoto.json?auth_token=", currentSettings.user.authtoken]];;
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                       @"/sports/", currentSettings.sport.id, @"/sponsors/", sponsor.sponsorid, @"/updatephoto.json?auth_token=",
+                                       currentSettings.user.authtoken]];;
     NSMutableURLRequest *urlrequest = [NSMutableURLRequest requestWithURL:url];
     NSURLResponse* urlresponse;
     NSError *error = nil;
     NSString *path = [NSString stringWithFormat:@"%@%@%@%@%@", @"uploads/sponsorsphotos/", sponsor.sponsorid, @"/", sponsor.name,
-                      sponsor.street];
+                      sponsor.sponsorid];
     NSMutableDictionary *athDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: path, @"filepath", @"image/jpeg",
                                     @"filetype", [NSString stringWithFormat:@"%@%@", sponsor.name, sponsor.street], @"filename", nil];
+    
+    if (sponsorimageselected) {
+        [athDict setValue:@"sponsorimage" forKey:@"sponsorimage"];
+        sponsorimageselected = NO;
+    } else if (bannerimageselected) {
+        [athDict setValue:@"sponsorbanner" forKey:@"sponsorimage"];
+        bannerimageselected = NO;
+    }
     
     //    NSDictionary *jsonDict = [[NSDictionary alloc] initWithObjectsAndKeys:athDict, @"athlete", nil];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:athDict options:0 error:&error];
@@ -399,7 +501,14 @@
     NSDictionary *athdata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        [self.navigationController popViewControllerAnimated:YES];
+        if (bannerimageselected)
+            [self uploadBannerImage];
+        else {
+            if (adproduct)
+                currentSettings.purchaseController.sponsor = sponsor;
+            
+            [self.navigationController popViewControllerAnimated:YES];
+        }
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[athdata objectForKey:@"error"]
                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -453,12 +562,6 @@
         countryPick = NO;
         [textField resignFirstResponder];
         [_countryPicker reloadAllComponents];
-    } else if (textField == _playerTextField) {
-        _playerContainer.hidden = NO;
-        playerController.player = nil;
-        [playerController viewWillAppear:YES];
-        _playerTextField.text = @"";
-        [textField resignFirstResponder];
     }
 }
 
@@ -484,7 +587,7 @@
     } else if (adInventoryPicker) {
         return [NSString stringWithFormat:@"%@ - $%.02f",
                 [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adlevelname],
-                [[currentSettings.inventorylist.inventorylist objectAtIndex:row] price]];
+                [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adprice]];
     } else {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
         return [subDict objectForKey:@"name"];
@@ -497,7 +600,7 @@
     } else if (adInventoryPicker) {
         _adInventoryTextField.text = [NSString stringWithFormat:@"%@ - $%.02f",
                                       [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adlevelname],
-                                      [[currentSettings.inventorylist.inventorylist objectAtIndex:row] price]];
+                                      [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adprice]];
         adinventory = [currentSettings.inventorylist.inventorylist objectAtIndex:row];
     } else {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
@@ -508,20 +611,32 @@
     _countryPicker.hidden = YES;
 }
 
-- (void)playerSelected:(UIStoryboardSegue *)segue {
-    player = playerController.player;
-    
-    if (player) {
-        _playerTextField.text = player.numberLogname;
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (adproduct) {
+        currentSettings.purchaseController.sponsor = sponsor;
     }
-    
-    _playerContainer.hidden = NO;
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"PlayerSelectSegue"]) {
-        playerController = segue.destinationViewController;
-    }
+- (void)uploadBannerImage {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [_activityIndicator startAnimating];
+    // Upload image data.  Remember to set the content type.
+    //    imagepath = [NSString stringWithFormat:@"%@%@%@", [[currentSettings getBucket] name], @"/uploads/sponsorsphotos/", athlete.athleteid];
+    NSString *photopath = [NSString stringWithFormat:@"%@%@%@%@%@", @"uploads/sponsorsphotos/",
+                           sponsor.sponsorid, @"/", sponsor.name, sponsor.sponsorid];
+    S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:photopath inBucket:[[currentSettings getBucket] name]];
+    por.contentType = @"image/jpeg";
+    
+    //    UIImage *image = [currentSettings normalizedImage:_playerImage.image scaledToSize:512];
+    NSData *imageData = UIImageJPEGRepresentation(_bannerImage.image, 1.0);
+    
+    NSLog(@"%d", imageData.length);
+    
+    por.data = imageData;
+    por.delegate = self;
+    
+    // Put the image data into the specified s3 bucket and object.
+    [[currentSettings getS3] putObject:por];
 }
 
 @end

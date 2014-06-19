@@ -33,6 +33,8 @@
 @property(nonatomic, strong) NSString *awssecretkey;
 @property(nonatomic, strong) NSString *awskeyid;
 
+@property (nonatomic, strong) NSString *adminsid;
+
 @property(nonatomic, strong) UIImage *thumbimage;
 @property(nonatomic, strong) UIImage *tinyimage;
 @property (nonatomic, assign) BOOL setupforads;

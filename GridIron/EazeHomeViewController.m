@@ -137,10 +137,7 @@
     if (currentSettings.firstuse) {
         [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
     } else if ((currentSettings.changesite) || (currentSettings.sport.id.length == 0)) {
-        if (([currentSettings.user loggedIn]) && (currentSettings.user.admin))
-            [self performSegueWithIdentifier:@"CreateSiteSegue" sender:self];
-        else
-            [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
+        [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
     } else {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
     }
