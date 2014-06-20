@@ -152,7 +152,11 @@
     cell.textLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:14.0];
     cell.textLabel.text = product.localizedTitle;
     cell.detailTextLabel.text = [product.price stringValue];
-    cell.imageView.image = [self getProductImage:product.productIdentifier];
+    
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        cell.imageView.image = [self getProductImage:product.productIdentifier Size:@"tiny"];
+    else
+        cell.imageView.image = [self getProductImage:product.productIdentifier Size:@"thumb"];
     
     return cell;
 }
@@ -164,14 +168,20 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
-- (UIImage *)getProductImage:(NSString *)productid {
+- (UIImage *)getProductImage:(NSString *)productid Size:(NSString *)size {
     UIImage *image = nil;
     
     for (int i = 0; i < getProducts.products.count; i++) {
         if ([[[getProducts.products objectAtIndex:i] productid] isEqualToString:productid]) {
             
-            if (![[[getProducts.products objectAtIndex:i] tinyurl] isEqualToString:@"/iosadimages/tiny/missing.png"]) {
-                image = [UIImage imageWithData:[[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[[getProducts.products objectAtIndex:i] tinyurl]]]];
+            if (([size isEqualToString:@"tiny"]) &&
+                (![[[getProducts.products objectAtIndex:i] tinyurl] isEqualToString:@"/iosadimages/tiny/missing.png"])) {
+                    image = [UIImage imageWithData:[[NSData alloc] initWithContentsOfURL:
+                                                    [NSURL URLWithString:[[getProducts.products objectAtIndex:i] tinyurl]]]];
+            } else if (([size isEqualToString:@"thumb"]) &&
+                       (![[[getProducts.products objectAtIndex:i] thumburl] isEqualToString:@"/iosadimages/thumb/missing.png"])) {
+                image = [UIImage imageWithData:[[NSData alloc] initWithContentsOfURL:
+                                                [NSURL URLWithString:[[getProducts.products objectAtIndex:i] thumburl]]]];
             }
             
             break;

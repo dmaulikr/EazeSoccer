@@ -166,9 +166,28 @@
         _adInventoryTextField.enabled = YES;
         
         if ([currentSettings isSiteOwner]) {
+            _playerTextField.hidden = YES;
+            _playerTextField.enabled = NO;
+            _sponsorCameraButton.hidden = NO;
+            _sponsorCameraButton.enabled = YES;
+            _sponsorCameraRollButton.hidden = NO;
+            _sponsorCameraRollButton.enabled = YES;
             
+            if ((_sponsorImage.image.CIImage == nil) && (_sponsorImage.image.CGImage == nil))
+                _sponsorImage.image = [UIImage imageWithData:UIImageJPEGRepresentation([UIImage imageNamed:@"photo_not_available.png"], 1)];
+
+            if ((_bannerImage.image.CIImage == nil) && (_bannerImage.image.CGImage == nil) && (!bannermedia))  {
+                _bannerlogoImage.image = [currentSettings.team getImage:@"tiny"];
+                _bannerlogoTitleLabel.text = [NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot];
+                _bannerlogoMessageLabel.text = @"Sponsor's message appears here!";
+            } else if (bannermedia) {
+                _bannerlogoImage.hidden = YES;
+                _bannerlogoMessageLabel.hidden = YES;
+                _bannerlogoTitleLabel.hidden = YES;
+            }
+
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Welcome"
-                                message:[NSString stringWithFormat:@"As an administrator you can edit and create new ad sponsors for the %@. General advertisers will have to use the web site to purchase ad space on your site.",
+                                message:[NSString stringWithFormat:@"As an administrator you can edit and create new ad sponsors for the %@. General advertisers will have to use the web site to purchase ad inventory you created. Fans and advertisers will be able to purchase ad inventory that is offered by the GameTracker app.\n Use this to add sponsors that you have collected revenue from outside of GameTracker.",
                                          currentSettings.team.mascot] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
             [alert show];
         } else if ((storekitProduct) && (adproduct)) {
@@ -330,6 +349,7 @@
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    bannermedia = NO;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -585,9 +605,8 @@
     if (statePicker) {
         return [stateList objectAtIndex:row];
     } else if (adInventoryPicker) {
-        return [NSString stringWithFormat:@"%@ - $%.02f",
-                [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adlevelname],
-                [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adprice]];
+        Sportadinv *adinv = [currentSettings.inventorylist.inventorylist objectAtIndex:row];
+        return [NSString stringWithFormat:@"%@ - $%.02f", adinv.adlevelname, adinv.price];
     } else {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
         return [subDict objectForKey:@"name"];
@@ -598,9 +617,8 @@
     if (statePicker) {
         _state.text = [stateDictionary objectForKey:[stateList objectAtIndex:row]];
     } else if (adInventoryPicker) {
-        _adInventoryTextField.text = [NSString stringWithFormat:@"%@ - $%.02f",
-                                      [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adlevelname],
-                                      [[currentSettings.inventorylist.inventorylist objectAtIndex:row] adprice]];
+        Sportadinv *adinv = [currentSettings.inventorylist.inventorylist objectAtIndex:row];
+        _adInventoryTextField.text = [NSString stringWithFormat:@"%@ - $%.02f", adinv.adlevelname, adinv.price];
         adinventory = [currentSettings.inventorylist.inventorylist objectAtIndex:row];
     } else {
         NSDictionary *subDict = [countryarray objectAtIndex:row];
