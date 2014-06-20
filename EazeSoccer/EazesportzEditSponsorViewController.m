@@ -94,6 +94,14 @@
     adInventoryPicker = NO;
     
     if (sponsor) {
+        if ([currentSettings isSiteOwner]) {
+            if (![sponsor.user_id isEqualToString:currentSettings.user.userid]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You are editing ad purchased by a fan!" delegate:nil
+                                                      cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                [alert show];
+            }
+        }
+            
         if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
             if (sponsor.thumbimage) {
                 _sponsorImage.image = [currentSettings normalizedImage:sponsor.thumbimage scaledToSize:125];
