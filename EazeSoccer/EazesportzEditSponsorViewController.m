@@ -324,6 +324,9 @@
         if (bannermedia) {
             _bannerImage.image = image;
             bannerimageselected = YES;
+            _bannerlogoMessageLabel.hidden = YES;
+            _bannerlogoTitleLabel.hidden = YES;
+            _bannerlogoImage.hidden = YES;
         } else {
             _sponsorImage.image = image;
             sponsorimageselected = YES;

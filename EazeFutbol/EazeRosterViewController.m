@@ -19,7 +19,6 @@
 
 @implementation EazeRosterViewController {
     EazesportzDisplayAdBannerViewController *adBannerController;
-    EazesportzRetrievePlayers *getPlayers;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -36,8 +35,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRosterData:) name:@"RosterChangedNotification" object:nil];
-    
-    getPlayers = [[EazesportzRetrievePlayers alloc] init];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)gotRosterData:(NSNotificationCenter *)notification {
@@ -53,8 +54,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-//    [getPlayers retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     
     if ([currentSettings isSiteOwner]) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.coachesButton, self.addButton, self.refreshBarButton, nil];
@@ -142,10 +141,6 @@
 
 - (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error {
     _bannerView.hidden = YES;
-}
-
-- (IBAction)refreshBarButtonClicked:(id)sender {
-    [getPlayers retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
 }
 
 @end

@@ -78,6 +78,8 @@
         coaches = [[EazesportzRetrieveCoaches alloc] init];
         visitingteams = [[EazesportzRetrieveVisitingTeams alloc] init];
         
+        purchaseController = [[EazesportzInApAdDetailViewController alloc] init];
+        
         newuser = nil;
         photodeleted = NO;
         

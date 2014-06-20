@@ -31,7 +31,7 @@
 
 @interface EazesportzAppDelegate () <CLLocationManagerDelegate>
 
-@property (nonatomic, strong) EazesportzInApAdDetailViewController *purchaseController;
+// @property (nonatomic, strong) EazesportzInApAdDetailViewController *purchaseController;
 
 @end
 
@@ -40,7 +40,7 @@
     CLLocationManager *locationManager;
     CLLocation *currentLocation;
     
-    EazesportzInApAdDetailViewController *paymentController;
+//    EazesportzInApAdDetailViewController *paymentController;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -109,8 +109,8 @@
     
     NSSetUncaughtExceptionHandler(&onUncaughtException);
 
-    paymentController = [[EazesportzInApAdDetailViewController alloc] init];
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:paymentController];
+//    paymentController = [[EazesportzInApAdDetailViewController alloc] init];
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:currentSettings.purchaseController];
     
     return YES;
 }
@@ -133,7 +133,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
-    [[SKPaymentQueue defaultQueue] removeTransactionObserver:paymentController];
+    [[SKPaymentQueue defaultQueue] removeTransactionObserver:currentSettings.purchaseController];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

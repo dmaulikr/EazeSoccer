@@ -8046,11 +8046,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <segue destination="4f6-0O-dQ5" kind="push" id="h9r-K5-oph"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem systemItem="refresh" id="y2v-Ik-lL0">
-                            <connections>
-                                <action selector="refreshBarButtonClicked:" destination="UHV-LT-4Ea" id="Gmf-fu-fdo"/>
-                            </connections>
-                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Roster" id="yje-Ku-ePw"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -8060,7 +8055,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <outlet property="bannerView" destination="nyb-Oi-NH2" id="M30-yM-y7p"/>
                         <outlet property="coachesButton" destination="nwo-VV-Gdz" id="3Bu-T9-Iys"/>
                         <outlet property="playerTableView" destination="jYS-YM-V56" id="n8M-6e-tqK"/>
-                        <outlet property="refreshBarButton" destination="y2v-Ik-lL0" id="gFy-v8-rpn"/>
                         <outlet property="rosterTableView" destination="jYS-YM-V56" id="WYB-qE-c8Z"/>
                     </connections>
                 </viewController>
@@ -15540,18 +15534,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <action selector="searchBarButtonClicked:" destination="kHl-fs-n5K" id="4SQ-q2-f8C"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem systemItem="refresh" id="4lE-sa-b6f">
-                            <connections>
-                                <action selector="refreshBarButtonClicked:" destination="kHl-fs-n5K" id="F3B-TM-Lhr"/>
-                            </connections>
-                        </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Manage Sponsors" id="k18-rg-Eq1"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="addBarButton" destination="qsv-d0-MFi" id="rqh-2D-zg9"/>
                         <outlet property="infoButton" destination="6Jx-fu-4ku" id="Iua-6z-iQz"/>
-                        <outlet property="refreshBarButton" destination="4lE-sa-b6f" id="8wk-mJ-emL"/>
                         <outlet property="searchBarButton" destination="HZO-ix-1T5" id="ru5-zo-Kfu"/>
                         <outlet property="sponsorTableView" destination="hSO-9b-JV8" id="xXS-AG-chj"/>
                         <segue destination="lvA-cs-w9H" kind="push" identifier="UpgradeInfoSegue" id="tFl-UM-Q4W"/>
@@ -15598,7 +15586,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="Qcb-Sh-fdt" id="MR8-BO-E5D"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Sponsor Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fKl-Og-NJj">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Sponsor Name or Message" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fKl-Og-NJj">
                                 <rect key="frame" x="20" y="99" width="300" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -15620,7 +15608,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="City" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tlP-V6-00q">
-                                <rect key="frame" x="328" y="137" width="420" height="30"/>
+                                <rect key="frame" x="328" y="137" width="420" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -15757,17 +15745,17 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <outlet property="delegate" destination="Qcb-Sh-fdt" id="Qku-f9-hKl"/>
                                 </connections>
                             </pickerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1cu-Aa-a1H">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1cu-Aa-a1H">
                                 <rect key="frame" x="20" y="357" width="728" height="66"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="728" id="IDn-aH-NFk"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="723" translatesAutoresizingMaskIntoConstraints="NO" id="f0l-Bo-XfW">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="723" translatesAutoresizingMaskIntoConstraints="NO" id="f0l-Bo-XfW">
                                 <rect key="frame" x="20" y="289" width="723" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <string key="text">The team logo will be used if choose not upload a banner ad. Banner images should be 768x100. Our cloud applications will size a banner to 320x50 for display on an iPhone. Use photo image software to create a banner.</string>
+                                <string key="text">The team logo will be used if choose not upload a banner ad. Banner images should be 768x66. Our cloud applications will size a banner to 320x50 for display on an iPhone. Use photo image software to create a banner.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -15857,6 +15845,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="axR-5g-77U">
+                                <rect key="frame" x="374" y="436" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -15949,6 +15942,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Edit Sponsor" id="Hcm-eZ-5Oj"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="axR-5g-77U" id="nse-Jg-nK3"/>
                         <outlet property="adInventoryTextField" destination="OqB-A9-VlO" id="1VA-8C-48U"/>
                         <outlet property="bannerCameraButton" destination="Zir-MS-nPi" id="YUK-RC-apO"/>
                         <outlet property="bannerCameraRollButton" destination="e8T-nh-s42" id="SBh-w9-dGc"/>
@@ -15956,6 +15950,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <outlet property="bannerlogoImage" destination="SXO-dd-KBg" id="APm-Jt-5oA"/>
                         <outlet property="bannerlogoMessageLabel" destination="QOa-qW-ia7" id="qvc-Aj-mGL"/>
                         <outlet property="bannerlogoTitleLabel" destination="WXx-OH-sN9" id="JMo-qa-GKh"/>
+                        <outlet property="catalogButton" destination="00A-rd-jls" id="Un7-9w-QqX"/>
                         <outlet property="city" destination="tlP-V6-00q" id="WzQ-ds-YhR"/>
                         <outlet property="countryPicker" destination="Q4c-v4-TK3" id="lqX-0y-vW1"/>
                         <outlet property="countryTextField" destination="ms1-rJ-5qX" id="TN6-Uk-Lay"/>
@@ -16246,7 +16241,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="Zwg-Ye-aog" detailTextLabel="0m3-7w-Xem" imageView="40w-NJ-Imq" rowHeight="120" style="IBUITableViewCellStyleSubtitle" id="QGR-PV-oth">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="InAppAdTableCell" textLabel="Zwg-Ye-aog" detailTextLabel="0m3-7w-Xem" imageView="40w-NJ-Imq" rowHeight="120" style="IBUITableViewCellStyleSubtitle" id="QGR-PV-oth">
                                         <rect key="frame" x="0.0" y="22" width="728" height="120"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QGR-PV-oth" id="38y-W6-thL">
@@ -18291,39 +18286,39 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="QnJ-xh-m8l"/>
+        <segue reference="4jJ-jB-vYA"/>
+        <segue reference="qJP-Lw-J2o"/>
+        <segue reference="SGE-un-NTU"/>
+        <segue reference="nd0-3X-o5D"/>
+        <segue reference="1Kt-je-sYs"/>
+        <segue reference="u0d-wO-R1L"/>
+        <segue reference="OfC-K8-lHu"/>
+        <segue reference="fve-wf-e6Q"/>
+        <segue reference="HXG-o4-icu"/>
+        <segue reference="v6u-Om-qKq"/>
+        <segue reference="yjK-PW-ftb"/>
+        <segue reference="KYp-R5-gb9"/>
+        <segue reference="u3w-je-1iw"/>
+        <segue reference="t4d-I2-32N"/>
+        <segue reference="dVS-nJ-zoK"/>
+        <segue reference="HDk-kT-Uby"/>
+        <segue reference="PXL-ma-8C1"/>
+        <segue reference="Qv7-69-wfe"/>
+        <segue reference="H65-We-2x9"/>
+        <segue reference="u4E-HE-IdB"/>
+        <segue reference="s3g-Kf-GBf"/>
+        <segue reference="75O-2O-NqL"/>
+        <segue reference="6Z5-LF-QIc"/>
         <segue reference="Ksy-nU-cBK"/>
-        <segue reference="Oyd-7t-Tze"/>
         <segue reference="mKf-k0-GTj"/>
-        <segue reference="a1e-yQ-ZFE"/>
-        <segue reference="tFl-UM-Q4W"/>
-        <segue reference="WXN-cq-dRL"/>
         <segue reference="nN3-yF-30a"/>
-        <segue reference="1UD-J4-nT5"/>
+        <segue reference="a1e-yQ-ZFE"/>
+        <segue reference="WXN-cq-dRL"/>
+        <segue reference="tFl-UM-Q4W"/>
         <segue reference="6rD-Y5-h0B"/>
         <segue reference="JsF-dp-ihV"/>
         <segue reference="D2u-Id-sQH"/>
-        <segue reference="qJP-Lw-J2o"/>
-        <segue reference="1Kt-je-sYs"/>
-        <segue reference="SGE-un-NTU"/>
-        <segue reference="nd0-3X-o5D"/>
-        <segue reference="QnJ-xh-m8l"/>
-        <segue reference="4jJ-jB-vYA"/>
-        <segue reference="6Z5-LF-QIc"/>
-        <segue reference="PXL-ma-8C1"/>
-        <segue reference="Qv7-69-wfe"/>
-        <segue reference="s3g-Kf-GBf"/>
-        <segue reference="u4E-HE-IdB"/>
-        <segue reference="75O-2O-NqL"/>
-        <segue reference="H65-We-2x9"/>
-        <segue reference="u0d-wO-R1L"/>
-        <segue reference="HXG-o4-icu"/>
-        <segue reference="OfC-K8-lHu"/>
-        <segue reference="fve-wf-e6Q"/>
-        <segue reference="v6u-Om-qKq"/>
-        <segue reference="yjK-PW-ftb"/>
-        <segue reference="u3w-je-1iw"/>
-        <segue reference="dVS-nJ-zoK"/>
-        <segue reference="t4d-I2-32N"/>
-        <segue reference="HDk-kT-Uby"/>
+        <segue reference="1UD-J4-nT5"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -114,6 +114,7 @@
     NSIndexPath *indexPath = [_inappAdLevelTable indexPathForSelectedRow];
     
     if ([segue.identifier isEqualToString:@"AdvertisementSegue"]) {
+        [[SKPaymentQueue defaultQueue] removeTransactionObserver:currentSettings.purchaseController];
         currentSettings.purchaseController = segue.destinationViewController;
         currentSettings.purchaseController.storekitProduct = [skproducts objectAtIndex:indexPath.row];
         currentSettings.purchaseController.sponsor = nil;

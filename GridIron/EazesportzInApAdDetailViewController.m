@@ -10,6 +10,7 @@
 #import "PlayerSelectionViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "EazeEditSponsorViewController.h"
+#import "EazesportzRetrieveSponsors.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 
@@ -74,8 +75,8 @@
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     
     [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
 }
@@ -132,6 +133,7 @@
                 // Call the appropriate custom method.
             case SKPaymentTransactionStatePurchased:
                 [self completeTransaction:transaction];
+                [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
                 break;
             case SKPaymentTransactionStateFailed:
                 [self failedTransaction:transaction];
@@ -146,6 +148,10 @@
 
 - (void)completeTransaction:(SKPaymentTransaction *)transaction {
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
+                                    message:[NSString stringWithFormat:@"Ad Purchased! Thank you for supporting %@", currentSettings.sport.sitename]
+                                                   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
 }
 
 - (void)failedTransaction:(SKPaymentTransaction *)transaction {

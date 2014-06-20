@@ -312,6 +312,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     
     NSDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
+    
     if (responseStatusCode == 200) {
         if (deletePlayer) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"AthleteDeletedNotification" object:nil

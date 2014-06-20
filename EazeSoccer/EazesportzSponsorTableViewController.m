@@ -33,6 +33,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSponsors:) name:@"SponsorListChangedNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,7 +44,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSponsors:) name:@"SponsorListChangedNotification" object:nil];
     
     if (([currentSettings isSiteOwner]) && (!currentSettings.sport.purchaseads)) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Your sport is not set up to sell ads and receive ad revenue. \nPlease visit GameTrackerPro.com to set up your site for ads." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
@@ -51,8 +51,7 @@
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

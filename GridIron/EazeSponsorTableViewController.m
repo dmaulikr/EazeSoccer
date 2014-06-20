@@ -44,10 +44,10 @@
         if (currentSettings.sport.purchaseads)
             [barButtons addObject:self.addBarButton];
         
-        [barButtons addObjectsFromArray:[NSArray arrayWithObjects:self.searchBarButton, self.refreshBarButton, self.infoButton, nil]];
+        [barButtons addObjectsFromArray:[NSArray arrayWithObjects:self.searchBarButton, self.infoButton, nil]];
         self.navigationItem.rightBarButtonItems = barButtons;
     } else {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, self.infoButton, nil];
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.infoButton, nil];
     }
     
     self.navigationController.toolbarHidden = YES;
@@ -86,16 +86,20 @@
         sponsor = [currentSettings.sponsors.sponsors objectAtIndex:indexPath.row];
     }
     
-    if (([sponsor.user_id isEqualToString:currentSettings.user.userid]) && (sponsor.playerad)) {
-        if (sponsor.portraitBannerImage == nil) {
+    if (sponsor.playerad) {
+        if ((sponsor.portraitBannerImage == nil) && (sponsor.portraitbanner.length > 0)) {
             dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             //this will start the image loading in bg
             dispatch_async(concurrentQueue, ^{
                 NSData *image = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:sponsor.portraitbanner]];
                 cell.sponsorImage.image = [UIImage imageWithData:image];
             });
-        } else {
+        } else if (sponsor.portraitbanner.length > 0) {
             cell.sponsorImage.image = sponsor.portraitBannerImage;
+        } else if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+            cell.sponsorImage.image = [currentSettings.team getImage:@"tiny"];
+        } else {
+            cell.sponsorImage.image = [currentSettings.team getImage:@"thumb"];
         }
     } else {
         if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
@@ -236,10 +240,6 @@
                                               cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
     }
-}
-
-- (IBAction)refreshBarButtonClicked:(id)sender {
-    [currentSettings.sponsors retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
 }
 
 @end

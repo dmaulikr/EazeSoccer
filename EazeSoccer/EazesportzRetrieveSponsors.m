@@ -70,17 +70,17 @@
     serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:nil];
     
     if (responseStatusCode == 200) {
-        if (sponsors) {
+/*        if (sponsors) {
             NSMutableArray *sponsorlist = [[NSMutableArray alloc] init];
             
             for (int i = 0; i < serverData.count; i++) {
                 Sponsor *sponsor = [[Sponsor alloc] initWithDirectory:[serverData objectAtIndex:i]];
-                [self replaceSponsorImages:sponsor];
                 [sponsorlist addObject:sponsor];
             }
             
             [self cleanUpSponsorImageList:sponsorlist];
-        } else {
+            [self replaceSponsorImages:sponsorlist];
+        } else { */
             sponsors = [[NSMutableArray alloc] init];
             
             for (int i = 0; i < serverData.count; i++) {
@@ -88,7 +88,7 @@
                 [sponsor loadImages];
                 [sponsors addObject:sponsor];
             }
-        }
+//        }
         
         if (sponsors.count > 0) {
             NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"adprice" ascending:YES];
@@ -164,22 +164,22 @@
     }
 }
 
-- (void)replaceSponsorImages:(Sponsor *)sponsor {
-    BOOL found = NO;
-    
+- (void)replaceSponsorImages:(NSMutableArray *)sponsorlist {
     for (int i = 0; i < sponsors.count; i++) {
-        
-        if (([[[sponsors objectAtIndex:i] sponsorid] isEqualToString:sponsor.sponsorid]) &&
-           ([[[sponsors objectAtIndex:i] sponsorpic_updated_at] compare:sponsor.sponsorpic_updated_at] == NSOrderedSame) &&
-            ([[[sponsors objectAtIndex:i] adbanner_updated_at] compare:sponsor.adbanner_updated_at] == NSOrderedSame)) {
-            found = YES;
-            break;
+        for (int cnt = 0; cnt < sponsorlist.count; cnt++) {
+            if ([[[sponsors objectAtIndex:i] sponsorid] isEqualToString:[[sponsorlist objectAtIndex:cnt] sponsorid]]) {
+                NSLog(@"sponsor ad banner i%d %@", i, [[sponsors objectAtIndex:i] adbanner_updated_at]);
+                NSLog(@"list ad banner cnt%d %@", cnt, [[sponsorlist objectAtIndex:i] adbanner_updated_at]);
+                if ([[[sponsors objectAtIndex:i] sponsorpic_updated_at]
+                                                compare:[[sponsorlist objectAtIndex:cnt] sponsorpic_updated_at]] != NSOrderedSame)
+                    [[sponsorlist objectAtIndex:cnt] loadImages];
+                else if ([[[sponsors objectAtIndex:i] adbanner_updated_at]
+                                                compare:[[sponsorlist objectAtIndex:cnt] adbanner_updated_at]] != NSOrderedSame) {
+                    [[sponsorlist objectAtIndex:cnt] loadImages];
+                }
+                break;
+            }
         }
-    }
-    
-    if (!found) {
-        [sponsor loadImages];
-        [sponsors addObject:sponsor];
     }
 }
 
@@ -197,6 +197,21 @@
         
         if (!found) {
             [sponsors removeObjectAtIndex:i];
+        }
+    }
+    
+    for (int i = 0; i < sponsorlist.count; i++) {
+        BOOL found = NO;
+        
+        for (int cnt = 0; cnt < sponsors.count; cnt++) {
+            if ([[[sponsors objectAtIndex:cnt] sponsorid] isEqualToString:[[sponsorlist objectAtIndex:i] sponsorid] ]) {
+                found = YES;
+                break;
+            }
+        }
+        
+        if (!found) {
+            [sponsors addObject:[sponsorlist objectAtIndex:i]];
         }
     }
 }
