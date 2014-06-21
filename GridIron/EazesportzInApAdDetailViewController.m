@@ -10,7 +10,6 @@
 #import "PlayerSelectionViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "EazeEditSponsorViewController.h"
-#import "EazesportzRetrieveSponsors.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 
@@ -133,7 +132,7 @@
                 // Call the appropriate custom method.
             case SKPaymentTransactionStatePurchased:
                 [self completeTransaction:transaction];
-                [[[EazesportzRetrieveSponsors alloc] init] retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
+                [currentSettings.sponsors retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
                 break;
             case SKPaymentTransactionStateFailed:
                 [self failedTransaction:transaction];

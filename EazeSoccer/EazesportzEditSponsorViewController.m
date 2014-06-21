@@ -452,8 +452,8 @@
             [_activityIndicator startAnimating];
             // Upload image data.  Remember to set the content type.
             //    imagepath = [NSString stringWithFormat:@"%@%@%@", [[currentSettings getBucket] name], @"/uploads/sponsorsphotos/", athlete.athleteid];
-            NSString *photopath = [NSString stringWithFormat:@"%@%@%@%@%@", @"uploads/sponsorsphotos/",
-                                   sponsor.sponsorid, @"/", sponsor.name, sponsor.street];
+            NSString *photopath = [NSString stringWithFormat:@"%@%@%@%@_sponsorimage", @"uploads/sponsorsphotos/",
+                                   sponsor.sponsorid, @"/", sponsor.name];
             S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:photopath inBucket:[[currentSettings getBucket] name]];
             por.contentType = @"image/jpeg";
             
@@ -507,16 +507,19 @@
     NSMutableURLRequest *urlrequest = [NSMutableURLRequest requestWithURL:url];
     NSURLResponse* urlresponse;
     NSError *error = nil;
-    NSString *path = [NSString stringWithFormat:@"%@%@%@%@%@", @"uploads/sponsorsphotos/", sponsor.sponsorid, @"/", sponsor.name,
-                      sponsor.sponsorid];
-    NSMutableDictionary *athDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: path, @"filepath", @"image/jpeg",
-                                    @"filetype", [NSString stringWithFormat:@"%@%@", sponsor.name, sponsor.street], @"filename", nil];
+    NSMutableDictionary *athDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys: @"image/jpeg",  @"filetype", nil];
     
     if (sponsorimageselected) {
         [athDict setValue:@"sponsorimage" forKey:@"sponsorimage"];
+        [athDict setValue:[NSString stringWithFormat:@"%@%@%@%@_sponsorimage", @"uploads/sponsorsphotos/", sponsor.sponsorid, @"/", sponsor.name]
+                   forKey:@"filepath"];
+        [athDict setValue:[NSString stringWithFormat:@"%@_sponsorimage", sponsor.name] forKey:@"filename"];
         sponsorimageselected = NO;
     } else if (bannerimageselected) {
         [athDict setValue:@"sponsorbanner" forKey:@"sponsorimage"];
+        [athDict setValue:[NSString stringWithFormat:@"%@%@%@%@_sponsorbanner", @"uploads/sponsorsphotos/", sponsor.sponsorid, @"/", sponsor.name]
+                   forKey:@"filepath"];
+        [athDict setValue:[NSString stringWithFormat:@"%@_sponsorbanner", sponsor.name] forKey:@"filename"];
         bannerimageselected = NO;
     }
     
@@ -651,8 +654,8 @@
     [_activityIndicator startAnimating];
     // Upload image data.  Remember to set the content type.
     //    imagepath = [NSString stringWithFormat:@"%@%@%@", [[currentSettings getBucket] name], @"/uploads/sponsorsphotos/", athlete.athleteid];
-    NSString *photopath = [NSString stringWithFormat:@"%@%@%@%@%@", @"uploads/sponsorsphotos/",
-                           sponsor.sponsorid, @"/", sponsor.name, sponsor.sponsorid];
+    NSString *photopath = [NSString stringWithFormat:@"%@%@%@%@_sponsorbanner", @"uploads/sponsorsphotos/",
+                           sponsor.sponsorid, @"/", sponsor.name];
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:photopath inBucket:[[currentSettings getBucket] name]];
     por.contentType = @"image/jpeg";
     
