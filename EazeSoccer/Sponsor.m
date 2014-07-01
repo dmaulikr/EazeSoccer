@@ -135,8 +135,9 @@
     
     NSMutableDictionary *sponsordict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:currentSettings.team.teamid, @"team_id",
                                         currentSettings.user.userid, @"user_id", athlete_id, @"athlete_id", name, @"name",
-                                        [addrnum stringValue], @"addrnum", street, @"street", zip, @"zip", phone, @"phone", fax, @"fax",
-                                        mobile, @"mobile", email, @"contactemail", adurl, @"adurl", sponsorlevel, @"sponsorlevel",  nil];
+                                        [addrnum stringValue], @"addrnum", street, @"street", city, @"city", state, @"state", zip, @"zip",
+                                        phone, @"phone", fax, @"fax", mobile, @"mobile", email, @"contactemail", adurl, @"adurl", sponsorlevel,
+                                        @"sponsorlevel",  nil];
     
     if (sportadinv_id.length > 0)
         [sponsordict setValue:sportadinv_id forKeyPath:@"sportadvin_id"];

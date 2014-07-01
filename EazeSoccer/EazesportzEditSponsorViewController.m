@@ -228,18 +228,6 @@
                 _bannerlogoImage.image = [currentSettings.team getImage:@"tiny"];
                 _bannerlogoTitleLabel.text = [NSString stringWithFormat:@"%@ Proud Sponsor", currentSettings.team.mascot];
                 _bannerlogoMessageLabel.text = @"Sponsor's message appears here!";
-                UIAlertView *alert;
-                
-                if (adproduct.playerad) {
-                    alert = [[UIAlertView alloc] initWithTitle:@"Player Ad"
-                                message:@"Enter your sponsor information. Player ads only require sponsor name or message. Contact informatio is not required." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-                } else {
-                    alert = [[UIAlertView alloc] initWithTitle:@"Team Ad"
-                                        message:@"Enter your sponsor information. Make sure to enter contact information so we can map your business!"
-                                                      delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-                }
-                
-                [alert show];
             } else if (bannermedia) {
                 _bannerlogoImage.hidden = YES;
                 _bannerlogoMessageLabel.hidden = YES;
