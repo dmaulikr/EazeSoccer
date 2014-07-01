@@ -27,9 +27,12 @@
 #import <AWSRuntime/AmazonErrorHandler.h>
 #import <CoreLocation/CoreLocation.h>
 #import <StoreKit/StoreKit.h>
+#import "Reachability.h"
 
 
-@interface EazesportzAppDelegate () <CLLocationManagerDelegate>
+@interface EazesportzAppDelegate (private) <CLLocationManagerDelegate>
+
+-(void)reachabilityChanged:(NSNotification*)note;
 
 // @property (nonatomic, strong) EazesportzInApAdDetailViewController *purchaseController;
 
@@ -77,40 +80,58 @@
     
     [AmazonErrorHandler shouldNotThrowExceptions];
     currentSettings.rootwindow = self.window;
+
+    Reachability * reach = [Reachability reachabilityWithHostname:@"www.google.com"];
     
-    if ([KeychainWrapper searchKeychainCopyMatchingIdentifier:GOMOBIEMAIL] != nil) {  // Use keychain email and password
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
-//        [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
-//                                     Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
-        if ([[[EazesportzLogin alloc] init] LoginSynchronous: [KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
-                                                    Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]]) {
-            if (![currentSettings initS3Bucket]) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Storage Access Issue. Please restart app!"
-                                                               delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert setAlertViewStyle:UIAlertViewStyleDefault];
-                [alert show];
-            } else {
+    reach.reachableBlock = ^(Reachability * reachability)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([KeychainWrapper searchKeychainCopyMatchingIdentifier:GOMOBIEMAIL] != nil) {  // Use keychain email and password
+        //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginResult:) name:@"LoginNotification" object:nil];
+        //        [[[EazesportzLogin alloc] init] Login:[KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
+        //                                     Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]];
+                if ([[[EazesportzLogin alloc] init] LoginSynchronous: [KeychainWrapper keychainStringFromMatchingIdentifier:GOMOBIEMAIL]
+                                                            Password:[KeychainWrapper keychainStringFromMatchingIdentifier:PIN_SAVED]]) {
+                    if (![currentSettings initS3Bucket]) {
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Storage Access Issue. Please restart app!"
+                                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+                        [alert show];
+                    } else {
+                        [self getSport];
+                    }
+                }
+            } else if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentsport"]) {
                 [self getSport];
-            }
-        }
-    } else if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentsport"]) {
-        [self getSport];
-    } else
-        currentSettings.firstuse = YES;
-    
-    // set up location manager
-    locationManager = [[CLLocationManager alloc] init];
-    [locationManager setDelegate:self];
-    [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-    [locationManager startUpdatingLocation];
+            } else
+                currentSettings.firstuse = YES;
+            
+            // set up location manager
+            locationManager = [[CLLocationManager alloc] init];
+            [locationManager setDelegate:self];
+            [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+            [locationManager startUpdatingLocation];
 
-	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-            (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-    
-    NSSetUncaughtExceptionHandler(&onUncaughtException);
+            [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+                    (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+            
+            NSSetUncaughtExceptionHandler(&onUncaughtException);
 
-//    paymentController = [[EazesportzInApAdDetailViewController alloc] init];
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:currentSettings.purchaseController];
+        //    paymentController = [[EazesportzInApAdDetailViewController alloc] init];
+            [[SKPaymentQueue defaultQueue] addTransactionObserver:currentSettings.purchaseController];
+        });
+    };
+    
+    reach.unreachableBlock = ^(Reachability * reachability)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"You need network connecitity to use GameTracker!" delegate:nil
+                                                  cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+        });
+    };
+    
+    [reach startNotifier];
     
     return YES;
 }

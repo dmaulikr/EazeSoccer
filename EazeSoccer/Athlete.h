@@ -20,6 +20,7 @@
 #import "FootballReturnerStats.h"
 
 #import "Soccer.h"
+#import "SoccerStat.h"
 #import "Lacrosstat.h"
 #import "GameSchedule.h"
 
@@ -64,6 +65,7 @@
 @property(nonatomic, strong) NSMutableArray *basketball_stats;
 
 @property(nonatomic, strong) NSMutableArray *soccer_stats;
+@property (nonatomic, strong) NSMutableArray *soccer_gamestats;
 
 @property (nonatomic, strong) NSMutableArray *lacrosstats;
 

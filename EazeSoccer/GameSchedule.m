@@ -79,6 +79,7 @@
 @synthesize visitorbonus;
 @synthesize period;
 
+@synthesize soccer_game;
 @synthesize socceroppck;
 @synthesize socceroppsaves;
 @synthesize socceroppsog;
@@ -239,6 +240,10 @@
             lacrosse_home_score_by_period = [gameScheduleDictionary objectForKey:@"lacrosse_home_score_by_period"];
             lacrosse_visitor_score = [gameScheduleDictionary objectForKey:@"lacrosse_visitor_score"];
             lacrosse_visitor_score_by_period = [gameScheduleDictionary objectForKey:@"lacrosse_visitor_score_by_period"];
+        } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+            soccer_game = [[SoccerGame alloc] initWithDictionary:[gameScheduleDictionary objectForKey:@"soccer_gmae"]];
+            
+            
         }
         
         return self;

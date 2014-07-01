@@ -55,7 +55,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _playerImage.image = [currentSettings getRosterThumbImage:player];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"])
+        _playerImage.image = [currentSettings getRosterThumbImage:player];
+    else
+        _playerImage.image = [currentSettings getRosterMediumImage:player];
+    
     soccerstats = [player findSoccerGameStats:game.id];
     
     _minutesPlayedTextField.text = [soccerstats.minutesplayed stringValue];

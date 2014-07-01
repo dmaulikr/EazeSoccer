@@ -81,10 +81,22 @@
     _minutesTextField.text = [gametime objectAtIndex:0];
     _secondsTextField.text = [gametime objectAtIndex:1];
     _periodsTextField.text = [game.period stringValue];
-    _visitorSavesTextField.text = [game.socceroppsaves stringValue];
-    _visitorCKTextField.text = [game.socceroppck stringValue];
-    _visitorShotsTextField.text = [game.socceroppsog stringValue];
-    _visitorScoreTextField.text = [game.opponentscore stringValue];
+    _visitorSavesTextField.text = [game.soccer_game.soccergame_visitorsaves stringValue];
+    _visitorCKTextField.text = [game.soccer_game.soccergame_visitorcornerkicks stringValue];
+    _visitorShotsTextField.text = [game.soccer_game.soccer_visitor_shots stringValue];
+    _visitorScoreTextField.text = [game.soccer_game.soccergame_visitor_score stringValue];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"MM-dd-yyyy"];
+    _gameSummaryDateLabel.text = [dateFormat stringFromDate:game.gamedatetime];
+    _gameSmmaryHomeTeamLabel.text = currentSettings.team.mascot;
+    _gameSummaryVisitorTeamLabel.text = game.opponent_mascot;
+    
+    _gameSummaryHomePeriodOneLabel.text = [game.soccer_game.soccergame_home_score_period1 stringValue];
+    _gameSummaryHomePeriodTwoLabel.text = [game.soccer_game.soccergame_home_score_period2 stringValue];
+    _gameSummaryHomeOT1Label.text = [game.soccer_game.soccergame_home_score_periodOT1 stringValue];
+    _gameSummaryHomeOT2Label.text = [game.soccer_game.soccergame_home_score_periodOT2 stringValue];
+    _gameSummaryHomeFinalLabel.text = [game.soccer_game.soccergame_home_score stringValue];
     
     visiblestats = @"Team";
     _hometeamLabel.text = currentSettings.team.mascot;
@@ -92,10 +104,16 @@
     _visitorteamLabel.text = game.opponent_mascot;
     _vsitorimage.image = [currentSettings getOpponentImage:game];
     
-    if (game.editHomeScore)
-        _homeScoreTextField.text = [game.homescore stringValue];
-    else
-        _homeScoreTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+//    if (game.editHomeScore)
+        _homeScoreTextField.text = [game.soccer_game.soccergame_home_score stringValue];
+//    else
+//        _homeScoreTextField.text = [NSString stringWithFormat:@"%d", [currentSettings teamTotalPoints:game.id]];
+    
+    _gameSummaryVisitorPeriodOneLabel.text = [game.soccer_game.soccergame_visitor_score_period1 stringValue];
+    _gameSummaryVisitorPeriodTwoLabel.text = [game.soccer_game.soccergame_visitor_score_period2 stringValue];
+    _gameSummaryVisitorOT1Label.text = [game.soccer_game.soccergame_visitor_score_periodOT1 stringValue];
+    _gameSummaryVisitorOT2Label.text = [game.soccer_game.soccergame_visitor_score_periodOT2 stringValue];
+    _gameSummaryVisitorFinalLabel.text = [game.soccer_game.soccergame_visitor_score stringValue];
     
     _homeCkLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeCK]];
     _homeshotsLabel.text = [NSString stringWithFormat:@"%d", [game soccerHomeShots]];

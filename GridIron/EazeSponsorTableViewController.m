@@ -38,19 +38,6 @@
     getAds = [[EazesportzRetrieveAdvertisements alloc] init];
     myads = NO;
     
-    if ([currentSettings.user loggedIn]) {
-        NSMutableArray *barButtons = [[NSMutableArray alloc] init];
-        
-        if (currentSettings.sport.purchaseads)
-            [barButtons addObject:self.addBarButton];
-        
-        [barButtons addObjectsFromArray:[NSArray arrayWithObjects:self.searchBarButton, self.infoButton, nil]];
-        self.navigationItem.rightBarButtonItems = barButtons;
-    } else {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.infoButton, nil];
-    }
-    
-    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -61,6 +48,20 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    if ([currentSettings.user loggedIn]) {
+        NSMutableArray *barButtons = [[NSMutableArray alloc] init];
+        
+        if ((currentSettings.sport.purchaseads) && (![currentSettings isSiteOwner]))
+            [barButtons addObject:self.addBarButton];
+        
+        [barButtons addObjectsFromArray:[NSArray arrayWithObjects:self.searchBarButton, self.infoButton, nil]];
+        self.navigationItem.rightBarButtonItems = barButtons;
+    } else {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.infoButton, nil];
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

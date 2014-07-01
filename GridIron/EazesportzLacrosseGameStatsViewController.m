@@ -219,7 +219,8 @@
             cell.backgroundColor = [UIColor darkGrayColor];
             cell.textLabel.font = [UIFont fontWithName:@"Helvetica Neue" size:12.0];
             cell.textLabel.textColor = [UIColor whiteColor];
-            cell.textLabel.text = @"Add Score";
+            cell.textLabel.text = @"Add Score using score sheet!";
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             return cell;
         }
     } else if (penalty) {
@@ -355,7 +356,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (scoreLog) {
+    if ((scoreLog) && (gamescoreings.count > 0)) {
         LacrossScoring *scorestat = [gamescoreings objectAtIndex:indexPath.row];
         
         if ((scorestat.photos.count > 0) && (scorestat.videos.count > 0)) {

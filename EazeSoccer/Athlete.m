@@ -57,6 +57,7 @@
 @synthesize basketball_stats;
 
 @synthesize soccer_stats;
+@synthesize soccer_gamestats;
 
 @synthesize lacrosstats;
 
@@ -211,6 +212,13 @@
             
             for (int i = 0; i < soccerstats.count; i++) {
                 [soccer_stats addObject:[[Soccer alloc] initWithDirectory:[[soccerstats objectAtIndex:i] objectForKey:@"soccer"] AthleteId:athleteid]];
+            }
+            
+            NSArray *soccergamestats = [athleteDictionary objectForKey:@"soccer_stats"];
+            soccer_gamestats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < soccergamestats.count; i++) {
+                [soccer_gamestats addObject:[[SoccerStat alloc] initWithDictionary:[soccergamestats objectAtIndex:i]]];
             }
         } else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
             NSArray *lacrosse_stats = [athleteDictionary objectForKey:@"lacrosstats"];

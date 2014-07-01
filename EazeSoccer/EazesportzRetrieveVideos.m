@@ -120,9 +120,9 @@
     NSError *jsonSerializationError;
     NSData* result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&jsonSerializationError];
     long statusCode = [(NSHTTPURLResponse*)response statusCode];
-    NSDictionary *videodata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
     
     if (statusCode == 200) {
+        NSDictionary *videodata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
         return [[Video alloc] initWithDirectory:videodata];
     } else {
         return nil;

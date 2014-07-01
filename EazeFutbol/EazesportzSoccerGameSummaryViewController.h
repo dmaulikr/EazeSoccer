@@ -43,5 +43,18 @@
 @property (weak, nonatomic) IBOutlet UITextField *homeScoreTextField;
 - (IBAction)teamstatsBarButtonClicked:(id)sender;
 - (IBAction)playerstatsBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryDateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameSmmaryHomeTeamLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryVisitorTeamLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryHomePeriodOneLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryHomePeriodTwoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryHomeOT1Label;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryHomeOT2Label;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryHomeFinalLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryVisitorPeriodOneLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryVisitorPeriodTwoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryVisitorOT1Label;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryVisitorOT2Label;
+@property (weak, nonatomic) IBOutlet UILabel *gameSummaryVisitorFinalLabel;
 
 @end

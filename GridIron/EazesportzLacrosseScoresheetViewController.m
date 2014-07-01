@@ -291,7 +291,7 @@
         scoreEntryController.visitingTeam = YES;
         [scoreEntryController viewWillAppear:YES];
         _scoreEntryContainer.hidden = NO;
-    } else {
+    } else if ((collectionView == _hometimeoutCollectionView) || (collectionView == _visitortimeoutCollectionView)) {
         _timeoutContainer.hidden = NO;
         NSString *timeoutString;
         NSArray *timeout;

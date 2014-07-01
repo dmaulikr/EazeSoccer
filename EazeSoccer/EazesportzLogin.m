@@ -181,11 +181,13 @@
     //Capturing server response
     NSURLResponse* response;
     NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&jsonSerializationError];
-    NSMutableDictionary *logindata = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
-    NSLog(@"%@", logindata);
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    NSLog(@"response = %d", [httpResponse statusCode]);
     
     if ([httpResponse statusCode] == 200) {
+        NSMutableDictionary *logindata = [NSJSONSerialization JSONObjectWithData:result options:0 error:&jsonSerializationError];
+        NSLog(@"%@", logindata);
+        
         if ([password length] > 0) {
             if ([KeychainWrapper createKeychainValue:password forIdentifier:PIN_SAVED]) {
                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:PIN_SAVED];

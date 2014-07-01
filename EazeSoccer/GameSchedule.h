@@ -10,6 +10,7 @@
 
 #import "Gamelogs.h"
 #import "LacrossGame.h"
+#import "SoccerGame.h"
 
 @interface GameSchedule : NSObject
 
@@ -67,6 +68,7 @@
 @property(nonatomic, assign) BOOL visitorbonus;
 @property(nonatomic, strong) NSNumber *period;
 
+@property (nonatomic, strong) SoccerGame *soccer_game;
 @property(nonatomic, strong) NSNumber *socceroppck;
 @property(nonatomic, strong) NSNumber *socceroppsog;
 @property(nonatomic, strong) NSNumber *socceroppsaves;

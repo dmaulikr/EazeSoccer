@@ -171,7 +171,7 @@
     for (int i = 1; i < 4; i++) {
         NSString *thetimeout = home_1stperiod_timeouts[i-1];
         
-        if (thetimeout.length > 0) {
+        if (thetimeout.length > 1) {
             NSArray *timeout = [home_1stperiod_timeouts[i-1] componentsSeparatedByString:@":"];
             [dictionary setValue:timeout[0] forKey:[NSString stringWithFormat:@"firsttimeout_minutes%d", i]];
             [dictionary setValue:timeout[1] forKey:[NSString stringWithFormat:@"firsttimeout_seconds%d", i]];
@@ -184,7 +184,7 @@
     for (int i = 1; i < 4; i++) {
         NSString *thetimeout = home_1stperiod_timeouts[i-1];
         
-        if (thetimeout.length > 0) {
+        if (thetimeout.length > 1) {
             NSArray *timeout = [home_2ndperiod_timeouts[i-1] componentsSeparatedByString:@":"];
             [dictionary setValue:timeout[0] forKey:[NSString stringWithFormat:@"secondtimeout_minutes%d", i]];
             [dictionary setValue:timeout[1] forKey:[NSString stringWithFormat:@"secondtimeout_seconds%d", i]];

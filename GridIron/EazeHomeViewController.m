@@ -30,6 +30,8 @@
 #import "EazesportzSendNotificationData.h"
 #import "EazesportzLacrosseGameSummaryViewController.h"
 
+#import "Reachability.h"
+
 @interface EazeHomeViewController () <UIAlertViewDelegate>
 
 @end
@@ -59,6 +61,9 @@
     getTeams = [[EazesportzRetrieveTeams alloc] init];
     getNews = [[EazesportzRetrieveNews alloc] init];
     _activityIndicator.hidesWhenStopped = YES;
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification
+                                            object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -134,9 +139,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (currentSettings.firstuse) {
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"currentsport"]) {
         [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
-    } else if ((currentSettings.changesite) || (currentSettings.sport.id.length == 0)) {
+    } else if ((currentSettings.changesite) || (![[NSUserDefaults standardUserDefaults] objectForKey:@"currentsite"])) {
         [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
     } else {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
@@ -147,7 +152,21 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GameListChangedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SponsorListChangedNotification" object:nil];
+}
+
+- (void)reachabilityChanged:(NSNotification *)note {
+    Reachability *reach = [note object];
+    
+    if ([reach isReachable]) {
+    }
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Network connectivity lost!" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void)gotSponsors:(NSNotification *)notification {

@@ -10,7 +10,7 @@
 
 #import "EazesportzAppDelegate.h"
 
-@interface EazesportzSponsorProductsViewController ()
+@interface EazesportzSponsorProductsViewController () <UIAlertViewDelegate>
 
 @end
 
@@ -85,6 +85,26 @@
         } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
             [_bannerImage setImage:[UIImage imageNamed:@"Soccerbanner.png"]];
         }
+    }
+}
+
+- (IBAction)setupMySportButtonClicked:(id)sender {
+    if (currentSettings.sport.purchaseads) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Your site is already set up for ads! Visit GameTrackerPro.com anyway?"
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Visit Site", nil];
+        [alert show];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.gametrackerpro.com/sports/%@/sportadinvs",
+                                                                     currentSettings.sport.id]]];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"Visit Site"]) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.gametrackerpro.com/sports/%@/sportadinvs",
+                                                                         currentSettings.sport.id]]];
     }
 }
 
