@@ -368,12 +368,14 @@
     CGImageRef cgref = [_sponsorImage.image CGImage];
     CIImage *cim = [_sponsorImage.image CIImage];
 
-    if (_sponsorName.text.length == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor must have a name or message!"
-                                                delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-        [alert setAlertViewStyle:UIAlertViewStyleDefault];
-        [alert show];
-        return;
+    if (adproduct) {
+        if (_sponsorName.text.length == 0) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor must have a name or message!"
+                                                    delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+            [alert setAlertViewStyle:UIAlertViewStyleDefault];
+            [alert show];
+            return;
+        }
     }
     
     if (sponsor) {
@@ -394,6 +396,29 @@
         }
     }
     
+    
+    if ((!adproduct.playerad) && ((_sponsorurl.text.length == 0) || (_sponsorEmail.text.length == 0))) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+                                        message:@"You should enter a url and email. Your url will be used to launch your web site. You can save your ad do it later if you want to."
+                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+        [alert show];
+    } else if ((_streetNumber.text.length == 0) || (_streetName.text.length == 0) || (_city.text.length == 0) || (_state.text.length == 0) ||
+                   (_zipcode.text.length == 0)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"Address information is not complete. GameTracker can show fans where you located on a map! You can always enter it later."
+                                                       delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+        [alert setAlertViewStyle:UIAlertViewStyleDefault];
+        [alert show];
+    } else if ((_phone.text.length == 0) && (_mobile.text.length == 0) && (_faxnumber.text.length == 0)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"Phone information is not complete. Consider adding a phone number if you want our fans to be able to call you! You can always enter it later." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+        [alert show];
+    } else {
+        [self saveSponsor];
+    }
+}
+
+- (void)saveSponsor {
     if (!sponsor) {
         sponsor = [[Sponsor alloc] init];
     }
@@ -442,6 +467,8 @@
         [sponsor deleteSponsor];
     } else if ([title isEqualToString:@"Select"]) {
         [self performSegueWithIdentifier:@"SelectSitesSegue" sender:self];
+    } else if ([title isEqualToString:@"Continue"]) {
+        [self saveSponsor];
     }
 }
 

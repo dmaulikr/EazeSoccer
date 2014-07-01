@@ -214,14 +214,14 @@
         
         [currentSettings.sponsors retrieveSponsors:currentSettings.sport.id Token:currentSettings.user.authtoken];
     } else {
+        httperror = [serverData objectForKey:@"error"];
+        
         if (deleteSponsor)
             [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorDeletedNotification" object:nil
                                                               userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:httperror, @"Result", nil]];
         else
             [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorSavedNotification" object:nil
-                                                              userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:httperror, @"Result", nil]];
-        
-        httperror = [serverData objectForKey:@"error"];
+                                                              userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:httperror, @"Result", nil]];        
     }
 }
 
