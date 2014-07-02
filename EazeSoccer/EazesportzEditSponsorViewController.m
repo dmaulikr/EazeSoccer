@@ -10,6 +10,7 @@
 #import "EazesportzAppDelegate.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface EazesportzEditSponsorViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPopoverControllerDelegate,
                                                    UIAlertViewDelegate, AmazonServiceRequestDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
@@ -82,11 +83,33 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)updatedLocation:(NSNotification *)notification {
+    if (!sponsor) {
+        CLLocation *userLocation = [[notification userInfo] objectForKey:@"newLocationResult"];
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+        
+        [geocoder reverseGeocodeLocation:userLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+            if (error){
+                NSLog(@"Geocode failed with error: %@", error);
+                return;
+            }
+            CLPlacemark *placemark = [placemarks objectAtIndex:0];
+            _countryTextField.text = placemark.country;
+            _city.text = placemark.locality;
+            _state.text = placemark.administrativeArea;
+            _zipcode.text = placemark.postalCode;
+        }];
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NewLocationNotification" object:nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sponsorDeleted:) name:@"SponsorDeletedNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sponsorSaved:) name:@"SponsorSavedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatedLocation:) name:@"NewLocationNotification" object:nil];
     
     _countryPicker.hidden = YES;
     statePicker = NO;
@@ -149,6 +172,7 @@
         _streetName.text = sponsor.street;
         _city.text = sponsor.city;
         _state.text = sponsor.state;
+        _countryTextField.text = sponsor.country;
         _zipcode.text = sponsor.zip;
         _phone.text = sponsor.phone;
         _mobile.text = sponsor.mobile;
@@ -429,6 +453,13 @@
     else if (adproduct.ios_client_ad_id.length > 0)
         sponsor.ios_client_ad = adproduct.ios_client_ad_id;
     
+    if (([sponsor.adurl rangeOfString:@"http://"].location == NSNotFound) || ([sponsor.adurl rangeOfString:@"http://"].location != 0)) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Url must be preceded by 'http://'" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
     if (player) {
         sponsor.athlete_id = player.athleteid;
         sponsor.playerad = YES;
@@ -441,7 +472,7 @@
 }
 
 - (IBAction)deleteButtonClicked:(id)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm" message:@"Delete Sponsor?"
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm" message:@"Delete Sponsor? Ads will be removed from queue forever."
                                                    delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Delete", nil];
     [alert setAlertViewStyle:UIAlertViewStyleDefault];
     [alert show];
@@ -463,6 +494,8 @@
 - (void)sponsorSaved:(NSNotification *)notification {
     if ([[[notification userInfo] valueForKey:@"Result"] isEqualToString:@"Success"]) {
         if (sponsorimageselected) {
+            _sponsorCameraButton.enabled = NO;
+            _sponsorCameraRollButton.enabled = NO;
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
             [_activityIndicator startAnimating];
             // Upload image data.  Remember to set the content type.
@@ -512,6 +545,14 @@
 
 -(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
 {
+    if ((!_sponsorCameraRollButton.enabled) || (!_sponsorCameraButton.enabled)) {
+        _sponsorCameraButton.enabled = YES;
+        _sponsorCameraRollButton.enabled = YES;
+    } else {
+        _bannerCameraButton.enabled = YES;
+        _bannerCameraRollButton.enabled = YES;
+    }
+    
     [_activityIndicator stopAnimating];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
@@ -665,6 +706,9 @@
 }
 
 - (void)uploadBannerImage {
+    _bannerCameraRollButton.enabled = NO;
+    _bannerCameraButton.enabled = NO;
+    
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [_activityIndicator startAnimating];
     // Upload image data.  Remember to set the content type.

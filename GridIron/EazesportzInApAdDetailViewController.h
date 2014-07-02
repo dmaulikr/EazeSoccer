@@ -30,5 +30,7 @@
 - (IBAction)playerSelected:(UIStoryboardSegue *)segue;
 @property (weak, nonatomic) IBOutlet UILabel *playerLabel;
 - (IBAction)purchaseButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *purchaseButton;
+@property (weak, nonatomic) IBOutlet UIButton *playerButton;
 
 @end

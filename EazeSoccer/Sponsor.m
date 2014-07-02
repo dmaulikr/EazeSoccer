@@ -37,10 +37,12 @@
 @synthesize sponsorlevel;
 @synthesize teamonly;
 @synthesize teamid;
+@synthesize country;
 
 @synthesize user_id;
 @synthesize athlete_id;
 @synthesize sportadinv_id;
+
 @synthesize ios_client_ad;
 
 @synthesize adprice;
@@ -94,9 +96,13 @@
         adsponsorlevel = [sponsorDictionary objectForKey:@"adsponsorlevel"];
         playerad = [[sponsorDictionary objectForKey:@"playerad"] boolValue];
         
+        country = [sponsorDictionary objectForKey:@"country"];
+        
         teamid = [sponsorDictionary objectForKey:@"teamid"];
         sportadinv_id = [sponsorDictionary objectForKey:@"sportadinv_id"];
+        
         ios_client_ad = [sponsorDictionary objectForKey:@"ios_client_ad"];
+        
         user_id = [sponsorDictionary objectForKey:@"user_id"];
         athlete_id = [sponsorDictionary objectForKey:@"athlete_id"];        
         
@@ -137,13 +143,13 @@
                                         currentSettings.user.userid, @"user_id", athlete_id, @"athlete_id", name, @"name",
                                         [addrnum stringValue], @"addrnum", street, @"street", city, @"city", state, @"state", zip, @"zip",
                                         phone, @"phone", fax, @"fax", mobile, @"mobile", email, @"contactemail", adurl, @"adurl", sponsorlevel,
-                                        @"sponsorlevel",  nil];
+                                        @"sponsorlevel", country, @"country", nil];
     
     if (sportadinv_id.length > 0)
         [sponsordict setValue:sportadinv_id forKeyPath:@"sportadvin_id"];
     else if (ios_client_ad.length > 0)
         [sponsordict setValue:ios_client_ad forKeyPath:@"ios_client_ad_id"];
-
+    
     NSMutableDictionary *jsonDict =  [[NSMutableDictionary alloc] init];
     [jsonDict setValue:sponsordict forKey:@"sponsor"];
     NSError *jsonSerializationError = nil;

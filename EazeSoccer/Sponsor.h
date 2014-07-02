@@ -30,10 +30,13 @@
 @property(nonatomic, strong) NSString *sponsorlevel;
 @property(nonatomic, strong) NSNumber *teamonly;
 @property(nonatomic, strong) NSString *teamid;
+@property (nonatomic, strong) NSString *country;
+
 
 @property (nonatomic, strong) NSString *user_id;
 @property (nonatomic, strong) NSString *athlete_id;
 @property (nonatomic, strong) NSString *sportadinv_id;
+
 @property (nonatomic, strong) NSString *ios_client_ad;
 
 @property (nonatomic, assign) float adprice;

@@ -19,6 +19,7 @@
 
 @implementation EazesportzInApAdDetailViewController {
     PlayerSelectionViewController *playerController;
+    SKMutablePayment *payment;
 }
 
 @synthesize adproduct;
@@ -71,6 +72,11 @@
     
     if (sponsor) {
         [self requestPayment];
+        
+        _purchaseButton.enabled = NO;
+        _purchaseButton.hidden = YES;
+        _playerButton.enabled = NO;
+        _playerButton.hidden = YES;
     }
 }
 
@@ -114,13 +120,30 @@
 }
 
 - (void)requestPayment {
-    NSString *useremail = [self hashedValueForAccountName:currentSettings.user.email];
-    SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:storekitProduct];
-    payment.applicationUsername = useremail;
+//    NSString *useremail = [self hashedValueForAccountName:currentSettings.user.email];
+    payment = [SKMutablePayment paymentWithProduct:storekitProduct];
+//    payment.applicationUsername = useremail;
+    payment.applicationUsername = sponsor.sponsorid;
     payment.quantity = 1;
-    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savedSponsor:) name:@"SponsorSavedNotification" object:nil];
+//    [sponsor saveSponsor];
     [[SKPaymentQueue defaultQueue] addPayment:payment];
 }
+
+/*
+- (void)savedSponsor:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"])
+        [[SKPaymentQueue defaultQueue] addPayment:payment];
+    else {
+        [sponsor deleteSponsor];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Sponsor purchase set up failure." delegate:self
+                                              cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SponsorSavedNotification" object:nil];
+}
+ */
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response {
 }
@@ -156,7 +179,9 @@
 - (void)failedTransaction:(SKPaymentTransaction *)transaction {
     NSLog(@"Transaction Failed= %@", transaction.error);
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-    [sponsor deleteSponsor];
+    Sponsor *deleteSponsor = [[Sponsor alloc ] init];
+    deleteSponsor.sponsorid = transaction.payment.applicationUsername;
+    [deleteSponsor deleteSponsor];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Purchase failed!" delegate:self cancelButtonTitle:@"Cancel"
                                           otherButtonTitles:nil];
@@ -210,6 +235,8 @@
     NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
     if ([title isEqualToString:@"Cancel"]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if ([title isEqualToString:@"Ok"]) {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
