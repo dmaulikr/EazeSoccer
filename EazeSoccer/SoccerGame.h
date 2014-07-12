@@ -44,6 +44,8 @@
 
 @property (nonatomic, strong) NSString *visiting_team_id;
 
+@property (nonatomic, strong) NSMutableArray *soccersubs;
+
 - (id)initWithDictionary:(NSDictionary *)soccer_game_dictionary;
 
 @end

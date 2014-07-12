@@ -459,21 +459,12 @@
 
 - (BOOL)isSoccerGoalie {
     BOOL result = NO;
+    NSArray *positions = [position componentsSeparatedByString:@"/"];
     
-    for (int i = 0; i < soccer_stats.count; i++) {
-        if ([[soccer_stats objectAtIndex:i] goalieStats]) {
+    for (int i = 0; i < positions.count; i++) {
+        if ([[positions objectAtIndex:i] isEqualToString:@"GK"]) {
             result = YES;
             break;
-        }
-    }
-    
-    if (!result) {
-        NSArray *positions = [position componentsSeparatedByString:@"/"];
-        for (int i = 0; i < positions.count; i++) {
-            if ([[positions objectAtIndex:i] isEqualToString:@"GK"]) {
-                result = YES;
-                break;
-            }
         }
     }
     
@@ -508,6 +499,24 @@
     thestats.shutouts = [NSNumber numberWithInt:shutouts];
     
     return thestats;
+}
+
+- (SoccerStat *)getSoccerGameStat:(NSString *)soccer_game_id {
+    SoccerStat *soccerstats = [[SoccerStat alloc] init];
+    
+    for (int i = 0; i < [soccer_gamestats count]; i++) {
+        if ([[[soccer_gamestats objectAtIndex:i] soccer_game_id] isEqualToString:soccer_game_id]) {
+            soccerstats = [soccer_gamestats objectAtIndex:i];
+            break;
+        }
+    }
+    
+    if (soccerstats.athlete_id.length == 0) {
+        soccerstats.athlete_id = athleteid;
+        soccerstats.soccer_game_id = soccer_game_id;
+    }
+    
+    return  soccerstats;
 }
 
 - (BasketballStats *)basketballSeasonTotals {

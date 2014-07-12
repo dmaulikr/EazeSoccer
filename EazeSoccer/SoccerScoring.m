@@ -12,6 +12,8 @@
 
 @synthesize soccer_scoring_id;
 @synthesize soccer_stat_id;
+@synthesize athlete_id;
+@synthesize visitor_roster_id;
 
 @synthesize gametime;
 @synthesize assist;
@@ -39,6 +41,9 @@
     if (self == [super init]) {
         soccer_scoring_id = [soccer_scoring_dictionary objectForKey:@"soccer_scoring_id"];
         soccer_stat_id = [soccer_scoring_dictionary objectForKey:@"soccer_stat_id"];
+        athlete_id = [soccer_scoring_dictionary objectForKey:@"athlete_id"];
+        visitor_roster_id = [soccer_scoring_dictionary objectForKey:@"visitor_roster_id"];
+
         gametime = [soccer_scoring_dictionary objectForKey:@"soccer_scoring_id"];
         soccer_stat_id = [soccer_scoring_dictionary objectForKey:@"gametime"];
         assist = [soccer_scoring_dictionary objectForKey:@"assist"];

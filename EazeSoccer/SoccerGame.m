@@ -7,6 +7,7 @@
 //
 
 #import "SoccerGame.h"
+#import "SoccerSubs.h"
 
 @implementation SoccerGame
 
@@ -44,6 +45,8 @@
 
 @synthesize visiting_team_id;
 
+@synthesize soccersubs;
+
 - (id)initWithDictionary:(NSDictionary *)soccer_game_dictionary; {
     if (self == [super init]) {
         soccer_game_id = [soccer_game_dictionary objectForKey:@"soccer_game_id"];
@@ -76,6 +79,18 @@
         visitoroffsides = [soccer_game_dictionary objectForKey:@"visitoroffsides"];
         homeplayers = [soccer_game_dictionary objectForKey:@"homeplayers"];
         visitorplayers = [soccer_game_dictionary objectForKey:@"visitorplayers"];
+        
+        visiting_team_id = [soccer_game_dictionary objectForKey:@"visiting_team_id"];
+        
+        NSArray *subs = [soccer_game_dictionary objectForKey:@"soccer_subs"];
+        
+        if (subs.count > 0) {
+            soccersubs = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < subs.count; i++) {
+                [soccersubs addObject:[[SoccerSubs alloc] initWithDictionary:[subs objectAtIndex:i]]];
+            }
+        }
         
         return self;
     } else

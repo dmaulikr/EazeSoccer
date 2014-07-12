@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong) NSString *soccer_stat_id;
 @property (nonatomic, strong) NSString *soccer_goalstat_id;
+@property (nonatomic, strong) NSString *athlete_id;
+@property (nonatomic, strong) NSString *visitor_roster_id;
 
 @property (nonatomic, strong) NSNumber *saves;
 @property (nonatomic, strong) NSNumber *goals_allowed;
@@ -21,5 +23,7 @@
 @property (nonatomic, assign) BOOL dirty;
 
 - (id)initWithDictionary:(NSDictionary *)soccer_goalstat_dictionary;
+
+- (NSDictionary *)getDictionary;
 
 @end

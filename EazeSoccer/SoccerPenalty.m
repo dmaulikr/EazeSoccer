@@ -12,6 +12,8 @@
 
 @synthesize soccer_stat_id;
 @synthesize soccer_penalty_id;
+@synthesize athlete_id;
+@synthesize visitor_roster_id;
 
 @synthesize infraction;
 @synthesize card;
@@ -24,6 +26,9 @@
     if (self == [super init]) {
         soccer_penalty_id = [soccer_penalty_dictionary objectForKey:@"soccer_penalty_id"];
         soccer_stat_id = [soccer_penalty_dictionary objectForKey:@"soccer_stat_id"];
+        athlete_id = [soccer_penalty_dictionary objectForKey:@"athlete_id"];
+        visitor_roster_id = [soccer_penalty_dictionary objectForKey:@"visitor_roster_id"];
+
         infraction = [soccer_penalty_dictionary objectForKey:@"infraction"];
         card = [soccer_penalty_dictionary objectForKey:@"card"];
         gametime = [soccer_penalty_dictionary objectForKey:@"gametime"];

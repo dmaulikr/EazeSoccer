@@ -79,18 +79,7 @@
         _adContainer.hidden = NO;
         [adController viewWillAppear:YES];
     }
-    
-    if (currentSettings.isSiteOwner) {
-        if (currentSettings.teams.count > 0)
-            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, self.editTeamButton, self.changeTeamButton, nil];
-        else
-            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, nil];
-    } else
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.changeTeamButton, nil];
-    
-    self.navigationController.toolbarHidden = YES;
-    _teamPicker.hidden = YES;
-    
+        
     if (currentSettings.team.teamid.length > 0) {
         if (currentSettings.teams.count > 1)
             _changeTeamButton.enabled = YES;
@@ -121,9 +110,10 @@
             [[[[self.tabBarController tabBar]items]objectAtIndex:2]setEnabled:NO];
             [[[[self.tabBarController tabBar]items]objectAtIndex:3]setEnabled:NO];
             [[[[self.tabBarController tabBar]items]objectAtIndex:4]setEnabled:YES];
-
+            
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Notice"
-                                            message:[NSString stringWithFormat:@"No Teams entered yet for %@", currentSettings.sport.sitename]
+                                                        message:[NSString stringWithFormat:@"No Teams entered yet for %@. \nSelect '+' to add a team!",
+                                                                 currentSettings.sport.sitename]
                                                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alertView show];
             currentSettings.gameList = nil;
@@ -132,6 +122,17 @@
     } else {
         _changeTeamButton.enabled = NO;
     }
+
+    if (currentSettings.isSiteOwner) {
+        if (currentSettings.teams.count > 0)
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, self.editTeamButton, self.changeTeamButton, nil];
+        else
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addTeamButton, nil];
+    } else
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.changeTeamButton, nil];
+    
+    self.navigationController.toolbarHidden = YES;
+    _teamPicker.hidden = YES;
     
     editTeam = NO;
 }
@@ -161,6 +162,8 @@
     Reachability *reach = [note object];
     
     if ([reach isReachable]) {
+        if ((currentSettings.sport.id.length == 0) || (currentSettings.team.teamid.length == 0))
+            [self viewWillAppear:YES];
     }
     else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Network connectivity lost!" delegate:nil cancelButtonTitle:@"Ok"

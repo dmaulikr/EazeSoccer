@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong) NSString *soccer_penalty_id;
 @property (nonatomic, strong) NSString *soccer_stat_id;
+@property (nonatomic, strong) NSString *athlete_id;
+@property (nonatomic, strong) NSString *visitor_roster_id;
 
 @property (nonatomic, strong) NSString *infraction;
 @property (nonatomic, strong) NSString *card;

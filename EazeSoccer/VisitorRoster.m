@@ -15,6 +15,7 @@
     NSMutableData *theData;
     
     NSMutableArray *lacross_stats;
+    NSMutableArray *soccer_gamestats;
     
     BOOL deleteRoster;
 }
@@ -196,6 +197,33 @@
     }
     
     return stat;
+}
+
+- (SoccerStat *)getSoccerGameStat:(NSString *)soccer_game_id {
+    SoccerStat *soccerstats = [[SoccerStat alloc] init];
+    
+    for (int i = 0; i < [soccer_gamestats count]; i++) {
+        if ([[[soccer_gamestats objectAtIndex:i] soccer_game_id] isEqualToString:soccer_game_id]) {
+            soccerstats = [soccer_gamestats objectAtIndex:i];
+            break;
+        }
+    }
+    
+    return  soccerstats;
+}
+
+- (BOOL)isSoccerGoalie {
+    BOOL result = NO;
+    NSArray *positions = [position componentsSeparatedByString:@"/"];
+    
+    for (int i = 0; i < positions.count; i++) {
+        if ([[positions objectAtIndex:i] isEqualToString:@"GK"]) {
+            result = YES;
+            break;
+        }
+    }
+    
+    return result;
 }
 
 @end

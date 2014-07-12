@@ -14,6 +14,11 @@
 
 @property(nonatomic, strong) GameSchedule *game;
 
+@property (weak, nonatomic) IBOutlet UIButton *homeButton;
+- (IBAction)homeButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *visitorButton;
+- (IBAction)visitorButtonClicked:(id)sender;
+
 @property (weak, nonatomic) IBOutlet UILabel *hometeamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *visitorteamLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *homeimage;
@@ -25,10 +30,9 @@
 - (IBAction)refreshButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
-- (IBAction)teamstatsButtonClicked:(id)sender;
-- (IBAction)playerstatsButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *statTableView;
 @property (weak, nonatomic) IBOutlet UIButton *playerStatsButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *statsBarButton;
 
 @property (weak, nonatomic) IBOutlet UITextField *minutesTextField;
 @property (weak, nonatomic) IBOutlet UITextField *secondsTextField;
@@ -41,8 +45,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
 - (IBAction)saveBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *homeScoreTextField;
-- (IBAction)teamstatsBarButtonClicked:(id)sender;
-- (IBAction)playerstatsBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *gameSummaryDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *gameSmmaryHomeTeamLabel;
 @property (weak, nonatomic) IBOutlet UILabel *gameSummaryVisitorTeamLabel;

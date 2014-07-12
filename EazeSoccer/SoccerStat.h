@@ -12,6 +12,7 @@
 #import "SoccerPenalty.h"
 #import "SoccerPlayerStat.h"
 #import "SoccerScoring.h"
+#import "GameSchedule.h"
 
 @interface SoccerStat : NSObject
 
@@ -42,5 +43,20 @@
 @property (nonatomic, strong, readonly) NSString *soccer_penalty;
 
 - (id)initWithDictionary:(NSDictionary *)soccer_stats_dictionary;
+
+- (SoccerPlayerStat *)findPlayerStat:(NSNumber *)period;
+- (SoccerGoalstat *)findGoalStat:(NSNumber *)period;
+
+- (NSNumber *)getTotalShots;
+- (NSNumber *)getTotalGoals;
+- (NSNumber *)getTotalAssists;
+- (NSNumber *)getTotalSteals;
+- (NSNumber *)getTotalCornerKicks;
+
+- (NSNumber *)getTotalGoalsAllowed;
+- (NSNumber *)getTotalSaves;
+- (NSNumber *)getTotalMinutes;
+
+- (void)save:(NSString *)gameid StatType:(NSString *)stattype Period:(NSNumber *)period;
 
 @end

@@ -12,6 +12,7 @@
 #import "User.h"
 #import "GameSchedule.h"
 #import "Lacrosstat.h"
+#import "SoccerStat.h"
 
 @interface VisitorRoster : NSObject
 
@@ -33,5 +34,8 @@
 - (void)deleteVisitorRoster:(Sport *)sport User:(User *)user;
 
 - (Lacrosstat *)findLacrossStat:(GameSchedule *)game;
+
+- (SoccerStat *)getSoccerGameStat:(NSString *)soccer_game_id;
+- (BOOL)isSoccerGoalie;
 
 @end

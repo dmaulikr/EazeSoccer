@@ -131,7 +131,7 @@
                             }];
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login Credentials"
-                                                            message:[NSString stringWithFormat:@"%d", [httpResponse statusCode]]
+                                                            message:[NSString stringWithFormat:@"%ld", (long)[httpResponse statusCode]]
                                                            delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert setAlertViewStyle:UIAlertViewStyleDefault];
             [alert show];

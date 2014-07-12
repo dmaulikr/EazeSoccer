@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import "EazesportzAppDelegate.h"
+
 @interface SoccerPlayerStat : NSObject
 
 @property (nonatomic, strong) NSString *soccer_playerstat_id;
 @property (nonatomic, strong) NSString *soccer_stat_id;
+@property (nonatomic, strong) NSString *athlete_id;
+@property (nonatomic, strong) NSString *visitor_roster_id;
 
 @property (nonatomic, strong) NSNumber *shots;
 @property (nonatomic, strong) NSNumber *steals;
@@ -22,5 +26,7 @@
 @property (nonatomic, assign) BOOL dirty;
 
 - (id)initWithDictionary:(NSDictionary *)soccer_playerstat_dictionary;
+
+- (NSDictionary *)getDictionary;
 
 @end

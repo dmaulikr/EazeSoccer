@@ -140,6 +140,8 @@
 - (BOOL)saveSoccerGameStats:(NSString *)gameid;
 - (BOOL)isSoccerGoalie;
 
+- (SoccerStat *)getSoccerGameStat:(NSString *)soccer_game_id;
+
 - (Soccer *)soccerSeasonTotals;
 
 - (Lacrosstat *)findLacrosstat:(GameSchedule *)game;

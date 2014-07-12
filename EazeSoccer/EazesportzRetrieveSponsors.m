@@ -131,6 +131,10 @@
                 [levelsarray addObject:[NSNumber numberWithDouble:pow(2, cnt)]];
                 cnt -= 1.0;
             }
+        } else {
+            pricearray = nil;
+            playerads = nil;
+            levelsarray = nil;
         }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SponsorListChangedNotification" object:nil];
