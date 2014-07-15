@@ -58,6 +58,16 @@
     if (responseStatusCode == 200) {
         game = [[GameSchedule alloc] initWithDictionary:serverData];
     
+        int index = 0;
+        
+        for (int i = 0; i < currentSettings.gameList.count; i++) {
+            if ([[[currentSettings.gameList objectAtIndex:i] id] isEqualToString:game.id]) {
+                index = i;
+                break;
+            }
+        }
+        
+        [currentSettings.gameList replaceObjectAtIndex:index withObject:game];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"GameDataNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
@@ -68,7 +78,8 @@
 
 - (GameSchedule *)getGameSynchronous:(Sport *)sport Team:(Team *)team Game:(NSString *)gameid User:(User *)user {
     GameSchedule *thegame = nil;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"EazesportzUrl"],
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@",
+                                       [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
                                        @"/sports/", sport.id, @"/teams/", team.teamid, @"/gameschedules/", gameid, @".json?auth_token=", user.authtoken]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSURLResponse* response;
@@ -79,6 +90,16 @@
     
     if ([httpResponse statusCode] == 200) {
         thegame = [[GameSchedule alloc] initWithDictionary:thedata];
+        int index = 0;
+        
+        for (int i = 0; i < currentSettings.gameList.count; i++) {
+            if ([[[currentSettings.gameList objectAtIndex:i] id] isEqualToString:thegame.id]) {
+                index = i;
+                break;
+            }
+        }
+        
+        [currentSettings.gameList replaceObjectAtIndex:index withObject:thegame];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving game" delegate:self cancelButtonTitle:@"Ok"
                                               otherButtonTitles:nil, nil];

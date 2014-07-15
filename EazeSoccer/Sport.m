@@ -64,6 +64,9 @@
 @synthesize lacrosse_personal_fouls;
 @synthesize lacrosse_technical_fouls;
 
+@synthesize soccer_yellowcard;
+@synthesize soccer_redcard;
+
 @synthesize footballDefensePositions;
 @synthesize footballOffensePositions;
 @synthesize footballSpecialTeamsPositions;
@@ -129,6 +132,8 @@
         
         if ([name isEqualToString:@"Soccer"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"soccer_positions"]];
+            soccer_yellowcard = [self parsePositions:[sportDictionary objectForKey:@"soccer_yellowcard"]];
+            soccer_redcard = [self parsePositions:[sportDictionary objectForKey:@"soccer_redcard"]];
         } else if ([name isEqualToString:@"Basketball"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"basketball_positions"]];
         } else if ([name isEqualToString:@"Football"]) {

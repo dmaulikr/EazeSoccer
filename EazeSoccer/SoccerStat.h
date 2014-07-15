@@ -12,7 +12,6 @@
 #import "SoccerPenalty.h"
 #import "SoccerPlayerStat.h"
 #import "SoccerScoring.h"
-#import "GameSchedule.h"
 
 @interface SoccerStat : NSObject
 
@@ -46,6 +45,8 @@
 
 - (SoccerPlayerStat *)findPlayerStat:(NSNumber *)period;
 - (SoccerGoalstat *)findGoalStat:(NSNumber *)period;
+- (SoccerPenalty *)findPenaltyStat:(NSNumber *)period;
+- (SoccerScoring *)findScoringStat:(NSNumber *)period;
 
 - (NSNumber *)getTotalShots;
 - (NSNumber *)getTotalGoals;
@@ -57,6 +58,14 @@
 - (NSNumber *)getTotalSaves;
 - (NSNumber *)getTotalMinutes;
 
-- (void)save:(NSString *)gameid StatType:(NSString *)stattype Period:(NSNumber *)period;
+- (void)saveScoreStat:(NSString *)gameid Score:(SoccerScoring *)stat;
+- (void)savePlayerStat:(NSString *)gameid PlayerStat:(SoccerPlayerStat *)stat;
+- (void)saveGoalStat:(NSString *)gameid GoalStat:(SoccerGoalstat *)stat;
+- (void)savePenaltyStat:(NSString *)gameid PenaltyStat:(SoccerPenalty *)stat;
+
+- (void)deleteScoreStat:(NSString *)gameid Score:(SoccerScoring *)stat;
+- (void)deletePlayerStat:(NSString *)gameid PlayerStat:(SoccerPlayerStat *)stat;
+- (void)deleteGoalStat:(NSString *)gameid GoalStat:(SoccerGoalstat *)stat;
+- (void)deletePenaltyStat:(NSString *)gameid PenaltyStat:(SoccerPenalty *)stat;
 
 @end

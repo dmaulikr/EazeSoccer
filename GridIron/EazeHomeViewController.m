@@ -72,6 +72,7 @@
     self.tabBarController.tabBar.hidden = NO;
     _adContainer.hidden = YES;
     [_activityIndicator stopAnimating];
+    _teamPicker.hidden = YES;
     
     if (currentSettings.sponsors.sponsors.count == 0)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotSponsors:) name:@"SponsorListChangedNotification" object:nil];
@@ -132,7 +133,6 @@
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.changeTeamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
-    _teamPicker.hidden = YES;
     
     editTeam = NO;
 }

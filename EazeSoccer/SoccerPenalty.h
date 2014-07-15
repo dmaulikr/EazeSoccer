@@ -24,4 +24,6 @@
 
 - (id)initWithDictionary:(NSDictionary *)soccer_penalty_dictionary;
 
+- (NSDictionary *)getDictionary;
+
 @end

@@ -86,7 +86,7 @@
         _visitorShotsTextField.enabled = NO;
         _visitorScoreTextField.enabled = NO;
     } else {
-        _visitorButton.enabled = NO;
+//        _visitorButton.enabled = NO;
         _visitorSavesTextField.enabled = YES;
         _visitorCKTextField.enabled = YES;
         _visitorShotsTextField.enabled = YES;
@@ -212,7 +212,7 @@
         shots += [[soccerstat getTotalShots] intValue];
         assists += [[soccerstat getTotalAssists] intValue];
         steals += [[soccerstat getTotalSteals] intValue];
-        cornerkicks += [[soccerstat gettotalCornerKickes] intValue];
+        cornerkicks += [[soccerstat getTotalCornerKicks] intValue];
         goalsagainst += [[soccerstat getTotalGoalsAllowed] intValue];
         goalssaved += [[soccerstat getTotalSaves] intValue];
     }
@@ -337,7 +337,7 @@
 }
             
 - (IBAction)visitorButtonClicked:(id)sender {
-    visitors = YES;
+//    visitors = YES;
 }
             
 @end

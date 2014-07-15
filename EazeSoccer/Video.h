@@ -31,6 +31,7 @@
 @property(nonatomic, strong) NSMutableArray *athletes;
 
 @property (nonatomic, strong) NSString *lacross_scoring_id;
+@property (nonatomic, strong) NSString *soccer_scoring_id;
 
 - (id)initWithDirectory:(NSDictionary *)items;
 

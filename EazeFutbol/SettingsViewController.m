@@ -95,7 +95,7 @@
         
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:jsonData];
         [request setHTTPMethod:@"DELETE"];
         NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
@@ -109,13 +109,13 @@
             [KeychainWrapper deleteItemFromKeychainWithIdentifier:GOMOBIEMAIL];
             [currentSettings.user logout];
             UITabBarController *tabBarController = self.tabBarController;
-          
+
             for (UIViewController *viewController in tabBarController.viewControllers)
             {
                 if ([viewController isKindOfClass:[UINavigationController class]])
                     [(UINavigationController *)viewController popToRootViewControllerAnimated:NO];
             }
-            
+ 
             UIView * fromView = tabBarController.selectedViewController.view;
             UIView * toView = [[tabBarController.viewControllers objectAtIndex:0] view];
             
@@ -129,6 +129,7 @@
                                     tabBarController.selectedIndex = 0;
                                 }
                             }];
+ 
         } else {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Login Credentials"
                                                             message:[NSString stringWithFormat:@"%ld", (long)[httpResponse statusCode]]
@@ -290,7 +291,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if ([currentSettings isSiteOwner])
-        return 10;
+        return 9;
     else if (currentSettings.user.userid.length > 0)
         return 8;
     else

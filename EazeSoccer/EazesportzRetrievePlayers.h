@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Athlete.h"
+
 @interface EazesportzRetrievePlayers : NSObject
 
 - (void)retrievePlayers:(NSString *)sportid Team:(NSString *)teamid Token:(NSString *)authtoken;
+- (Athlete *)getAthleteSynchronous:(NSString *)sportid Team:(NSString *)teamid Athlete:(NSString *)athlete;
 
 @end

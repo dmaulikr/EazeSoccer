@@ -29,6 +29,7 @@
 @synthesize game;
 
 @synthesize lacross_scoring_id;
+@synthesize soccer_scoring_id;
 
 - (id)init {
     if (self = [super init]) {
@@ -68,6 +69,7 @@
         updated_at = [items objectForKey:@"updated_at"];
         
         lacross_scoring_id = [items objectForKey:@"lacross_scoring_id"];
+        soccer_scoring_id = [items objectForKey:@"soccer_scoring_id"];
         
         return self;
     } else {

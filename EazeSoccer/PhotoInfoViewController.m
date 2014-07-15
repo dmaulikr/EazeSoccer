@@ -443,6 +443,8 @@
         
         if (photo.lacross_scoring_id.length > 0)
             [photoDict setObject:photo.lacross_scoring_id forKey:@"lacross_scoring_id"];
+        else if (photo.soccer_scoring_id.length > 0)
+            [photoDict setObject:photo.soccer_scoring_id forKey:@"soccer_scoring_id"];
         
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
         NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:photoDict, @"photo", nil];

@@ -25,4 +25,8 @@
 
 - (id)initWithDictionary:(NSDictionary *)soccer_scoring_dictionary;
 
+- (NSMutableDictionary *)getDictionary;
+
+- (NSString *)getScoreLog;
+
 @end

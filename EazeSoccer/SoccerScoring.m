@@ -7,6 +7,7 @@
 //
 
 #import "SoccerScoring.h"
+#import "EazesportzAppDelegate.h"
 
 @implementation SoccerScoring
 
@@ -44,8 +45,7 @@
         athlete_id = [soccer_scoring_dictionary objectForKey:@"athlete_id"];
         visitor_roster_id = [soccer_scoring_dictionary objectForKey:@"visitor_roster_id"];
 
-        gametime = [soccer_scoring_dictionary objectForKey:@"soccer_scoring_id"];
-        soccer_stat_id = [soccer_scoring_dictionary objectForKey:@"gametime"];
+        gametime = [soccer_scoring_dictionary objectForKey:@"gametime"];
         assist = [soccer_scoring_dictionary objectForKey:@"assist"];
         period = [soccer_scoring_dictionary objectForKey:@"period"];
         
@@ -68,6 +68,39 @@
         return  self;
     } else
         return nil;
+}
+
+- (NSMutableDictionary *)getDictionary {
+    NSArray *timearray = [gametime componentsSeparatedByString:@":"];
+    
+    if (timearray.count < 2) {
+        timearray = [[NSArray alloc] initWithObjects:@"00", @"00", nil];
+    }
+    
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:timearray[0], @"minutes", timearray[1], @"seconds",
+                                       period, @"period", assist, @"assist",nil];
+    
+    if (soccer_stat_id)
+        [dictionary setValue:soccer_stat_id forKey:@"soccer_stat_id"];
+    
+    if (soccer_scoring_id)
+        [dictionary setValue:soccer_scoring_id forKey:@"soccer_scoring_id"];
+    
+    if (athlete_id)
+        [dictionary setValue:athlete_id forKey:@"athlete_id"];
+    else
+        [dictionary setValue:visitor_roster_id forKey:@"visitor_roster_id"];
+    
+    return dictionary;
+}
+
+- (NSString *)getScoreLog {
+    NSString *score = [NSString stringWithFormat:@"%@ - %@: %@", [period stringValue], gametime, [[currentSettings findAthlete:athlete_id] numberLogname]];
+    
+    if (assist.length > 0)
+        score = [score stringByAppendingString:[NSString stringWithFormat:@", Assist: %@", [[currentSettings findAthlete:assist] numberLogname]]];
+    
+    return score;
 }
 
 @end

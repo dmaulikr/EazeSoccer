@@ -38,6 +38,7 @@
 @synthesize team_id;
 @synthesize user_id;
 @synthesize lacross_scoring_id;
+@synthesize soccer_scoring_id;
 
 - (id)init {
     if (self = [super init]) {
@@ -50,6 +51,7 @@
         schedule = @"";
         team_id = @"";
         lacross_scoring_id = @"";
+        soccer_scoring_id = @"";
         pending = NO;
         return self;
     } else
@@ -89,6 +91,7 @@
         self.sport_id = [items objectForKey:@"sport_id"];
         self.team_id = [items objectForKey:@"team_id"];
         lacross_scoring_id = [items objectForKey:@"lacross_scoring_id"];
+        soccer_scoring_id = [items objectForKey:@"soccer_scoring_id"];
     
         return  self;
     } else {

@@ -21,7 +21,15 @@
 - (IBAction)cardButtonClicked:(id)sender;
 - (IBAction)statsButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *playerStatsContainer;
+@property (weak, nonatomic) IBOutlet UIView *goalieStatsContainer;
+@property (weak, nonatomic) IBOutlet UIView *scoreStatsContainer;
+@property (weak, nonatomic) IBOutlet UIView *penaltyStatsContainer;
+@property (weak, nonatomic) IBOutlet UIView *subsStatsContainer;
 
 - (IBAction)soccerPlayerstatsDone:(UIStoryboardSegue *)segue;
+- (IBAction)soccerGoaliestatsDone:(UIStoryboardSegue *)segue;
+- (IBAction)soccerScorestatsDone:(UIStoryboardSegue *)segue;
+- (IBAction)soccerPenaltystatsDone:(UIStoryboardSegue *)segue;
+- (IBAction)soccerSubstatsDone:(UIStoryboardSegue *)segue;
 
 @end

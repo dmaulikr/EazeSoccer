@@ -10,6 +10,8 @@
 
 @interface SoccerSubs : NSObject
 
+@property (nonatomic, strong) NSString *soccer_sub_id;
+@property (nonatomic, strong) NSString *soccer_game_id;
 @property (nonatomic, strong) NSString *inplayer;
 @property (nonatomic, strong) NSString *outplayer;
 @property (nonatomic, strong) NSString *gametime;

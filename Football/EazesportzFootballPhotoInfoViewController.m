@@ -47,15 +47,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if ((![currentSettings.sport.name isEqualToString:@"Football"]) && (![currentSettings.sport.name isEqualToString:@"Lacrosse"])) {
+    if ([currentSettings.sport.name isEqualToString:@"Basketball"]) {
         _gameplayTextField.enabled = NO;
         _gameplayTextField.hidden = YES;
     }
     
-    if ([currentSettings.sport.name isEqualToString:@"Football"])
+    if (![currentSettings.sport.name isEqualToString:@"Basketball"])
         _gameplayTextField.inputView = _gamelogContainer.inputView;
-    else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"])
-        _gameplayTextField.inputView = _scorelogContainer.inputView;
 
     _gamelogContainer.hidden = YES;
     _scorelogContainer.hidden = YES;
@@ -84,9 +82,13 @@
 }
 
 - (IBAction)scoreLogSelected:(UIStoryboardSegue *)segue {
+
     if (scorelogController.lacrosse_score) {
         self.photo.lacross_scoring_id = scorelogController.lacrosse_score.lacross_scoring_id;
         _gameplayTextField.text = [scorelogController.lacrosse_score getScoreLog];
+    } else if (scorelogController.soccer_score) {
+        self.photo.soccer_scoring_id = scorelogController.soccer_score.soccer_scoring_id;
+        _gameplayTextField.text = [scorelogController.soccer_score getScoreLog];
     } else {
         self.photo.lacross_scoring_id = @"";
         _gameplayTextField.text = @"";
@@ -105,7 +107,7 @@
                 gamelogController.game = self.photo.game;
                 gamelogController.gamelog = nil;
                 [gamelogController viewWillAppear:YES];
-            } else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
+            } else if (([currentSettings.sport.name isEqualToString:@"Lacrosse"]) || ([currentSettings.sport.name isEqualToString:@"Soccer"])) {
                 _scorelogContainer.hidden = NO;
                 scorelogController.game = self.photo.game;
                 scorelogController.lacrosse_score = nil;

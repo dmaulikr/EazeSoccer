@@ -39,4 +39,33 @@
         return nil;
 }
 
+- (NSMutableDictionary *)getDictionary {
+    NSArray *timearray = [gametime componentsSeparatedByString:@":"];
+    
+    if (timearray.count < 2) {
+        timearray = [[NSArray alloc] initWithObjects:@"00", @"00", nil];
+    }
+    
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:timearray[0], @"minutes", timearray[1], @"seconds",
+                                       period, @"period", nil];
+    
+    if ([card isEqualToString:@"Y"])
+        [dictionary setValue:infraction forKey:@"yellowcard"];
+    else
+        [dictionary setValue:infraction forKey:@"redcard"];
+    
+    if (soccer_stat_id)
+        [dictionary setValue:soccer_stat_id forKey:@"soccer_stat_id"];
+    
+    if (soccer_penalty_id)
+        [dictionary setValue:soccer_penalty_id forKey:@"soccer_penalty_id"];
+    
+    if (athlete_id)
+        [dictionary setValue:athlete_id forKey:@"athlete_id"];
+    else
+        [dictionary setValue:visitor_roster_id forKey:@"visitor_roster_id"];
+    
+    return dictionary;
+}
+
 @end

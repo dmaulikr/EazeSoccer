@@ -7,6 +7,7 @@
 //
 
 #import "EazesportzScoreLogViewController.h"
+#import "EazesportzAppDelegate.h"
 
 @interface EazesportzScoreLogViewController ()
 
@@ -18,6 +19,7 @@
 
 @synthesize game;
 @synthesize lacrosse_score;
+@synthesize soccer_score;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,7 +45,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    scores = [game.lacross_game getLacrosseScores:YES];
+    if ([currentSettings.sport.name isEqualToString:@"Lacrosse"])
+        scores = [game.lacross_game getLacrosseScores:YES];
+    else
+        scores = [game.soccer_game getSoccerScores:YES];
+    
     [_scorelogTableView reloadData];
 }
 
@@ -98,7 +104,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    lacrosse_score = [scores objectAtIndex:indexPath.row];
+    if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
+        lacrosse_score = [scores objectAtIndex:indexPath.row];
+        soccer_score = nil;
+    } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+        soccer_score = [scores objectAtIndex:indexPath.row];
+        lacrosse_score = nil;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -107,10 +119,14 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSIndexPath *indexPath = [_scorelogTableView indexPathForSelectedRow];
     
+    lacrosse_score = nil;
+    soccer_score = nil;
+    
     if (indexPath.length > 0) {
-        lacrosse_score = [scores objectAtIndex:indexPath.row];
-    } else {
-        lacrosse_score = nil;
+        if ([currentSettings.sport.name isEqualToString:@"Lacrosse"])
+            lacrosse_score = [scores objectAtIndex:indexPath.row];
+        else
+            soccer_score = [scores objectAtIndex:indexPath.row];
     }
 }
 

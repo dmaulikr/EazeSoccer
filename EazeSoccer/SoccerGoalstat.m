@@ -38,10 +38,21 @@
         return nil;
 }
 
-- (NSDictionary *)getDictionary {
-    NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:soccer_goalstat_id, @"soccer_goalstat_id",
-                                soccer_stat_id, @"soccer_stat_id", athlete_id, @"athlete_id", visitor_roster_id, @"visitor_roster_id",
-                                goals_allowed, @"goals_allowed", saves, @"saves", minutes_played, @"minutes_played", period, @"period", nil];
+- (NSMutableDictionary *)getDictionary {
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:goals_allowed, @"goals_allowed", saves, @"saves",
+                                       minutes_played, @"minutes_played", period, @"period", nil];
+    
+    if (soccer_stat_id)
+        [dictionary setValue:soccer_stat_id forKey:@"soccer_stat_id"];
+    
+    if (soccer_goalstat_id)
+        [dictionary setValue:soccer_goalstat_id forKey:@"soccer_goalstat_id"];
+    
+    if (athlete_id)
+        [dictionary setValue:athlete_id forKey:@"athlete_id"];
+    else
+        [dictionary setValue:visitor_roster_id forKey:@"visitor_roster_id"];
+    
     return dictionary;
 }
 

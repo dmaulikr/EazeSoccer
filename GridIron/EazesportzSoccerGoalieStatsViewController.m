@@ -1,20 +1,19 @@
 //
-//  EazesportzSoccerPlayerStatsViewController.m
+//  EazesportzSoccerGoalieStatsViewController.m
 //  EazeSportz
 //
 //  Created by Gilbert Zaldivar on 7/11/14.
 //  Copyright (c) 2014 Gil. All rights reserved.
 //
 
-#import "EazesportzSoccerPlayerStatsViewController.h"
+#import "EazesportzSoccerGoalieStatsViewController.h"
 
-@interface EazesportzSoccerPlayerStatsViewController ()
+@interface EazesportzSoccerGoalieStatsViewController ()
 
 @end
 
-@implementation EazesportzSoccerPlayerStatsViewController {
-    SoccerPlayerStat *stats;
-    UITextField *lastTextField;
+@implementation EazesportzSoccerGoalieStatsViewController {
+    SoccerGoalstat *stats;
 }
 
 @synthesize game;
@@ -35,10 +34,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    _shotsTextField.keyboardType = UIKeyboardTypeNumberPad;
-    _cornerkickTextField.keyboardType = UIKeyboardTypeNumberPad;
-    _stealsTextField.keyboardType = UIKeyboardTypeNumberPad;
-    _foulsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _saveTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _allowedTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _minutesplayedTextField.keyboardType = UIKeyboardTypeNumberPad;
 }
 
 - (void)didReceiveMemoryWarning
@@ -52,36 +50,29 @@
     
     [_periodSegmentedControl setSelectedSegmentIndex:[game.period intValue] - 1];
     
-    [self getPlayerStats];
+    [self getGoalieStats];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [lastTextField resignFirstResponder];
-}
-
-- (void)getPlayerStats {
-    NSNumber *period = [NSNumber numberWithInteger:_periodSegmentedControl.selectedSegmentIndex + 1];
+- (void)getGoalieStats {
+    NSNumber *period = [NSNumber numberWithInteger:_periodSegmentedControl.selectedSegmentIndex - 1];
     
-    stats = [[player getSoccerGameStat:game.soccer_game.soccer_game_id] findPlayerStat:period];
-    _shotsTextField.text = [stats.shots stringValue];
-    _cornerkickTextField.text = [stats.cornerkicks stringValue];
-    _stealsTextField.text = [stats.steals stringValue];
-    _foulsTextField.text = [stats.fouls stringValue];
+    stats = [[player getSoccerGameStat:game.soccer_game.soccer_game_id] findGoalStat:period];
+    _saveTextField.text = [stats.saves stringValue];
+    _allowedTextField.text = [stats.goals_allowed stringValue];
+    _minutesplayedTextField.text = [stats.minutes_played stringValue];
 }
 
 - (IBAction)periodSegmentedControlClicked:(id)sender {
-    [self getPlayerStats];
+    [self getGoalieStats];
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statSaved:) name:@"SoccerStatNotification" object:nil];
-    stats.shots = [NSNumber numberWithInt:[_shotsTextField.text intValue]];
-    stats.cornerkicks = [NSNumber numberWithInt:[_cornerkickTextField.text intValue]];
-    stats.steals = [NSNumber numberWithInt:[_stealsTextField.text intValue]];
-    stats.fouls = [NSNumber numberWithInt:[_foulsTextField.text intValue]];
+    stats.saves = [NSNumber numberWithInt:[_saveTextField.text intValue]];
+    stats.goals_allowed = [NSNumber numberWithInt:[_allowedTextField.text intValue]];
+    stats.minutes_played = [NSNumber numberWithInt:[_minutesplayedTextField.text intValue]];
     stats.period = [NSNumber numberWithLong:_periodSegmentedControl.selectedSegmentIndex + 1];
-    [[player getSoccerGameStat:game.soccer_game.soccer_game_id] savePlayerStat:game.id PlayerStat:stats];
+    [[player getSoccerGameStat:game.soccer_game.soccer_game_id] saveGoalStat:game.id GoalStat:stats];
 }
 
 - (void)statSaved:(NSNotification *)notification {
@@ -97,8 +88,7 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    if ((textField == _shotsTextField) || (textField == _cornerkickTextField) || (_stealsTextField) ||
-        (_foulsTextField)) {
+    if ((textField == _allowedTextField) || (textField == _saveTextField) || (_minutesplayedTextField)) {
         NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
         NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
         BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
@@ -113,10 +103,6 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
     [super touchesBegan:touches withEvent:event];
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    lastTextField = textField;
 }
 
 @end

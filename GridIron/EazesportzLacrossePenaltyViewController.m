@@ -80,6 +80,12 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    _pickerView.delegate = nil;
+    _pickerView.dataSource = nil;
+}
+
 /*
 #pragma mark - Navigation
 

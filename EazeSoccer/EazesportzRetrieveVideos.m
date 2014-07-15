@@ -33,7 +33,7 @@
                                     @"/sports/", sport.id, @"/videoclips.json?team_id=", team.teamid, @"&auth_token=", user.authtoken];
     else
         stringurl = [NSString stringWithFormat:@"%@%@%@%@%@", [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"],
-                                    @"/sports/", sport.id, @"/videoclips/showfeaturedvideos.json?team_id=", team.teamid];
+                                    @"/sports/", sport.id, @"/videoclips.json?team_id=", team.teamid];
     
     if (athlete) {
         stringurl = [stringurl stringByAppendingFormat:@"&athlete_id=%@", athlete.athleteid];

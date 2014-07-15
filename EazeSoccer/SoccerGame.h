@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SoccerSubs.h"
 
 @interface SoccerGame : NSObject
 
@@ -47,5 +48,11 @@
 @property (nonatomic, strong) NSMutableArray *soccersubs;
 
 - (id)initWithDictionary:(NSDictionary *)soccer_game_dictionary;
+
+- (void)saveSub:(SoccerSubs *)soccersub;
+
+- (void)deleteSub:(SoccerSubs *)soccersub;
+
+- (NSArray *)getSoccerScores:(BOOL)home;
 
 @end

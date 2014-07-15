@@ -102,12 +102,24 @@
                 int goals = 0, shots = 0, assists = 0, steals = 0, cornerkicks = 0;
                 
                 for (int i = 0; i < currentSettings.gameList.count; i++) {
-                    Soccer *astat = [self.athlete findSoccerGameStats:[[currentSettings.gameList objectAtIndex:i] id]];
-                    goals += [astat.goals intValue];
-                    shots += [astat.shotstaken intValue];
-                    assists += [astat.assists intValue];
-                    steals += [astat.steals intValue];
-                    cornerkicks += [astat.cornerkicks intValue];
+                    SoccerStat *astat = [self.athlete getSoccerGameStat:[[currentSettings.gameList objectAtIndex:i] soccer_game].soccer_game_id];
+                    
+                    for (int i = 1; i < 5; i++) {
+                        SoccerScoring *scorestat = [astat findScoringStat:[NSNumber numberWithInt:i]];
+                        SoccerPlayerStat *playerstat = [astat findPlayerStat:[NSNumber numberWithInt:i]];
+                        
+                        if (scorestat) {
+                            goals += 1;
+                            if (scorestat.assist)
+                                assists += 1;
+                        }
+                        
+                        if (playerstat) {
+                            shots += [[playerstat shots] intValue];
+                            steals += [playerstat.steals intValue];
+                            cornerkicks += [playerstat.cornerkicks intValue];
+                        }
+                    }
                 }
                 
                 stats.goals = [NSNumber numberWithInt:goals];
@@ -159,10 +171,13 @@
                 int goalssaved = 0, goalsagainst = 0, minutesplayed = 0;
                 
                 for (int i = 0; i < currentSettings.gameList.count; i++) {
-                    Soccer *astat = [self.athlete findSoccerGameStats:[[currentSettings.gameList objectAtIndex:i] id]];
-                    goalsagainst += [astat.goalsagainst intValue];
-                    goalssaved += [astat.goalssaved intValue];
-                    minutesplayed += [astat.minutesplayed intValue];
+                    SoccerStat *astat = [self.athlete getSoccerGameStat:[[currentSettings.gameList objectAtIndex:i] soccer_game].soccer_game_id];
+                    for (int i = 1; i < 5; i++) {
+                        SoccerGoalstat *goalstat = [astat findGoalStat:[NSNumber numberWithInt:i]];
+                        goalsagainst += [goalstat.goals_allowed intValue];
+                        goalssaved += [goalstat.saves intValue];
+                        minutesplayed += [goalstat.minutes_played intValue];
+                    }
                 }
                 
                 stats.goalsagainst = [NSNumber numberWithInt:goalsagainst];

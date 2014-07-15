@@ -51,9 +51,9 @@
         athlete_id = [soccer_playerstat_dictionary objectForKey:@"athlete_id"];
         visitor_roster_id = [soccer_playerstat_dictionary objectForKey:@"visitor_roster_id"];
         
-        shots = [soccer_playerstat_dictionary objectForKey:@"soccer_playerstat_id"];
-        steals = [soccer_playerstat_dictionary objectForKey:@"shots"];
-        cornerkicks =  [soccer_playerstat_dictionary objectForKey:@"cornerkicks"];
+        shots = [soccer_playerstat_dictionary objectForKey:@"shots"];
+        steals = [soccer_playerstat_dictionary objectForKey:@"steals"];
+        cornerkicks =  [soccer_playerstat_dictionary objectForKey:@"cornerkick"];
         fouls = [soccer_playerstat_dictionary objectForKey:@"fouls"];
         period = [soccer_playerstat_dictionary objectForKey:@"period"];
         
@@ -62,10 +62,21 @@
         return nil;
 }
 
-- (NSDictionary *)getDictionary {
-    NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:soccer_playerstat_id, @"soccer_playerstat_id",
-                                soccer_stat_id, @"soccer_stat_id", athlete_id, @"athlete_id", visitor_roster_id, @"visitor_roster_id",
-                                shots, @"shots", steals, @"steals", cornerkicks, @"cornerkicks", fouls, @"fouls", period, @"period", nil];
+- (NSMutableDictionary *)getDictionary {
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:shots, @"shots", steals, @"steals", cornerkicks, @"cornerkick",
+                                       fouls, @"fouls", period, @"period", nil];
+    
+    if (soccer_stat_id)
+        [dictionary setValue:soccer_stat_id forKey:@"soccer_stat_id"];
+    
+    if (soccer_playerstat_id)
+        [dictionary setValue:soccer_playerstat_id forKey:@"soccer_playerstat_id"];
+    
+    if (athlete_id)
+        [dictionary setValue:athlete_id forKey:@"athlete_id"];
+    else
+        [dictionary setValue:visitor_roster_id forKey:@"visitor_roster_id"];
+
     return dictionary;
 }
 

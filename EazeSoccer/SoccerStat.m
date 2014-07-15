@@ -9,10 +9,13 @@
 #import "SoccerStat.h"
 
 #import "EazesportzAppDelegate.h"
+#import "EazesportzGetGame.h"
+#import "EazesportzRetrievePlayers.h"
 
 @implementation SoccerStat {
     long responseStatusCode;
     NSMutableData *theData;
+    NSString *gameidentifier;
 }
 
 @synthesize scoring_stats;
@@ -58,56 +61,59 @@
 
 - (id)initWithDictionary:(NSDictionary *)soccer_dictionary {
     if ((self = [super init]) && (soccer_dictionary.count > 0)) {
-        athlete_id = [soccer_dictionary objectForKey:@"athlete_id"];
-        soccer_game_id = [soccer_dictionary objectForKey:@"soccer_game_id"];
-        visitor_roster_id = [soccer_dictionary objectForKey:@"visitor_roster_id"];
-        soccer_stat_id = [soccer_dictionary objectForKey:@"soccer_stat_id"];
-        
-        scoring_stats = [[NSMutableArray alloc] init];
-        NSArray *scoringArray = [soccer_dictionary objectForKey:@"soccer_scorings"];
-        
-        for (int i = 0; i < scoringArray.count; i++) {
-            NSDictionary *stats = [scoringArray objectAtIndex:i];
-            SoccerScoring *scoring = [[SoccerScoring alloc] initWithDictionary:stats];
-            [scoring_stats addObject:scoring];
-        }
-        
-        goalstats = [[NSMutableArray alloc] init];
-        NSArray *goalstatsArray = [soccer_dictionary objectForKey:@"soccer_goalstats"];
-        
-        for (int i = 0; i < goalstatsArray.count; i++) {
-            NSDictionary *stats = [goalstatsArray objectAtIndex:i];
-            SoccerGoalstat *goalstat = [[SoccerGoalstat alloc] initWithDictionary:stats];
-            [goalstats addObject:goalstat];
-        }
-        
-        player_stats = [[NSMutableArray alloc] init];
-        NSArray *playerstatsArray = [soccer_dictionary objectForKey:@"soccer_playerstats"];
-        
-        for (int i = 0; i < playerstatsArray.count; i++) {
-            NSDictionary *stats = [playerstatsArray objectAtIndex:i];
-            SoccerPlayerStat *stat = [[SoccerPlayerStat alloc] initWithDictionary:stats];
-            [player_stats addObject:stat];
-        }
-        
-        penalty_stats = [[NSMutableArray alloc] init];
-        NSArray *penaltystatsArray = [soccer_dictionary objectForKey:@"soccer_penalties"];
-        
-        for (int i = 0; i < penaltystatsArray.count; i++) {
-            NSDictionary *stats = [penaltystatsArray objectAtIndex:i];
-            SoccerPenalty *stat = [[SoccerPenalty alloc] initWithDictionary:stats];
-            [penalty_stats addObject:stat];
-        }
-        
-        soccer_scoring = @"Scoring";
-        soccer_penalty = @"Penalty";
-        soccer_player_stat = @"Player Stat";
-        soccer_goalstat = @"Goal Stat";
-        
+        [self parseDictionary:soccer_dictionary];
         return self;
     } else {
         return nil;
     }
+}
+
+- (void)parseDictionary:(NSDictionary *)soccer_dictionary {
+    athlete_id = [soccer_dictionary objectForKey:@"athlete_id"];
+    soccer_game_id = [soccer_dictionary objectForKey:@"soccer_game_id"];
+    visitor_roster_id = [soccer_dictionary objectForKey:@"visitor_roster_id"];
+    soccer_stat_id = [soccer_dictionary objectForKey:@"soccer_stat_id"];
+    
+    scoring_stats = [[NSMutableArray alloc] init];
+    NSArray *scoringArray = [soccer_dictionary objectForKey:@"soccer_scorings"];
+    
+    for (int i = 0; i < scoringArray.count; i++) {
+        NSDictionary *stats = [scoringArray objectAtIndex:i];
+        SoccerScoring *scoring = [[SoccerScoring alloc] initWithDictionary:stats];
+        [scoring_stats addObject:scoring];
+    }
+    
+    goalstats = [[NSMutableArray alloc] init];
+    NSArray *goalstatsArray = [soccer_dictionary objectForKey:@"soccer_goalstats"];
+    
+    for (int i = 0; i < goalstatsArray.count; i++) {
+        NSDictionary *stats = [goalstatsArray objectAtIndex:i];
+        SoccerGoalstat *goalstat = [[SoccerGoalstat alloc] initWithDictionary:stats];
+        [goalstats addObject:goalstat];
+    }
+    
+    player_stats = [[NSMutableArray alloc] init];
+    NSArray *playerstatsArray = [soccer_dictionary objectForKey:@"soccer_playerstats"];
+    
+    for (int i = 0; i < playerstatsArray.count; i++) {
+        NSDictionary *stats = [playerstatsArray objectAtIndex:i];
+        SoccerPlayerStat *stat = [[SoccerPlayerStat alloc] initWithDictionary:stats];
+        [player_stats addObject:stat];
+    }
+    
+    penalty_stats = [[NSMutableArray alloc] init];
+    NSArray *penaltystatsArray = [soccer_dictionary objectForKey:@"soccer_penalties"];
+    
+    for (int i = 0; i < penaltystatsArray.count; i++) {
+        NSDictionary *stats = [penaltystatsArray objectAtIndex:i];
+        SoccerPenalty *stat = [[SoccerPenalty alloc] initWithDictionary:stats];
+        [penalty_stats addObject:stat];
+    }
+    
+    soccer_scoring = @"Scoring";
+    soccer_penalty = @"Penalty";
+    soccer_player_stat = @"Player Stat";
+    soccer_goalstat = @"Goal Stat";
 }
 
 - (SoccerPlayerStat *)findPlayerStat:(NSNumber *)period {
@@ -121,6 +127,7 @@
     
     if (entry.soccer_playerstat_id.length == 0) {
         entry.soccer_stat_id = soccer_stat_id;
+        entry.athlete_id = athlete_id;
     }
     
     return entry;
@@ -137,6 +144,41 @@
     
     if (entry.soccer_goalstat_id.length == 0) {
         entry.soccer_stat_id = soccer_stat_id;
+        entry.athlete_id = athlete_id;
+    }
+    
+    return entry;
+}
+
+- (SoccerPenalty *)findPenaltyStat:(NSNumber *)period {
+    SoccerPenalty *entry = [[SoccerPenalty alloc] init];
+    
+    for (int i = 0; i < [penalty_stats count]; i++) {
+        if ([[[penalty_stats objectAtIndex:i] period] isEqual:period]) {
+            entry = [penalty_stats objectAtIndex:i];
+        }
+    }
+    
+    if (entry.soccer_penalty_id.length == 0) {
+        entry.soccer_stat_id = soccer_stat_id;
+        entry.athlete_id = athlete_id;
+    }
+    
+    return entry;
+}
+
+- (SoccerScoring *)findScoringStat:(NSNumber *)period {
+    SoccerScoring *entry = [[SoccerScoring alloc] init];
+    
+    for (int i = 0; i < [scoring_stats count]; i++) {
+        if ([[[scoring_stats objectAtIndex:i] period] isEqual:period]) {
+            entry = [scoring_stats objectAtIndex:i];
+        }
+    }
+    
+    if (entry.soccer_scoring_id.length == 0) {
+        entry.soccer_stat_id = soccer_stat_id;
+        entry.athlete_id = athlete_id;
     }
     
     return entry;
@@ -160,7 +202,8 @@
     int assists = 0;
     
     for (int i = 0; i < scoring_stats.count; i++) {
-        assists += [[[scoring_stats objectAtIndex:i] assist] intValue];
+        if ([[scoring_stats objectAtIndex:i] assist].length > 0)
+            assists += 1;
     }
     
     return [NSNumber numberWithInt:assists];
@@ -217,15 +260,14 @@
     return [NSNumber numberWithInt:minutes];
 }
 
-- (void)save:(NSString *)gameid StatType:(NSString *)stattype Period:(NSNumber *)period {
+- (void)saveStat:(NSString *)gameid Dictionary:(NSMutableDictionary *)dictionary {
+    gameidentifier = gameid;
     NSBundle *mainBundle = [NSBundle mainBundle];
-    
-    
     NSString *urlstring;
     
     if (athlete_id)
         urlstring = [NSString stringWithFormat:@"%@/sports/%@/athletes/%@/soccer_stats",
-                                    [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, athlete_id];
+                     [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, athlete_id];
     else {
         VisitingTeam *visitors = [currentSettings findVisitingTeam:[currentSettings findGame:gameid].soccer_game.visiting_team_id];
         
@@ -233,29 +275,102 @@
                      [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, visitors.visiting_team_id, visitor_roster_id];
     }
     
+    [dictionary setValue:soccer_game_id forKey:@"soccer_game_id"];
+    
     if (soccer_stat_id)
-        urlstring = [urlstring stringByAppendingFormat:@"/%@?auth_token=%@", soccer_stat_id, currentSettings.user.authtoken];
+        urlstring = [urlstring stringByAppendingFormat:@"/%@.json?auth_token=%@", soccer_stat_id, currentSettings.user.authtoken];
     else
-        urlstring = [urlstring stringByAppendingFormat:@"?auth_token=%@", currentSettings.user.authtoken];
+        urlstring = [urlstring stringByAppendingFormat:@".json?auth_token=%@", currentSettings.user.authtoken];
     
     NSURL *url = [NSURL URLWithString:urlstring];
-    NSMutableDictionary *dictionary;
-    
-    if ([stattype isEqualToString:@"playerstat"])
-        dictionary = [[[self findPlayerStat:period] getDictionary] mutableCopy];
-    else if ([stattype isEqualToString:@"goalstat"])
-        dictionary = [[[self findGoalStat:period] getDictionary] mutableCopy];
-    
-    [dictionary setValue:stattype forKey:stattype];
-    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     
     if (soccer_stat_id) {
-        [dictionary setValue:soccer_stat_id forKeyPath:@"soccer_stat_id"];
         [request setHTTPMethod:@"PUT"];
     } else {
         [request setHTTPMethod:@"POST"];
     }
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    [[NSURLConnection alloc] initWithRequest:request  delegate:self];
+}
+
+- (void)saveScoreStat:(NSString *)gameid Score:(SoccerScoring *)stat {
+    NSMutableDictionary *dictionary = [stat getDictionary];
+    [dictionary setValue:@"scorestat" forKey:@"scorestat"];
+    [self saveStat:gameid Dictionary:dictionary];
+}
+
+- (void)savePlayerStat:(NSString *)gameid PlayerStat:(SoccerPlayerStat *)stat {
+    NSMutableDictionary *dictionary = [stat getDictionary];
+    [dictionary setValue:@"playerstat" forKey:@"playerstat"];
+    [self saveStat:gameid Dictionary:dictionary];
+}
+
+- (void)saveGoalStat:(NSString *)gameid GoalStat:(SoccerScoring *)stat {
+    NSMutableDictionary *dictionary = [stat getDictionary];
+    [dictionary setValue:@"goalstat" forKey:@"goalstat"];
+    [self saveStat:gameid Dictionary:dictionary];
+}
+
+- (void)savePenaltyStat:(NSString *)gameid PenaltyStat:(SoccerPlayerStat *)stat {
+    NSMutableDictionary *dictionary = [stat getDictionary];
+    [dictionary setValue:@"penatlystat" forKey:@"panaltystat"];
+    [self saveStat:gameid Dictionary:dictionary];
+}
+
+- (void)deleteScoreStat:(NSString *)gameid Score:(SoccerScoring *)stat {
+    [self deleteStat:gameid Stat:@"soccer_scoring" Id:stat.soccer_scoring_id Period:stat.period];
+}
+
+- (void)deletePlayerStat:(NSString *)gameid PlayerStat:(SoccerPlayerStat *)stat {
+    [self deleteStat:gameid Stat:@"soccer_playerstat" Id:stat.soccer_playerstat_id Period:stat.period];
+}
+
+- (void)deletePenaltyStat:(NSString *)gameid PenaltyStat:(SoccerPenalty *)stat {
+    [self deleteStat:gameid Stat:@"soccer_penalty" Id:stat.soccer_penalty_id Period:stat.period];
+}
+
+- (void)deleteGoalStat:(NSString *)gameid GoalStat:(SoccerGoalstat *)stat {
+    [self deleteStat:gameid Stat:@"soccer_goalstat" Id:stat.soccer_goalstat_id Period:stat.period];
+}
+
+- (void)deleteStat:(NSString *)gameid Stat:(NSString *)stattype Id:(NSString *)statid Period:(NSNumber *)period {
+    gameidentifier = gameid;
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *urlstring;
+    
+    if (athlete_id)
+        urlstring = [NSString stringWithFormat:@"%@/sports/%@/athletes/%@/soccer_stats/%@.json?auth_token=%@",
+                     [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, athlete_id, soccer_stat_id,
+                     currentSettings.user.authtoken];
+    else {
+        VisitingTeam *visitors = [currentSettings findVisitingTeam:[currentSettings findGame:gameid].soccer_game.visiting_team_id];
+        
+        urlstring = [NSString stringWithFormat:@"%@/sports/%@/visiting_teams/%@/visitor_roster/%@/soccer_stats/%@.json?auth_token=%@",
+                     [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, visitors.visiting_team_id, visitor_roster_id,
+                     soccer_stat_id, currentSettings.user.authtoken];
+    }
+    
+    NSURL *url = [NSURL URLWithString:urlstring];
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    
+    [dictionary setValue:statid forKey:stattype];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"DELETE"];
     
     NSError *jsonSerializationError = nil;
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -286,7 +401,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SoccerPlayerStatNotification" object:nil
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SoccerStatNotification" object:nil
                                                       userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
 }
 
@@ -296,15 +411,19 @@
     NSError *jsonSerializationError = nil;
     NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
     NSLog(@"%@", serverData);
-    NSDictionary *items = [serverData objectForKey:@"soccer_stat"];
     
     if (responseStatusCode == 200) {
-        [self initWithDictionary:items];
+        if (soccer_stat_id)
+            [self parseDictionary:serverData];
+        else
+            [[[EazesportzRetrievePlayers alloc] init] getAthleteSynchronous:currentSettings.sport.id Team:currentSettings.team.teamid Athlete:athlete_id];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"SoccerPlayerStatNotification" object:nil
+        [[[EazesportzGetGame alloc] init] getGameSynchronous:currentSettings.sport Team:currentSettings.team Game:gameidentifier User:currentSettings.user];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SoccerStatNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"SoccerPlayerStatNotification" object:nil
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SoccerStatNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
     }
 }

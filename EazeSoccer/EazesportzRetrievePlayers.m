@@ -78,4 +78,38 @@
     }
 }
 
+- (Athlete *)getAthleteSynchronous:(NSString *)sportid Team:(NSString *)teamid Athlete:(NSString *)athleteid {
+    Athlete *player;
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@%@%@",
+                                       [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"],
+                                       @"/sports/", sportid, @"/athletes/", athleteid, @".json?team_id=", teamid]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLResponse* response;
+    NSError *error = nil;
+    NSData* result = [NSURLConnection sendSynchronousRequest:request  returningResponse:&response error:&error];
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    NSDictionary *thedata = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+    
+    if ([httpResponse statusCode] == 200) {
+        player = [[Athlete alloc] initWithDictionary:thedata];
+        int index = 0;
+        
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            if ([[[currentSettings.roster objectAtIndex:i] athleteid] isEqualToString:player.athleteid]) {
+                index = i;
+                break;
+            }
+        }
+        
+        [currentSettings.roster replaceObjectAtIndex:index withObject:player];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving player" delegate:self cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    
+    return player;
+}
+
 @end

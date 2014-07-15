@@ -533,7 +533,7 @@
     int cornerKicks = 0;
     
     for (int i = 0; i < currentSettings.roster.count; i++) {
-        cornerKicks += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:self.id] cornerkicks] intValue];
+        cornerKicks += [[[[currentSettings.roster objectAtIndex:i] getSoccerGameStat:self.soccer_game.soccer_game_id] getTotalCornerKicks] intValue];
     }
     
     return  cornerKicks;
@@ -543,7 +543,7 @@
     int shots = 0;
     
     for (int i = 0; i < currentSettings.roster.count; i++) {
-        shots += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:self.id] shotstaken] intValue];
+        shots += [[[[currentSettings.roster objectAtIndex:i] getSoccerGameStat:self.soccer_game.soccer_game_id] getTotalShots] intValue];
     }
     
     return  shots;
@@ -553,7 +553,7 @@
     int saves = 0;
     
     for (int i = 0; i < currentSettings.roster.count; i++) {
-        saves += [[[[currentSettings.roster objectAtIndex:i] findSoccerGameStats:self.id] goalssaved] intValue];
+        saves += [[[[currentSettings.roster objectAtIndex:i] getSoccerGameStat:self.soccer_game.soccer_game_id] getTotalSaves] intValue];
     }
     
     return  saves;

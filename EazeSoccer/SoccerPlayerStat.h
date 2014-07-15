@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "EazesportzAppDelegate.h"
-
 @interface SoccerPlayerStat : NSObject
 
 @property (nonatomic, strong) NSString *soccer_playerstat_id;
@@ -27,6 +25,6 @@
 
 - (id)initWithDictionary:(NSDictionary *)soccer_playerstat_dictionary;
 
-- (NSDictionary *)getDictionary;
+- (NSMutableDictionary *)getDictionary;
 
 @end
