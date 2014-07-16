@@ -8,6 +8,8 @@
 
 #import "EazeWelcomeViewController.h"
 #import "sportzteamsRegisterLoginViewController.h"
+#import "Reachability.h"
+#import "EazesportzAppDelegate.h"
 
 #import <iAd/iAd.h>
 
@@ -87,6 +89,25 @@
     interstitial = nil;
     requestingAd = NO;
     NSLog(@"interstitialAdDidFINISH");
+}
+
+- (void)reachabilityChanged:(NSNotification *)note {
+    Reachability *reach = [note object];
+    
+    if ([reach isReachable]) {
+        if ((currentSettings.sport.id.length == 0) || (currentSettings.team.teamid.length == 0))
+            [self viewWillAppear:YES];
+    }
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Network connectivity lost!" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

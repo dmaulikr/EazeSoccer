@@ -154,8 +154,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GameListChangedNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SponsorListChangedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)reachabilityChanged:(NSNotification *)note {
