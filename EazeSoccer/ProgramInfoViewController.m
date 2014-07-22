@@ -136,6 +136,13 @@
     [_reviewMediaSwitch setOn:sport.review_media];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    _pickerView.delegate = nil;
+    _pickerView.dataSource = nil;
+}
+
 - (void)displayAdWarning {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
                                 message:@"Your site is not set up to collect ad revenue.\n Visit the website to set up your site to sell and collect ad revenue"

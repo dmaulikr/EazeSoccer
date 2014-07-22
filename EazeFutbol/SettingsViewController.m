@@ -16,6 +16,8 @@
 #import "EazesportzRetrieveSport.h"
 #import "EazesportzRetrieveTeams.h"
 
+#import "Reachability.h"
+
 #import <QuartzCore/QuartzCore.h>
 
 @interface SettingsViewController () <UIAlertViewDelegate>
@@ -61,8 +63,15 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     if (currentSettings.sport.id.length == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please select a site before continuing"
-                                                       delegate:self cancelButtonTitle:@"Select Site" otherButtonTitles:nil, nil];
+        UIAlertView *alert;
+        
+        if (([currentSettings.user loggedIn]) && (currentSettings.user.admin)) {
+            alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please create your site continuing"
+                                                       delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Logout", nil];
+        } else {
+            alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Please select a site before continuing"
+                                              delegate:self cancelButtonTitle:@"Select Site" otherButtonTitles:nil, nil];
+        }
         
         [alert setAlertViewStyle:UIAlertViewStyleDefault];
         [alert show];
@@ -193,6 +202,10 @@
         [self performSegueWithIdentifier:@"LoginSegue" sender:self];
     } else if ([title isEqualToString:@"Select Site"]) {
         self.tabBarController.selectedIndex = 0;
+    } else if ([title isEqualToString:@"Logout"]) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FirstUser"];
+        currentSettings.firstuse = YES;
+        [self logoutButtonClicked:self];
     }
 }
 
@@ -218,6 +231,7 @@
                             tabBarController.selectedIndex = 0;
                         }
                     }];
+    
 }
 
 - (IBAction)addSiteButtonClicked:(id)sender {

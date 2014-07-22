@@ -115,6 +115,10 @@
     [self displayStats];
     
     self.title = [NSString stringWithFormat:@"%@ - %@", athlete.logname, pos];
+    _playerLabel.text = athlete.numberLogname;
+
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:_saveBarButton, _totalsBarButton, _refreshBarButton, nil];
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -1525,6 +1529,14 @@
                 return  NO;
     } else
         return YES;
+}
+
+- (IBAction)saveBarButtonClicked:(id)sender {
+    [self savePlayerStatsButtonClicked:sender];
+}
+
+- (IBAction)totalsBarButtonClicked:(id)sender {
+    [self totalsButtonClicked:sender];
 }
 
 @end

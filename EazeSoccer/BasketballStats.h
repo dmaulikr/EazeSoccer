@@ -37,5 +37,6 @@
 
 - (void)saveScoringStats;
 - (void)saveOtherStats;
+- (NSNumber *)pointTotal:(NSString *)gameid;
 
 @end

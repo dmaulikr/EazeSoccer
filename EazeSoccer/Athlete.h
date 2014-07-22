@@ -23,7 +23,7 @@
 #import "SoccerStat.h"
 #import "Lacrosstat.h"
 #import "GameSchedule.h"
-
+#import "WaterPoloStat.h"
 
 @interface Athlete : NSObject
 
@@ -68,6 +68,8 @@
 @property (nonatomic, strong) NSMutableArray *soccer_gamestats;
 
 @property (nonatomic, strong) NSMutableArray *lacrosstats;
+
+@property (nonatomic, strong) NSMutableArray *waterpolostats;
 
 //@property(nonatomic, strong) UIImage *thumbimage;
 //@property(nonatomic, strong) UIImage *tinyimage;

@@ -49,5 +49,6 @@
 - (IBAction)playerstatsBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *messageBarButton;
 - (IBAction)messageBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *scoreBarButton;
 
 @end

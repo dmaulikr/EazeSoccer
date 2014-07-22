@@ -61,6 +61,8 @@
 
 @synthesize lacrosstats;
 
+@synthesize waterpolostats;
+
 //@synthesize thumbimage;
 //@synthesize tinyimage;
 //@synthesize mediumimage;
@@ -87,6 +89,8 @@
             basketball_stats = [[NSMutableArray alloc] init];
         else if ([currentSettings.sport.name isEqualToString:@"Soccer"])
             soccer_stats = [[NSMutableArray alloc] init];
+        else if ([currentSettings.sport.name isEqualToString:@"Water Polo"])
+            waterpolostats = [[NSMutableArray alloc] init];
         return self;
     } else
         return nil;
@@ -226,6 +230,13 @@
             
             for (int i = 0; i < lacrosse_stats.count; i++) {
                 [lacrosstats addObject:[[Lacrosstat alloc] initWithDictionary:[lacrosse_stats objectAtIndex:i]]];
+            }
+        } else if ([currentSettings.sport.name isEqualToString:@"Water Polo"]) {
+            NSArray *waterpolo_stats = [athleteDictionary objectForKey:@"waterpolostats"];
+            waterpolostats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < waterpolo_stats.count; i++) {
+                [waterpolostats addObject:[[WaterPoloStat alloc] initWithDictionary:[waterpolo_stats objectAtIndex:i]]];
             }
         }
         

@@ -242,4 +242,8 @@
     [self saveBasketballStats:statDict];
 }
 
+- (NSNumber *)pointTotal:(NSString *)gameid {
+    return [NSNumber numberWithInt:([twomade intValue] * 2) + ([threemade intValue] * 3) + [ftmade intValue]];
+}
+
 @end

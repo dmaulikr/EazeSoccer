@@ -41,7 +41,7 @@
     EazesportzRetrieveNews *getNews;
     Newsfeed *newsitem;
     GameSchedule *game;
-    BOOL editTeam, gotgamelist;
+    BOOL editTeam, gotgamelist, netok;
     EazesportzCheckAdImageViewController *adController;
 }
 
@@ -61,13 +61,13 @@
     getTeams = [[EazesportzRetrieveTeams alloc] init];
     getNews = [[EazesportzRetrieveNews alloc] init];
     _activityIndicator.hidesWhenStopped = YES;
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification
-                                            object:nil];
+    netok = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     
     self.tabBarController.tabBar.hidden = NO;
     _adContainer.hidden = YES;
@@ -134,21 +134,27 @@
     
     self.navigationController.toolbarHidden = YES;
     
+    [_homeTableView reloadData];
+    
     editTeam = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"currentsport"]) {
-        [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
-    } else if ((currentSettings.changesite) || (![[NSUserDefaults standardUserDefaults] objectForKey:@"currentsite"])) {
-        [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
-    } else {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
+    if (netok) {
+        if (([currentSettings.user loggedIn]) && (currentSettings.user.adminsite.length == 0) && (currentSettings.user.admin)) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"You must define your site before continuing"
+                                                           delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alert show];
+        } else if (currentSettings.firstuse) {
+            [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
+        } else if (currentSettings.changesite) {
+            [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
+        } else {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
+        }
     }
-    
-    [_homeTableView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -161,10 +167,26 @@
     Reachability *reach = [note object];
     
     if ([reach isReachable]) {
+        netok = YES;
+        
         if ((currentSettings.sport.id.length == 0) || (currentSettings.team.teamid.length == 0))
+            NSLog(@"user.admin%d", currentSettings.user.admin);
+            NSLog(@"user.adminsite=%@", currentSettings.user.adminsite);
+            
+            if (currentSettings.firstuse) {
+                [self performSegueWithIdentifier:@"WelcomeSegue" sender:self];
+            } else if (([currentSettings.user loggedIn]) && (currentSettings.user.admin) && (currentSettings.user.adminsite.length == 0)) {
+                [self performSegueWithIdentifier:@"ProgramInfoSegue" sender:self];
+            } else if ((currentSettings.changesite) || (![[NSUserDefaults standardUserDefaults] objectForKey:@"currentsite"])) {
+                [self performSegueWithIdentifier:@"FindSiteSegue" sender:self];
+            } else {
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGames:) name:@"GameListChangedNotification" object:nil];
+            }
+            
             [self viewWillAppear:YES];
-    }
-    else {
+    } else {
+        netok = NO;
+        
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Network connectivity lost!" delegate:nil cancelButtonTitle:@"Ok"
                                               otherButtonTitles:nil];
         [alert show];
@@ -226,7 +248,7 @@
                 cell.homeTableCellTitle.text = currentSettings.sport.sitename;
                 cell.homeTableCellText.text = @"";
             } else {
-                cell.homeTableCellTitle.text = @"Welcome to Eazesportz";
+                cell.homeTableCellTitle.text = @"Welcome to GameTracker";
                 cell.homeTableCellText.text = @"Select a site to contine";
             }
             break;
@@ -476,6 +498,8 @@
     
     if ([title isEqualToString:@"Refresh"]) {
         [self teamSelected];
+    } else if ([title isEqualToString:@"Ok"]) {
+        [self performSegueWithIdentifier:@"ProgramInfoSegue" sender:self];
     }
 }
 

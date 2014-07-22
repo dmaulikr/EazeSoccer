@@ -107,10 +107,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (([currentSettings.user loggedIn]) && (currentSettings.user.adminsid.length == 0)) {
-        [_loginButton setTitle:@"Create Sport" forState:UIControlStateNormal];
+    if (([currentSettings.user loggedIn]) && (currentSettings.user.admin)) {
+        [_loginButton setTitle:@"Edit Sport" forState:UIControlStateNormal];
     } else {
-        [_loginButton setTitle:@"Login" forState:UIControlStateNormal];
+        [_loginButton setTitle:@"Login or Register" forState:UIControlStateNormal];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatedLocation:) name:@"NewLocationNotification" object:nil];

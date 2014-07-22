@@ -32,10 +32,6 @@
 
 @interface EazesportzAppDelegate (private) <CLLocationManagerDelegate>
 
--(void)reachabilityChanged:(NSNotification*)note;
-
-// @property (nonatomic, strong) EazesportzInApAdDetailViewController *purchaseController;
-
 @end
 
 @implementation EazesportzAppDelegate {
@@ -49,6 +45,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    currentSettings = [[sportzCurrentSettings alloc] init];
     
     //Clear keychain on first run in case of reinstallation
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"]) {
@@ -64,9 +62,8 @@
         [standardDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"BlogAlerts"];
         [standardDefaults setValue:[NSNumber numberWithBool:YES] forKey:@"TeamAlerts"];
         [standardDefaults synchronize];
+        currentSettings.firstuse = YES;
     }
-
-    currentSettings = [[sportzCurrentSettings alloc] init];
 
     UIImageView *myGraphic;
     
@@ -81,7 +78,7 @@
     [AmazonErrorHandler shouldNotThrowExceptions];
     currentSettings.rootwindow = self.window;
 
-    Reachability * reach = [Reachability reachabilityWithHostname:@"www.google.com"];
+    Reachability *reach = [Reachability reachabilityWithHostname:@"www.google.com"];
     
     reach.reachableBlock = ^(Reachability * reachability)
     {
@@ -104,7 +101,7 @@
             } else if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentsport"]) {
                 [self getSport];
             } else
-                currentSettings.firstuse = YES;
+                currentSettings.changesite = YES;
             
             // set up location manager
             locationManager = [[CLLocationManager alloc] init];

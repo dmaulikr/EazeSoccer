@@ -51,4 +51,5 @@
 - (IBAction)recBarButtonClicked:(id)sender;
 - (IBAction)kickBarButtonClicked:(id)sender;
 - (IBAction)retBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addStatsBarButton;
 @end

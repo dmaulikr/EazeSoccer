@@ -15,6 +15,7 @@
 #import "EazeBballPlayerStatsViewController.h"
 #import "EazesportzRetrieveAlerts.h"
 #import "EazeBasketballScoringStatsViewController.h"
+#import "EazesportzBasketballScoreSheetViewController.h"
 
 
 @interface EazeBasketballGameSummaryViewController () <UIAlertViewDelegate>
@@ -77,7 +78,7 @@
     [super viewWillAppear:animated];
     
     if ([currentSettings isSiteOwner])
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.saveBarButton, self.messageBarButton, nil];
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshButton, self.saveBarButton, self.messageBarButton, self.scoreBarButton, nil];
     else
         self.navigationItem.rightBarButtonItem = self.refreshButton;
     
@@ -212,6 +213,9 @@
             destController.game = game;
             destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
         }
+    } else if ([segue.identifier isEqualToString:@"ScoreSheetSegue"]) {
+        EazesportzBasketballScoreSheetViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 
@@ -369,13 +373,9 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (([currentSettings isSiteOwner]) && ([visiblestats isEqualToString:@"Player"])) {
-        [self performSegueWithIdentifier:@"EditPointsBasketballStatsSegue" sender:self];
-    } else {
-        if ([visiblestats isEqualToString:@"Player"]) {
-            if (indexPath.row < currentSettings.roster.count) {
-                [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
-            }
+    if ([visiblestats isEqualToString:@"Player"]) {
+        if (indexPath.row < currentSettings.roster.count) {
+            [self performSegueWithIdentifier:@"PlayerStatsSegue" sender:self];
         }
     }
 }
@@ -525,7 +525,7 @@
     NSString *scoreMessage = [NSString stringWithFormat:@"%@ - %d, %@ - %@", currentSettings.team.mascot,
                               [currentSettings teamTotalPoints:game.id], game.opponent_mascot, [game.opponentscore stringValue]];
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Send Score Message" message:scoreMessage delegate:self cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles:@"Ok", nil] ;
+                                              otherButtonTitles:@"Send", nil] ;
     alertView.tag = 2;
     alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
     [alertView textFieldAtIndex:0].text = scoreMessage;
@@ -533,30 +533,33 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
     
-    UITextField * alertTextField = [alertView textFieldAtIndex:0];
-    NSLog(@"alerttextfiled - %@",alertTextField.text);
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/teams/%@/gameschedules/%@/alertupdate.json?auth_token=%@",
-                                       [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
-                                       currentSettings.team.teamid, game.id, currentSettings.user.authtoken]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    NSDictionary *messageDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:alertTextField.text, @"message", nil];
-    NSError *jsonSerializationError;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:messageDictionary options:0 error:&jsonSerializationError];
-    
-    if (jsonSerializationError) {
-        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    if ([title isEqualToString:@"Send"]) {
+        UITextField * alertTextField = [alertView textFieldAtIndex:0];
+        NSLog(@"alerttextfiled - %@",alertTextField.text);
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sports/%@/teams/%@/gameschedules/%@/alertupdate.json?auth_token=%@",
+                                           [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id,
+                                           currentSettings.team.teamid, game.id, currentSettings.user.authtoken]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        NSDictionary *messageDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:alertTextField.text, @"message", nil];
+        NSError *jsonSerializationError;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:messageDictionary options:0 error:&jsonSerializationError];
+        
+        if (jsonSerializationError) {
+            NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+        }
+        
+        [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
+        
+        [request setHTTPMethod:@"PUT"];
+        
+        [request setHTTPBody:jsonData];
+        
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
     }
-    
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-Length"];
-    
-    [request setHTTPMethod:@"PUT"];
-    
-    [request setHTTPBody:jsonData];
-    
-    [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {

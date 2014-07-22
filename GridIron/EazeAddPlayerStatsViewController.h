@@ -90,5 +90,11 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *yardsPluMinusSegmentedControl;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UILabel *playerLabel;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
+- (IBAction)saveBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *totalsBarButton;
+- (IBAction)totalsBarButtonClicked:(id)sender;
 
 @end

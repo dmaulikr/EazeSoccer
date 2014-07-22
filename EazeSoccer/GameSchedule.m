@@ -92,6 +92,8 @@
 @synthesize lacrosse_visitor_score;
 @synthesize lacrosse_visitor_score_by_period;
 
+@synthesize water_polo_game;
+
 @synthesize httperror;
 
 - (id)init {
@@ -242,6 +244,8 @@
             lacrosse_visitor_score_by_period = [gameScheduleDictionary objectForKey:@"lacrosse_visitor_score_by_period"];
         } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
             soccer_game = [[SoccerGame alloc] initWithDictionary:[gameScheduleDictionary objectForKey:@"soccer_game"]];
+        } else if ([currentSettings.sport.name isEqualToString:@"Water Polo"]) {
+            water_polo_game = [[WaterPoloGame alloc] initWithDictionary:[gameScheduleDictionary objectForKey:@"water_polo_game"]];
         }
         
         return self;

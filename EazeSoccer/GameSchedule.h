@@ -11,6 +11,7 @@
 #import "Gamelogs.h"
 #import "LacrossGame.h"
 #import "SoccerGame.h"
+#import "WaterPoloGame.h"
 
 @interface GameSchedule : NSObject
 
@@ -80,6 +81,8 @@
 @property (nonatomic, strong) NSMutableArray *lacrosse_home_score_by_period;
 @property (nonatomic, strong) NSNumber *lacrosse_visitor_score;
 @property (nonatomic, strong) NSMutableArray *lacrosse_visitor_score_by_period;
+
+@property (nonatomic, strong) WaterPoloGame *water_polo_game;
 
 
 @property(nonatomic, strong) NSString *httperror;
