@@ -229,7 +229,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([currentSettings isSiteOwner]) {
+    if (([currentSettings isSiteOwner]) && (indexPath.row < currentSettings.gameList.count)) {
         [self performSegueWithIdentifier:@"EditTotalsSegue" sender:self];
     }
 }

@@ -13,6 +13,7 @@
 #import "GameSchedule.h"
 #import "Lacrosstat.h"
 #import "SoccerStat.h"
+#import "WaterPoloStat.h"
 
 @interface VisitorRoster : NSObject
 
@@ -37,5 +38,8 @@
 
 - (SoccerStat *)getSoccerGameStat:(NSString *)soccer_game_id;
 - (BOOL)isSoccerGoalie;
+
+- (BOOL)isWaterPoloGoalie;
+- (WaterPoloStat *)findWaterPoloStat:(GameSchedule *)game;
 
 @end

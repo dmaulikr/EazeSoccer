@@ -7,15 +7,19 @@
 //
 
 #import "WaterPoloGame.h"
+#import "EazesportzAppDelegate.h"
+#import "EazesportzGetGame.h"
 
-@implementation WaterPoloGame
+@implementation WaterPoloGame {
+    long responseStatusCode;
+    NSMutableData *theData;
+}
 
 @synthesize waterpolo_oppsog;
 @synthesize waterpolo_oppassists;
 @synthesize waterpolo_oppsaves;
 @synthesize waterpolo_oppfouls;
-@synthesize home_exclusions;
-@synthesize visitor_exclusions;
+@synthesize exclusions;
 @synthesize home_time_outs_left;
 @synthesize visitor_time_outs_left;
 
@@ -56,8 +60,7 @@
         waterpolo_oppsaves = [waterpolo_game_dictionary  objectForKey:@"waterpolo_oppsaves"];
         waterpolo_oppfouls = [waterpolo_game_dictionary  objectForKey:@"waterpolo_oppfouls"];
         waterpolo_oppassists = [waterpolo_game_dictionary  objectForKey:@"waterpolo_oppassists"];
-        home_exclusions = [waterpolo_game_dictionary objectForKey:@"home_exclusions"];
-        visitor_exclusions = [waterpolo_game_dictionary objectForKey:@"waterpolo_game_dictionary"];
+        exclusions = [waterpolo_game_dictionary objectForKey:@"exclusions"];
         home_time_outs_left = [waterpolo_game_dictionary objectForKey:@"home_time_outs_left"];
         visitor_time_outs_left = [waterpolo_game_dictionary objectForKey:@"visitor_time_outs_left"];
         
@@ -89,6 +92,70 @@
         return self;
     } else
         return nil;
+}
+
+- (void)save {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/games/%@/water_polo_games/%@.json?auth_token=%@",
+                           [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, gameschedule_id, water_polo_game_id,
+                           currentSettings.user.authtoken];
+    NSURL *url = [NSURL URLWithString:urlstring];
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:waterpolo_oppsog, @"waterpolo_oppsog", waterpolo_oppassists,
+                                       @"waterpolo_oppassists", waterpolo_oppsaves, @"waterpolo_oppsaves", waterpolo_oppfouls, @"waterpolo_oppfouls",
+                                       home_time_outs_left, @"home_time_outs_left", visitor_time_outs_left, @"visitor_time_outs_left",
+                                       exclusions, @"exclusions", nil];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"PUT"];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    responseStatusCode = [httpResponse statusCode];
+    theData = [[NSMutableData alloc]init];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [theData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameStatNotification" object:nil
+                                                      userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    
+    NSError *jsonSerializationError = nil;
+    NSMutableDictionary *serverData = [NSJSONSerialization JSONObjectWithData:theData options:0 error:&jsonSerializationError];
+    NSLog(@"%@", serverData);
+    
+    if (responseStatusCode == 200) {
+        [[[EazesportzGetGame alloc] init] getGameSynchronous:currentSettings.sport Team:currentSettings.team Game:gameschedule_id
+                                                        User:currentSettings.user];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameStatNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
+    }
 }
 
 @end

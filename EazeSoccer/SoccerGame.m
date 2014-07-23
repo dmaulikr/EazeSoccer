@@ -101,6 +101,35 @@
         return nil;
 }
 
+- (void)saveSoccerGame {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/games/%@/soccer_games/%@.json?auth_token=%@",
+                           [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, gameschedule_id, soccer_game_id,
+                           currentSettings.user.authtoken];
+    NSURL *url = [NSURL URLWithString:urlstring];
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:socceroppsog, @"socceroppsog", socceroppck,
+                                       @"socceroppck", socceroppsaves, @"socceroppsaves", socceroppfouls, @"socceroppfouls", visitorfouls, @"visitorfouls",
+                                       visitoroffsides, @"visitoroffsides", nil];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"PUT"];
+    
+    NSError *jsonSerializationError = nil;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    
+    if (!jsonSerializationError) {
+        NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Serialized JSON: %@", serJson);
+    } else {
+        NSLog(@"JSON Encoding Failed: %@", [jsonSerializationError localizedDescription]);
+    }
+    
+    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody:jsonData];
+    [[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
 - (void)saveSub:(SoccerSubs *)soccersub {
     NSBundle *mainBundle = [NSBundle mainBundle];
     NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/games/%@/soccer_games/%@/addsubstitute_player?auth_token=%@",

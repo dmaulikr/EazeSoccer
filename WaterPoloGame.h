@@ -14,8 +14,7 @@
 @property (nonatomic, strong) NSNumber *waterpolo_oppassists;
 @property (nonatomic, strong) NSNumber *waterpolo_oppsaves;
 @property (nonatomic, strong) NSNumber *waterpolo_oppfouls;
-@property (nonatomic, strong) NSArray *home_exclusions;
-@property (nonatomic, strong) NSArray *visitor_exclusions;
+@property (nonatomic, strong) NSArray *exclusions;
 @property (nonatomic, strong) NSNumber *home_time_outs_left;
 @property (nonatomic, strong) NSNumber *visitor_time_outs_left;
 
@@ -51,5 +50,7 @@
 @property (nonatomic, strong) NSMutableArray *soccersubs;
 
 - (id)initWithDictionary:(NSDictionary *)waterpolo_game_dictionary;
+
+- (void)save;
 
 @end

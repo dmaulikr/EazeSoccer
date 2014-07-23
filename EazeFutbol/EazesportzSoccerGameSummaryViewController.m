@@ -146,6 +146,11 @@
     [_statTableView reloadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (IBAction)refreshButtonClicked:(id)sender {
     [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
     game = [currentSettings retrieveGame:game.id];
@@ -323,13 +328,48 @@
 }
 
 - (IBAction)saveBarButtonClicked:(id)sender {
-    game.socceroppsog = [NSNumber numberWithInt:[_visitorShotsTextField.text intValue]];
-    game.socceroppsaves = [NSNumber numberWithInt:[_visitorSavesTextField.text intValue]];
-    game.socceroppck = [NSNumber numberWithInt:[_visitorCKTextField.text intValue]];
+    if (game.soccer_game.soccer_game_id.length > 0) {
+        game.soccer_game.socceroppsaves = [NSNumber numberWithInt:[_visitorSavesTextField.text intValue]];
+        game.soccer_game.socceroppsog = [NSNumber numberWithInt:[_visitorShotsTextField.text intValue]];
+        game.soccer_game.socceroppck = [NSNumber numberWithInt:[_visitorCKTextField.text intValue]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(soccerGameSaved:) name:@"SoccerGameStatNotification" object:nil];
+        [game.soccer_game saveSoccerGame];
+    } else {
+        game.socceroppsog = [NSNumber numberWithInt:[_visitorShotsTextField.text intValue]];
+        game.socceroppsaves = [NSNumber numberWithInt:[_visitorSavesTextField.text intValue]];
+        game.socceroppck = [NSNumber numberWithInt:[_visitorCKTextField.text intValue]];
+        [self saveGameData];
+    }
+}
+
+- (void)soccerGameSaved:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        [self saveGameData];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error saving game data!" delegate:nil cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (void)saveGameData {
     game.currentgametime = [NSString stringWithFormat:@"%@:%@", _minutesTextField.text, _secondsTextField.text];
     game.period = [NSNumber numberWithInt:[_periodsTextField.text intValue]];
     game.opponentscore = [NSNumber numberWithInt:[_visitorScoreTextField.text intValue]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gameSaved:) name:@"GameSavedNotification" object:nil];
     [game saveGameschedule];
+}
+
+- (void)gameSaved:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Game Saved!" delegate:nil cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error saving game data!" delegate:nil cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (IBAction)homeButtonClicked:(id)sender {

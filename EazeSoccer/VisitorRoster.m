@@ -16,6 +16,7 @@
     
     NSMutableArray *lacross_stats;
     NSMutableArray *soccer_gamestats;
+    NSMutableArray *waterpolostats;
     
     BOOL deleteRoster;
 }
@@ -218,6 +219,41 @@
     
     for (int i = 0; i < positions.count; i++) {
         if ([[positions objectAtIndex:i] isEqualToString:@"GK"]) {
+            result = YES;
+            break;
+        }
+    }
+    
+    return result;
+}
+
+- (WaterPoloStat *)findWaterPoloStat:(GameSchedule *)game {
+    WaterPoloStat *astat = nil;
+    
+    for (int i = 0; i < waterpolostats.count; i++) {
+        
+        if ([[[waterpolostats objectAtIndex:i] water_polo_game_id] isEqualToString:game.water_polo_game.water_polo_game_id]) {
+            astat = [waterpolostats objectAtIndex:i];
+            break;
+        }
+    }
+    
+    if (!astat) {
+        astat = [[WaterPoloStat alloc] init];
+        astat.athlete_id = visitor_roster_id;
+        astat.water_polo_game_id = game.water_polo_game.water_polo_game_id;
+        [waterpolostats addObject:astat];
+    }
+    
+    return astat;
+}
+
+- (BOOL)isWaterPoloGoalie {
+    BOOL result = NO;
+    NSArray *positions = [position componentsSeparatedByString:@"/"];
+    
+    for (int i = 0; i < positions.count; i++) {
+        if ([[positions objectAtIndex:i] isEqualToString:@"G"]) {
             result = YES;
             break;
         }

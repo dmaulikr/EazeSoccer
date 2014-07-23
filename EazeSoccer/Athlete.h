@@ -149,6 +149,9 @@
 - (Lacrosstat *)findLacrosstat:(GameSchedule *)game;
 - (Lacrosstat *)getLacrosstatById:(NSString *)lacross_stat_id;
 
+- (BOOL)isWaterPoloGoalie;
+- (WaterPoloStat *)findWaterPoloStat:(GameSchedule *)game;
+
 //- (UIImage *)getImage:(NSString *)size;
 
 @end

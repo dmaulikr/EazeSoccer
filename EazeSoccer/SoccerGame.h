@@ -50,6 +50,7 @@
 - (id)initWithDictionary:(NSDictionary *)soccer_game_dictionary;
 
 - (void)saveSub:(SoccerSubs *)soccersub;
+- (void)saveSoccerGame;
 
 - (void)deleteSub:(SoccerSubs *)soccersub;
 
