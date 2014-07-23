@@ -10,7 +10,7 @@
 
 #import "EazesportzAppDelegate.h"
 
-@interface EazesportzSoccerPenaltyStatsViewController ()
+@interface EazesportzSoccerPenaltyStatsViewController () <UIPickerViewDataSource, UIPickerViewDelegate>
 
 @end
 
@@ -57,6 +57,8 @@
     [super viewWillAppear:animated];
     
     _pickerView.hidden = YES;
+    _pickerView.delegate = self;
+    _pickerView.dataSource = self;
     [_periodSegmentedControl setSelectedSegmentIndex:[game.period intValue] - 1];
     
     if (penalty) {

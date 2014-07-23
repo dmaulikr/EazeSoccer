@@ -21,7 +21,7 @@
 #import "EazesportzLacrosseScoresheetViewController.h"
 #import "EazesportzRetrievePlayers.h"
 
-@interface EazesportzLacrosseStatsViewController () <UIAlertViewDelegate>
+@interface EazesportzLacrosseStatsViewController () <UIAlertViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @end
 
@@ -66,6 +66,8 @@
     [super viewWillAppear:animated];
     
     _pickerView.hidden = YES;
+    _pickerView.dataSource = self;
+    _pickerView.delegate = self;
     _shotsContainer.hidden = YES;
     _playerstatsContainer.hidden = YES;
     _goaliestatsContainer.hidden = YES;
@@ -86,6 +88,12 @@
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, self.scoreButton, self.saveBarButton, nil];
     else
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    _pickerView.delegate = nil;
+    _pickerView.dataSource = nil;
 }
 
 #pragma mark - Navigation

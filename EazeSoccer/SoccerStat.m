@@ -117,70 +117,46 @@
 }
 
 - (SoccerPlayerStat *)findPlayerStat:(NSNumber *)period {
-    SoccerPlayerStat *entry = [[SoccerPlayerStat alloc] init];
+    SoccerPlayerStat *entry;
     
     for (int i = 0; i < [player_stats count]; i++) {
         if ([[[player_stats objectAtIndex:i] period] isEqual:period]) {
             entry = [player_stats objectAtIndex:i];
         }
     }
-    
-    if (entry.soccer_playerstat_id.length == 0) {
-        entry.soccer_stat_id = soccer_stat_id;
-        entry.athlete_id = athlete_id;
-    }
-    
     return entry;
 }
 
 - (SoccerGoalstat *)findGoalStat:(NSNumber *)period {
-    SoccerGoalstat *entry = [[SoccerGoalstat alloc] init];
+    SoccerGoalstat *entry;
     
     for (int i = 0; i < [goalstats count]; i++) {
         if ([[[goalstats objectAtIndex:i] period] isEqual:period]) {
             entry = [goalstats objectAtIndex:i];
         }
     }
-    
-    if (entry.soccer_goalstat_id.length == 0) {
-        entry.soccer_stat_id = soccer_stat_id;
-        entry.athlete_id = athlete_id;
-    }
-    
     return entry;
 }
 
 - (SoccerPenalty *)findPenaltyStat:(NSNumber *)period {
-    SoccerPenalty *entry = [[SoccerPenalty alloc] init];
+    SoccerPenalty *entry;
     
     for (int i = 0; i < [penalty_stats count]; i++) {
         if ([[[penalty_stats objectAtIndex:i] period] isEqual:period]) {
             entry = [penalty_stats objectAtIndex:i];
         }
     }
-    
-    if (entry.soccer_penalty_id.length == 0) {
-        entry.soccer_stat_id = soccer_stat_id;
-        entry.athlete_id = athlete_id;
-    }
-    
     return entry;
 }
 
 - (SoccerScoring *)findScoringStat:(NSNumber *)period {
-    SoccerScoring *entry = [[SoccerScoring alloc] init];
+    SoccerScoring *entry;
     
     for (int i = 0; i < [scoring_stats count]; i++) {
         if ([[[scoring_stats objectAtIndex:i] period] isEqual:period]) {
             entry = [scoring_stats objectAtIndex:i];
         }
     }
-    
-    if (entry.soccer_scoring_id.length == 0) {
-        entry.soccer_stat_id = soccer_stat_id;
-        entry.athlete_id = athlete_id;
-    }
-    
     return entry;
 }
 

@@ -9,7 +9,7 @@
 #import "EazesportzSoccerScoreStatsViewController.h"
 #import "EazesportzAppDelegate.h"
 
-@interface EazesportzSoccerScoreStatsViewController ()
+@interface EazesportzSoccerScoreStatsViewController () <UIPickerViewDelegate, UIPickerViewDataSource>
 
 @end
 
@@ -52,6 +52,8 @@
     
     scoreplayer = YES;
     _pickerView.hidden = YES;
+    _pickerView.dataSource = self;
+    _pickerView.delegate = self;
     
     [_periodSegmentedControl setSelectedSegmentIndex:[game.period intValue] - 1];
 

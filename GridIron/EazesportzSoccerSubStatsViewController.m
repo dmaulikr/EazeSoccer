@@ -9,7 +9,7 @@
 #import "EazesportzSoccerSubStatsViewController.h"
 #import "EazesportzAppDelegate.h"
 
-@interface EazesportzSoccerSubStatsViewController ()
+@interface EazesportzSoccerSubStatsViewController () <UIPickerViewDataSource, UIPickerViewDelegate>
 
 @end
 
@@ -49,6 +49,9 @@
     [super viewWillAppear:animated];
     
     _pickerView.hidden = YES;
+    _pickerView.delegate = self;
+    _pickerView.dataSource = self;
+    
     [_periodSegmentedControl setSelectedSegmentIndex:[game.period intValue] - 1];
     
     if (subentry) {

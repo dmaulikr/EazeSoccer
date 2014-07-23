@@ -9,7 +9,7 @@
 #import "EazesportzLacrosseScoreEntryViewController.h"
 #import "EazesportzAppDelegate.h"
 
-@interface EazesportzLacrosseScoreEntryViewController () <UIAlertViewDelegate>
+@interface EazesportzLacrosseScoreEntryViewController () <UIAlertViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
 @end
 
@@ -60,6 +60,8 @@
     [super viewWillAppear:animated];
     visitors = [currentSettings findVisitingTeam:game.lacross_game.visiting_team_id];
     _pickerView.hidden = YES;
+    _pickerView.dataSource = self;
+    _pickerView.delegate = self;
     pickertype = @"Player";
     
     if (scorestat) {
