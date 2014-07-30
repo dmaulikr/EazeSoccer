@@ -350,6 +350,8 @@
                                               otherButtonTitles:nil];
         [alert show];
     }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SoccerGameStatNotification" object:nil];
 }
 
 - (void)saveGameData {
@@ -370,6 +372,8 @@
                                               otherButtonTitles:nil];
         [alert show];
     }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GameSavedNotification" object:nil];
 }
 
 - (IBAction)homeButtonClicked:(id)sender {

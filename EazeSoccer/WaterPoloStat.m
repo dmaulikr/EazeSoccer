@@ -28,13 +28,13 @@
 @synthesize visitor_roster_id;
 
 @synthesize player_shots;
-@synthesize player_cornerkicks;
 @synthesize player_steals;
 @synthesize player_fouls;
 @synthesize player_assists;
 @synthesize player_penalties;
 @synthesize player_goals_allowed;
 @synthesize player_minutes_played;
+@synthesize player_saves;
 
 @synthesize waterpolo_scoring;
 @synthesize waterpolo_player_stat;
@@ -72,6 +72,8 @@
     water_polo_game_id = [waterpolo_dictionary objectForKey:@"water_polo_game_id"];
     visitor_roster_id = [waterpolo_dictionary objectForKey:@"visitor_roster_id"];
     waterpolo_stat_id = [waterpolo_dictionary objectForKey:@"waterpolo_stat_id"];
+    
+    player_saves = [waterpolo_dictionary objectForKey:@"player_saves"];
     
     scoring_stats = [[NSMutableArray alloc] init];
     NSArray *scoringArray = [waterpolo_dictionary objectForKey:@"waterpolo_scorings"];
@@ -218,14 +220,18 @@
     return [NSNumber numberWithInt:steals];
 }
 
-- (NSNumber *)getTotalCornerKicks {
-    int cornerkicks = 0;
+- (NSNumber *)getTotalPoints {
+    int points = 0;
     
-    for (int i = 0; i < player_stats.count; i++) {
-        cornerkicks += [[[player_stats objectAtIndex:i] cornerkicks] intValue];
+    for (int i = 0; i < scoring_stats.count; i++) {
+        points += 1;
     }
     
-    return [NSNumber numberWithInt:cornerkicks];
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+//        WaterPoloStat *stat = [
+    }
+    
+    return [NSNumber numberWithInt:points];
 }
 
 - (NSNumber *)getTotalGoalsAllowed {
@@ -400,7 +406,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"waterpoloStatNotification" object:nil
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterpoloStatNotification" object:nil
                                                       userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
 }
 
@@ -419,10 +425,10 @@
         
         [[[EazesportzGetGame alloc] init] getGameSynchronous:currentSettings.sport Team:currentSettings.team Game:gameidentifier User:currentSettings.user];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"waterpoloStatNotification" object:nil
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterpoloStatNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"waterpoloStatNotification" object:nil
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterpoloStatNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
     }
 }

@@ -60,28 +60,34 @@
         waterpolo_oppsaves = [waterpolo_game_dictionary  objectForKey:@"waterpolo_oppsaves"];
         waterpolo_oppfouls = [waterpolo_game_dictionary  objectForKey:@"waterpolo_oppfouls"];
         waterpolo_oppassists = [waterpolo_game_dictionary  objectForKey:@"waterpolo_oppassists"];
-        exclusions = [waterpolo_game_dictionary objectForKey:@"exclusions"];
+        NSArray *gameexclusions = [waterpolo_game_dictionary objectForKey:@"exclusions"];
+        
+        if (gameexclusions.count > 0)
+            exclusions = [gameexclusions mutableCopy];
+        else
+            exclusions = [[NSMutableArray alloc] initWithCapacity:8];
+        
         home_time_outs_left = [waterpolo_game_dictionary objectForKey:@"home_time_outs_left"];
         visitor_time_outs_left = [waterpolo_game_dictionary objectForKey:@"visitor_time_outs_left"];
         
-        waterpolo_home_score = [waterpolo_game_dictionary  objectForKey:@"waterpolo_home_score"];
-        waterpolo_visitor_score = [waterpolo_game_dictionary  objectForKey:@"waterpolo_visitor_score"];
+        waterpolo_home_score = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score"];
+        waterpolo_visitor_score = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score"];
         waterpolo_game_home_score_period1 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_period1"];
         waterpolo_game_home_score_period2 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_period2"];
-        waterpolo_game_home_score_period3 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_period3"];
-        waterpolo_game_home_score_period4 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_period4"];
+        waterpolo_game_home_score_period3 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_periodOT1"];
+        waterpolo_game_home_score_period4 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_periodOT2"];
         waterpolo_game_visitor_score_period1 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_period1"];
         waterpolo_game_visitor_score_period2 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_period2"];
-        waterpolo_game_visitor_score_period3 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_period3"];
-        waterpolo_game_visitor_score_period4 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_period4"];
+        waterpolo_game_visitor_score_period3 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_periodOT1"];
+        waterpolo_game_visitor_score_period4 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_periodOT2"];
         waterpolo_home_shots = [waterpolo_game_dictionary  objectForKey:@"waterpolo_home_shots"];
         waterpolo_visitor_shots = [waterpolo_game_dictionary  objectForKey:@"waterpolo_visitor_shots"];
-        waterpolo_home_saves = [waterpolo_game_dictionary  objectForKey:@"waterpolo_home_saves"];
-        waterpolo_visitor_saves = [waterpolo_game_dictionary  objectForKey:@"waterpolo_visitor_saves"];
+        waterpolo_home_saves = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_homesaves"];
+        waterpolo_visitor_saves = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitorsaves"];
         waterpolo_home_steals = [waterpolo_game_dictionary  objectForKey:@"waterpolo_home_steals"];
         waterpolo_visitor_steals = [waterpolo_game_dictionary  objectForKey:@"waterpolo_visitor_steals"];
-        waterpolo_home_fouls = [waterpolo_game_dictionary  objectForKey:@"waterpolo_home_fouls"];
-        waterpolo_visitor_fouls = [waterpolo_game_dictionary  objectForKey:@"waterpolo_visitor_fouls"];
+        waterpolo_home_fouls = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_fouls"];
+        waterpolo_visitor_fouls = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_fouls"];
         waterpolo_home_goals_allowed = [waterpolo_game_dictionary  objectForKey:@"waterpolo_home_goals_allowed"];
         waterpolo_visitor_goals_allowed = [waterpolo_game_dictionary  objectForKey:@"waterpolo_visitor_goals_allowed"];
         waterpolo_home_minutes_played = [waterpolo_game_dictionary  objectForKey:@"waterpolo_home_minutes_played"];
@@ -96,9 +102,9 @@
 
 - (void)save {
     NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/games/%@/water_polo_games/%@.json?auth_token=%@",
-                           [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, gameschedule_id, water_polo_game_id,
-                           currentSettings.user.authtoken];
+    NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/teams/%@/gameschedules/%@/water_polo_games/%@.json?auth_token=%@",
+                           [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, currentSettings.team.teamid,
+                           gameschedule_id, water_polo_game_id,currentSettings.user.authtoken];
     NSURL *url = [NSURL URLWithString:urlstring];
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:waterpolo_oppsog, @"waterpolo_oppsog", waterpolo_oppassists,
                                        @"waterpolo_oppassists", waterpolo_oppsaves, @"waterpolo_oppsaves", waterpolo_oppfouls, @"waterpolo_oppfouls",
@@ -136,7 +142,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameStatNotification" object:nil
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameSavedNotification" object:nil
                                                       userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
 }
 
@@ -148,12 +154,11 @@
     NSLog(@"%@", serverData);
     
     if (responseStatusCode == 200) {
-        [[[EazesportzGetGame alloc] init] getGameSynchronous:currentSettings.sport Team:currentSettings.team Game:gameschedule_id
-                                                        User:currentSettings.user];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameStatNotification" object:nil
+        [[[EazesportzGetGame alloc] init] getGameSynchronous:currentSettings.sport Team:currentSettings.team Game:gameschedule_id User:currentSettings.user];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameSavedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameStatNotification" object:nil
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameSavedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
     }
 }

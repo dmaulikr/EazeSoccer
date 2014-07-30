@@ -90,6 +90,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    _pickerView.delegate = self;
+    _pickerView.dataSource = self;
 
     newmedia = NO;
     imageselected = NO;

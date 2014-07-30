@@ -55,7 +55,6 @@
     jersey = @"";
     position = @"";
     player = nil;
-//    [currentSettings retrievePlayers];
     rosterdata = currentSettings.roster;
     _findPlayerContainer.hidden = YES;
     [_playerTableView reloadData];

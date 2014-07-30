@@ -300,7 +300,7 @@
 }
 
 - (void)gameSaved:(NSNotification *)notification {
-    if (game.httperror.length == 0) {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
         if (oppImage) {
             [self uploadImage:game];
         } else {

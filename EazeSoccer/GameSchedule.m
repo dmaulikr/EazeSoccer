@@ -440,10 +440,14 @@
             if (self.id.length == 0)
                 self.id = [[serverData objectForKey:@"schedule"] objectForKey:@"_id"];
 
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"GameSavedNotification" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"GameSavedNotification" object:nil
+                                                              userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
         }
     } else {
         httperror = [serverData objectForKey:@"error"];
+        NSLog(@"Error=%@", httperror);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GameDeletedNotification" object:nil
+                                                          userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Error", @"Result", nil]];
     }
 }
 

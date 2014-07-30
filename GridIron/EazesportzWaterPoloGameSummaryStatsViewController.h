@@ -1,19 +1,14 @@
 //
-//  EazesportzWaterPoloStatsViewController.h
+//  EazesportzWaterPoloGameSummaryStatsViewController.h
 //  EazeSportz
 //
-//  Created by Gilbert Zaldivar on 7/22/14.
+//  Created by Gilbert Zaldivar on 7/29/14.
 //  Copyright (c) 2014 Gil. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "EazesportzWaterPoloGameSummaryViewController.h"
 
-#import "GameSchedule.h"
-
-@interface EazesportzWaterPoloStatsViewController : UIViewController
-
-@property (nonatomic, strong) GameSchedule *game;
-@property (nonatomic, assign) BOOL isVisitingTeam;
+@interface EazesportzWaterPoloGameSummaryStatsViewController : EazesportzWaterPoloGameSummaryViewController
 
 @property (weak, nonatomic) IBOutlet UITableView *statsTableView;
 
@@ -28,5 +23,4 @@
 - (IBAction)waterpoloPenaltystatsDone:(UIStoryboardSegue *)segue;
 - (IBAction)statsButtonClicked:(id)sender;
 - (IBAction)scoreButtonClicked:(id)sender;
-
 @end

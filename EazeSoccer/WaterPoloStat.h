@@ -26,13 +26,13 @@
 @property (nonatomic, strong) NSString *visitor_roster_id;
 
 @property (nonatomic, strong) NSNumber *player_shots;
-@property (nonatomic, strong) NSNumber *player_cornerkicks;
 @property (nonatomic, strong) NSNumber *player_steals;
 @property (nonatomic, strong) NSNumber *player_fouls;
 @property (nonatomic, strong) NSNumber *player_assists;
 @property (nonatomic, strong) NSNumber *player_penalties;
 @property (nonatomic, strong) NSNumber *player_goals_allowed;
 @property (nonatomic, strong) NSNumber *player_minutes_played;
+@property (nonatomic, strong) NSNumber *player_saves;
 
 @property (nonatomic, strong) NSString *httperror;
 
@@ -50,6 +50,7 @@
 
 - (NSNumber *)getTotalShots;
 - (NSNumber *)getTotalGoals;
+- (NSNumber *)getTotalPoints;
 - (NSNumber *)getTotalAssists;
 - (NSNumber *)getTotalSteals;
 - (NSNumber *)getTotalFouls;

@@ -1,12 +1,12 @@
 //
-//  EazesportzWaterPoloStatsViewController.m
+//  EazesportzWaterPoloGameSummaryStatsViewController.m
 //  EazeSportz
 //
-//  Created by Gilbert Zaldivar on 7/22/14.
+//  Created by Gilbert Zaldivar on 7/29/14.
 //  Copyright (c) 2014 Gil. All rights reserved.
 //
 
-#import "EazesportzWaterPoloStatsViewController.h"
+#import "EazesportzWaterPoloGameSummaryStatsViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "SoccerPlayerStatsTableCell.h"
 #import "EazesportzLacrosseMinutesStatTableViewCell.h"
@@ -15,11 +15,11 @@
 #import "EazesportzWaterPoloGoalieStatsViewController.h"
 #import "EazesportzWaterPoloPlayerGamesViewController.h"
 
-@interface EazesportzWaterPoloStatsViewController ()
+@interface EazesportzWaterPoloGameSummaryStatsViewController ()
 
 @end
 
-@implementation EazesportzWaterPoloStatsViewController {
+@implementation EazesportzWaterPoloGameSummaryStatsViewController {
     NSString *visiblestats;
     VisitingTeam *visitingteam;
     NSMutableArray *goalies, *scorings, *penalties;
@@ -28,9 +28,6 @@
     EazesportzWaterPoloPlayerStatsViewController *playerstatsController;
     EazesportzWaterPoloGoalieStatsViewController *goaliestatsController;
 }
-
-@synthesize game;
-@synthesize isVisitingTeam;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -61,8 +58,8 @@
     _goalieStatsContainer.hidden = YES;
     _scoreStatsContainer.hidden = YES;
     
-    if (isVisitingTeam)
-        visitingteam = [currentSettings findVisitingTeam:game.soccer_game.visiting_team_id];
+    if (self.game.water_polo_game.visiting_team_id.length > 0)
+        visitingteam = [currentSettings findVisitingTeam:self.game.soccer_game.visiting_team_id];
     else
         visitingteam = nil;
 }
@@ -88,7 +85,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ([visiblestats isEqualToString:@"Stats"]) {
-        if (isVisitingTeam) {
+        if (self.game.water_polo_game.visiting_team_id.length > 0) {
             if (section == 0) {
                 return visitingteam.visitor_roster.count;
             } else {
@@ -122,13 +119,13 @@
         
         for (int i = 0; i < currentSettings.roster.count; i++) {
             Athlete *player = [currentSettings.roster objectAtIndex:i];
-            [scorings addObjectsFromArray:[[player findWaterPoloStat:game] scoring_stats]];
+            [scorings addObjectsFromArray:[[player findWaterPoloStat:self.game] scoring_stats]];
         }
         
-        if (isVisitingTeam) {
+        if (self.game.water_polo_game.visiting_team_id.length > 0) {
             for (int i = 0; i < visitingteam.visitor_roster.count; i++) {
                 VisitorRoster *player = [visitingteam.visitor_roster objectAtIndex:i];
-                [scorings addObjectsFromArray:[[player findWaterPoloStat:game] scoring_stats]];
+                [scorings addObjectsFromArray:[[player findWaterPoloStat:self.game] scoring_stats]];
             }
         }
         
@@ -139,15 +136,15 @@
     } else {
         penalties = [[NSMutableArray alloc] init];
         
-        if (isVisitingTeam) {
+        if (self.game.water_polo_game.visiting_team_id.length > 0) {
             for (int i = 0; i < visitingteam.visitor_roster.count; i++) {
                 VisitorRoster *player = [visitingteam.visitor_roster objectAtIndex:i];
-                [penalties addObjectsFromArray:[[player findWaterPoloStat:game] penalty_stats]];
+                [penalties addObjectsFromArray:[[player findWaterPoloStat:self.game] penalty_stats]];
             }
         } else {
             for (int i = 0; i < currentSettings.roster.count; i++) {
                 Athlete *player = [currentSettings.roster objectAtIndex:i];
-                [penalties addObjectsFromArray:[[player findWaterPoloStat:game] penalty_stats]];
+                [penalties addObjectsFromArray:[[player findWaterPoloStat:self.game] penalty_stats]];
             }
         }
         
@@ -175,41 +172,41 @@
         cell.backgroundColor = [UIColor darkGrayColor];
         
         if (indexPath.section == 0) {
-            if (isVisitingTeam) {
+            if (self.game.water_polo_game.visiting_team_id.length > 0) {
                 VisitorRoster *player = [visitingteam.visitor_roster objectAtIndex:indexPath.row];
                 cell.label1.text = [player.number stringValue];
                 cell.label2.text = player.position;
                 cell.label3.text = player.logname;
-                cell.label4.text = [[[player findWaterPoloStat:game] getTotalShots] stringValue];
-                cell.label5.text = [[[player findWaterPoloStat:game] getTotalGoals] stringValue];
-                cell.label6.text = [[[player findWaterPoloStat:game] getTotalAssists] stringValue];
+                cell.label4.text = [[[player findWaterPoloStat:self.game] getTotalShots] stringValue];
+                cell.label5.text = [[[player findWaterPoloStat:self.game] getTotalGoals] stringValue];
+                cell.label6.text = [[[player findWaterPoloStat:self.game] getTotalAssists] stringValue];
             } else {
                 Athlete *player = [currentSettings.roster objectAtIndex:indexPath.row];
                 cell.label1.text = [player.number stringValue];
                 cell.label2.text = player.position;
                 cell.label3.text = player.logname;
-                cell.label4.text = [[[player findWaterPoloStat:game] getTotalShots] stringValue];
-                cell.label5.text = [[[player findWaterPoloStat:game] getTotalGoals] stringValue];
-                cell.label6.text = [[[player findWaterPoloStat:game] getTotalAssists] stringValue];
+                cell.label4.text = [[[player findWaterPoloStat:self.game] getTotalShots] stringValue];
+                cell.label5.text = [[[player findWaterPoloStat:self.game] getTotalGoals] stringValue];
+                cell.label6.text = [[[player findWaterPoloStat:self.game] getTotalAssists] stringValue];
             }
             
         } else {
-            if (isVisitingTeam) {
+            if (self.game.water_polo_game.visiting_team_id.length > 0) {
                 VisitorRoster *player = [goalies objectAtIndex:indexPath.row];
                 cell.label1.text = [player.number stringValue];
                 cell.label2.text = player.position;
                 cell.label3.text = player.logname;
-                cell.label4.text = [[[player findWaterPoloStat:game] getTotalSaves] stringValue];
-                cell.label5.text = [[[player findWaterPoloStat:game] getTotalGoalsAllowed] stringValue];
-                cell.label6.text = [[[player findWaterPoloStat:game] getTotalMinutes] stringValue];
+                cell.label4.text = [[[player findWaterPoloStat:self.game] getTotalSaves] stringValue];
+                cell.label5.text = [[[player findWaterPoloStat:self.game] getTotalGoalsAllowed] stringValue];
+                cell.label6.text = [[[player findWaterPoloStat:self.game] getTotalMinutes] stringValue];
             } else {
                 Athlete *player = [goalies objectAtIndex:indexPath.row];
                 cell.label1.text = [player.number stringValue];
                 cell.label2.text = player.position;
                 cell.label3.text = player.logname;
-                cell.label4.text = [[[player findWaterPoloStat:game] getTotalSaves] stringValue];
-                cell.label5.text = [[[player findWaterPoloStat:game] getTotalGoalsAllowed] stringValue];
-                cell.label6.text = [[[player findWaterPoloStat:game] getTotalMinutes] stringValue];
+                cell.label4.text = [[[player findWaterPoloStat:self.game] getTotalSaves] stringValue];
+                cell.label5.text = [[[player findWaterPoloStat:self.game] getTotalGoalsAllowed] stringValue];
+                cell.label6.text = [[[player findWaterPoloStat:self.game] getTotalMinutes] stringValue];
             }
             
         }
@@ -295,7 +292,7 @@
         if (indexPath.row < penalties.count) {
             SoccerPenalty *penalty = [penalties objectAtIndex:indexPath.row];
             
-            if (isVisitingTeam) {
+            if (self.game.water_polo_game.visiting_team_id.length > 0) {
                 VisitorRoster *player = [visitingteam.visitor_roster objectAtIndex:indexPath.row];
                 cell.label1.text = player.logname;
             } else {
@@ -326,10 +323,10 @@
         if ([visiblestats isEqualToString:@"Stats"]) {
             if (indexPath.section == 0) {
                 _playerStatsContainer.hidden = NO;
-                playerstatsController.game = game;
+                playerstatsController.game = self.game;
                 playerstatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
                 
-                if (isVisitingTeam)
+                if (self.game.water_polo_game.visiting_team_id.length > 0)
                     playerstatsController.visitor = YES;
                 else
                     playerstatsController.visitor = NO;
@@ -337,10 +334,10 @@
                 [playerstatsController viewWillAppear:YES];
             } else {
                 _goalieStatsContainer.hidden = NO;
-                goaliestatsController.game = game;
+                goaliestatsController.game = self.game;
                 goaliestatsController.player = [currentSettings.roster objectAtIndex:indexPath.row];
                 
-                if (isVisitingTeam)
+                if (self.game.water_polo_game.visiting_team_id.length > 0)
                     goaliestatsController.visitor = YES;
                 else
                     goaliestatsController.visitor = NO;
@@ -349,9 +346,9 @@
             }
         } else if ([visiblestats isEqualToString:@"Score"]) {
             _scoreStatsContainer.hidden = NO;
-            scorestatsController.game = game;
+            scorestatsController.game = self.game;
             
-            if (isVisitingTeam)
+            if (self.game.water_polo_game.visiting_team_id.length > 0)
                 scorestatsController.visitor = YES;
             else
                 scorestatsController.visitor = NO;
@@ -363,22 +360,22 @@
             }
             
             [scorestatsController viewWillAppear:YES];
-/*        } else {
-            _penaltyStatsContainer.hidden = NO;
-            penaltyController.game = game;
-            
-            if (isVisitingTeam)
-                penaltyController.visitor = YES;
-            else
-                penaltyController.visitor = NO;
-            
-            if (indexPath.row < penalties.count) {
-                penaltyController.penalty = [penalties objectAtIndex:indexPath.row];
-            } else {
-                penaltyController.penalty = nil;
-            }
-            
-            [penaltyController viewWillAppear:YES]; */
+            /*        } else {
+             _penaltyStatsContainer.hidden = NO;
+             penaltyController.game = game;
+             
+             if (isVisitingTeam)
+             penaltyController.visitor = YES;
+             else
+             penaltyController.visitor = NO;
+             
+             if (indexPath.row < penalties.count) {
+             penaltyController.penalty = [penalties objectAtIndex:indexPath.row];
+             } else {
+             penaltyController.penalty = nil;
+             }
+             
+             [penaltyController viewWillAppear:YES]; */
         }
     } else {
         if ([visiblestats isEqualToString:@"Stats"])
@@ -397,7 +394,7 @@
             }
         }
     }
- 
+    
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

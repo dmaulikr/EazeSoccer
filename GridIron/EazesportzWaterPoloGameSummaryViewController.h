@@ -54,4 +54,5 @@
 - (IBAction)saveBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
 - (IBAction)refreshBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *statsBarButton;
 @end

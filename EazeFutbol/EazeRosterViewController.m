@@ -34,7 +34,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRosterData:) name:@"RosterChangedNotification" object:nil];
 }
 
 - (void)dealloc {
@@ -54,6 +53,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotRosterData:) name:@"RosterChangedNotification" object:nil];
     
     if ([currentSettings isSiteOwner]) {
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.coachesButton, self.addButton, self.refreshBarButton, nil];
@@ -62,6 +62,11 @@
     }
     
     self.navigationController.toolbarHidden = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(BOOL)shouldAutorotate {

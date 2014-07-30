@@ -232,7 +232,7 @@
                 [lacrosstats addObject:[[Lacrosstat alloc] initWithDictionary:[lacrosse_stats objectAtIndex:i]]];
             }
         } else if ([currentSettings.sport.name isEqualToString:@"Water Polo"]) {
-            NSArray *waterpolo_stats = [athleteDictionary objectForKey:@"waterpolostats"];
+            NSArray *waterpolo_stats = [athleteDictionary objectForKey:@"waterpolo_stats"];
             waterpolostats = [[NSMutableArray alloc] init];
             
             for (int i = 0; i < waterpolo_stats.count; i++) {

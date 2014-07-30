@@ -31,6 +31,21 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _minutesTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _secondsTextField.keyboardType =  UIKeyboardTypeNumberPad;
+    _homeScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorScoreTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _periodTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _homeTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorTimeOutsTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _homeOneExclusionNumberTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _homeOneExclusionTimeTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _homeTwoExclusionNumberTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _homeTwoExclusionTimeTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorOneExclusionNumberTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorOneExclusionTimeTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorTwoExclusionNumberTextField.keyboardType = UIKeyboardTypeNumberPad;
+    _visitorTwoExclusionTimeTextField.keyboardType = UIKeyboardTypeNumberPad;
 }
 
 - (void)didReceiveMemoryWarning
@@ -42,8 +57,14 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _homeImageView.image = [currentSettings.team getImage:@"tiny"];
-    _visitorImageView.image = [game opponentImage:@"tiny"];
+    if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"apptype"] isEqualToString:@"client"]) {
+        _homeImageView.image = [currentSettings.team getImage:@"tiny"];
+        _visitorImageView.image = [game opponentImage:@"tiny"];
+    } else {
+        _homeImageView.image = [currentSettings.team getImage:@"thumb"];
+        _visitorImageView.image = [game opponentImage:@"thumb"];
+    }
+    
     [_homeButton setTitle:currentSettings.team.mascot forState:UIControlStateNormal];
     [_visitorButton setTitle:game.opponent_mascot forState:UIControlStateNormal];
     _homeScoreTextField.text = [game.water_polo_game.waterpolo_home_score stringValue];
@@ -51,14 +72,14 @@
     _periodTextField.text = [game.period stringValue];
     _homeTimeOutsTextField.text = [game.water_polo_game.home_time_outs_left stringValue];
     _visitorTimeOutsTextField.text = [game.water_polo_game.visitor_time_outs_left stringValue];
-    _homeOneExclusionNumberTextField.text = [game.water_polo_game.exclusions objectAtIndex:0];
-    _homeOneExclusionTimeTextField.text = [game.water_polo_game.exclusions objectAtIndex:1];
-    _homeTwoExclusionNumberTextField.text = [game.water_polo_game.exclusions objectAtIndex:2];
-    _homeTwoExclusionTimeTextField.text = [game.water_polo_game.exclusions objectAtIndex:3];
-    _visitorOneExclusionNumberTextField.text = [game.water_polo_game.exclusions objectAtIndex:4];
-    _visitorOneExclusionTimeTextField.text = [game.water_polo_game.exclusions objectAtIndex:5];
-    _visitorTwoExclusionNumberTextField.text = [game.water_polo_game.exclusions objectAtIndex:6];
-    _visitorTwoExclusionTimeTextField.text = [game.water_polo_game.exclusions objectAtIndex:7];
+    _homeOneExclusionNumberTextField.text = [[game.water_polo_game.exclusions objectAtIndex:0] stringValue];
+    _homeOneExclusionTimeTextField.text = [[game.water_polo_game.exclusions objectAtIndex:1] stringValue];
+    _homeTwoExclusionNumberTextField.text = [[game.water_polo_game.exclusions objectAtIndex:2] stringValue];
+    _homeTwoExclusionTimeTextField.text = [[game.water_polo_game.exclusions objectAtIndex:3] stringValue];
+    _visitorOneExclusionNumberTextField.text = [[game.water_polo_game.exclusions objectAtIndex:4] stringValue];
+    _visitorOneExclusionTimeTextField.text = [[game.water_polo_game.exclusions objectAtIndex:5] stringValue];
+    _visitorTwoExclusionNumberTextField.text = [[game.water_polo_game.exclusions objectAtIndex:6] stringValue];
+    _visitorTwoExclusionTimeTextField.text = [[game.water_polo_game.exclusions objectAtIndex:7] stringValue];
     
     _homeSummaryLabel.text = currentSettings.team.mascot;
     _visitorSummaryLabel.text = game.opponent_mascot;
@@ -72,6 +93,42 @@
     _visitorPeriodThreeLabel.text = [game.water_polo_game.waterpolo_game_visitor_score_period3 stringValue];
     _visitorPeriodFourLabel.text = [game.water_polo_game.waterpolo_game_visitor_score_period4 stringValue];
     _visitorTotalLabel.text = [game.water_polo_game.waterpolo_visitor_score stringValue];
+    
+    NSArray *gametime = [game.currentgametime componentsSeparatedByString:@":"];
+    
+    if (gametime.count == 2) {
+        _minutesTextField.text = [gametime objectAtIndex:0];
+        _secondsTextField.text = [gametime objectAtIndex:1];
+    } else {
+        _minutesTextField.text = @"00";
+        _secondsTextField.text = @"00";
+    }
+    
+    [self textFieldConfiguration:_minutesTextField];
+    [self textFieldConfiguration:_secondsTextField];
+    [self textFieldConfiguration:_homeScoreTextField];
+    [self textFieldConfiguration:_secondsTextField];
+    [self textFieldConfiguration:_periodTextField];
+    [self textFieldConfiguration:_homeScoreTextField];
+    [self textFieldConfiguration:_visitorScoreTextField];
+    [self textFieldConfiguration:_homeOneExclusionTimeTextField];
+    [self textFieldConfiguration:_homeOneExclusionNumberTextField];
+    [self textFieldConfiguration:_homeTwoExclusionNumberTextField];
+    [self textFieldConfiguration:_homeTwoExclusionTimeTextField];
+    [self textFieldConfiguration:_visitorOneExclusionNumberTextField];
+    [self textFieldConfiguration:_visitorOneExclusionTimeTextField];
+    [self textFieldConfiguration:_visitorTwoExclusionNumberTextField];
+    [self textFieldConfiguration:_visitorTwoExclusionTimeTextField];
+    [self textFieldConfiguration:_homeTimeOutsTextField];
+    [self textFieldConfiguration:_visitorTimeOutsTextField];
+    
+    if ([currentSettings isSiteOwner]) {
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, self.saveBarButton, self.statsBarButton, nil];
+    } else{
+            self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, self.statsBarButton, nil];
+    }
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 #pragma mark - Navigation
@@ -92,11 +149,41 @@
 }
 
 - (IBAction)saveBarButtonClicked:(id)sender {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(waterPoloGameSaved:) name:@"WaterPoloGameStatNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(waterPoloGameSaved:) name:@"WaterPoloGameSavedNotification" object:nil];
+    game.water_polo_game.home_time_outs_left = [NSNumber numberWithInt:[_homeTimeOutsTextField.text intValue]];
+    game.water_polo_game.visitor_time_outs_left = [NSNumber numberWithInt:[_visitorTimeOutsTextField.text intValue]];
+    [game.water_polo_game.exclusions replaceObjectAtIndex:0 withObject:[NSNumber numberWithInt:[_homeOneExclusionNumberTextField.text intValue]]];
+    [game.water_polo_game.exclusions replaceObjectAtIndex:1 withObject:[NSNumber numberWithInt:[_homeOneExclusionTimeTextField.text intValue]]];
+    [game.water_polo_game.exclusions replaceObjectAtIndex:2 withObject:[NSNumber numberWithInt:[_homeTwoExclusionNumberTextField.text intValue]]];
+    [game.water_polo_game.exclusions replaceObjectAtIndex:3 withObject:[NSNumber numberWithInt:[_homeTwoExclusionTimeTextField.text intValue]]];
+    [game.water_polo_game.exclusions replaceObjectAtIndex:4 withObject:[NSNumber numberWithInt:[_visitorOneExclusionNumberTextField.text intValue]]];
+    [game.water_polo_game.exclusions replaceObjectAtIndex:5 withObject:[NSNumber numberWithInt:[_visitorOneExclusionTimeTextField.text intValue]]];
+    [game.water_polo_game.exclusions replaceObjectAtIndex:6 withObject:[NSNumber numberWithInt:[_visitorTwoExclusionNumberTextField.text intValue]]];
+    [game.water_polo_game.exclusions replaceObjectAtIndex:7 withObject:[NSNumber numberWithInt:[_visitorTwoExclusionTimeTextField.text intValue]]];
     [game.water_polo_game save];
 }
 
 - (void)waterPoloGameSaved:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        [self saveGameData];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error saving game data!" delegate:nil cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"WaterPoloGameSavedNotification" object:nil];
+}
+
+- (void)saveGameData {
+    game.currentgametime = [NSString stringWithFormat:@"%@:%@", _minutesTextField.text, _secondsTextField.text];
+    game.period = [NSNumber numberWithInt:[_periodTextField.text intValue]];
+    game.opponentscore = [NSNumber numberWithInt:[_visitorScoreTextField.text intValue]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gameSaved:) name:@"GameSavedNotification" object:nil];
+    [game saveGameschedule];
+}
+
+- (void)gameSaved:(NSNotification *)notification {
     if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"Game Saved!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
@@ -105,6 +192,8 @@
                                               otherButtonTitles:nil];
         [alert show];
     }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GameSavedNotification" object:nil];
 }
 
 - (IBAction)refreshBarButtonClicked:(id)sender {
