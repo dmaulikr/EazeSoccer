@@ -103,9 +103,9 @@
 
 - (void)saveSoccerGame {
     NSBundle *mainBundle = [NSBundle mainBundle];
-    NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/games/%@/soccer_games/%@.json?auth_token=%@",
-                           [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, gameschedule_id, soccer_game_id,
-                           currentSettings.user.authtoken];
+    NSString *urlstring = [NSString stringWithFormat:@"%@/sports/%@/teams/%@/gameschedules/%@/soccer_games/%@.json?auth_token=%@",
+                           [mainBundle objectForInfoDictionaryKey:@"SportzServerUrl"], currentSettings.sport.id, currentSettings.team.teamid,
+                           gameschedule_id, soccer_game_id, currentSettings.user.authtoken];
     NSURL *url = [NSURL URLWithString:urlstring];
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:socceroppsog, @"socceroppsog", socceroppck,
                                        @"socceroppck", socceroppsaves, @"socceroppsaves", socceroppfouls, @"socceroppfouls", visitorfouls, @"visitorfouls",
@@ -118,7 +118,8 @@
     
     NSError *jsonSerializationError = nil;
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[[NSDictionary alloc] initWithObjectsAndKeys:dictionary, @"soccer_game", nil]
+                                                       options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
