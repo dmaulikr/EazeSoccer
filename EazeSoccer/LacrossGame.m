@@ -42,6 +42,12 @@
 @synthesize visitor_1stperiod_timeouts;
 @synthesize visitor_2ndperiod_timeouts;
 
+@synthesize visitor_score_period1;
+@synthesize visitor_score_period2;
+@synthesize visitor_score_period3;
+@synthesize visitor_score_period4;
+@synthesize visitor_score_periodOT1;
+
 @synthesize gameschedule_id;
 @synthesize lacross_game_id;
 
@@ -97,6 +103,13 @@
         visitor_penaltytwo_minutes = [lacross_game_dictionary objectForKey:@"visitor_penaltytwo_minutes"];
         visitor_penaltytwo_seconds = [lacross_game_dictionary objectForKey:@"visitor_penaltytwo_seconds"];
         
+        visitor_score_period1 = [lacross_game_dictionary objectForKey:@"visitor_score_period1"];
+        visitor_score_period2 = [lacross_game_dictionary objectForKey:@"visitor_score_period2"];
+        visitor_score_period3 = [lacross_game_dictionary objectForKey:@"visitor_score_period3"];
+        visitor_score_period4 = [lacross_game_dictionary objectForKey:@"visitor_score_period4"];
+        visitor_score_periodOT1 = [lacross_game_dictionary objectForKey:@"visitor_score_periodOT1"];
+                                   
+        
         return self;
     } else {
         return nil;
@@ -111,18 +124,24 @@
                                         currentSettings.user.authtoken]];
     
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-                                        [home_penaltyone_number stringValue], @"homeonenumber",
-                                        [home_penaltyone_minutes stringValue], @"homeoneminutes",
-                                        [home_penaltyone_seconds stringValue], @"homeoneseconds",
-                                        [home_penaltytwo_number stringValue], @"hometwonumber",
-                                        [home_penaltytwo_minutes stringValue], @"hometwominutes",
-                                        [home_penaltytwo_seconds stringValue], @"hometwoseconds",
-                                        [visitor_penaltyone_number stringValue], @"visitoronenumber",
-                                        [visitor_penaltyone_minutes stringValue], @"visitoroneminutes",
-                                        [visitor_penaltyone_seconds stringValue], @"visitoroneseconds",
-                                        [visitor_penaltytwo_number stringValue], @"visitortwonumber",
-                                        [visitor_penaltytwo_minutes stringValue], @"visitortwominutes",
-                                        [visitor_penaltytwo_seconds stringValue], @"visitortwoseconds", nil];
+                                       [home_penaltyone_number stringValue], @"homeonenumber",
+                                       [home_penaltyone_minutes stringValue], @"homeoneminutes",
+                                       [home_penaltyone_seconds stringValue], @"homeoneseconds",
+                                       [home_penaltytwo_number stringValue], @"hometwonumber",
+                                       [home_penaltytwo_minutes stringValue], @"hometwominutes",
+                                       [home_penaltytwo_seconds stringValue], @"hometwoseconds",
+                                       [visitor_penaltyone_number stringValue], @"visitoronenumber",
+                                       [visitor_penaltyone_minutes stringValue], @"visitoroneminutes",
+                                       [visitor_penaltyone_seconds stringValue], @"visitoroneseconds",
+                                       [visitor_penaltytwo_number stringValue], @"visitortwonumber",
+                                       [visitor_penaltytwo_minutes stringValue], @"visitortwominutes",
+                                       [visitor_penaltytwo_seconds stringValue], @"visitortwoseconds",
+                                       [visitor_score_period1 stringValue], @"visitor_score_period1",
+                                       [visitor_score_period2 stringValue], @"visitor_score_period2",
+                                       [visitor_score_period3 stringValue], @"visitor_score_period3",
+                                       [visitor_score_period4 stringValue], @"visitor_score_period4",
+                                       [visitor_score_periodOT1 stringValue], @"visitor_score_periodOT1",
+                                       nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
     //    NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:dictionary, @"gameschedule", nil];
@@ -515,6 +534,11 @@
     
 Done:
     return scorelog;
+}
+
+- (NSNumber *)computeVisitorTotal {
+    return [NSNumber numberWithInt:([visitor_score_period1 intValue] + [visitor_score_period2 intValue] + [visitor_score_period3 intValue] +
+                                    [visitor_score_period4 intValue] + [visitor_score_periodOT1 intValue])];
 }
 
 @end

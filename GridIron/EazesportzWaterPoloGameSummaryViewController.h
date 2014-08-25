@@ -55,4 +55,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
 - (IBAction)refreshBarButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsBarButton;
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
+
 @end

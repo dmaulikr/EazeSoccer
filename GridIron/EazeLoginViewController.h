@@ -17,4 +17,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *loginMessageLabel;
 
 @property (nonatomic, assign) BOOL registeradmin;
+
+- (IBAction)forgotPasswordButtonClicked:(id)sender;
 @end

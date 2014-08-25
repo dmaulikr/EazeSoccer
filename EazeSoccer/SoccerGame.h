@@ -56,4 +56,6 @@
 
 - (NSArray *)getSoccerScores:(BOOL)home;
 
+- (NSNumber *)visitorScore;
+
 @end

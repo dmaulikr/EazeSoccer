@@ -17,12 +17,14 @@
 #import "UpdateSoccerTotalsViewController.h"
 #import "EazesportzSoccerScoreSheetViewController.h"
 
-@interface EazesportzSoccerGameSummaryViewController ()
+@interface EazesportzSoccerGameSummaryViewController () <UIAlertViewDelegate>
 
 @end
 
 @implementation EazesportzSoccerGameSummaryViewController {
     BOOL visitors;
+    
+    int period;
 }
 
 @synthesize game;
@@ -323,8 +325,17 @@
         return NO;
 }
 
-- (void)textFieldWillBeginEditing:(UITextField *)textFied {
-    textFied.text = @"";
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    textField.text = @"";
+    
+/*
+    if (textField == _visitorScoreTextField) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Select Period" message:nil delegate:self
+                                                  cancelButtonTitle:@"Cancel" otherButtonTitles:@"1", @"2", @"OT1", @"OT2", nil];
+        [alertView show];
+        [textField resignFirstResponder];
+    }
+*/
 }
 
 - (IBAction)saveBarButtonClicked:(id)sender {
@@ -383,5 +394,60 @@
 - (IBAction)visitorButtonClicked:(id)sender {
 //    visitors = YES;
 }
-            
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"1"]) {
+        period = 1;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"2"]) {
+        period = 2;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"OT1"]) {
+        period = 3;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"OT2"]) {
+        period = 4;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"Submit"]) {
+        NSNumber *score = [NSNumber numberWithInt:[[alertView textFieldAtIndex:0].text intValue]];
+        
+        switch (period) {
+            case 1:
+                game.soccer_game.soccergame_visitor_score_period1 = score;
+                _gameSummaryVisitorPeriodOneLabel.text = [score stringValue];
+                break;
+                
+            case 2:
+                game.soccer_game.soccergame_visitor_score_period2 = score;
+                _gameSummaryVisitorPeriodTwoLabel.text = [score stringValue];
+                break;
+                
+            case 3:
+                game.soccer_game.soccergame_visitor_score_periodOT1 = score;
+                _gameSummaryVisitorOT1Label.text = [score stringValue];
+                break;
+                
+            default:
+                game.soccer_game.soccergame_visitor_score_periodOT2 = score;
+                _gameSummaryVisitorOT2Label.text = [score stringValue];
+                break;
+                
+        }
+        
+        _visitorScoreTextField.text = [[game.soccer_game visitorScore] stringValue];
+//        _.text = _visitorScoreTextField.text;
+    }
+}
+
+- (void)displayPeriodScoreAlert {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Enter Score" message:nil delegate:self cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Submit", nil];
+    alertView.tag = 2;
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+    [alertView show];
+}
+
 @end

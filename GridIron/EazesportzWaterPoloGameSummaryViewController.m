@@ -10,11 +10,13 @@
 #import "EazesportzAppDelegate.h"
 #import "EazesportzWaterPoloStatsViewController.h"
 
-@interface EazesportzWaterPoloGameSummaryViewController ()
+@interface EazesportzWaterPoloGameSummaryViewController () <UIAlertViewDelegate>
 
 @end
 
-@implementation EazesportzWaterPoloGameSummaryViewController
+@implementation EazesportzWaterPoloGameSummaryViewController {
+    int period;
+}
 
 @synthesize game;
 
@@ -83,15 +85,21 @@
     
     _homeSummaryLabel.text = currentSettings.team.mascot;
     _visitorSummaryLabel.text = game.opponent_mascot;
+    
     _homePeriodOneLabel.text = [game.water_polo_game.waterpolo_game_home_score_period1 stringValue];
     _homePeriodTwoLabel.text = [game.water_polo_game.waterpolo_game_home_score_period2 stringValue];
     _homePeriodThreeLabel.text = [game.water_polo_game.waterpolo_game_home_score_period3 stringValue];
     _homePeriodFourLabel.text = [game.water_polo_game.waterpolo_game_home_score_period4 stringValue];
+    _homeOverTimeLabel.text = [game.water_polo_game.waterpolo_game_home_score_periodOT1 stringValue];
+    
     _homeTotalLabel.text = [game.water_polo_game.waterpolo_home_score stringValue];
+    
     _visitorPeriodOneLabel.text = [game.water_polo_game.waterpolo_game_visitor_score_period1 stringValue];
     _visitorPeriodTwoLabel.text = [game.water_polo_game.waterpolo_game_visitor_score_period2 stringValue];
     _visitorPeriodThreeLabel.text = [game.water_polo_game.waterpolo_game_visitor_score_period3 stringValue];
     _visitorPeriodFourLabel.text = [game.water_polo_game.waterpolo_game_visitor_score_period4 stringValue];
+    _visitorOverTimeLabel.text = [game.water_polo_game.waterpolo_game_visitor_score_periodOT1 stringValue];
+    
     _visitorTotalLabel.text = [game.water_polo_game.waterpolo_visitor_score stringValue];
     
     NSArray *gametime = [game.currentgametime componentsSeparatedByString:@":"];
@@ -247,8 +255,80 @@
         return NO;
 }
 
-- (void)textFieldWillBeginEditing:(UITextField *)textFied {
-    textFied.text = @"";
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    textField.text = @"";
+    
+    if (textField == _visitorScoreTextField) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Select Period" message:nil delegate:self
+                                 cancelButtonTitle:@"Cancel" otherButtonTitles:@"1", @"2", @"3", @"4", @"OT", nil];
+//        alertView.tag = 2;
+//        alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+//        [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+        [alertView show];
+        [textField resignFirstResponder];
+    }
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"1"]) {
+        period = 1;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"2"]) {
+        period = 2;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"3"]) {
+        period = 3;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"4"]) {
+        period = 4;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"OT1"]) {
+        period = 5;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"Submit"]) {
+        NSNumber *score = [NSNumber numberWithInt:[[alertView textFieldAtIndex:0].text intValue]];
+        
+        switch (period) {
+            case 1:
+                game.water_polo_game.waterpolo_game_visitor_score_period1 = score;
+                _visitorPeriodOneLabel.text = [score stringValue];
+                break;
+                
+            case 2:
+                game.water_polo_game.waterpolo_game_visitor_score_period2 = score;
+                _visitorPeriodTwoLabel.text = [score stringValue];
+                break;
+                
+            case 3:
+                game.water_polo_game.waterpolo_game_visitor_score_period3 = score;
+                _visitorPeriodThreeLabel.text = [score stringValue];
+                break;
+                
+            case 4:
+                game.water_polo_game.waterpolo_game_visitor_score_period4 = score;
+                _visitorPeriodFourLabel.text = [score stringValue];
+                break;
+                
+            default:
+                game.water_polo_game.waterpolo_game_visitor_score_periodOT1 = score;
+                _visitorOverTimeLabel.text = [score stringValue];
+        }
+        
+        _visitorScoreTextField.text = [[game.water_polo_game visitorScore] stringValue];
+        _visitorTotalLabel.text = _visitorScoreTextField.text;
+    }
+}
+
+- (void)displayPeriodScoreAlert {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Enter Score" message:nil delegate:self cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Submit", nil];
+    alertView.tag = 2;
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+    [alertView show];
 }
 
 @end

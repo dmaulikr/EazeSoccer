@@ -455,6 +455,8 @@
         [self performSegueWithIdentifier:@"GamePhotoSegue" sender:self];
     } else if ([title isEqualToString:@"Video"]) {
         [self performSegueWithIdentifier:@"GameVideoSegue" sender:self];
+    } else {
+        [super alertView:alertView clickedButtonAtIndex:buttonIndex];
     }
 }
 

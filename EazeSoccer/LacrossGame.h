@@ -41,6 +41,12 @@
 @property (nonatomic, strong) NSMutableArray *visitor_1stperiod_timeouts;
 @property (nonatomic, strong) NSMutableArray *visitor_2ndperiod_timeouts;
 
+@property (nonatomic, strong) NSNumber *visitor_score_period1;
+@property (nonatomic, strong) NSNumber *visitor_score_period2;
+@property (nonatomic, strong) NSNumber *visitor_score_period3;
+@property (nonatomic, strong) NSNumber *visitor_score_period4;
+@property (nonatomic, strong) NSNumber *visitor_score_periodOT1;
+
 @property (nonatomic, strong) NSString *gameschedule_id;
 @property (nonatomic, strong) NSString *lacross_game_id;
 
@@ -57,5 +63,6 @@
 - (NSArray *)getLacrosseScores:(BOOL)home;
 - (NSArray *)getLacrossePenalties:(BOOL)home;
 - (NSString *)findScoreLog:(NSString *)scorelogid;
+- (NSNumber *)computeVisitorTotal;
 
 @end

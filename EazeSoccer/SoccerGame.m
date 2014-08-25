@@ -109,7 +109,9 @@
     NSURL *url = [NSURL URLWithString:urlstring];
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:socceroppsog, @"socceroppsog", socceroppck,
                                        @"socceroppck", socceroppsaves, @"socceroppsaves", socceroppfouls, @"socceroppfouls", visitorfouls, @"visitorfouls",
-                                       visitoroffsides, @"visitoroffsides", nil];
+                                       visitoroffsides, @"visitoroffsides", soccergame_visitor_score_period1, @"visitor_score_period1",
+                                       soccergame_visitor_score_period2, @"visitor_score_period2", soccergame_visitor_score_periodOT1,
+                                       @"visitor_score_periodOT1", soccergame_visitor_score_periodOT2, @"visitor_score_periodOT2", nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"PUT"];
@@ -257,6 +259,11 @@
     [gamescoreings sortUsingDescriptors:descriptors];
     
     return gamescoreings;
+}
+
+- (NSNumber *)visitorScore {
+    return [NSNumber numberWithInt:([soccergame_visitor_score_period1 intValue] + [soccergame_visitor_score_period2 intValue] +
+                                    [soccergame_visitor_score_periodOT1 intValue] + [soccergame_visitor_score_periodOT2 intValue])];
 }
 
 @end

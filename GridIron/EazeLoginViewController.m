@@ -169,4 +169,8 @@
     [super touchesBegan:touches withEvent:event];
 }
 
+- (IBAction)forgotPasswordButtonClicked:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/users/password/new", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"SecureSportzServerUrl"]]]];
+}
+
 @end

@@ -42,10 +42,12 @@
 @synthesize waterpolo_game_home_score_period2;
 @synthesize waterpolo_game_home_score_period3;
 @synthesize waterpolo_game_home_score_period4;
+@synthesize waterpolo_game_home_score_periodOT1;
 @synthesize waterpolo_game_visitor_score_period1;
 @synthesize waterpolo_game_visitor_score_period2;
 @synthesize waterpolo_game_visitor_score_period3;
 @synthesize waterpolo_game_visitor_score_period4;
+@synthesize waterpolo_game_visitor_score_periodOT1;
 
 @synthesize water_polo_game_id;
 @synthesize gameschedule_id;
@@ -74,12 +76,14 @@
         waterpolo_visitor_score = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score"];
         waterpolo_game_home_score_period1 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_period1"];
         waterpolo_game_home_score_period2 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_period2"];
-        waterpolo_game_home_score_period3 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_periodOT1"];
-        waterpolo_game_home_score_period4 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_periodOT2"];
+        waterpolo_game_home_score_period3 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_period3"];
+        waterpolo_game_home_score_period4 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_home_score_period4"];
+        waterpolo_game_home_score_periodOT1 = [waterpolo_game_dictionary objectForKey:@"waterpolo_game_home_score_periodOT1"];
         waterpolo_game_visitor_score_period1 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_period1"];
         waterpolo_game_visitor_score_period2 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_period2"];
-        waterpolo_game_visitor_score_period3 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_periodOT1"];
-        waterpolo_game_visitor_score_period4 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_periodOT2"];
+        waterpolo_game_visitor_score_period3 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_period3"];
+        waterpolo_game_visitor_score_period4 = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_visitor_score_period4"];
+        waterpolo_game_visitor_score_periodOT1 = [waterpolo_game_dictionary objectForKey:@"waterpolo_game_visitor_score_periodOT1"];
         waterpolo_home_shots = [waterpolo_game_dictionary  objectForKey:@"waterpolo_home_shots"];
         waterpolo_visitor_shots = [waterpolo_game_dictionary  objectForKey:@"waterpolo_visitor_shots"];
         waterpolo_home_saves = [waterpolo_game_dictionary  objectForKey:@"waterpolo_game_homesaves"];
@@ -109,6 +113,11 @@
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:waterpolo_oppsog, @"waterpolo_oppsog", waterpolo_oppassists,
                                        @"waterpolo_oppassists", waterpolo_oppsaves, @"waterpolo_oppsaves", waterpolo_oppfouls, @"waterpolo_oppfouls",
                                        home_time_outs_left, @"home_time_outs_left", visitor_time_outs_left, @"visitor_time_outs_left",
+                                       [waterpolo_game_visitor_score_period1 stringValue], @"visitor_score_period1",
+                                       [waterpolo_game_visitor_score_period2 stringValue], @"visitor_score_period2",
+                                       [waterpolo_game_visitor_score_period3 stringValue], @"visitor_score_period3",
+                                       [waterpolo_game_visitor_score_period4 stringValue], @"visitor_score_period4",
+                                       [waterpolo_game_visitor_score_periodOT1 stringValue], @"visitor_score_periodOT1",
                                        exclusions, @"exclusions", nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -116,7 +125,7 @@
     
     NSError *jsonSerializationError = nil;
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonSerializationError];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[[NSDictionary  alloc] initWithObjectsAndKeys:dictionary, @"water_polo_game", nil] options:0 error:&jsonSerializationError];
     
     if (!jsonSerializationError) {
         NSString *serJson = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -161,6 +170,12 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameSavedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
     }
+}
+
+- (NSNumber *)visitorScore {
+    return [NSNumber numberWithInt:([waterpolo_game_visitor_score_period1 intValue] + [waterpolo_game_visitor_score_period2 intValue] +
+                                    [waterpolo_game_visitor_score_period3 intValue] + [waterpolo_game_visitor_score_period4 intValue] +
+                                    [waterpolo_game_visitor_score_periodOT1 intValue])];
 }
 
 @end

@@ -37,10 +37,13 @@
 @property (nonatomic, strong) NSNumber *waterpolo_game_home_score_period2;
 @property (nonatomic, strong) NSNumber *waterpolo_game_home_score_period3;
 @property (nonatomic, strong) NSNumber *waterpolo_game_home_score_period4;
+@property (nonatomic, strong) NSNumber *waterpolo_game_home_score_periodOT1;
+
 @property (nonatomic, strong) NSNumber *waterpolo_game_visitor_score_period1;
 @property (nonatomic, strong) NSNumber *waterpolo_game_visitor_score_period2;
 @property (nonatomic, strong) NSNumber *waterpolo_game_visitor_score_period3;
 @property (nonatomic, strong) NSNumber *waterpolo_game_visitor_score_period4;
+@property (nonatomic, strong) NSNumber *waterpolo_game_visitor_score_periodOT1;
 
 @property (nonatomic, strong) NSString *water_polo_game_id;
 @property (nonatomic, strong) NSString *gameschedule_id;
@@ -52,5 +55,7 @@
 - (id)initWithDictionary:(NSDictionary *)waterpolo_game_dictionary;
 
 - (void)save;
+
+- (NSNumber *)visitorScore;
 
 @end

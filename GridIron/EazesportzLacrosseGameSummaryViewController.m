@@ -15,13 +15,14 @@
 #import "EazesportzLacrosseScoresheetViewController.h"
 #import "EazesportzGetGame.h"
 
-@interface EazesportzLacrosseGameSummaryViewController ()
+@interface EazesportzLacrosseGameSummaryViewController () <UIAlertViewDelegate>
 
 @end
 
 @implementation EazesportzLacrosseGameSummaryViewController {
     NSIndexPath *deleteIndexPath;
     EazesportzGetGame *getgame;
+    int period;
     
     BOOL home;
 }
@@ -131,19 +132,27 @@
     
     _summaryHomeTotalsScore.text = [NSString stringWithFormat:@"%d", sum];
     
+/*
     _summaryVisitorFirstPeriodScore.text = [[game.lacrosse_visitor_score_by_period objectAtIndex:0] stringValue];
     _summaryVisitorSecondPeriodScore.text = [[game.lacrosse_visitor_score_by_period objectAtIndex:1] stringValue];
     _summaryVisitorThirdPeriodScore.text = [[game.lacrosse_visitor_score_by_period objectAtIndex:2] stringValue];
     _summaryVisitorFourthPeriodScore.text = [[game.lacrosse_visitor_score_by_period objectAtIndex:3] stringValue];
     _summaryVisitorOvertimeScore.text = [[game.lacrosse_visitor_score_by_period objectAtIndex:4] stringValue];
+ */
+    _summaryVisitorFirstPeriodScore.text = [game.lacross_game.visitor_score_period1 stringValue];
+    _summaryVisitorSecondPeriodScore.text = [game.lacross_game.visitor_score_period2 stringValue];
+    _summaryVisitorThirdPeriodScore.text = [game.lacross_game.visitor_score_period3 stringValue];
+    _summaryVisitorFourthPeriodScore.text = [game.lacross_game.visitor_score_period4 stringValue];
+    _summaryVisitorOvertimeScore.text = [game.lacross_game.visitor_score_periodOT1 stringValue];
     
+/*
     sum = 0;
     
     for (int i = 0; i < 5; i++) {
         sum += [[game.lacrosse_visitor_score_by_period objectAtIndex:i] intValue];
     }
-    
-    _summaryVisitorTotalScore.text = [NSString stringWithFormat:@"%d", sum];
+*/
+    _summaryVisitorTotalScore.text = [[game.lacross_game computeVisitorTotal] stringValue];
     
     _homeImageView.image = [currentSettings.team getImage:@"tiny"];
     _visitorImageView.image = [game opponentImage:@"tiny"];
@@ -289,6 +298,76 @@
     }
     
     return result;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if (textField == _visitorTextField) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Select Period" message:nil delegate:self
+                                                  cancelButtonTitle:@"Cancel" otherButtonTitles:@"1", @"2", @"3", @"4", @"OT", nil];
+        [alertView show];
+        [textField resignFirstResponder];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    
+    if ([title isEqualToString:@"1"]) {
+        period = 1;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"2"]) {
+        period = 2;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"3"]) {
+        period = 3;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"4"]) {
+        period = 4;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"OT1"]) {
+        period = 5;
+        [self displayPeriodScoreAlert];
+    } else if ([title isEqualToString:@"Submit"]) {
+        NSNumber *score = [NSNumber numberWithInt:[[alertView textFieldAtIndex:0].text intValue]];
+        
+        switch (period) {
+            case 1:
+                game.lacross_game.visitor_score_period1 = score;
+                _summaryVisitorFirstPeriodScore.text = [score stringValue];
+                break;
+                
+            case 2:
+                game.lacross_game.visitor_score_period2 = score;
+                _summaryVisitorSecondPeriodScore.text = [score stringValue];
+                break;
+                
+            case 3:
+                game.lacross_game.visitor_score_period3 = score;
+                _summaryVisitorThirdPeriodScore.text = [score stringValue];
+                break;
+                
+            case 4:
+                game.lacross_game.visitor_score_period4 = score;
+                _summaryVisitorFourthPeriodScore.text = [score stringValue];
+                break;
+                
+            default:
+                game.lacross_game.visitor_score_periodOT1 = score;
+                _summaryVisitorOvertimeScore.text = [score stringValue];
+        }
+        
+        _summaryVisitorTotalScore.text = [[game.lacross_game computeVisitorTotal] stringValue];
+        _visitorTextField.text = _summaryVisitorTotalScore.text;
+    }
+}
+
+- (void)displayPeriodScoreAlert {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Enter Score" message:nil delegate:self cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Submit", nil];
+    alertView.tag = 2;
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+    [alertView show];
 }
 
 @end

@@ -78,6 +78,8 @@
 		2B239A3A1930E6F10064ABD2 /* EazesportzRetrieveVisitingTeams.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B239A371930E6F10064ABD2 /* EazesportzRetrieveVisitingTeams.m */; };
 		2B27BDE6196F356200D0A617 /* SoccerSubs.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B27BDE5196F356200D0A617 /* SoccerSubs.m */; };
 		2B27BDE7196F356200D0A617 /* SoccerSubs.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B27BDE5196F356200D0A617 /* SoccerSubs.m */; };
+		2B27E54419A50DAB005196F0 /* HockeyGame.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B27E54319A50DAB005196F0 /* HockeyGame.m */; };
+		2B27E54519A50DAB005196F0 /* HockeyGame.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B27E54319A50DAB005196F0 /* HockeyGame.m */; };
 		2B29E013198829E700C77A4C /* EazesportzWaterPoloGameSummaryStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B29E012198829E700C77A4C /* EazesportzWaterPoloGameSummaryStatsViewController.m */; };
 		2B29E014198829E700C77A4C /* EazesportzWaterPoloGameSummaryStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B29E012198829E700C77A4C /* EazesportzWaterPoloGameSummaryStatsViewController.m */; };
 		2B2A1C88193CBB410002977A /* EazesportzLacrosseGoalieStatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2A1C87193CBB410002977A /* EazesportzLacrosseGoalieStatsViewController.m */; };
@@ -2154,6 +2156,8 @@
 		2B239A371930E6F10064ABD2 /* EazesportzRetrieveVisitingTeams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzRetrieveVisitingTeams.m; sourceTree = "<group>"; };
 		2B27BDE4196F356100D0A617 /* SoccerSubs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoccerSubs.h; sourceTree = "<group>"; };
 		2B27BDE5196F356200D0A617 /* SoccerSubs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoccerSubs.m; sourceTree = "<group>"; };
+		2B27E54219A50DAB005196F0 /* HockeyGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HockeyGame.h; sourceTree = "<group>"; };
+		2B27E54319A50DAB005196F0 /* HockeyGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HockeyGame.m; sourceTree = "<group>"; };
 		2B29E011198829E700C77A4C /* EazesportzWaterPoloGameSummaryStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzWaterPoloGameSummaryStatsViewController.h; sourceTree = "<group>"; };
 		2B29E012198829E700C77A4C /* EazesportzWaterPoloGameSummaryStatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EazesportzWaterPoloGameSummaryStatsViewController.m; sourceTree = "<group>"; };
 		2B2A1C86193CBB410002977A /* EazesportzLacrosseGoalieStatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EazesportzLacrosseGoalieStatsViewController.h; sourceTree = "<group>"; };
@@ -3125,6 +3129,7 @@
 		2B171DD518E74C41006A9503 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				2B27E54119A50D7B005196F0 /* Hockey */,
 				B4F988801820B3B80093EF7E /* Alert.h */,
 				B4F988811820B3B80093EF7E /* Alert.m */,
 				B4F988921820BCCF0093EF7E /* Athlete.h */,
@@ -3205,6 +3210,15 @@
 				2B29E012198829E700C77A4C /* EazesportzWaterPoloGameSummaryStatsViewController.m */,
 			);
 			name = "Water Polo";
+			sourceTree = "<group>";
+		};
+		2B27E54119A50D7B005196F0 /* Hockey */ = {
+			isa = PBXGroup;
+			children = (
+				2B27E54219A50DAB005196F0 /* HockeyGame.h */,
+				2B27E54319A50DAB005196F0 /* HockeyGame.m */,
+			);
+			name = Hockey;
 			sourceTree = "<group>";
 		};
 		2B51AB69192F031D00F75620 /* Lacrosse */ = {
@@ -4902,6 +4916,7 @@
 				2BA89329193C31BE007942D2 /* EazesportzLacrossePlayerStatsViewController.m in Sources */,
 				2BB9F27D18F4CAA200D70955 /* EazesportzFootballPunterTotalsViewController.m in Sources */,
 				2BB9F27E18F4CAA200D70955 /* EazesportzFootballRushingTotalsViewController.h in Sources */,
+				2B27E54519A50DAB005196F0 /* HockeyGame.m in Sources */,
 				2BB9F27F18F4CAA200D70955 /* EazesportzFootballRushingTotalsViewController.m in Sources */,
 				2BB9F28018F4CAA200D70955 /* EazesportzFootballReturnerTotalsViewController.h in Sources */,
 				2BB9F28118F4CAA200D70955 /* EazesportzFootballReturnerTotalsViewController.m in Sources */,
@@ -5720,6 +5735,7 @@
 				2B2D5C7A18FF3B300047F6D6 /* EazeRosterViewController.h in Sources */,
 				2B2D5C7B18FF3B300047F6D6 /* EazeRosterViewController.m in Sources */,
 				2BF3EF6C197B580500CC3288 /* WaterPoloScoring.m in Sources */,
+				2B27E54419A50DAB005196F0 /* HockeyGame.m in Sources */,
 				2B677A0818FC97B5002F1C0A /* FindSiteViewController.h in Sources */,
 				2B677A0918FC97B5002F1C0A /* FindSiteViewController.m in Sources */,
 				2B677A0A18FC97B5002F1C0A /* SelectSiteTableViewController.h in Sources */,
@@ -6832,7 +6848,7 @@
 				INFOPLIST_FILE = "GridIron/GridIron-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = GameTracker;
-				PROVISIONING_PROFILE = "047EC710-7C57-4541-9CCD-6E709A264376";
+				PROVISIONING_PROFILE = "26066c61-efcf-4b81-bd75-13de13b2278a";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -6859,7 +6875,7 @@
 				INFOPLIST_FILE = "GridIron/GridIron-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = GameTracker;
-				PROVISIONING_PROFILE = "047EC710-7C57-4541-9CCD-6E709A264376";
+				PROVISIONING_PROFILE = "26066c61-efcf-4b81-bd75-13de13b2278a";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -7003,8 +7019,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Gilbert Zaldivar (7Q875BPG27)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilbert Zaldivar (7Q875BPG27)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Users/Gil/IOS,
 					"Development/aws-ios-sdk-1.7.1",
@@ -7020,7 +7036,7 @@
 				INFOPLIST_FILE = "Football/Football-Info.plist";
 				PRIVATE_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PrivateHeaders";
 				PRODUCT_NAME = GameTrackerHD;
-				PROVISIONING_PROFILE = "4E3D1288-8D82-44C3-913B-F0E1B7C2467F";
+				PROVISIONING_PROFILE = "3af4a060-a47d-476a-a384-faaf4c63a8b4";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Headers";
 				WRAPPER_EXTENSION = app;
 			};
@@ -7033,8 +7049,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Gilbert Zaldivar (7Q875BPG27)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilbert Zaldivar (7Q875BPG27)";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Users/Gil/IOS,
 					"Development/aws-ios-sdk-1.7.1",
@@ -7045,7 +7061,7 @@
 				INFOPLIST_FILE = "Football/Football-Info.plist";
 				PRIVATE_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PrivateHeaders";
 				PRODUCT_NAME = GameTrackerHD;
-				PROVISIONING_PROFILE = "4E3D1288-8D82-44C3-913B-F0E1B7C2467F";
+				PROVISIONING_PROFILE = "3af4a060-a47d-476a-a384-faaf4c63a8b4";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/Headers";
 				WRAPPER_EXTENSION = app;
 			};
