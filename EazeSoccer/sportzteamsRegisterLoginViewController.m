@@ -41,7 +41,6 @@
     self.view.backgroundColor = [UIColor clearColor];
     _siteLabel.numberOfLines = 0;
     [_siteLabel setText:sport.sitename];
-    _registerView.layer.cornerRadius = 6;
     _emailText.keyboardType = UIKeyboardTypeEmailAddress;
 }
 
@@ -56,6 +55,14 @@
     
     if ((sport.id.length == 0) && (!admin)) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No sport loaded. Creating a login without loading a sport will make you administrator of a new site." delegate:self cancelButtonTitle:@"Create Admin" otherButtonTitles:@"Cancel Admin", nil];
+        [alert show];
+    }
+    
+    if (admin) {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"You are creating a GameTracker site.\n You will be the administrator of this site.\n If you did not intend to become an administrator, click Cancel!" delegate:self
+                                              cancelButtonTitle:@"Cancel Site" otherButtonTitles:@"Create Site", nil];
         [alert show];
     }
 }
@@ -218,6 +225,8 @@
         [self.navigationController popViewControllerAnimated:YES];
     } else if ([title isEqualToString:@"Create Admin"]) {
         admin = YES;
+    } else if (([title isEqualToString:@"Cancel Site"]) || ([title isEqualToString:@"Cancel Admin"])) {
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -227,4 +236,6 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: urlString]];
 }
 
+- (IBAction)gobackButtonClicked:(id)sender {
+}
 @end

@@ -21,7 +21,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *confirmText;
 - (IBAction)createLoginButtonClicked:(id)sender;
 - (IBAction)learnmoreButtonClicked:(id)sender;
-@property (weak, nonatomic) IBOutlet UIView *registerView;
 
 
 @end

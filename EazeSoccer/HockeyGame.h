@@ -13,8 +13,7 @@
 @property (nonatomic, strong) NSNumber *hockey_oppsog;
 @property (nonatomic, strong) NSNumber *hockey_oppassists;
 @property (nonatomic, strong) NSNumber *hockey_oppsaves;
-@property (nonatomic, strong) NSNumber *hockey_oppfouls;
-@property (nonatomic, strong) NSMutableArray *exclusions;
+@property (nonatomic, strong) NSMutableArray *penalties;
 @property (nonatomic, strong) NSNumber *home_time_outs_left;
 @property (nonatomic, strong) NSNumber *visitor_time_outs_left;
 
@@ -35,10 +34,10 @@
 @property (nonatomic, strong) NSNumber *hockey_game_home_score_period2;
 @property (nonatomic, strong) NSNumber *hockey_game_home_score_period3;
 @property (nonatomic, strong) NSNumber *hockey_game_home_score_overtime;
-@property (nonatomic, strong) NSNumber *hockey_game_visitor_score_period1;
-@property (nonatomic, strong) NSNumber *hockey_game_visitor_score_period2;
-@property (nonatomic, strong) NSNumber *hockey_game_visitor_score_period3;
-@property (nonatomic, strong) NSNumber *hockey_game_visitor_score_overtime;
+@property (nonatomic, strong) NSNumber *visitor_score_period1;
+@property (nonatomic, strong) NSNumber *visitor_score_period2;
+@property (nonatomic, strong) NSNumber *visitor_score_period3;
+@property (nonatomic, strong) NSNumber *visitor_score_overtime;
 
 @property (nonatomic, strong) NSString *hockey_game_id;
 @property (nonatomic, strong) NSString *gameschedule_id;
