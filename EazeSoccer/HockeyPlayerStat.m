@@ -28,8 +28,15 @@
 
 - (id)init {
     if (self = [super init]) {
-        shots = 0;
+        shots = [NSNumber numberWithInt:0];
+        plusminus = [NSNumber numberWithInt:0];
+        faceofflost = [NSNumber numberWithInt:0];
+        faceoffwon = [NSNumber numberWithInt:0];
+        blockedshots = [NSNumber numberWithInt:0];
+        hits = [NSNumber numberWithInt:0];
         period = [NSNumber numberWithInt:1];
+        
+        timeonice = @"00:00";
         
         athlete_id = @"";
         hockey_playerstat_id = @"";
@@ -43,7 +50,7 @@
 - (id)initWithDictionary:(NSDictionary *)hockey_playerstat_dictionary {
     if (self == [super init]) {
         hockey_playerstat_id = [hockey_playerstat_dictionary objectForKey:@"hockey_playerstat_id"];
-        hockey_playerstat_id = [hockey_playerstat_dictionary objectForKey:@"hockey_playerstat_id"];
+        hockey_stat_id = [hockey_playerstat_dictionary objectForKey:@"hockey_stat_id"];
         athlete_id = [hockey_playerstat_dictionary objectForKey:@"athlete_id"];
         
         shots = [hockey_playerstat_dictionary objectForKey:@"shots"];

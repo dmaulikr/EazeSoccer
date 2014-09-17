@@ -15,8 +15,9 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *statsTableView;
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBarButton;
-- (IBAction)saveBarButtonClicked:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshBarButton;
+- (IBAction)refreshBarButtonClicked:(id)sender;
+
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *statsBarButton;
 - (IBAction)scoreButtonClicked:(id)sender;
 - (IBAction)goalieButtonClicked:(id)sender;

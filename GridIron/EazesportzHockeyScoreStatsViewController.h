@@ -26,5 +26,6 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *periodSegmentedControl;
 - (IBAction)periodSegmentedControlClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIPickerView *playerPicker;
+@property (weak, nonatomic) IBOutlet UITextField *goaltypeTextField;
 
 @end

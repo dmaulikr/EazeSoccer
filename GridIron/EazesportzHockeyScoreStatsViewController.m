@@ -15,8 +15,10 @@
 @end
 
 @implementation EazesportzHockeyScoreStatsViewController {
-    BOOL scoreplayer;
+    NSString *pickertype;
     Athlete *assistplayer, *player;
+    
+    NSArray *goaltypes, *assiststypes;
 }
 
 @synthesize game;
@@ -35,6 +37,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    goaltypes = [[NSMutableArray alloc] initWithObjects:@"Even Strength", @"Power Play", @"Short Handed", nil];
+    assiststypes = [[NSMutableArray alloc] initWithObjects:@"Even Strength Assist", @"Power Play Assist", @"Short Handed Assist", nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -45,7 +50,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    scoreplayer = YES;
+    pickertype = @"Player";
     _playerPicker.hidden = YES;
     _playerPicker.dataSource = self;
     _playerPicker.delegate = self;
@@ -56,6 +61,7 @@
         player = [currentSettings findAthlete:score.athlete_id];
         _playerTextField.text = player.logname;
         _assistTextField.text = [[currentSettings findAthlete:score.assist] logname];
+        _goaltypeTextField.text = score.goaltype;
         
         NSArray *timearray = [score.gametime componentsSeparatedByString:@":"];
         
@@ -77,6 +83,7 @@
         _deleteButton.hidden = YES;
         _deleteButton.enabled = NO;
         assistplayer = player = nil;
+        _goaltypeTextField.text = @"";
     }
 }
 
@@ -133,21 +140,29 @@
 
 // Method to define the numberOfRows in a component using the array.
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent :(NSInteger)component {
-    return currentSettings.roster.count;
+    if ([pickertype isEqualToString:@"Goal Type"])
+        return goaltypes.count;
+    else
+        return currentSettings.roster.count;
 }
 
 // Method to show the title of row for a component.
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [[currentSettings.roster objectAtIndex:row] numberLogname];
+    if ([pickertype isEqualToString:@"Goal Type"])
+        return [goaltypes objectAtIndex:row];
+    else
+        return [[currentSettings.roster objectAtIndex:row] numberLogname];
 }
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    if (scoreplayer) {
+    if ([pickertype isEqualToString:@"Player"]) {
         player = [currentSettings.roster objectAtIndex:row];
         _playerTextField.text = player.numberLogname;
-    } else {
+    } else if ([pickertype isEqualToString:@"Assist"]) {
         assistplayer = [currentSettings.roster objectAtIndex:row];
         _assistTextField.text = player.numberLogname;
+    } else {
+        _goaltypeTextField.text = [goaltypes objectAtIndex:row];
     }
     
     _playerPicker.hidden = YES;
@@ -155,11 +170,13 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     if (textField == _playerTextField)
-        scoreplayer = YES;
+        pickertype = @"Player";
     else if (textField == _assistTextField)
-        scoreplayer = NO;
+        pickertype = @"Assist";
+    else if (textField == _goaltypeTextField)
+        pickertype = @"Goal Type";
     
-    if ((textField == _playerTextField) || (textField == _assistTextField)) {
+    if ((textField == _playerTextField) || (textField == _assistTextField) || (textField == _goaltypeTextField)) {
         [_playerPicker reloadAllComponents];
         _playerPicker.hidden = NO;
         [textField resignFirstResponder];

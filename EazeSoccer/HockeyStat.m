@@ -300,13 +300,15 @@
 }
 
 - (NSNumber *)getTotalPenaltyMinutes {
-    int minutes = 0;
+    int minutes = 0, seconds = 0;
     
-    for (int i = 0; i < penalties.count; i++) {
-        minutes += [[[penalties objectAtIndex:i] penaltytime] intValue];
+    for (int i = 0; i < penalty_stats.count; i++) {
+        NSArray *timearray = [[[penalty_stats objectAtIndex:i] penaltytime] componentsSeparatedByString:@":"];
+        minutes += [timearray[0] intValue];
+        seconds += [timearray[1] intValue];
     }
     
-    return [NSNumber numberWithInt:minutes];
+    return [NSNumber numberWithInt:(minutes + seconds/60)];
 }
 
 - (NSNumber *)gettotalFaceOffsWon {

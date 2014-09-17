@@ -60,7 +60,7 @@
     if (penaltystat) {
         player = [currentSettings findAthlete:penaltystat.athlete_id];
         _playerTextField.text = player.logname;
-        _penaltyTextField.text = [game.hockey_game.hockey_penalties objectForKey:penaltystat.infraction];
+        _penaltyTextField.text = [game.hockey_game.hockey_penalties allKeysForObject:penaltystat.infraction][0];
         
         NSArray *timearray = [penaltystat.gametime componentsSeparatedByString:@":"];
         

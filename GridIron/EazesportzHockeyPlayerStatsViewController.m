@@ -48,7 +48,7 @@
     
     stats = [player findHockeyStat:game];
     _periodSegmentedControl.selectedSegmentIndex = [game.period intValue];
-    playerstats = [stats findPlayerStat:[NSNumber numberWithInt:[game.period intValue] + 1]];
+    playerstats = [stats findPlayerStat:[NSNumber numberWithInt:[game.period intValue]]];
     _shotsTextField.text = [playerstats.shots stringValue];
     _blockedShotsTextField.text = [playerstats.blockedshots stringValue];
     _plusminusTextField.text = [playerstats.plusminus stringValue];

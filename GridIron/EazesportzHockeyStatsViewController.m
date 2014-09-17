@@ -17,6 +17,8 @@
 #import "EazesportzHockeyScoreStatsViewController.h"
 #import "EazesportzHockeyGoalStatsViewController.h"
 #import "EazesportzHockeyPenaltyStatsViewController.h"
+#import "EazesportzRetrievePlayers.h"
+#import "EazesportzHockeyTotalsViewController.h"
 
 @interface EazesportzHockeyStatsViewController () <UIAlertViewDelegate>
 
@@ -66,7 +68,7 @@
     _penaltyContainer.hidden = YES;
     
     if ([currentSettings isSiteOwner]) {
-        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.saveBarButton, self.statsBarButton, nil];
+        self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.refreshBarButton, self.statsBarButton, nil];
     } else{
         self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.statsBarButton, nil];
     }
@@ -106,6 +108,15 @@
         goalieStatsController = segue.destinationViewController;
     } else if ([segue.identifier isEqualToString:@"PenaltyStatsSegue"]) {
         penaltyStatsController = segue.destinationViewController;
+    } else if ([segue.identifier isEqualToString:@"HockeyTotalsSegue"]) {
+        EazesportzHockeyTotalsViewController *destController = segue.destinationViewController;
+        NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
+        destController.game = game;
+        
+        if ([visiblestats isEqualToString:@"Stats"])
+            destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+        else
+            destController.player = [currentSettings findAthlete:[[goalies objectAtIndex:indexPath.row] athlete_id]];
     }
 }
 
@@ -121,16 +132,12 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ([visiblestats isEqualToString:@"Goalie"]) {
-        if (section == 0)
-            return currentSettings.roster.count;
-        else {
-            goalies = [[NSMutableArray alloc] init];
-            
-            for (int i = 0; i < currentSettings.roster.count; i++) {
-                Athlete *aplayer = [currentSettings.roster objectAtIndex:i];
-                if ([aplayer isHockeyGoalie]) {
-                    [goalies addObject:aplayer];
-                }
+        goalies = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            Athlete *aplayer = [currentSettings.roster objectAtIndex:i];
+            if ([aplayer isHockeyGoalie]) {
+                [goalies addObject:aplayer];
             }
         }
         
@@ -361,7 +368,7 @@
             [playerStatsController viewWillAppear:YES];
         }
     } else {
-        if ([visiblestats isEqualToString:@"Goalie"])
+        if (([visiblestats isEqualToString:@"Goalie"]) || ([visiblestats isEqualToString:@"Stats"]))
             [self performSegueWithIdentifier:@"HockeyTotalsSegue" sender:self];
         else if ([visiblestats isEqualToString:@"Scoring"]) {
             HockeyScoring *score = [scorings objectAtIndex:indexPath.row];
@@ -472,9 +479,6 @@
     }
 }
 
-- (IBAction)saveBarButtonClicked:(id)sender {
-}
-
 - (IBAction)scoreButtonClicked:(id)sender {
     visiblestats = @"Scoring";
     [_statsTableView reloadData];
@@ -518,6 +522,20 @@
 - (IBAction)penaltiesButtonClicked:(id)sender {
     visiblestats = @"Penalties";
     [_statsTableView reloadData];
+}
+
+- (IBAction)refreshBarButtonClicked:(id)sender {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statsRetrieved:) name:@"RosterChangedNotification" object:nil];
+    [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid Token:currentSettings.user.authtoken];
+}
+
+- (void)statsRetrieved:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        [_statsTableView reloadData];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error updating stats" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 @end
