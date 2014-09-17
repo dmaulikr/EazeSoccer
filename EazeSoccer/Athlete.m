@@ -63,6 +63,8 @@
 
 @synthesize waterpolostats;
 
+@synthesize hockeystats;
+
 //@synthesize thumbimage;
 //@synthesize tinyimage;
 //@synthesize mediumimage;
@@ -237,6 +239,13 @@
             
             for (int i = 0; i < waterpolo_stats.count; i++) {
                 [waterpolostats addObject:[[WaterPoloStat alloc] initWithDictionary:[waterpolo_stats objectAtIndex:i]]];
+            }
+        } else if ([currentSettings.sport.name isEqualToString:@"Hockey"]) {
+            NSArray *hockey_stats = [athleteDictionary objectForKey:@"hockey_stats"];
+            hockeystats = [[NSMutableArray alloc] init];
+            
+            for (int i = 0; i < hockey_stats.count; i++) {
+                [hockeystats addObject:[[HockeyStat alloc] initWithDictionary:[hockey_stats objectAtIndex:i]]];
             }
         }
         
@@ -1400,6 +1409,41 @@
 }
 
 - (BOOL)isWaterPoloGoalie {
+    BOOL result = NO;
+    NSArray *positions = [position componentsSeparatedByString:@"/"];
+    
+    for (int i = 0; i < positions.count; i++) {
+        if ([[positions objectAtIndex:i] isEqualToString:@"G"]) {
+            result = YES;
+            break;
+        }
+    }
+    
+    return result;
+}
+
+- (HockeyStat *)findHockeyStat:(GameSchedule *)game {
+    HockeyStat *astat = nil;
+    
+    for (int i = 0; i < hockeystats.count; i++) {
+        
+        if ([[[hockeystats objectAtIndex:i] hockey_game_id] isEqualToString:game.hockey_game.hockey_game_id]) {
+            astat = [hockeystats objectAtIndex:i];
+            break;
+        }
+    }
+    
+    if (!astat) {
+        astat = [[HockeyStat alloc] init];
+        astat.athlete_id = athleteid;
+        astat.hockey_game_id = game.hockey_game.hockey_game_id;
+        [hockeystats addObject:astat];
+    }
+    
+    return astat;
+}
+
+- (BOOL)isHockeyGoalie {
     BOOL result = NO;
     NSArray *positions = [position componentsSeparatedByString:@"/"];
     

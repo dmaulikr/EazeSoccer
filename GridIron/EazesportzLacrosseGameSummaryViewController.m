@@ -14,6 +14,7 @@
 #import "EazesportzLacrosseGameStatsViewController.h"
 #import "EazesportzLacrosseScoresheetViewController.h"
 #import "EazesportzGetGame.h"
+#import "EazesportzRetrievePlayers.h"
 
 @interface EazesportzLacrosseGameSummaryViewController () <UIAlertViewDelegate>
 
@@ -259,6 +260,8 @@
     if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GameDataNotification" object:nil];
         game = getgame.game;
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
         [self viewWillAppear:YES];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving game!" delegate:nil cancelButtonTitle:@"Ok"

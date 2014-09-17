@@ -179,6 +179,8 @@
         [self displayDataEntryAlert:@"Season cannot be blank"];
     else if (_gradeageclassTextField.text.length == 0)
         [self displayDataEntryAlert:@"Grade/Class cannot be blank"];
+    else if (_positionTextField.text.length == 0)
+        [self displayDataEntryAlert:@"Position cannot be blank"];
     else {
         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
         

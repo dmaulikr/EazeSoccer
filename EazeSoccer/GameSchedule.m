@@ -94,6 +94,8 @@
 
 @synthesize water_polo_game;
 
+@synthesize hockey_game;
+
 @synthesize httperror;
 
 - (id)init {
@@ -246,6 +248,8 @@
             soccer_game = [[SoccerGame alloc] initWithDictionary:[gameScheduleDictionary objectForKey:@"soccer_game"]];
         } else if ([currentSettings.sport.name isEqualToString:@"Water Polo"]) {
             water_polo_game = [[WaterPoloGame alloc] initWithDictionary:[gameScheduleDictionary objectForKey:@"water_polo_game"]];
+        } else if ([currentSettings.sport.name isEqualToString:@"Hockey"]) {
+            hockey_game = [[HockeyGame alloc] initWithDictionary:[gameScheduleDictionary objectForKey:@"hockey_game"]];
         }
         
         return self;

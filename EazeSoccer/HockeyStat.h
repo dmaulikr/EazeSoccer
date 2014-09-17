@@ -69,12 +69,25 @@
 - (NSNumber *)getTotalGoals;
 - (NSNumber *)getTotalPoints;
 - (NSNumber *)getTotalAssists;
-- (NSNumber *)getTotalSteals;
-- (NSNumber *)getTotalFouls;
+
+- (NSNumber *)getTotalPowerPlayGoals;
+- (NSNumber *)getTotalPowerPlayAssists;
+- (NSNumber *)getTotalShortHandedGoals;
+- (NSNumber *)getTotalShortHandedAssists;
+- (NSNumber *)gameWinningGoal;
 
 - (NSNumber *)getTotalGoalsAllowed;
 - (NSNumber *)getTotalSaves;
 - (NSNumber *)getTotalMinutes;
+
+- (NSNumber *)getTotalPenaltyMinutes;
+
+- (NSNumber *)gettotalFaceOffsWon;
+- (NSNumber *)getTotalFaceOffsLost;
+- (NSNumber *)getTotalTimeOnIce;
+- (NSNumber *)getTotalHits;
+- (NSNumber *)getTotalBlockedShots;
+- (NSNumber *)getTotalPlusMinues;
 
 - (void)saveScoreStat:(NSString *)gameid Score:(HockeyScoring *)stat;
 - (void)savePlayerStat:(NSString *)gameid PlayerStat:(HockeyPlayerStat *)stat;

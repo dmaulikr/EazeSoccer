@@ -416,11 +416,6 @@
     getGame = [[EazesportzGetGame alloc] init];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGame:) name:@"GameDataNotification" object:nil];
     [getGame getGame:currentSettings.sport.id Team:currentSettings.team.teamid Game:game.id Token:currentSettings.user.authtoken];
-    
-    if (currentSettings.user.userid.length > 0) {
-        [[[EazesportzRetrieveAlerts alloc] init] retrieveAlerts:currentSettings.sport.id Team:currentSettings.team.teamid
-                                                          Token:currentSettings.user.authtoken];
-    }
 }
 
 - (void)gotGame:(NSNotification *)notification {

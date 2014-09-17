@@ -177,9 +177,14 @@
 - (NSNumber *)getTotalAssists {
     int assists = 0;
     
-    for (int i = 0; i < scoring_stats.count; i++) {
-        if ([[scoring_stats objectAtIndex:i] assist].length > 0)
-            assists += 1;
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+        SoccerStat *stats = [[currentSettings.roster objectAtIndex:i] getSoccerGameStat:soccer_game_id];
+        
+        for (int cnt = 0; cnt < stats.scoring_stats.count; cnt++) {
+            if ([[[stats.scoring_stats objectAtIndex:cnt] assist] isEqualToString:athlete_id]) {
+                assists += 1;
+            }
+        }
     }
     
     return [NSNumber numberWithInt:assists];
@@ -303,7 +308,7 @@
 
 - (void)savePenaltyStat:(NSString *)gameid PenaltyStat:(SoccerPlayerStat *)stat {
     NSMutableDictionary *dictionary = [stat getDictionary];
-    [dictionary setValue:@"penatlystat" forKey:@"panaltystat"];
+    [dictionary setValue:@"penaltystat" forKey:@"penaltystat"];
     [self saveStat:gameid Dictionary:dictionary];
 }
 

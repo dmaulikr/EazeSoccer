@@ -16,9 +16,26 @@
 
 @synthesize infraction;
 @synthesize gametime;
+@synthesize penaltytime;
 @synthesize period;
 
 @synthesize dirty;
+
+- (id)init {
+    if (self == [super init]) {
+        infraction = @"";
+        gametime = @"00:00";
+        penaltytime = @"0:00";
+        period = [NSNumber numberWithInt:1];
+        
+        hockey_stat_id = @"";
+        hockey_penalty_id = @"";
+        athlete_id = @"";
+        
+        return self;
+    } else
+        return nil;
+}
 
 - (id)initWithDictionary:(NSDictionary *)hockey_penalty_dictionary {
     if (self == [super init]) {
@@ -28,6 +45,7 @@
         
         infraction = [hockey_penalty_dictionary objectForKey:@"infraction"];
         gametime = [hockey_penalty_dictionary objectForKey:@"gametime"];
+        penaltytime = [hockey_penalty_dictionary objectForKey:@"penaltytime"];
         period = [hockey_penalty_dictionary objectForKey:@"period"];
         
         return self;
@@ -43,7 +61,7 @@
     }
     
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:timearray[0], @"minutes", timearray[1], @"seconds",
-                                       period, @"period", nil];
+                                       penaltytime, @"penaltytime", infraction, @"infraction", period, @"period", nil];
     
     if (hockey_stat_id)
         [dictionary setValue:hockey_stat_id forKey:@"hockey_stat_id"];

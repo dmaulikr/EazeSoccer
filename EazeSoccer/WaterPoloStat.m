@@ -332,7 +332,7 @@
 
 - (void)savePenaltyStat:(NSString *)gameid PenaltyStat:(WaterPoloPlayerstat *)stat {
     NSMutableDictionary *dictionary = [stat getDictionary];
-    [dictionary setValue:@"penatlystat" forKey:@"panaltystat"];
+    [dictionary setValue:@"penaltystat" forKey:@"penaltystat"];
     [self saveStat:gameid Dictionary:dictionary];
 }
 

@@ -15,6 +15,13 @@
 @property (nonatomic, strong) NSString *athlete_id;
 
 @property (nonatomic, strong) NSNumber *shots;
+@property (nonatomic, strong) NSNumber *faceoffwon;
+@property (nonatomic, strong) NSNumber *faceofflost;
+@property (nonatomic, strong) NSString *timeonice;
+@property (nonatomic, strong) NSNumber *hits;
+@property (nonatomic, strong) NSNumber *blockedshots;
+@property (nonatomic, strong) NSNumber *plusminus;
+
 @property (nonatomic, strong) NSNumber *period;
 
 @property (nonatomic, assign) BOOL dirty;

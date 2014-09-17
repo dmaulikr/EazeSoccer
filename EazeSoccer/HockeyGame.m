@@ -19,7 +19,7 @@
 @synthesize hockey_oppsog;
 @synthesize hockey_oppassists;
 @synthesize hockey_oppsaves;
-@synthesize penalties;
+// @synthesize penalties;
 @synthesize home_time_outs_left;
 @synthesize visitor_time_outs_left;
 
@@ -40,10 +40,27 @@
 @synthesize hockey_game_home_score_period2;
 @synthesize hockey_game_home_score_period3;
 @synthesize hockey_game_home_score_overtime;
+
 @synthesize visitor_score_period1;
 @synthesize visitor_score_period2;
 @synthesize visitor_score_period3;
 @synthesize visitor_score_overtime;
+
+@synthesize home_penalty_one_number;
+@synthesize home_penalty_one_minutes;
+@synthesize home_penalty_one_seconds;
+@synthesize home_penalty_two_number;
+@synthesize home_penalty_two_minutes;
+@synthesize home_penalty_two_seconds;
+
+@synthesize visitor_penalty_one_number;
+@synthesize visitor_penalty_one_minutes;
+@synthesize visitor_penalty_one_seconds;
+@synthesize visitor_penalty_two_number;
+@synthesize visitor_penalty_two_minutes;
+@synthesize visitor_penalty_two_seconds;
+
+@synthesize hockey_penalties;
 
 @synthesize hockey_game_id;
 @synthesize gameschedule_id;
@@ -56,7 +73,7 @@
         hockey_oppsog = [hockey_game_dictionary objectForKey:@"hockey_oppsog"];
         hockey_oppassists = [hockey_game_dictionary objectForKey:@"hockey_oppassists"];
         hockey_oppsaves = [hockey_game_dictionary objectForKey:@"hockey_oppsaves"];
-        penalties = [hockey_game_dictionary objectForKey:@"penalties"];
+//        penalties = [hockey_game_dictionary objectForKey:@"penalties"];
         home_time_outs_left = [hockey_game_dictionary objectForKey:@"home_time_outs_left"];
         visitor_time_outs_left = [hockey_game_dictionary objectForKey:@"visitor_time_outs_left"];
         
@@ -72,14 +89,31 @@
         hockey_home_minutes_played = [hockey_game_dictionary objectForKey:@"hockey_home_minutes_played"];
         hockey_visitor_minutes_played = [hockey_game_dictionary objectForKey:@"hockey_visitor_minutes_played"];
         
-        hockey_game_home_score_period1 = [hockey_game_dictionary objectForKey:@"hockey_game_home_score_period1"];
-        hockey_game_home_score_period2 = [hockey_game_dictionary objectForKey:@"hockey_game_home_score_period2"];
-        hockey_game_home_score_period3 = [hockey_game_dictionary objectForKey:@"hockey_game_home_score_period3"];
-        hockey_game_home_score_overtime = [hockey_game_dictionary objectForKey:@"hockey_game_home_score_overtime"];
+        hockey_game_home_score_period1 = [hockey_game_dictionary objectForKey:@"home_score_period1"];
+        hockey_game_home_score_period2 = [hockey_game_dictionary objectForKey:@"home_score_period2"];
+        hockey_game_home_score_period3 = [hockey_game_dictionary objectForKey:@"home_score_period3"];
+        hockey_game_home_score_overtime = [hockey_game_dictionary objectForKey:@"home_score_periodOT"];
+        
         visitor_score_period1 = [hockey_game_dictionary objectForKey:@"visitor_score_period1"];
         visitor_score_period2 = [hockey_game_dictionary objectForKey:@"visitor_score_period2"];
         visitor_score_period3 = [hockey_game_dictionary objectForKey:@"visitor_score_period3"];
         visitor_score_overtime = [hockey_game_dictionary objectForKey:@"visitor_score_periodOT"];
+        
+        home_penalty_one_number = [hockey_game_dictionary objectForKey:@"home_penalty_one_number"];
+        home_penalty_one_minutes = [hockey_game_dictionary objectForKey:@"home_penalty_one_minutes"];
+        home_penalty_one_seconds = [hockey_game_dictionary objectForKey:@"home_penalty_one_seconds"];
+        home_penalty_two_number = [hockey_game_dictionary objectForKey:@"home_penalty_two_number"];
+        home_penalty_two_minutes = [hockey_game_dictionary objectForKey:@"home_penalty_two_minutes"];
+        home_penalty_two_seconds = [hockey_game_dictionary objectForKey:@"home_penalty_two_seconds"];
+        
+        visitor_penalty_one_number = [hockey_game_dictionary objectForKey:@"visitor_penalty_one_number"];
+        visitor_penalty_one_minutes = [hockey_game_dictionary objectForKey:@"visitor_penalty_one_minutes"];
+        visitor_penalty_one_seconds = [hockey_game_dictionary objectForKey:@"visitor_penalty_one_seconds"];
+        visitor_penalty_two_number = [hockey_game_dictionary objectForKey:@"visitor_penalty_two_number"];
+        visitor_penalty_two_minutes = [hockey_game_dictionary objectForKey:@"visitor_penalty_two_minutes"];
+        visitor_penalty_two_seconds = [hockey_game_dictionary objectForKey:@"visitor_penalty_two_seconds"];
+        
+        hockey_penalties = [self parsePositions:[hockey_game_dictionary objectForKey:@"hockey_penalties"]];
         
         hockey_game_id = [hockey_game_dictionary objectForKey:@"hockey_game_id"];
         gameschedule_id = [hockey_game_dictionary objectForKey:@"gameschedule_id"];
@@ -87,6 +121,19 @@
         return self;
     } else
         return nil;
+}
+
+- (NSMutableDictionary *)parsePositions:(NSArray *)positions {
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    
+    for (int i = 0; i < positions.count; i++) {
+        NSArray *pospair = [positions objectAtIndex:i];
+        for (int cnt = 0; cnt < pospair.count; cnt = cnt + 2) {
+            [result setObject:[pospair objectAtIndex:cnt + 1] forKey:[pospair objectAtIndex:cnt]];
+        }
+    }
+    
+    return result;
 }
 
 - (void)save {
@@ -100,7 +147,16 @@
                                        home_time_outs_left, @"home_time_outs_left", visitor_time_outs_left, @"visitor_time_outs_left",
                                        visitor_score_period1, @"visitor_score_period1",  visitor_score_period2, @"visitor_score_period2",
                                        visitor_score_period3, @"visitor_score_period3", visitor_score_overtime, @"visitor_score_periodOT1",
-                                       penalties, @"penalties", nil];
+                                       home_penalty_one_number, @"home_penalty_one_number", home_penalty_one_minutes, @"home_penalty_one_minutes",
+                                       home_penalty_one_seconds, @"home_penalty_one_seconds", home_penalty_two_number, @"home_penalty_two_number",
+                                       home_penalty_two_minutes, @"home_penalty_two_minutes", home_penalty_two_seconds, @"home_penalty_two_seconds",
+                                       visitor_penalty_one_number, @"visitor_penalty_one_number",
+                                       visitor_penalty_one_minutes, @"visitor_penalty_one_minutes",
+                                       visitor_penalty_one_seconds, @"visitor_penalty_one_seconds",
+                                       visitor_penalty_two_number, @"visitor_penalty_two_number",
+                                       visitor_penalty_two_minutes, @"visitor_penalty_two_minutes",
+                                       visitor_penalty_two_seconds, @"visitor_penalty_two_seconds", nil];
+//                                       penalties, @"penalties", nil];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"PUT"];
@@ -133,7 +189,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameSavedNotification" object:nil
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HockeyGameSavedNotification" object:nil
                                                       userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Network Error", @"Result", nil]];
 }
 
@@ -146,10 +202,10 @@
     
     if (responseStatusCode == 200) {
         [[[EazesportzGetGame alloc] init] getGameSynchronous:currentSettings.sport Team:currentSettings.team Game:gameschedule_id User:currentSettings.user];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameSavedNotification" object:nil
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HockeyGameSavedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Success", @"Result", nil]];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"WaterPoloGameSavedNotification" object:nil
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HockeyGameSavedNotification" object:nil
                                                           userInfo:[[NSDictionary alloc] initWithObjectsAndKeys:@"Save Error", @"Result", nil]];
     }
 }

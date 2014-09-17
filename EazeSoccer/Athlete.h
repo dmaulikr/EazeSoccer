@@ -24,6 +24,7 @@
 #import "Lacrosstat.h"
 #import "GameSchedule.h"
 #import "WaterPoloStat.h"
+#import "HockeyStat.h"
 
 @interface Athlete : NSObject
 
@@ -70,6 +71,8 @@
 @property (nonatomic, strong) NSMutableArray *lacrosstats;
 
 @property (nonatomic, strong) NSMutableArray *waterpolostats;
+
+@property (nonatomic, strong) NSMutableArray *hockeystats;
 
 //@property(nonatomic, strong) UIImage *thumbimage;
 //@property(nonatomic, strong) UIImage *tinyimage;
@@ -151,6 +154,9 @@
 
 - (BOOL)isWaterPoloGoalie;
 - (WaterPoloStat *)findWaterPoloStat:(GameSchedule *)game;
+
+- (BOOL)isHockeyGoalie;
+- (HockeyStat *)findHockeyStat:(GameSchedule *)game;
 
 //- (UIImage *)getImage:(NSString *)size;
 

@@ -1,25 +1,23 @@
 //
-//  EazesportzWaterPoloGoalieStatsViewController.m
+//  EazesportzHockeyGoalStatsViewController.m
 //  EazeSportz
 //
-//  Created by Gilbert Zaldivar on 7/23/14.
+//  Created by Gilbert Zaldivar on 9/15/14.
 //  Copyright (c) 2014 Gil. All rights reserved.
 //
 
-#import "EazesportzWaterPoloGoalieStatsViewController.h"
+#import "EazesportzHockeyGoalStatsViewController.h"
 
-@interface EazesportzWaterPoloGoalieStatsViewController ()
+@interface EazesportzHockeyGoalStatsViewController ()
 
 @end
 
-@implementation EazesportzWaterPoloGoalieStatsViewController {
-    WaterPoloGoalstat *stats;
+@implementation EazesportzHockeyGoalStatsViewController {
+    HockeyGoalStat *stats;
 }
 
 @synthesize game;
 @synthesize player;
-@synthesize visitor;
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,10 +32,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    _saveTextField.keyboardType = UIKeyboardTypeNumberPad;
-    _allowedTextField.keyboardType = UIKeyboardTypeNumberPad;
-    _minutesplayedTextField.keyboardType = UIKeyboardTypeNumberPad;
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,18 +43,17 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [_periodSegmentedControl setSelectedSegmentIndex:[game.period intValue] - 1];
-    
+    _periodSegmentedControl.selectedSegmentIndex = [game.period intValue];
     [self getGoalieStats];
 }
 
 - (void)getGoalieStats {
     NSNumber *period = [NSNumber numberWithInteger:_periodSegmentedControl.selectedSegmentIndex - 1];
     
-    stats = [[player findWaterPoloStat:game] findGoalStat:period];
-    _saveTextField.text = [stats.saves stringValue];
-    _allowedTextField.text = [stats.goals_allowed stringValue];
-    _minutesplayedTextField.text = [stats.minutes_played stringValue];
+    stats = [[player findHockeyStat:game] findGoalStat:period];
+    _savesTextField.text = [stats.saves stringValue];
+    _goalsallowedTextField.text = [stats.goals_allowed stringValue];
+    _minutesTextField.text = [stats.minutes_played stringValue];
 }
 
 - (IBAction)periodSegmentedControlClicked:(id)sender {
@@ -68,12 +61,12 @@
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statSaved:) name:@"WaterpoloStatNotification" object:nil];
-    stats.saves = [NSNumber numberWithInt:[_saveTextField.text intValue]];
-    stats.goals_allowed = [NSNumber numberWithInt:[_allowedTextField.text intValue]];
-    stats.minutes_played = [NSNumber numberWithInt:[_minutesplayedTextField.text intValue]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statSaved:) name:@"HockeyStatNotification" object:nil];
+    stats.saves = [NSNumber numberWithInt:[_savesTextField.text intValue]];
+    stats.goals_allowed = [NSNumber numberWithInt:[_goalsallowedTextField.text intValue]];
+    stats.minutes_played = [NSNumber numberWithInt:[_minutesTextField.text intValue]];
     stats.period = [NSNumber numberWithLong:_periodSegmentedControl.selectedSegmentIndex + 1];
-    [[player findWaterPoloStat:game] saveGoalStat:game.id GoalStat:stats];
+    [[player findHockeyStat:game] saveGoalStat:game.id GoalStat:stats];
 }
 
 - (void)statSaved:(NSNotification *)notification {
@@ -89,16 +82,13 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    if ((textField == _allowedTextField) || (textField == _saveTextField) || (_minutesplayedTextField)) {
-        NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
-        NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
-        BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
-        if (myStringMatchesRegEx)
-            return YES;
-        else
-            return NO;
-    } else
+    NSString *validRegEx =@"^[0-9.]*$"; //change this regular expression as your requirement
+    NSPredicate *regExPredicate =[NSPredicate predicateWithFormat:@"SELF MATCHES %@", validRegEx];
+    BOOL myStringMatchesRegEx = [regExPredicate evaluateWithObject:string];
+    if (myStringMatchesRegEx)
         return YES;
+    else
+        return NO;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

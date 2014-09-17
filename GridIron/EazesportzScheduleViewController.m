@@ -15,6 +15,7 @@
 #import "EazesportzDisplayAdBannerViewController.h"
 #import "EazesportzLacrosseGameSummaryViewController.h"
 #import "EazesportzWaterPoloGameSummaryViewController.h"
+#import "EazesportzHockeyGameSummaryViewController.h"
 
 @interface EazesportzScheduleViewController () <UIAlertViewDelegate>
 
@@ -99,6 +100,9 @@
         } else if ([segue.identifier isEqualToString:@"WaterPoloGameSummarySegue"]) {
             EazesportzWaterPoloGameSummaryViewController *destController = segue.destinationViewController;
             destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
+        } else if ([segue.identifier isEqualToString:@"HockeyGameSummary"]) {
+            EazesportzHockeyGameSummaryViewController *destController = segue.destinationViewController;
+            destController.game = [currentSettings.gameList objectAtIndex:indexPath.row];
         } else if ([segue.identifier isEqualToString:@"AdBannerSegue"]) {
             adBannerController = segue.destinationViewController;
         }
@@ -119,6 +123,8 @@
             [self performSegueWithIdentifier:@"LacrosseGameSummary" sender:self];
         } else if ([currentSettings.sport.name isEqualToString:@"Water Polo"]) {
             [self performSegueWithIdentifier:@"WaterPoloGameSummarySegue" sender:self];
+        } else if ([currentSettings.sport.name isEqualToString:@"Hockey"]) {
+            [self performSegueWithIdentifier:@"HockeyGameSummary" sender:self];
         }
     }
 }

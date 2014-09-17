@@ -19,8 +19,9 @@
 @synthesize gametime;
 @synthesize assist;
 @synthesize period;
-@synthesize assisttype;
+@synthesize assist_type;
 @synthesize goaltype;
+@synthesize game_winning_goal;
 
 @synthesize photos;
 @synthesize videos;
@@ -31,7 +32,7 @@
         period = [NSNumber numberWithInt:0];
         assist = @"";
         gametime = @"00:00";
-        assisttype = @"";
+        assist_type = @"";
         goaltype = @"";
         photos = [[NSMutableArray alloc] init];
         videos = [[NSMutableArray alloc] init];
@@ -51,8 +52,9 @@
         gametime = [hockey_scoring_dictionary objectForKey:@"gametime"];
         assist = [hockey_scoring_dictionary objectForKey:@"assist"];
         period = [hockey_scoring_dictionary objectForKey:@"period"];
-        assisttype = [hockey_scoring_dictionary objectForKey:@"assisttype"];
+        assist_type = [hockey_scoring_dictionary objectForKey:@"assist_type"];
         goaltype = [hockey_scoring_dictionary objectForKey:@"goaltype"];
+        game_winning_goal = [[hockey_scoring_dictionary objectForKey:@"game_winning_goal"] boolValue];
         
         NSArray *photoarray = [hockey_scoring_dictionary objectForKey:@"photos"];
         photos = [[NSMutableArray alloc] init];
@@ -83,7 +85,7 @@
     }
     
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:timearray[0], @"minutes", timearray[1], @"seconds",
-                                       period, @"period", assist, @"assist", assisttype, @"assisttype", goaltype, @"goaltype", nil];
+                                       period, @"period", assist, @"assist", assist_type, @"assist_type", goaltype, @"goaltype", nil];
     
     if (hockey_stat_id)
         [dictionary setValue:hockey_stat_id forKey:@"hockey_stat_id"];

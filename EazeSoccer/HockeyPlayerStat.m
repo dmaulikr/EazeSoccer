@@ -15,6 +15,13 @@
 @synthesize athlete_id;
 
 @synthesize shots;
+@synthesize plusminus;
+@synthesize faceoffwon;
+@synthesize faceofflost;
+@synthesize timeonice;
+@synthesize blockedshots;
+@synthesize hits;
+
 @synthesize period;
 
 @synthesize dirty;
@@ -40,6 +47,13 @@
         athlete_id = [hockey_playerstat_dictionary objectForKey:@"athlete_id"];
         
         shots = [hockey_playerstat_dictionary objectForKey:@"shots"];
+        plusminus = [hockey_playerstat_dictionary objectForKey:@"plusminus"];
+        faceoffwon = [hockey_playerstat_dictionary objectForKey:@"faceoffwon"];
+        faceofflost = [hockey_playerstat_dictionary objectForKey:@"faceofflost"];
+        timeonice = [hockey_playerstat_dictionary objectForKey:@"timeonice"];
+        blockedshots = [hockey_playerstat_dictionary objectForKey:@"blockedshots"];
+        hits = [hockey_playerstat_dictionary objectForKey:@"hits"];
+        
         period = [hockey_playerstat_dictionary objectForKey:@"period"];
         
         return self;
@@ -48,7 +62,9 @@
 }
 
 - (NSMutableDictionary *)getDictionary {
-    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:shots, @"shots", period, @"period", nil];
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:shots, @"shots", plusminus, @"plusminus",
+                                       faceoffwon, @"faceoffwon", faceofflost, @"faceofflost", timeonice, @"timeonice",
+                                       blockedshots, @"blockedshots", hits, @"hits", period, @"period", nil];
     
     if (hockey_stat_id)
         [dictionary setValue:hockey_stat_id forKey:@"hockey_stat_id"];

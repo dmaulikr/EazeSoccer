@@ -100,6 +100,7 @@
         _secondsTextField.text = @"00";
         _deleteButton.hidden = YES;
         _deleteButton.enabled = NO;
+        assistplayer = player = nil;
     }
 }
 
@@ -232,7 +233,7 @@
 }
 
 - (IBAction)deleteButtonClicked:(id)sender {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statSaved:) name:@"SoccerStatNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statSaved:) name:@"WaterpoloStatNotification" object:nil];
     WaterPoloStat *stat = [player findWaterPoloStat:game];
     [stat deleteScoreStat:game.id Score:score];
 }

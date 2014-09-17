@@ -9,6 +9,8 @@
 #import "EazesportzWaterPoloGameSummaryViewController.h"
 #import "EazesportzAppDelegate.h"
 #import "EazesportzWaterPoloStatsViewController.h"
+#import "EazesportzGetGame.h"
+#import "EazesportzRetrievePlayers.h"
 
 @interface EazesportzWaterPoloGameSummaryViewController () <UIAlertViewDelegate>
 
@@ -16,6 +18,7 @@
 
 @implementation EazesportzWaterPoloGameSummaryViewController {
     int period;
+    EazesportzGetGame *getgame;
 }
 
 @synthesize game;
@@ -205,6 +208,23 @@
 }
 
 - (IBAction)refreshBarButtonClicked:(id)sender {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(gotGame:) name:@"GameDataNotification" object:nil];
+    getgame = [[EazesportzGetGame alloc] init];
+    [getgame getGame:currentSettings.sport.id Team:currentSettings.team.teamid Game:game.id Token:currentSettings.user.authtoken];
+}
+
+- (void)gotGame:(NSNotification *)notification {
+    if ([[[notification userInfo] objectForKey:@"Result"] isEqualToString:@"Success"]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GameDataNotification" object:nil];
+        game = getgame.game;
+        [[[EazesportzRetrievePlayers alloc] init] retrievePlayers:currentSettings.sport.id Team:currentSettings.team.teamid
+                                                            Token:currentSettings.user.authtoken];
+        [self viewWillAppear:YES];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error retrieving game!" delegate:nil cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 -(BOOL)shouldAutorotate {

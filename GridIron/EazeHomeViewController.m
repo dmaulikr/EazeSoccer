@@ -31,6 +31,7 @@
 #import "EazesportzLacrosseGameSummaryViewController.h"
 #import "EazesportzWaterPoloGameSummaryViewController.h"
 #import "EazesportzWaterPoloGameSummaryStatsViewController.h"
+#import "EazesportzHockeyGameSummaryViewController.h"
 
 #import "Reachability.h"
 
@@ -344,6 +345,8 @@
                         [self performSegueWithIdentifier:@"LacrosseGameInfoSegue" sender:self];
                     else if ([currentSettings.sport.name isEqualToString:@"Water Polo"])
                         [self performSegueWithIdentifier:@"WaterPoloGameSummarySegue" sender:self];
+                    else if ([currentSettings.sport.name isEqualToString:@"Hockey"])
+                        [self performSegueWithIdentifier:@"HockeyGameSummary" sender:self];
                 }
                 break;
                 
@@ -395,6 +398,9 @@
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"WaterPoloGameSummarySegue"]) {
         EazesportzWaterPoloGameSummaryViewController *destController = segue.destinationViewController;
+        destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"HockeyGameSummary"]) {
+        EazesportzHockeyGameSummaryViewController *destController = segue.destinationViewController;
         destController.game = game;
     } else if ([segue.identifier isEqualToString:@"FeaturedPhotosSegue"]) {
         EazeFeaturedPhotosViewController *destController = segue.destinationViewController;

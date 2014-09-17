@@ -149,6 +149,8 @@
             lacrosse_personal_fouls = [sportDictionary objectForKey:@"lacrosse_personal_fouls"];
         } else if ([name isEqualToString:@"Water Polo"]) {
             playerPositions = [self parsePositions:[sportDictionary objectForKey:@"waterpolo_positions"]];
+        } else if ([name isEqualToString:@"Hockey"]) {
+            playerPositions = [self parsePositions:[sportDictionary objectForKey:@"hockey_positions"]];
         }
         
         return self;

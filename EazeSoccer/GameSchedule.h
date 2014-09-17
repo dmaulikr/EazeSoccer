@@ -12,6 +12,7 @@
 #import "LacrossGame.h"
 #import "SoccerGame.h"
 #import "WaterPoloGame.h"
+#import "HockeyGame.h"
 
 @interface GameSchedule : NSObject
 
@@ -84,6 +85,7 @@
 
 @property (nonatomic, strong) WaterPoloGame *water_polo_game;
 
+@property (nonatomic, strong) HockeyGame *hockey_game;
 
 @property(nonatomic, strong) NSString *httperror;
 

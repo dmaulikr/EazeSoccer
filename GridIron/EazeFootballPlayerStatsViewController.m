@@ -77,6 +77,8 @@
         visiblestats = @"Kick";
     else if ([player isReturner:nil])
         visiblestats = @"Ret";
+    else
+        visiblestats = @"Rush";
 
     [_playerStatTableView reloadData];
     

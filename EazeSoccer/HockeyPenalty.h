@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) NSString *infraction;
 @property (nonatomic, strong) NSString *gametime;
+@property (nonatomic, strong) NSString *penaltytime;
 @property (nonatomic, strong) NSNumber *period;
 
 @property (nonatomic, assign) BOOL dirty;

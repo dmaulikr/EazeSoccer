@@ -17,8 +17,9 @@
 @property (nonatomic, strong) NSNumber *period;
 @property (nonatomic, strong) NSString *gametime;
 @property (nonatomic, strong) NSString *assist;
-@property (nonatomic, strong) NSString *assisttype;
+@property (nonatomic, strong) NSString *assist_type;
 @property (nonatomic, strong) NSString *goaltype;
+@property (nonatomic, assign) BOOL game_winning_goal;
 
 @property (nonatomic, strong) NSMutableArray *photos;
 @property (nonatomic, strong) NSMutableArray *videos;

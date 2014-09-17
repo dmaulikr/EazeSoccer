@@ -73,7 +73,7 @@
 }
 
 - (IBAction)submitButtonClicked:(id)sender {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statSaved:) name:@"SoccerStatNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statSaved:) name:@"WaterpoloStatNotification" object:nil];
     stats.shots = [NSNumber numberWithInt:[_shotsTextField.text intValue]];
     stats.steals = [NSNumber numberWithInt:[_stealsTextField.text intValue]];
     stats.fouls = [NSNumber numberWithInt:[_foulsTextField.text intValue]];
