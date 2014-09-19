@@ -67,4 +67,7 @@
 
 - (NSNumber *)visitorScore;
 
+- (NSArray *)getHockeyScores;
+- (NSString *)findScoreLog:(NSString *)scorelogid;
+
 @end

@@ -579,23 +579,43 @@
 }
 
 - (IBAction)scoreButtonClicked:(id)sender {
-    visiblestats = @"Score";
-    [_scoreSheetTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information.\n Once you turn off stats you can enter the home score above." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Score";
+        [_scoreSheetTableView reloadData];
+    }
 }
 
 - (IBAction)subsButtonClicked:(id)sender {
-    visiblestats = @"Subs";
-    [_scoreSheetTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information.\n Once you turn off stats you can enter the home score above." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Subs";
+        [_scoreSheetTableView reloadData];
+    }
 }
 
 - (IBAction)cardButtonClicked:(id)sender {
-    visiblestats = @"Card";
-    [_scoreSheetTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information.\n Once you turn off stats you can enter the home score above." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Card";
+        [_scoreSheetTableView reloadData];
+    }
 }
 
 - (IBAction)statsButtonClicked:(id)sender {
-    visiblestats = @"Stats";
-    [_scoreSheetTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information.\n Once you turn off stats you can enter the home score above." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Stats";
+        [_scoreSheetTableView reloadData];
+    }
 }
 
 -(BOOL)shouldAutorotate {

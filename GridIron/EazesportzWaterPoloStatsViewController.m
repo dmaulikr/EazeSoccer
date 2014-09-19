@@ -14,6 +14,8 @@
 #import "EazesportzWaterPoloPlayerStatsViewController.h"
 #import "EazesportzWaterPoloGoalieStatsViewController.h"
 #import "EazesportzWaterPoloPlayerGamesViewController.h"
+#import "EazesVideosViewController.h"
+#import "EazePhotosViewController.h"
 
 @interface EazesportzWaterPoloStatsViewController ()
 
@@ -82,6 +84,13 @@
         NSIndexPath *indexPath = [_statsTableView indexPathForSelectedRow];
         EazesportzWaterPoloPlayerGamesViewController *destController = segue.destinationViewController;
         destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
+    } else if ([segue.identifier isEqualToString:@"PhotosSegue"]) {
+        EazePhotosViewController *destController = segue.destinationViewController;
+        currentSettings.photodeleted = YES;
+        destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"VideosSegue"]) {
+        EazesVideosViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 
@@ -391,9 +400,9 @@
                                                       cancelButtonTitle:@"Cancel" otherButtonTitles:@"Photo", @"Video", nil];
                 [alert show];
             } else if (score.photos.count > 0) {
-                [self performSegueWithIdentifier:@"GamePhotoSegue" sender:self];
+                [self performSegueWithIdentifier:@"PhotoSegue" sender:self];
             } else {
-                [self performSegueWithIdentifier:@"GameVideoSegue" sender:self];
+                [self performSegueWithIdentifier:@"VideoSegue" sender:self];
             }
         }
     }
@@ -462,8 +471,13 @@
 }
 
 - (IBAction)scoreButtonClicked:(id)sender {
-    visiblestats = @"Score";
-    [_statsTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Score";
+        [_statsTableView reloadData];
+    }
 }
 
 - (IBAction)cardButtonClicked:(id)sender {
@@ -472,8 +486,13 @@
 }
 
 - (IBAction)statsButtonClicked:(id)sender {
-    visiblestats = @"Stats";
-    [_statsTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Stats";
+        [_statsTableView reloadData];
+    }
 }
 
 - (IBAction)waterpoloPlayerstatsDone:(UIStoryboardSegue *)segue {

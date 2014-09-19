@@ -55,7 +55,8 @@
     
     if ([currentSettings.sport.name isEqualToString:@"Football"])
         _gameplayTextField.inputView = _gameplayContainer.inputView;
-    else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"])
+    else if (([currentSettings.sport.name isEqualToString:@"Lacrosse"]) || ([currentSettings.sport.name isEqualToString:@"Hockey"]) ||
+             ([currentSettings.sport.name isEqualToString:@"Water Polo"]) || ([currentSettings.sport.name isEqualToString:@"Soccer"]))
         _gameplayTextField.inputView = _scorelogContainer.inputView;
     
     _gameplayContainer.hidden = YES;
@@ -67,6 +68,12 @@
         _gameplayTextField.text = [[game findGamelog:self.video.gamelog] logentrytext];
     } else if (self.video.lacross_scoring_id.length > 0) {
         _gameplayTextField.text = [game.lacross_game findScoreLog:self.video.lacross_scoring_id];
+    } else if (self.video.soccer_scoring_id.length > 0) {
+        _gameplayTextField.text = [game.soccer_game findScoreLog:self.video.soccer_scoring_id];
+    } else if (self.video.waterpolo_scoring_id.length > 0) {
+        _gameplayTextField.text = [game.water_polo_game findScoreLog:self.video.waterpolo_scoring_id];
+    } else if (self.video.hockey_scoring_id.length > 0) {
+        _gameplayTextField.text = [game.hockey_game findScoreLog:self.video.hockey_scoring_id];
     } else {
         _gameplayTextField.text = @"";
     }
@@ -93,7 +100,8 @@
                 gamelogController.game = self.video.game;
                 gamelogController.gamelog = nil;
                 [gamelogController viewWillAppear:YES];
-            } else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
+            } else if (([currentSettings.sport.name isEqualToString:@"Lacrosse"]) || ([currentSettings.sport.name isEqualToString:@"Hockey"]) ||
+                       ([currentSettings.sport.name isEqualToString:@"Water Polo"]) || ([currentSettings.sport.name isEqualToString:@"Soccer"])) {
                 _scorelogContainer.hidden = NO;
                 scorelogController.game = self.video.game;
                 scorelogController.lacrosse_score = nil;
@@ -137,6 +145,12 @@
     if (scorelogController.lacrosse_score) {
         self.video.lacross_scoring_id = scorelogController.lacrosse_score.lacross_scoring_id;
         _gameplayTextField.text = [scorelogController.lacrosse_score getScoreLog];
+    } else if (scorelogController.soccer_score) {
+        self.video.soccer_scoring_id = scorelogController.soccer_score.soccer_scoring_id;
+        _gameplayTextField.text = [scorelogController.soccer_score getScoreLog];
+    } else if (scorelogController.hockey_score) {
+        self.video.hockey_scoring_id = scorelogController.hockey_score.hockey_scoring_id;
+        _gameplayTextField.text = [scorelogController.hockey_score getScoreLog];
     } else {
         self.video.lacross_scoring_id = @"";
         _gameplayTextField.text = @"";

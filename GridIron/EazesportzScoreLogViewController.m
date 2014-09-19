@@ -20,6 +20,8 @@
 @synthesize game;
 @synthesize lacrosse_score;
 @synthesize soccer_score;
+@synthesize hockey_score;
+@synthesize waterpolo_score;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,6 +49,10 @@
     
     if ([currentSettings.sport.name isEqualToString:@"Lacrosse"])
         scores = [game.lacross_game getLacrosseScores:YES];
+    else if ([currentSettings.sport.name isEqualToString:@"Hockey"])
+        scores = [game.hockey_game getHockeyScores];
+    else if ([currentSettings.sport.name isEqualToString:@"Water Polo"])
+        scores = [game.water_polo_game getWaterPoloScores];
     else
         scores = [game.soccer_game getSoccerScores:YES];
     
@@ -104,12 +110,16 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    soccer_score = nil;
+    lacrosse_score = nil;
+    hockey_score = nil;
+    
     if ([currentSettings.sport.name isEqualToString:@"Lacrosse"]) {
         lacrosse_score = [scores objectAtIndex:indexPath.row];
-        soccer_score = nil;
     } else if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
         soccer_score = [scores objectAtIndex:indexPath.row];
-        lacrosse_score = nil;
+    } else if ([currentSettings.sport.name isEqualToString:@"Hockey"]) {
+        hockey_score = [scores objectAtIndex:indexPath.row];
     }
 }
 
@@ -121,10 +131,15 @@
     
     lacrosse_score = nil;
     soccer_score = nil;
+    hockey_score = nil;
     
     if (indexPath.length > 0) {
         if ([currentSettings.sport.name isEqualToString:@"Lacrosse"])
             lacrosse_score = [scores objectAtIndex:indexPath.row];
+        else if ([currentSettings.sport.name isEqualToString:@"Hockey"])
+            hockey_score = [scores objectAtIndex:indexPath.row];
+        else if ([currentSettings.sport.name isEqualToString:@"Water Polo"])
+            waterpolo_score = [scores objectAtIndex:indexPath.row];
         else
             soccer_score = [scores objectAtIndex:indexPath.row];
     }

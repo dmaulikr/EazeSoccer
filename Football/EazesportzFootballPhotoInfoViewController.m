@@ -64,6 +64,8 @@
         _gameplayTextField.text = [[game findGamelog:self.photo.gamelog] logentrytext];
     } else if (self.photo.lacross_scoring_id.length > 0) {
         _gameplayTextField.text = [game.lacross_game findScoreLog:self.photo.lacross_scoring_id];
+    } else if (self.photo.hockey_scoring_id.length > 0) {
+        _gameplayTextField.text = [game.hockey_game findScoreLog:self.photo.hockey_scoring_id];
     } else {
         _gameplayTextField.text = @"";
     }
@@ -89,6 +91,9 @@
     } else if (scorelogController.soccer_score) {
         self.photo.soccer_scoring_id = scorelogController.soccer_score.soccer_scoring_id;
         _gameplayTextField.text = [scorelogController.soccer_score getScoreLog];
+    } else if (scorelogController.hockey_score) {
+        self.photo.hockey_scoring_id = scorelogController.hockey_score.hockey_scoring_id;
+        _gameplayTextField.text = [scorelogController.hockey_score getScoreLog];
     } else {
         self.photo.lacross_scoring_id = @"";
         _gameplayTextField.text = @"";
@@ -107,7 +112,8 @@
                 gamelogController.game = self.photo.game;
                 gamelogController.gamelog = nil;
                 [gamelogController viewWillAppear:YES];
-            } else if (([currentSettings.sport.name isEqualToString:@"Lacrosse"]) || ([currentSettings.sport.name isEqualToString:@"Soccer"])) {
+            } else if (([currentSettings.sport.name isEqualToString:@"Lacrosse"]) || ([currentSettings.sport.name isEqualToString:@"Soccer"]) ||
+                       ([currentSettings.sport.name isEqualToString:@"Hockey"])) {
                 _scorelogContainer.hidden = NO;
                 scorelogController.game = self.photo.game;
                 scorelogController.lacrosse_score = nil;

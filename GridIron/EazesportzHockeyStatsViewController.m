@@ -19,6 +19,8 @@
 #import "EazesportzHockeyPenaltyStatsViewController.h"
 #import "EazesportzRetrievePlayers.h"
 #import "EazesportzHockeyTotalsViewController.h"
+#import "EazePhotosViewController.h"
+#import "EazesVideosViewController.h"
 
 @interface EazesportzHockeyStatsViewController () <UIAlertViewDelegate>
 
@@ -117,6 +119,13 @@
             destController.player = [currentSettings.roster objectAtIndex:indexPath.row];
         else
             destController.player = [currentSettings findAthlete:[[goalies objectAtIndex:indexPath.row] athlete_id]];
+    } else if ([segue.identifier isEqualToString:@"PhotosSegue"]) {
+        EazePhotosViewController *destController = segue.destinationViewController;
+        currentSettings.photodeleted = YES;
+        destController.game = game;
+    } else if ([segue.identifier isEqualToString:@"VideosSegue"]) {
+        EazesVideosViewController *destController = segue.destinationViewController;
+        destController.game = game;
     }
 }
 
@@ -378,9 +387,9 @@
                                                       cancelButtonTitle:@"Cancel" otherButtonTitles:@"Photo", @"Video", nil];
                 [alert show];
             } else if (score.photos.count > 0) {
-                [self performSegueWithIdentifier:@"GamePhotoSegue" sender:self];
+                [self performSegueWithIdentifier:@"PhotoSegue" sender:self];
             } else {
-                [self performSegueWithIdentifier:@"GameVideoSegue" sender:self];
+                [self performSegueWithIdentifier:@"VideoSegue" sender:self];
             }
         } else if ([visiblestats isEqualToString:@"Penalties"]) {
             HockeyPenalty *penaltystat = [penalties objectAtIndex:indexPath.row];
@@ -480,18 +489,33 @@
 }
 
 - (IBAction)scoreButtonClicked:(id)sender {
-    visiblestats = @"Scoring";
-    [_statsTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information.\n Once you turn off stats you can enter the home score above." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Scoring";
+        [_statsTableView reloadData];
+    }
 }
 
 - (IBAction)goalieButtonClicked:(id)sender {
-    visiblestats = @"Goalie";
-    [_statsTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information.\n Once you turn off stats you can enter the home score above." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Goalie";
+        [_statsTableView reloadData];
+    }
 }
 
 - (IBAction)statsButtonClicked:(id)sender {
-    visiblestats = @"Stats";
-    [_statsTableView reloadData];
+    if (currentSettings.roster.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice" message:@"No roster entered. No players to assign stats!\n Either enter a roster or turn off stats for game scheduling by editing the game information.\n Once you turn off stats you can enter the home score above." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    } else {
+        visiblestats = @"Stats";
+        [_statsTableView reloadData];
+    }
 }
 
 - (IBAction)hockeyPlayerstatsDone:(UIStoryboardSegue *)segue {

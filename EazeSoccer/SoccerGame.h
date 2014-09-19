@@ -55,6 +55,7 @@
 - (void)deleteSub:(SoccerSubs *)soccersub;
 
 - (NSArray *)getSoccerScores:(BOOL)home;
+- (NSString *)findScoreLog:(NSString *)scorelogid;
 
 - (NSNumber *)visitorScore;
 

@@ -23,6 +23,7 @@
 
 @property (nonatomic, strong) NSString *lacross_scoring_id;
 @property (nonatomic, strong) NSString *soccer_scoring_id;
+@property (nonatomic, strong) NSString *hockey_scoring_id;
 
 @property(nonatomic, strong) NSMutableArray *photos;
 

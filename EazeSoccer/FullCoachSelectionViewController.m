@@ -39,7 +39,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addCoachButton, self.refreshButton, self.teamButton, nil];
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.addButton, self.refreshButton, self.teamButton, nil];
     
     self.navigationController.toolbarHidden = YES;
 }

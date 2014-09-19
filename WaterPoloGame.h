@@ -58,4 +58,7 @@
 
 - (NSNumber *)visitorScore;
 
+- (NSString *)findScoreLog:(NSString *)scorelogid;
+- (NSArray *)getWaterPoloScores;
+
 @end

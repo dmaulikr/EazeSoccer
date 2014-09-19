@@ -267,4 +267,29 @@
                                     [soccergame_visitor_score_periodOT1 intValue] + [soccergame_visitor_score_periodOT2 intValue])];
 }
 
+- (NSString *)findScoreLog:(NSString *)scorelogid {
+    NSString *scorelog;
+    GameSchedule *game = [currentSettings findGame:gameschedule_id];
+    
+    if ([currentSettings.sport.name isEqualToString:@"Soccer"]) {
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            SoccerStat *soccerstat = [[currentSettings.roster objectAtIndex:i] getSoccerGameStat:game.soccer_game.soccer_game_id];
+            
+            for (int cnt = 0; cnt < soccerstat.scoring_stats.count; cnt++) {
+                
+                if ([[[soccerstat.scoring_stats objectAtIndex:cnt] soccer_scoring_id] isEqualToString:scorelogid]) {
+                    SoccerScoring *scorestat = [soccerstat.scoring_stats objectAtIndex:cnt];
+                    scorelog = [scorestat getScoreLog];
+                    goto Done;
+                }
+                
+            }
+            
+        }
+    }
+    
+Done:
+    return scorelog;
+}
+
 @end

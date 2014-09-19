@@ -215,4 +215,52 @@
                                     [visitor_score_period3 intValue] + [visitor_score_overtime intValue])];
 }
 
+- (NSArray *)getHockeyScores {
+    NSMutableArray *gamescoreings = [[NSMutableArray alloc] init];
+    GameSchedule *game = [currentSettings findGame:gameschedule_id];
+    
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+        HockeyStat *astat = [[currentSettings.roster objectAtIndex:i] findHockeyStat:game];
+        
+        if (astat.scoring_stats.count > 0) {
+            for (int cnt = 0; cnt < astat.scoring_stats.count; cnt++) {
+                [gamescoreings addObject:[astat.scoring_stats objectAtIndex:cnt]];
+            }
+        }
+    }
+    
+    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES];
+    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO
+                                                                      selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSArray *descriptors = [NSArray arrayWithObjects:firstDescriptor, secondDescriptor, nil];
+    [gamescoreings sortUsingDescriptors:descriptors];
+    
+    return gamescoreings;
+}
+
+- (NSString *)findScoreLog:(NSString *)scorelogid {
+    NSString *scorelog;
+    GameSchedule *game = [currentSettings findGame:gameschedule_id];
+    
+    if ([currentSettings.sport.name isEqualToString:@"Hockey"]) {
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            HockeyStat *hockeystat = [[currentSettings.roster objectAtIndex:i] findHockeyStat:game];
+            
+            for (int cnt = 0; cnt < hockeystat.scoring_stats.count; cnt++) {
+                
+                if ([[[hockeystat.scoring_stats objectAtIndex:cnt] hockey_scoring_id] isEqualToString:scorelogid]) {
+                    HockeyScoring *scorestat = [hockeystat.scoring_stats objectAtIndex:cnt];
+                    scorelog = [scorestat getScoreLog];
+                    goto Done;
+                }
+                
+            }
+            
+        }
+    }
+    
+Done:
+    return scorelog;
+}
+
 @end

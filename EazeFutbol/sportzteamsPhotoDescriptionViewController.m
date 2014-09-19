@@ -118,7 +118,24 @@
     }
     
     _playButton.hidden = YES;
-    _playLabel.hidden = YES;
+    
+    if (photo.gamelog.length > 0)
+        _playLabel.text = [[[currentSettings findGame:photo.game.id] findGamelog:photo.gamelog] logentry];
+    else if (photo.lacross_scoring_id.length > 0) {
+        LacrossGame *lacrossgame = [[currentSettings findGame:photo.game.id] lacross_game];
+        _playLabel.text = [lacrossgame findScoreLog:photo.lacross_scoring_id];
+    } else if (photo.soccer_scoring_id.length > 0) {
+        SoccerGame *soccergame = [[currentSettings findGame:photo.game.id] soccer_game];
+        _playLabel.text = [soccergame findScoreLog:photo.soccer_scoring_id];
+    } else if (photo.hockey_scoring_id.length > 0) {
+        HockeyGame *hockeygame = [[currentSettings findGame:photo.game.id] hockey_game];
+        _playLabel.text = [hockeygame findScoreLog:photo.hockey_scoring_id];
+    } else if (photo.waterpolo_scoring_id.length > 0) {
+        WaterPoloGame *waterpologame = [[currentSettings findGame:photo.game.id] water_polo_game];
+        _playLabel.text = [waterpologame findScoreLog:photo.waterpolo_scoring_id];
+    } else {
+        _playLabel.hidden = YES;
+    }
     
     if (([currentSettings isSiteOwner]) || ([currentSettings.user.userid isEqualToString:photo.user_id])) {
         self.navigationItem.rightBarButtonItem = self.editBarButton;

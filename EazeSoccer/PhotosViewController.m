@@ -49,6 +49,7 @@
 @synthesize activityIndicator;
 @synthesize lacross_scoring_id;
 @synthesize soccer_scoring_id;
+@synthesize hockey_scoring_id;
 
 - (void)viewDidLoad
 {
@@ -75,7 +76,7 @@
     _userSelectContainer.hidden = YES;
     
     if (currentSettings.photodeleted) {
-        if ((player) || (game) || (user) || (lacross_scoring_id.length > 0) || (soccer_scoring_id.length > 0))
+        if ((player) || (game) || (user) || (lacross_scoring_id.length > 0) || (soccer_scoring_id.length > 0) || (hockey_scoring_id.length > 0))
             [self getPhotos];
         else if (!photos)
             [self teamButtonClicked:self];

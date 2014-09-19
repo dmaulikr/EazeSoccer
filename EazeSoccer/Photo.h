@@ -26,6 +26,9 @@
 
 @property (nonatomic, strong) NSString *lacross_scoring_id;
 @property (nonatomic, strong) NSString *soccer_scoring_id;
+@property (nonatomic, strong) NSString *waterpolo_scoring_id;
+@property (nonatomic, strong) NSString *hockey_scoring_id;
+
 @property(nonatomic, strong) NSString *sport_id;
 @property(nonatomic, strong) NSString *team_id;
 @property (nonatomic, strong) NSString *user_id;

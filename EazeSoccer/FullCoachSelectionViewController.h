@@ -12,7 +12,7 @@
 
 @interface FullCoachSelectionViewController : CoachSelectionViewController
 @property (weak, nonatomic) IBOutlet UITableView *coachTableView;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *addCoachButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *teamButton;
 - (IBAction)changeteamButtonClicked:(id)sender;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;

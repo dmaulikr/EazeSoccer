@@ -37,8 +37,11 @@
 @synthesize sport_id;
 @synthesize team_id;
 @synthesize user_id;
+
 @synthesize lacross_scoring_id;
 @synthesize soccer_scoring_id;
+@synthesize waterpolo_scoring_id;
+@synthesize hockey_scoring_id;
 
 - (id)init {
     if (self = [super init]) {
@@ -52,6 +55,8 @@
         team_id = @"";
         lacross_scoring_id = @"";
         soccer_scoring_id = @"";
+        hockey_scoring_id = @"";
+        waterpolo_scoring_id = @"";
         pending = NO;
         return self;
     } else
@@ -92,6 +97,8 @@
         self.team_id = [items objectForKey:@"team_id"];
         lacross_scoring_id = [items objectForKey:@"lacross_scoring_id"];
         soccer_scoring_id = [items objectForKey:@"soccer_scoring_id"];
+        waterpolo_scoring_id = [items objectForKey:@"waterpolo_scoring_id"];
+        hockey_scoring_id = [items objectForKey:@"hockey_scoring_id"];
     
         return  self;
     } else {

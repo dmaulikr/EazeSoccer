@@ -238,6 +238,12 @@
         if (video.lacross_scoring_id.length > 0)
             [videoDict setObject:video.lacross_scoring_id forKey:@"lacross_scoring_id"];
         
+        if (video.soccer_scoring_id.length > 0)
+            [videoDict setObject:video.soccer_scoring_id forKey:@"soccer_scoring_id"];
+        
+        if (video.waterpolo_scoring_id.length > 0)
+            [videoDict setObject:video.waterpolo_scoring_id forKey:@"waterpolo_scoring_id"];
+        
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:aurl];
         NSMutableDictionary *jsonDict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:videoDict, @"videoclip", nil];
         

@@ -178,4 +178,52 @@
                                     [waterpolo_game_visitor_score_periodOT1 intValue])];
 }
 
+- (NSString *)findScoreLog:(NSString *)scorelogid {
+    NSString *scorelog;
+    GameSchedule *game = [currentSettings findGame:gameschedule_id];
+    
+    if ([currentSettings.sport.name isEqualToString:@"Water Polo"]) {
+        for (int i = 0; i < currentSettings.roster.count; i++) {
+            WaterPoloStat *waterpolostat = [[currentSettings.roster objectAtIndex:i] findWaterPoloStat:game];
+            
+            for (int cnt = 0; cnt < waterpolostat.scoring_stats.count; cnt++) {
+                
+                if ([[[waterpolostat.scoring_stats objectAtIndex:cnt] waterpolo_scoring_id] isEqualToString:scorelogid]) {
+                    WaterPoloScoring *scorestat = [waterpolostat.scoring_stats objectAtIndex:cnt];
+                    scorelog = [scorestat getScoreLog];
+                    goto Done;
+                }
+                
+            }
+            
+        }
+    }
+    
+Done:
+    return scorelog;
+}
+
+- (NSArray *)getWaterPoloScores {
+    NSMutableArray *gamescoreings = [[NSMutableArray alloc] init];
+    GameSchedule *game = [currentSettings findGame:gameschedule_id];
+    
+    for (int i = 0; i < currentSettings.roster.count; i++) {
+        WaterPoloStat *astat = [[currentSettings.roster objectAtIndex:i] findWaterPoloStat:game];
+        
+        if (astat.scoring_stats.count > 0) {
+            for (int cnt = 0; cnt < astat.scoring_stats.count; cnt++) {
+                [gamescoreings addObject:[astat.scoring_stats objectAtIndex:cnt]];
+            }
+        }
+    }
+    
+    NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"period" ascending:YES];
+    NSSortDescriptor *secondDescriptor = [[NSSortDescriptor alloc] initWithKey:@"gametime" ascending:NO
+                                                                      selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSArray *descriptors = [NSArray arrayWithObjects:firstDescriptor, secondDescriptor, nil];
+    [gamescoreings sortUsingDescriptors:descriptors];
+    
+    return gamescoreings;
+}
+
 @end
