@@ -343,9 +343,12 @@
                         [self performSegueWithIdentifier:@"SoccerGameInfoSegue" sender:self];
                     else if ([currentSettings.sport.name isEqualToString:@"Lacrosse"])
                         [self performSegueWithIdentifier:@"LacrosseGameInfoSegue" sender:self];
-                    else if ([currentSettings.sport.name isEqualToString:@"Water Polo"])
-                        [self performSegueWithIdentifier:@"WaterPoloGameSummarySegue" sender:self];
-                    else if ([currentSettings.sport.name isEqualToString:@"Hockey"])
+                    else if ([currentSettings.sport.name isEqualToString:@"Water Polo"]) {
+                        UIViewController *mainViewController = [[UIStoryboard storyboardWithName:@"WaterPolo" bundle:nil] instantiateInitialViewController];
+                        
+                        [self.navigationController presentViewController:mainViewController animated:YES completion:nil];
+//                        [self performSegueWithIdentifier:@"WaterPoloGameSummarySegue" sender:self];
+                    } else if ([currentSettings.sport.name isEqualToString:@"Hockey"])
                         [self performSegueWithIdentifier:@"HockeyGameSummary" sender:self];
                 }
                 break;
